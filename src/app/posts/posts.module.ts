@@ -12,6 +12,7 @@ import { StoreModule } from '@ngrx/store';
 import { postsReducer } from './state/posts.reducer';
 import { SinglePostComponent } from './single-post/single-post.component';
 
+
 const routes: Routes = [
   {
     path: '',

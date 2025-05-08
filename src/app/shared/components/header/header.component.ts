@@ -1,10 +1,9 @@
-import { AuthService } from './../../../services/auth.service';
 import { isAuthenticated } from './../../../auth/state/auth.selector';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
-import { AppState } from 'src/app/store/app.state';
+import { AppState } from '../../../store/app.state';
 import { Store } from '@ngrx/store';
-import { autoLogout } from 'src/app/auth/state/auth.actions';
+import { autoLogout } from '../../../auth/state/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +11,13 @@ import { autoLogout } from 'src/app/auth/state/auth.actions';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
+
+  badgevisible = false;
+  badgevisibility() {
+    this.badgevisible = true;
+  }
+
+  
   isAuthenticated: Observable<boolean>;
   constructor(private store: Store<AppState>) {}
 

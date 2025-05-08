@@ -1,12 +1,12 @@
-<app-header></app-header>
+<!-- <app-postlogin *ngIf = "shouldShowHeader()"></app-postlogin>
 <app-loading-spinner *ngIf="showLoading | async"></app-loading-spinner>
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-      <div class="alert alert-danger" *ngIf="errorMessage | async as error">
-        {{ error }}
-      </div>
       <router-outlet></router-outlet>
     </div>
   </div>
-</div>
+</div> -->
+
+<app-postlogin *ngIf = "shouldShowHeader()"></app-postlogin>
+<router-outlet></router-outlet>

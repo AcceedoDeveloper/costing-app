@@ -25,11 +25,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import {
   RouterNavigatedAction,
-  routerNavigationAction,
   ROUTER_NAVIGATION,
 } from '@ngrx/router-store';
 import { of } from 'rxjs';
-import { dummyAction } from 'src/app/auth/state/auth.actions';
 
 @Injectable()
 export class PostsEffects {
@@ -51,7 +49,7 @@ export class PostsEffects {
             })
           );
         }
-        return of(dummyAction());
+        return of({ type: '[Posts] No Op' }); // Replace dummyAction with no-op
       })
     );
   });
@@ -88,6 +86,7 @@ export class PostsEffects {
       })
     );
   });
+
   deletePost$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(deletePost),
@@ -120,7 +119,7 @@ export class PostsEffects {
             })
           );
         }
-        return of(dummyAction());
+        return of({ type: '[Posts] No Op' }); // Replace dummyAction with no-op
       })
     );
   });

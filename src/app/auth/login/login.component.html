@@ -1,5 +1,7 @@
-<div class="row">
+<!-- <div class="row">
   <div class="col-md-6 offset-md-3">
+    
+
     <h3>Login</h3>
     <hr />
     <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
@@ -44,5 +46,57 @@
         </button>
       </div>
     </form>
+  </div>
+</div> -->
+
+
+<!----------------------- Main Container -------------------------->
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <!----------------------- Login Container -------------------------->
+  <div class="row border rounded-5 p-3 bg-white shadow box-area">
+    <!--------------------------- Left Box ----------------------------->
+    <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box">
+      <div class="featured-image mb-3">
+        <img src="" class="img-fluid" style="width: 250px;">
+      </div>
+      <!-- <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace; color: #000;">Costing Management helps industries track customer needs, project costs, and materials for better future planning.</small> -->
+    </div> 
+    <!-------------------- Right Box ---------------------------->
+    <div class="col-md-6 right-box">
+      <div class="row align-items-center">
+        <div class="header-text mb-4">
+          <mat-icon>lock</mat-icon>
+          <h2>Login</h2>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+        <!-- Username Field -->
+        <div class="form-group mb-3">
+            <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="User Name" formControlName="username">
+            
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group mb-3">
+              <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Password" formControlName="password">
+              
+        </div>
+
+          <div class="input-group mb-5 d-flex justify-content-between">
+            
+          </div>
+          <!-- Display error message -->
+          <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+            {{ errorMessage }}
+          </div>
+          <!-- Login button with loading state -->
+          <div class="input-group mb-3">
+            <button class="btn btn-lg btn-primary w-100 fs-6" [disabled]="!loginForm.valid || isLoading">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ isLoading ? 'Logging in...' : 'Login' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div> 
   </div>
 </div>

@@ -1,18 +1,14 @@
 import { SinglePostComponent } from './posts/single-post/single-post.component';
 import { AuthGuard } from './services/auth.guard';
-import { HomeComponent } from './home/home.component';
+
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
-  },
-  {
-    path: 'counter',
-    loadChildren: () =>
-      import('./counter/counter.module').then((m) => m.CounterModule),
+    redirectTo: 'auth/login', 
+    pathMatch: 'full', 
   },
   {
     path: 'posts',

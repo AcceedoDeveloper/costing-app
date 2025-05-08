@@ -3,7 +3,8 @@ import { Post } from './../../models/posts.model';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/store/app.state';
+import { AppState } from '../../store/app.state';
+import { autoLogout } from '../../auth/state/auth.actions';
 import { deletePost, loadPosts } from '../state/posts.actions';
 
 @Component({
@@ -27,4 +28,8 @@ export class PostsListComponent implements OnInit {
       this.store.dispatch(deletePost({ id }));
     }
   }
+  onLogout(event: Event) {
+      event.preventDefault();
+      this.store.dispatch(autoLogout());
+    }
 }

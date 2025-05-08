@@ -1,33 +1,19 @@
-import { User } from './../../models/user.model';
 import { createAction, props } from '@ngrx/store';
-export const LOGIN_START = '[auth page] login start';
-export const LOGIN_SUCCESS = '[auth page] login Success';
-export const LOGIN_FAIL = '[auth page] login Fail';
-
-export const SIGNUP_START = '[auth page] signup start';
-export const SIGNUP_SUCCESS = '[auth page] signup success';
-export const AUTO_LOGIN_ACTION = '[auth page] auto login';
-export const LOGOUT_ACTION = '[auth page] logout';
 
 export const loginStart = createAction(
-  LOGIN_START,
-  props<{ email: string; password: string }>()
+  '[Auth] Login Start',
+  props<{ username: string; password: string }>()
 );
+
 export const loginSuccess = createAction(
-  LOGIN_SUCCESS,
-  props<{ user: User; redirect: boolean }>()
+  '[Auth] Login Success',
+  props<{ user: any; token: string }>()
 );
 
-export const signupStart = createAction(
-  SIGNUP_START,
-  props<{ email: string; password: string }>()
+export const loginFail = createAction(
+  '[Auth] Login Fail',
+  props<{ error: string }>()
 );
 
-export const signupSuccess = createAction(
-  SIGNUP_SUCCESS,
-  props<{ user: User; redirect: boolean }>()
-);
-
-export const autoLogin = createAction(AUTO_LOGIN_ACTION);
-export const autoLogout = createAction(LOGOUT_ACTION);
-export const dummyAction = createAction('[dummy action]');
+export const autoLogout = createAction('[Auth] Auto Logout');
+export const autoLogin = createAction('[Auth] Auto Login');

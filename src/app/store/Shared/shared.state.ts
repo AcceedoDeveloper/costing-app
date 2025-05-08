@@ -7,3 +7,4 @@ export const initialState: SharedState = {
   showLoading: false,
   errorMessage: '',
 };
+

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CounterComponent } from './counter.component';
+import { Header2Component } from './header2.component';
 
-describe('CounterComponent', () => {
-  let component: CounterComponent;
-  let fixture: ComponentFixture<CounterComponent>;
+describe('Header2Component', () => {
+  let component: Header2Component;
+  let fixture: ComponentFixture<Header2Component>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CounterComponent ]
+      declarations: [ Header2Component ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CounterComponent);
+    fixture = TestBed.createComponent(Header2Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
