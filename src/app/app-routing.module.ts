@@ -3,28 +3,54 @@ import { AuthGuard } from './services/auth.guard';
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/login', 
-    pathMatch: 'full', 
+    redirectTo: 'auth/login',
+    pathMatch: 'full',
   },
   {
-    path: 'posts',
-    loadChildren: () =>
-      import('./posts/posts.module').then((m) => m.PostsModule),
+    path: '',
+    component: MainLayoutComponent,
     canActivate: [AuthGuard],
-  },
-  {
-    path: 'posts/details/:id',
-    component: SinglePostComponent,
+    children: [
+      {
+        path: 'posts',
+        loadChildren: () =>
+          import('./posts/posts.module').then((m) => m.PostsModule),
+      },
+      {
+        path: 'posts/details/:id',
+        component: SinglePostComponent,
+      },
+      {
+        path: 'master',
+        loadChildren: () =>
+          import('./master/master/master.module').then((m) => m.MasterModule),
+      }
+    ],
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+    component: AuthLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./auth/auth.module').then((m) => m.AuthModule),
+      },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: 'auth/login',
   },
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

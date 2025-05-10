@@ -1,0 +1,36 @@
+.container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .btn-primary:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+  .list-group {
+    margin-top: 20px;
+  }
+  .list-group-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }

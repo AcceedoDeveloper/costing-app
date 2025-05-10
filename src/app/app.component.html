@@ -7,6 +7,5 @@
     </div>
   </div>
 </div> -->
-
-<app-postlogin *ngIf = "shouldShowHeader()"></app-postlogin>
+<app-loading-spinner *ngIf="showLoading | async"></app-loading-spinner>
 <router-outlet></router-outlet>

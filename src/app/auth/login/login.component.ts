@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.authSubscription = this.store.select(isAuthenticated).subscribe((isAuthenticated) => {
       if (isAuthenticated) {
-        this.router.navigate(['/posts']);
+        this.router.navigate(['/master']);
       }
     });
 
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     this.loadingSubscription = this.store.select(getLoading).subscribe((loading) => {
-      console.log('Loading state:', loading); // Debug log
+      console.log('Loading state:', loading);
       this.isLoading = loading;
     });
     
