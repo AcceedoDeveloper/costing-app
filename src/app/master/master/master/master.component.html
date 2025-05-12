@@ -1,47 +1,35 @@
 
 <button mat-raised-button color="primary" (click)="openAddUserPopup()">Add User</button>
-<div class="container mt-4">
-  <h3 class="mb-3">User List</h3>
-    
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="table">
-        <tr>
-          <th>S.No</th>
-          <th>User Code</th>
-          <th>User Name</th>
-          <th>Department</th>
-          <th>Role</th>
-          <th>Password</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>20253</td>
-          <td>Mahesh</td>
-          <td>Software</td>
-          <td>Fresher</td>
-          <td>•••••</td>
-          <td class="text-center">
-            <span class="material-icons text-primary me-2 action-icon" title="Edit">edit</span>
-            <span class="material-icons text-danger action-icon" title="Delete">delete</span>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>20254</td>
-          <td>Priya</td>
-          <td>Design</td>
-          <td>Senior</td>
-          <td>•••••</td>
-          <td class="text-center">
-            <span class="material-icons text-primary me-2 action-icon" title="Edit">edit</span>
-            <span class="material-icons text-danger action-icon" title="Delete">delete</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+
+<!-- ({{ userCount$ | async }}) -->
+
+ <div class="container mx-auto p-4">
+      <h2 class="text-2xl font-bold mb-4">Users </h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="py-2 px-4 border-b">User Code</th>
+              <th class="py-2 px-4 border-b">Name</th>
+              <th class="py-2 px-4 border-b">Department</th>
+              <th class="py-2 px-4 border-b">Role</th>
+              <th class="py-2 px-4 border-b">Actions</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users$ | async" class="hover:bg-gray-50">
+              <td class="py-2 px-4 border-b">{{ user.UserCode }}</td>
+              <td class="py-2 px-4 border-b">{{ user.UserName }}</td>
+              <td class="py-2 px-4 border-b">{{ user.department }}</td>
+              <td class="py-2 px-4 border-b">{{ user.role }}</td>
+              <td class="py-2 px-4 border-b">
+                  <button mat-icon-button (click)="openEditUserPopup(user)">
+                    edit
+                  </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>

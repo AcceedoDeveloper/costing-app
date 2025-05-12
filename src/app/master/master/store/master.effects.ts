@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { createUser, createUserSuccess } from './master.action';
+import { createUser, createUserSuccess, loadUsers, loadUsersSuccess, loadUsersFailure } from './master.action';
 import { User } from '../../../models/users.model';
 import { UserService } from '../../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
@@ -31,6 +31,25 @@ export class UserEffects {
     })
   );
 });
+
+  loadUsers$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(loadUsers),
+      mergeMap(() => {
+        return this.userService.getUsers().pipe(
+          map((users) => {
+            
+            return loadUsersSuccess({ users });
+          }),
+          catchError((error) => {
+            this.toastr.error('Failed to load users.', 'Error');
+            console.error('Error loading users:', error);
+            return of(loadUsersFailure({ error: error.message }));
+          })
+        );
+      })
+    );
+  });
 
   
 }

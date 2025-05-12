@@ -20,13 +20,15 @@ export class AdduserComponent implements OnInit {
     this.users$ = this.store.select(getUsers);
     this.count$ = this.store.select(getUserCount);
 
-   this.userForm = this.fb.group({
+this.userForm = this.fb.group({
   UserCode: ['', Validators.required],
   UserName: ['', Validators.required],
   department: ['', Validators.required],
   role: ['', Validators.required],
+  userName: ['', Validators.required], 
   password: ['', Validators.required]
 });
+
 
   }
 

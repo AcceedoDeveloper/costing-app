@@ -1,56 +1,62 @@
-/* Ensure the drawer container takes the full viewport height */
+
 .drawer-container {
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
   }
   
-  /* Style the toolbar */
+ 
   mat-toolbar {
     position: sticky;
     top: 0;
     z-index: 1000;
+    
   }
   
-  /* Style the drawer */
+
   mat-drawer {
-    width: 250px; /* Fixed width for the drawer */
-    background-color: #ffffff; /* White background for the drawer */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Add a shadow for overlay effect */
-    z-index: 1001; /* Ensure the drawer is above the content */
+    width: 250px; 
+    background-color: #ffffff; 
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); 
+    z-index: 1001; 
   }
   
-  /* Style the drawer content */
+  
   mat-drawer-content {
-    padding: 0; /* Remove default padding */
+    padding: 0; 
   }
   
-  /* Style the main content area */
+
   .main-content {
-    padding: 16px; /* Add padding to the content */
-    height: calc(100vh - 64px); /* Adjust height to account for toolbar (64px is default toolbar height) */
-    overflow: auto; /* Allow scrolling if content overflows */
+    padding: 16px; 
+    height: calc(100vh - 64px); 
+    overflow: auto; 
   }
   
-  /* Style the nav list items */
+ 
   mat-nav-list mat-list-item button {
     display: flex;
     align-items: center;
     width: 100%;
     padding: 0 16px;
     height: 48px;
-    color: #333; /* Dark text color for readability */
+    color: #333; 
   }
   
-  /* Align the icon and text within the button */
+  
   mat-nav-list mat-list-item button mat-icon {
-    margin-right: 16px; /* Space between icon and text */
+    margin-right: 16px; 
   }
   
-  /* Hover effect for nav list items */
+ 
   mat-nav-list mat-list-item button:hover {
-    background-color: #f0f0f0; /* Light gray on hover */
+    background-color: #f0f0f0;
   }
   
-  /* Optional: Add a backdrop when the drawer is open */
+ 
   :host ::ng-deep .mat-drawer-backdrop {
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black backdrop */
+    background-color: rgba(0, 0, 0, 0.5);
   }
+
+  .mat-toolbar.mat-primary {
+    background: #ddfa81;
+    color: #fff;
+}

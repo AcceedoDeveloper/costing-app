@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { createUserSuccess } from '../store/master.action';
+import { createUserSuccess} from '../store/master.action';
 import { User } from '../../../models/users.model';
+import { loadUsersSuccess, loadUsersFailure } from '../store/master.action';
 
 // Define the state directly in the reducer
 const initialState = {
@@ -10,6 +11,18 @@ const initialState = {
 
 const _userReducer = createReducer(
   initialState,
+ 
+  on(loadUsersSuccess, (state, action) => ({
+    ...state,
+    users: action.users,
+    count: action.users.length,
+    error: null,
+  })),
+  on(loadUsersFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  })),
+
   on(createUserSuccess, (state, action) => ({
     ...state,
     users: [...state.users, action.user],
