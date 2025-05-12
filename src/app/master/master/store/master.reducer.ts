@@ -1,9 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { createUserSuccess} from '../store/master.action';
 import { User } from '../../../models/users.model';
-import { loadUsersSuccess, loadUsersFailure } from '../store/master.action';
+import { loadUsersSuccess, loadUsersFailure 
+  , updateUser, updateUserFailure, updateUserSuccess
+  , deleteUserSuccess, deleteUserFailure
+} from '../store/master.action';
 
-// Define the state directly in the reducer
+
 const initialState = {
   users: [] as User[],
   count: 0,
@@ -27,6 +30,26 @@ const _userReducer = createReducer(
     ...state,
     users: [...state.users, action.user],
     count: state.count + 1,
+  })),
+
+  on(updateUserSuccess, (state, action) => ({
+    ...state,
+    users: state.users.map((user) => (user.UserCode === action.user.UserCode ? action.user : user)),
+    error: null,
+  })),
+  on(updateUserFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  })),
+  on(deleteUserSuccess, (state, action) => ({
+    ...state,
+    users: state.users.filter((user) => user.id !== action.id),
+    count: state.count - 1,
+    error: null,
+  })),
+  on(deleteUserFailure, (state, action) => ({
+    ...state,
+    error: action.error,
   }))
 );
 

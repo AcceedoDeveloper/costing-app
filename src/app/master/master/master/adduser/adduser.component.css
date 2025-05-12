@@ -1,4 +1,4 @@
-.container {
+/* .container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
@@ -34,3 +34,29 @@
     border-radius: 4px;
     margin-bottom: 5px;
   }
+ 
+.password-masked {
+  font-family: 'text-security-disc';
+  -webkit-text-security: disc;
+}
+
+
+.password-masked:focus {
+  -webkit-text-security: none;
+}
+ */
+
+
+ /* adduser.component.css */
+.mat-form-field-flex {
+  width: 90%;
+}
+
+.mat-form-field-flex {
+width: 90% !important ; 
+}
+
+.matfiles{
+  margin-right: 15px;
+  width: 40%;
+}

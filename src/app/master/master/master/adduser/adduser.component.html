@@ -1,34 +1,81 @@
-<form [formGroup]="userForm" (ngSubmit)="createNewUser()">
-  <div class="form-group">
-    <label for="UserCode">User Code</label>
-    <input id="UserCode" formControlName="UserCode" class="form-control" placeholder="Enter user code" />
-  </div>
+<div class="p-4">
+  <h2 class="text-xl font-bold mb-4">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+  <form [formGroup]="userForm" (ngSubmit)="submitUser()" class="grid grid-cols-2 gap-x-8 gap-y-6 items-start">
+    <!-- Column 1 -->
+    <div class="space-y-8">
+      <!-- User Code -->
+      <mat-form-field *ngIf="!isEditMode" appearance="outline" class="matfiles">
+        <mat-label>User Code</mat-label>
+        <input matInput id="UserCode" formControlName="UserCode" placeholder="Enter user code" />
+        <mat-error *ngIf="userForm.get('UserCode')?.hasError('required')">
+          User Code is required
+        </mat-error>
+      </mat-form-field>
 
-  <div class="form-group">
-    <label for="UserName">User Name</label>
-    <input id="UserName" formControlName="UserName" class="form-control" placeholder="Enter user name" />
-  </div>
+      <!-- Department -->
+      <mat-form-field appearance="outline" class="matfiles">
+        <mat-label>Department</mat-label>
+        <input matInput id="department" formControlName="department" placeholder="Enter department" />
+        <mat-error *ngIf="userForm.get('department')?.hasError('required')">
+          Department is required
+        </mat-error>
+      </mat-form-field>
 
-  <div class="form-group">
-    <label for="department">Department</label>
-    <input id="department" formControlName="department" class="form-control" placeholder="Enter department" />
-  </div>
+      <!-- User Name (login) -->
+      
+    </div>
 
-  <div class="form-group">
-    <label for="role">Role</label>
-    <input id="role" formControlName="role" class="form-control" placeholder="Enter role" />
-  </div>
+    <!-- Column 2 -->
+    <div class="space-y-4">
+      <!-- User Name -->
+      <mat-form-field appearance="outline" class="matfiles">
+        <mat-label>User Name</mat-label>
+        <input matInput id="UserName" formControlName="UserName" placeholder="Enter user name" />
+        <mat-error *ngIf="userForm.get('UserName')?.hasError('required')">
+          User Name is required
+        </mat-error>
+      </mat-form-field>
 
-  <div class="form-group">
-  <label for="userName">User Name (login)</label>
-  <input id="userName" formControlName="userName" class="form-control" placeholder="Enter login userName" />
+      <!-- Role -->
+      <mat-form-field appearance="outline" class="matfiles">
+        <mat-label>Role</mat-label>
+        <input matInput id="role" formControlName="role" placeholder="Enter role" />
+        <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+          Role is required
+        </mat-error>
+      </mat-form-field>
+
+      
+    </div>
+
+
+     <div class="space-y-4">
+      <mat-form-field appearance="outline" class="matfiles">
+        <mat-label>User Name (login)</mat-label>
+        <input matInput id="userName" formControlName="userName" placeholder="Enter login userName" />
+        <mat-error *ngIf="userForm.get('userName')?.hasError('required')">
+          Login User Name is required
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- Password -->
+      <mat-form-field appearance="outline" class="matfiles">
+        <mat-label>Password</mat-label>
+        <input matInput id="password" type="password" formControlName="password" placeholder="Enter password" />
+        <mat-error *ngIf="userForm.get('password')?.hasError('required')">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+     </div>
+    
+
+    <!-- Buttons (full width below columns) -->
+    <div class="col-span-2 flex justify-end gap-2 mt-4">
+      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+        {{ isEditMode ? 'Update' : 'Create' }} User
+      </button>
+    </div>
+  </form>
 </div>
-
-
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input id="password" type="password" formControlName="password" class="form-control" placeholder="Enter password" />
-  </div>
-
-  <button type="submit" class="btn-primary" [disabled]="userForm.invalid">Create User</button>
-</form>

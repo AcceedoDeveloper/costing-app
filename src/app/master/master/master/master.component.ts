@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AdduserComponent} from './adduser/adduser.component';
-import { loadUsers } from '../store/master.action';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { AdduserComponent } from './adduser/adduser.component';
+import { loadUsers, deleteUser } from '../store/master.action';
 import { Store } from '@ngrx/store';
 import { getUsers, getUserCount } from '../store/master.selector';
 import { User } from '../../../models/users.model';
 import { Observable } from 'rxjs';
+import { Userget } from '../../../models/users.model';
 
 @Component({
   selector: 'app-master',
@@ -15,20 +18,47 @@ import { Observable } from 'rxjs';
 export class MasterComponent implements OnInit {
   users$: Observable<User[]>;
   userCount$: Observable<number>;
-   
+  dataSource = new MatTableDataSource<User>();
+  displayedColumns: string[] = ['UserCode', 'UserName', 'department', 'role', 'actions', 'delete'];
 
-  constructor(private dialog: MatDialog,private store: Store) {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private dialog: MatDialog, private store: Store) {
     this.users$ = this.store.select(getUsers);
     this.userCount$ = this.store.select(getUserCount);
   }
 
   ngOnInit() {
     this.store.dispatch(loadUsers());
-  }
-  openAddUserPopup() {
-    this.dialog.open(AdduserComponent, {
-      width: '400px',
+    this.users$.subscribe(users => {
+      this.dataSource.data = users;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  openAddUserPopup() {
+    this.dialog.open(AdduserComponent, {
+      width: '500px',
+    });
+  }
+
+  openEditUserPopup(user: User) {
+    console.log('employee', user.UserCode);
+    this.dialog.open(AdduserComponent, {
+      width: '500px',
+      data: { user }
+    });
+  }
+
+  deleteUser(user: Userget) {
+    if (confirm(`Are you sure you want to delete ${user.UserName}?`)) {
+      console.log(user._id);
+      this.store.dispatch(deleteUser({ id: user._id }));
+      this.store.dispatch(loadUsers());
+    }
+  }
 }

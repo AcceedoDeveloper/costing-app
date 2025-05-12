@@ -1,11 +1,12 @@
 export interface User {
   id?: string;
-  UserCode: string;
+  UserCode?: string;
   UserName: string;
   department: string;
   role: string;
   userName: string; 
   password: string;
+  
 }
 
 export interface Userget {

@@ -1,5 +1,16 @@
-.table td,
-.table th {
-  vertical-align: middle;
-  text-align: center;
+table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th.mat-header-cell, td.mat-cell {
+  padding: 0 16px;
+  text-align: left;
+}
+
+.mat-paginator {
+  background: #f5f5f5;
 }
