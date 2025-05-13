@@ -1,9 +1,10 @@
 <div class="p-4">
   <h2 class="text-xl font-bold mb-4">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
-  <form [formGroup]="userForm" (ngSubmit)="submitUser()" class="grid grid-cols-2 gap-x-8 gap-y-6 items-start">
-    <!-- Column 1 -->
-    <div class="space-y-8">
-      <!-- User Code -->
+  <form [formGroup]="userForm" (ngSubmit)="submitUser()">
+  
+    <div class="box">
+     
+    
       <mat-form-field *ngIf="!isEditMode" appearance="outline" class="matfiles">
         <mat-label>User Code</mat-label>
         <input matInput id="UserCode" formControlName="UserCode" placeholder="Enter user code" />
@@ -12,7 +13,7 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Department -->
+    
       <mat-form-field appearance="outline" class="matfiles">
         <mat-label>Department</mat-label>
         <input matInput id="department" formControlName="department" placeholder="Enter department" />
@@ -21,13 +22,13 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- User Name (login) -->
+      
       
     </div>
 
-    <!-- Column 2 -->
-    <div class="space-y-4">
-      <!-- User Name -->
+    
+    <div class="box">
+      
       <mat-form-field appearance="outline" class="matfiles">
         <mat-label>User Name</mat-label>
         <input matInput id="UserName" formControlName="UserName" placeholder="Enter user name" />
@@ -36,7 +37,7 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Role -->
+     
       <mat-form-field appearance="outline" class="matfiles">
         <mat-label>Role</mat-label>
         <input matInput id="role" formControlName="role" placeholder="Enter role" />
@@ -49,7 +50,7 @@
     </div>
 
 
-     <div class="space-y-4">
+     <div class="box">
       <mat-form-field appearance="outline" class="matfiles">
         <mat-label>User Name (login)</mat-label>
         <input matInput id="userName" formControlName="userName" placeholder="Enter login userName" />
@@ -59,7 +60,7 @@
       </mat-form-field>
 
 
-      <!-- Password -->
+      
       <mat-form-field appearance="outline" class="matfiles">
         <mat-label>Password</mat-label>
         <input matInput id="password" type="password" formControlName="password" placeholder="Enter password" />
@@ -70,8 +71,8 @@
      </div>
     
 
-    <!-- Buttons (full width below columns) -->
-    <div class="col-span-2 flex justify-end gap-2 mt-4">
+   
+    <div class="box">
       <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
       <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
         {{ isEditMode ? 'Update' : 'Create' }} User
