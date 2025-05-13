@@ -1,31 +1,7 @@
-<!-- <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer mode="over" [opened]="sidenavOpened">
-    <mat-toolbar color="primary">Menu</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item [routerLink]="['/master']">Master</a>
-      <a mat-list-item (click)="onLogout($event)" [routerLink]="['/auth/login']">Logout</a>
-    </mat-nav-list>
-  </mat-sidenav>
-  
-  <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button mat-icon-button (click)="toggleSidenav()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span>Costing Management</span>
-    </mat-toolbar>
-    <div class="main-content">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container> -->
-
-
-
-
 <mat-drawer-container class="drawer-container" autosize>
   <mat-drawer #drawer mode="over" [opened]="sidenavOpened" position="start">
-    <mat-toolbar color="#0a58ca73" >Menu</mat-toolbar>
+    <mat-toolbar  style="background-color: #5b84ff;" >Cost Management</mat-toolbar>
+    
     <mat-nav-list>
       <mat-list-item>
         <button  [routerLink]="['/master']" mat-button>
@@ -43,30 +19,11 @@
         </button>
       </mat-list-item>
       <mat-list-item>
-        <button routerLink="slider" mat-button>
-          <mat-icon>explore</mat-icon> Slider
+        <button [routerLink]="['/material']" mat-button>
+          <mat-icon>construction</mat-icon> Material
         </button>
       </mat-list-item>
-      <mat-list-item>
-        <button routerLink="table" mat-button>
-          <mat-icon>table_chart</mat-icon> Table
-        </button>
-      </mat-list-item>
-      <mat-list-item>
-        <button routerLink="settings" mat-button>
-          <mat-icon>settings</mat-icon> Settings
-        </button>
-      </mat-list-item>
-      <mat-list-item>
-        <button routerLink="help" mat-button>
-          <mat-icon>help</mat-icon> Help
-        </button>
-      </mat-list-item>
-      <mat-list-item>
-        <button routerLink="analytics" mat-button>
-          <mat-icon>analytics</mat-icon> Analytics
-        </button>
-      </mat-list-item>
+     
       <mat-list-item>
         <button (click)="onLogout($event)" [routerLink]="['/auth/login']" mat-button>
           <mat-icon>logout</mat-icon> Logout
@@ -81,6 +38,9 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span>Costing Management</span>
+      <div>P</div>
+        
+      
     </mat-toolbar>
     <div class="main-content">
       <router-outlet></router-outlet>

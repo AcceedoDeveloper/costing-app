@@ -30,6 +30,11 @@ const routes: Routes = [
         path: 'master',
         loadChildren: () =>
           import('./master/master/master.module').then((m) => m.MasterModule),
+      },
+      {
+        path: 'material',
+        loadChildren: () => 
+          import('./material/material.module').then(m => m.MaterialModule)
       }
     ],
   },

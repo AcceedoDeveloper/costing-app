@@ -35,7 +35,7 @@ export class AdduserComponent implements OnInit {
       department: ['', Validators.required],
       role: ['', Validators.required],
       userName: ['', Validators.required],
-      password: ['', Validators.required]
+     password: ['', this.data?.user ? [] : [Validators.required]]
     });
 
     if (data?.user) {
@@ -49,7 +49,7 @@ export class AdduserComponent implements OnInit {
         department: data.user.department,
         role: data.user.role,
         userName: data.user.userName ||  '',
-        password: data.user.password 
+        password: '' 
       });
     }
   }
@@ -69,7 +69,7 @@ export class AdduserComponent implements OnInit {
           department: formValue.department,
           role: formValue.role,
           userName: formValue.userName,
-          password: formValue.password
+          password: formValue.password || this.data.user?.password
         };
       } else {
         user = {
