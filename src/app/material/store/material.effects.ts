@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 import {Material} from '../../models/material.model';
 import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , deleteMaterial, deleteMaterialSuccess, createMaterial, createMaterialSuccess
-  , updateMaterial, updateMaterialSuccess
+  , updateMaterial, updateMaterialSuccess, updateMaterialFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 
@@ -55,23 +55,32 @@ createMaterial$ = createEffect(() => {
 });
 
 
-  updateMaterial$ = createEffect(() => {
-  return this.actions$.pipe(
+updateMaterial$ = createEffect(() =>
+  this.actions$.pipe(
     ofType(updateMaterial),
-    mergeMap((action) => {
-      return this.materialService.updateMaterial(action.material).pipe(
-        map((material) => {
-          this.toastr.success('Material updated successfully!', 'Success'); // ✅ Success toast
-          return updateMaterialSuccess({ material });
+    mergeMap(action =>
+      this.materialService.updateMaterial(action.material).pipe(
+        map(() => {
+          this.toastr.success('Material updated successfully!', 'Success'); 
+          return updateMaterialSuccess({ material: action.material });
         }),
-        catchError((error) => {
-          this.toastr.error('Failed to update material.', 'Error'); // ✅ Error toast
-          return of({ type: '[Material] Update Material Failed' });
+        catchError(error => {
+          this.toastr.error('Failed to update material.', 'Error'); 
+          return of(updateMaterialFailure({ error: error.message }));
         })
-      );
-    })
-  );
-});
+      )
+    )
+  )
+);
+
+
+updateMaterialSuccess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updateMaterialSuccess),
+    map(() => loadMaterials())
+  )
+);
+
 
 
  deleteMaterial$ = createEffect(() => {

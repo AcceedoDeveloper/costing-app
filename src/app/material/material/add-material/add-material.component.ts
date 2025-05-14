@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute, Router } from '@angular/router';
-import { createMaterial, updateMaterial} from '../../store/material.actions';
+import { createMaterial, updateMaterial, loadMaterials} from '../../store/material.actions';
 import { Material } from '../../../models/material.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -48,8 +48,11 @@ export class AddMaterialComponent implements OnInit {
 
     if (this.isEditMode && this.materialId) {
       this.store.dispatch(updateMaterial({ material }));  
+      
     } else {
       this.store.dispatch(createMaterial({ material }));
+      this.store.dispatch(loadMaterials())
+       
     }
 
     this.dialogRef.close();  

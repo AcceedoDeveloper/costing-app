@@ -35,7 +35,7 @@ const _materialReducer = createReducer(
    on(updateMaterialSuccess, (state, action) => ({
     ...state,
     materials: state.materials.map((material) =>
-      material._id === action.material._id ? action.material : material
+      material.name === action.material.name ? action.material : material
     ),
     error: null,
   })),

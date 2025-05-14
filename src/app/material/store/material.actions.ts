@@ -28,3 +28,7 @@ export const createMaterialSuccess = createAction(CREATE_MATERIAL_SUCCESS, props
 
 export const updateMaterial = createAction(UPDATE_MATERIAL, props<{ material: Material }>());
 export const updateMaterialSuccess = createAction(UPDATE_MATERIAL_SUCCESS, props<{ material: Material }>());
+export const updateMaterialFailure = createAction(
+  '[Material] Update Material Failure',
+  props<{ error: string }>()
+);

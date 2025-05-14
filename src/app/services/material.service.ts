@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable,  } from 'rxjs';
 import { Material } from '../models/material.model';
+import { map } from 'rxjs/operators';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +14,13 @@ export class MaterialService {
 
   constructor(private http: HttpClient) { }
 
-  getMaterials(): Observable<Material[]> {
-    return this.http.get<Material[]>(`${this.apiUrl}/getMaterial`);
-  }
+ getMaterials(): Observable<Material[]> {
+  return this.http.get<{ materials: Material[] }>(`${this.apiUrl}/getMaterial`)
+    .pipe(
+      map(response => response.materials)
+    );
+}
+
 
   deleteMaterial(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/deleteMaterial/${id}`);

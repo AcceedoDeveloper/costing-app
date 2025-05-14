@@ -62,7 +62,7 @@ export class MaterialComponent implements OnInit, AfterViewInit {
         console.log(meterial.name);
         this.store.dispatch(deleteMaterial({ id: meterial.name }));
           this.store.dispatch(loadMaterials());
-       
+          
       }
     }
 
@@ -73,11 +73,11 @@ export class MaterialComponent implements OnInit, AfterViewInit {
     }
 
     onEdit(material: Material): void {
-  console.log('Edit clicked for:', material);
-  this.dialog.open(AddMaterialComponent, {
-    width: '500px',
-    data: { material, isEditMode: true } // Pass the material and edit mode flag
-  });
+       console.log('Edit clicked for:', material);
+          this.dialog.open(AddMaterialComponent, {
+          width: '500px',
+          data: { material, isEditMode: true } 
+       });
 }
 
 }
