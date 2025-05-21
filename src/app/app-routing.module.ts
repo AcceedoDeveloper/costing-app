@@ -35,7 +35,13 @@ const routes: Routes = [
         path: 'material',
         loadChildren: () => 
           import('./material/material.module').then(m => m.MaterialModule)
+      },
+      {
+        path: 'grade',
+        loadChildren: () => 
+          import('./grade/grade.module').then(m => m.GradeModule)
       }
+
     ],
   },
   {
@@ -49,6 +55,7 @@ const routes: Routes = [
       },
     ],
   },
+  { path: 'grade', loadChildren: () => import('./grade/grade.module').then(m => m.GradeModule) },
   {
     path: '**',
     redirectTo: 'auth/login',

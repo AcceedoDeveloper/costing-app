@@ -1,0 +1,25 @@
+<mat-form-field class="full-width" appearance="">
+  <mat-chip-list #chipList aria-label="Fruit selection">
+    <mat-chip *ngFor="let fruit of fruits" [removable]="true" (removed)="remove(fruit)">
+      {{fruit}}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+
+    <input
+      #fruitInput
+      placeholder="New fruit..."
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="false"
+      [(ngModel)]="currentFruit"
+      (ngModelChange)="filterFruits()"
+    />
+  </mat-chip-list>
+
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option *ngFor="let fruit of filteredFruits" [value]="fruit">
+      {{fruit}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

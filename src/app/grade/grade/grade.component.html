@@ -1,0 +1,73 @@
+<div  class="d-flex justify-content-end button">
+<button mat-raised-button color="primary" (click)="openAddMeterialPopup()" >Add Grade</button>
+</div>
+
+
+
+<div class="container">
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Grade No Column -->
+    <ng-container matColumnDef="gradeNo">
+      <th mat-header-cell *matHeaderCellDef> Grade No </th>
+      <td mat-cell *matCellDef="let grade"> {{grade.gradeNo}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let grade"> {{grade.name}} </td>
+    </ng-container>
+
+    <!-- Price Column -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef> Price </th>
+      <td mat-cell *matCellDef="let grade"> {{grade.price}} </td>
+    </ng-container>
+
+    <!-- Total Quantity Column -->
+    <ng-container matColumnDef="totalQuantity">
+      <th mat-header-cell *matHeaderCellDef> Total Quantity </th>
+      <td mat-cell *matCellDef="let grade"> {{grade.totalQuantity}} </td>
+    </ng-container>
+
+    <!-- Materials Used Column -->
+    <ng-container matColumnDef="materialsUsed">
+      <th mat-header-cell *matHeaderCellDef> Materials Used </th>
+      <td mat-cell *matCellDef="let grade">
+        <div class="materials-box">
+          <div *ngFor="let material of grade.materialsUsed">
+            {{material.name}} ({{material.type}}): {{material.quantity}}
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+
+   <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="bold-header">actions</th>
+        <td mat-cell *matCellDef="let grade">
+            <button mat-icon-button (click)="onEdit(material)" >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+     
+      
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef class="bold-header">Delete</th>
+        <td mat-cell *matCellDef="let grade">
+          <button mat-icon-button (click)="deleteGrade(grade.gradeNo)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+    <!-- Table Header and Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

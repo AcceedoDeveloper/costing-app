@@ -23,6 +23,12 @@
           <mat-icon>construction</mat-icon> Material
         </button>
       </mat-list-item>
+
+       <mat-list-item>
+        <button [routerLink]="['/grade']" mat-button>
+          <mat-icon>grade</mat-icon> Grade
+        </button>
+      </mat-list-item>
      
       <mat-list-item>
         <button (click)="onLogout($event)" [routerLink]="['/auth/login']" mat-button>
@@ -38,8 +44,7 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span>Costing Management</span>
-      <div>P</div>
-        
+     
       
     </mat-toolbar>
     <div class="main-content">
