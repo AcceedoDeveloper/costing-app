@@ -1,5 +1,18 @@
 import { createAction, props } from '@ngrx/store';
 import { Grade } from '../../models/garde.model';
+import {MaterialItem} from '../../models/MaterialMap.model';
+
+
+
+export const loadMaterialMap = createAction('[Grade] Load Material Map');
+export const loadMaterialMapSuccess = createAction(
+  '[Grade] Load Material Map Success',
+  props<{ materialMap: { [key: string]: MaterialItem[] } }>()
+);
+export const loadMaterialMapFailure = createAction(
+  '[Grade] Load Material Map Failure',
+  props<{ error: any }>()
+);
 
 export const loadGrades = createAction('[Grade] Load Grades');
 export const loadGradesSuccess = createAction('[Grade] Load Grades Success', props<{ grades: Grade[] }>());

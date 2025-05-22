@@ -47,6 +47,7 @@ export class AddMaterialComponent implements OnInit {
     console.log('data', material);
 
     if (this.isEditMode && this.materialId) {
+      console.log('edit data', material);
       this.store.dispatch(updateMaterial({ material }));  
       
     } else {

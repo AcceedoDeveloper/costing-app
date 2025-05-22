@@ -13,6 +13,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+
+
 
 import { FormsModule } from '@angular/forms';
 
@@ -30,6 +34,8 @@ import { GradeEffects } from './store/grade.effects';
 @NgModule({
   declarations: [GradeComponent, AddgradeComponent],
   imports: [
+    MatSelectModule,
+    MatOptionModule,
     CommonModule,
     GradeRoutingModule,
     MatTableModule,

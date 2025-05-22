@@ -1,25 +1,19 @@
-<mat-form-field class="full-width" appearance="">
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip *ngFor="let fruit of fruits" [removable]="true" (removed)="remove(fruit)">
-      {{fruit}}
-      <mat-icon matChipRemove>cancel</mat-icon>
-    </mat-chip>
-
-    <input
-      #fruitInput
-      placeholder="New fruit..."
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="false"
-      [(ngModel)]="currentFruit"
-      (ngModelChange)="filterFruits()"
-    />
-  </mat-chip-list>
-
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let fruit of filteredFruits" [value]="fruit">
-      {{fruit}}
+<!-- Type Dropdown -->
+<mat-form-field appearance="fill">
+  <mat-label>Type</mat-label>
+  <mat-select [(ngModel)]="selectedType" (selectionChange)="onTypeChange($event.value)">
+    <mat-option *ngFor="let type of materialTypes" [value]="type">
+      {{ type }}
     </mat-option>
-  </mat-autocomplete>
+  </mat-select>
+</mat-form-field>
+
+<!-- Name Dropdown (Disabled until Type is selected) -->
+<mat-form-field appearance="fill">
+  <mat-label>Name</mat-label>
+  <mat-select [(ngModel)]="selectedName" [disabled]="!selectedType">
+    <mat-option *ngFor="let name of filteredNames" [value]="name.name">
+      {{ name.name }}
+    </mat-option>
+  </mat-select>
 </mat-form-field>

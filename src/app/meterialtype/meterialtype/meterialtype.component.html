@@ -1,0 +1,68 @@
+<div class="material-container">
+  <div class="header">
+    <div class="spacer"></div>
+    <div class="add-section">
+      <mat-form-field appearance="standard">
+        <mat-label>Material Type Name</mat-label>
+        <input matInput [(ngModel)]="newMaterialType" />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="isEditMode ? updateMaterial() : addMaterial()"
+      >
+        <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+        {{ isEditMode ? 'Update' : 'Add' }}
+      </button>
+      <button
+        mat-button
+        color="warn"
+        *ngIf="isEditMode"
+        (click)="cancelAction()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="custom-table"
+    style="width: 100%; margin-top: 16px"
+  >
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Material Name </th>
+      <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          mat-icon-button
+        
+          (click)="startEdit(element)"
+          aria-label="Edit Material"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          
+          (click)="deleteMaterialType(element._id)"
+          aria-label="Delete Material"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Table Headers and Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

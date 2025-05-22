@@ -6,6 +6,7 @@ export interface User {
   role: string;
   userName: string; 
   password: string;
+  _id?:string;
   
 }
 
@@ -21,4 +22,5 @@ export interface Userget {
   createdAt?: string;
   updatedAt?: string;
   token?: string;
+  userName?: string;
 }

@@ -60,7 +60,7 @@ export class MaterialComponent implements OnInit, AfterViewInit {
  deleteMaterial(meterial: Material) {
       if (confirm(`Are you sure you want to delete ${meterial.name}?`)) {
         console.log(meterial.name);
-        this.store.dispatch(deleteMaterial({ id: meterial.name }));
+        this.store.dispatch(deleteMaterial({ id: meterial._id }));
           this.store.dispatch(loadMaterials());
           
       }

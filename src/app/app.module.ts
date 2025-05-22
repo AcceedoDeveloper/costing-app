@@ -38,14 +38,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { UserComponent } from './master/user/user.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,  
-    LoadingSpinnerComponent,  MainLayoutComponent, AuthLayoutComponent, UserComponent,
+    LoadingSpinnerComponent,  MainLayoutComponent, AuthLayoutComponent,
    
   ],
   imports: [

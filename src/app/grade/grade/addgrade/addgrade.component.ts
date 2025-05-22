@@ -1,7 +1,10 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import {MaterialItem } from '../../../models/MaterialMap.model';
+
+
+import * as GradeActions from '../../store/grade.actions';
+import * as fromGrade from '../../store/grade.selectors';
 
 @Component({
   selector: 'app-addgrade',
@@ -9,49 +12,29 @@ import { MatChipInputEvent } from '@angular/material/chips';
   styleUrls: ['./addgrade.component.css']
 })
 export class AddgradeComponent implements OnInit {
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
-  currentFruit: string = '';
-  filteredFruits: string[] = [];
 
-  @ViewChild('fruitInput') fruitInput!: ElementRef<HTMLInputElement>;
+  constructor(private store : Store){}
 
-  ngOnInit(): void {
-    this.filterFruits();
-  }
+ materialMap: { [key: string]: any[] } = {};
+materialTypes: string[] = [];
+filteredNames: any[] = [];
 
-  filterFruits() {
-    const input = this.currentFruit.toLowerCase();
-    this.filteredFruits = input
-      ? this.allFruits.filter(fruit => fruit.toLowerCase().includes(input) && !this.fruits.includes(fruit))
-      : this.allFruits.slice().filter(f => !this.fruits.includes(f));
-  }
+selectedType: string | null = null;
+selectedName: string | null = null;
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    if (value && !this.fruits.includes(value)) {
-      this.fruits.push(value);
-    }
-    this.currentFruit = '';
-    this.filterFruits();
-  }
+ngOnInit(): void {
+  this.store.dispatch(GradeActions.loadMaterialMap());
 
-  remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-    }
-    this.filterFruits();
-  }
+  this.store.select(fromGrade.selectMaterialMap).subscribe(materialMap => {
+    console.log('data', materialMap);
+    this.materialMap = materialMap;
+    this.materialTypes = Object.keys(materialMap);
+  });
+}
 
-  selected(event: MatAutocompleteSelectedEvent): void {
-    const value = event.option.viewValue;
-    if (!this.fruits.includes(value)) {
-      this.fruits.push(value);
-    }
-    this.currentFruit = '';
-    this.fruitInput.nativeElement.value = '';
-    this.filterFruits();
-  }
+onTypeChange(type: string): void {
+  this.filteredNames = this.materialMap[type] || [];
+  this.selectedName = null; // Reset name selection
+}
+
 }

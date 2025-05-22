@@ -1,0 +1,27 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { MaterialType } from '../models/material-type.model';
+
+@Injectable({ providedIn: 'root' })
+export class MaterialTypeService {
+  private apiUrl = 'http://localhost:3005';
+
+  constructor(private http: HttpClient) {}
+
+  getMaterialTypes(): Observable<MaterialType[]> {
+    return this.http.get<MaterialType[]>(`${this.apiUrl}/getMaterialType`);
+  }
+
+  addMaterialType(material: Partial<MaterialType>): Observable<MaterialType> {
+    return this.http.post<MaterialType>(`${this.apiUrl}/addMaterialType`, material);
+  }
+
+  updateMaterialType(id: string, material: Partial<MaterialType>): Observable<MaterialType> {
+    return this.http.patch<MaterialType>(`${this.apiUrl}/updateMaterialType/${id}`, material);
+  }
+
+  deleteMaterialType(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/deleteMaterialType/${id}`);
+  }
+}

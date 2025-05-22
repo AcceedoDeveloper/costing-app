@@ -41,5 +41,21 @@ export class GradeEffects {
   )
 );
 
+loadMaterialMap$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(GradeActions.loadMaterialMap),
+    mergeMap(() =>
+      this.gradeService.getMaterialMap().pipe(
+        map(response =>
+          GradeActions.loadMaterialMapSuccess({ materialMap: response.materialMap }) // ✅ FIXED HERE
+        ),
+        catchError(error =>
+          of(GradeActions.loadMaterialMapFailure({ error }))
+        )
+      )
+    )
+  )
+);
+
 
 }

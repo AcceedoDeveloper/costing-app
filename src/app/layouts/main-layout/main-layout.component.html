@@ -9,8 +9,8 @@
         </button>
       </mat-list-item>
       <mat-list-item>
-        <button [routerLink]="['/master/user']" mat-button>
-          <mat-icon>dashboard</mat-icon> Dashboard
+        <button [routerLink]="['/master/role']" mat-button>
+          <mat-icon>person</mat-icon> User
         </button>
       </mat-list-item>
       <mat-list-item>
@@ -21,6 +21,11 @@
       <mat-list-item>
         <button [routerLink]="['/material']" mat-button>
           <mat-icon>construction</mat-icon> Material
+        </button>
+      </mat-list-item>
+          <mat-list-item>
+        <button [routerLink]="['/meterialtype']" mat-button>
+          <mat-icon>text_fields</mat-icon> Material Type
         </button>
       </mat-list-item>
 
@@ -38,14 +43,31 @@
     </mat-nav-list>
   </mat-drawer>
   
-  <mat-drawer-content>
+ <mat-drawer-content>
     <mat-toolbar color="primary">
       <button mat-icon-button (click)="toggleSidenav()">
         <mat-icon>menu</mat-icon>
       </button>
       <span>Costing Management</span>
-     
-      
+      <!-- Spacer to push logout button to the right -->
+      <span style="flex: 1 1 auto;"></span>
+      <!-- Circular Logout Button with Menu -->
+      <button mat-icon-button class="logout-button" [matMenuTriggerFor]="userMenu" matTooltip="User Profile" matTooltipPosition="below">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <!-- User Menu -->
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <div class="user-info">
+          <div class="user-details">
+            <span class="username">{{ username }}</span>
+            <span class="role">{{ role }}</span>
+          </div>
+          <button mat-menu-item (click)="onLogout($event)" [routerLink]="['/auth/login']">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </div>
+      </mat-menu>
     </mat-toolbar>
     <div class="main-content">
       <router-outlet></router-outlet>

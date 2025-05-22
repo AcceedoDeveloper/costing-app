@@ -46,8 +46,8 @@ export class MasterComponent implements OnInit {
     });
   }
 
-  openEditUserPopup(user: User) {
-    console.log('employee', user.UserCode);
+  openEditUserPopup(user: Userget) {
+    console.log('employee', user._id);
     this.dialog.open(AdduserComponent, {
       width: '500px',
       data: { user }

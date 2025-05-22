@@ -29,6 +29,7 @@ export class GradeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+   
     this.store.dispatch(GradeActions.loadGrades());
     this.grades$ = this.store.select(fromGrade.selectAllGrades);
     this.grades$.subscribe(grades => {
@@ -36,6 +37,7 @@ export class GradeComponent implements OnInit {
       this.dataSource.data = grades;
       this.dataSource.paginator = this.paginator;
     });
+    
   }
 
   openAddMeterialPopup() {

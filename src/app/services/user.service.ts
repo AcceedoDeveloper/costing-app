@@ -21,7 +21,7 @@ private apiUrl = 'http://localhost:3005';
   }
 
   updateUser(user: User): Observable<User> {
-    console.log('userID', user.UserCode); 
+    console.log('userID', user._id); 
     console.log(user);
 
     const updatedUser: Partial<User> = {
@@ -35,7 +35,7 @@ private apiUrl = 'http://localhost:3005';
     console.log('Modified user object:', updatedUser);
 
     
-    return this.http.put<User>(`${this.apiUrl}/UpdateUser/${user.UserCode}`, updatedUser);
+    return this.http.put<User>(`${this.apiUrl}/UpdateUser/${user._id}`, updatedUser);
   }
 
   deleteUser(id: string): Observable<{ message: string }> {

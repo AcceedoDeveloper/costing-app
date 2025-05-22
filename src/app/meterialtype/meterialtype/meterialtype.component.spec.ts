@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserComponent } from './user.component';
+import { MeterialtypeComponent } from './meterialtype.component';
 
-describe('UserComponent', () => {
-  let component: UserComponent;
-  let fixture: ComponentFixture<UserComponent>;
+describe('MeterialtypeComponent', () => {
+  let component: MeterialtypeComponent;
+  let fixture: ComponentFixture<MeterialtypeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserComponent ]
+      declarations: [ MeterialtypeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserComponent);
+    fixture = TestBed.createComponent(MeterialtypeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

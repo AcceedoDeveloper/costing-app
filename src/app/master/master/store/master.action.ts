@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from '../../../models/users.model';
+import {Role} from '../../../models/role.model';
+import { Roles } from 'src/app/models/MaterialMap.model';
 
 export const CREATE_USER = '[user page] create user';
 export const CREATE_USER_SUCCESS = '[user page] create user success';
@@ -30,3 +32,28 @@ export const updateUserFailure = createAction(UPDATE_USER_FAILURE, props<{ error
 export const deleteUser = createAction(DELETE_USER, props<{ id: string }>());
 export const deleteUserSuccess = createAction(DELETE_USER_SUCCESS, props<{ id: string }>());
 export const deleteUserFailure = createAction(DELETE_USER_FAILURE, props<{ error: string }>());
+
+
+
+
+export const loadRoles = createAction('[Role] Load Roles');
+export const loadRolesSuccess = createAction('[Role] Load Roles Success', props<{ roles: Role[] }>());
+export const loadRolesFailure = createAction('[Role] Load Roles Failure', props<{ error: string }>());
+
+export const addRole = createAction('[Role] Add Role', props<{ role: Partial<Role> }>());
+export const addRoleSuccess = createAction('[Role] Add Role Success', props<{ role: Role }>());
+export const addRoleFailure = createAction('[Role] Add Role Failure', props<{ error: string }>());
+
+export const updateRole = createAction('[Role] Update Role', props<{ id: string; role: Partial<Role> }>());
+export const updateRoleSuccess = createAction('[Role] Update Role Success', props<{ role: Role }>());
+export const updateRoleFailure = createAction('[Role] Update Role Failure', props<{ error: string }>());
+
+export const deleteRole = createAction('[Role] Delete Role', props<{ id: string }>());
+export const deleteRoleSuccess = createAction('[Role] Delete Role Success', props<{ id: string }>());
+export const deleteRoleFailure = createAction('[Role] Delete Role Failure', props<{ error: string }>());
+
+
+export const loadbaseRoles = createAction('[Roles] Load Roles');
+export const loadbaseRolesSuccess = createAction('[Role] Load Roles Success', props<{ roles: Roles[] }>());
+export const loadbaseRolesFailure = createAction('[Role] Load Roles Failure', props<{ error: string }>());
+

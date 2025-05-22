@@ -40,7 +40,13 @@ const routes: Routes = [
         path: 'grade',
         loadChildren: () => 
           import('./grade/grade.module').then(m => m.GradeModule)
+      },
+      {
+        path: 'meterialtype',
+        loadChildren: () =>
+          import('./meterialtype/meterialtype.module').then(m => m.MeterialtypeModule)
       }
+     
 
     ],
   },
@@ -56,6 +62,8 @@ const routes: Routes = [
     ],
   },
   { path: 'grade', loadChildren: () => import('./grade/grade.module').then(m => m.GradeModule) },
+  { path: 'meterialtype', loadChildren: () => import('./meterialtype/meterialtype.module').then(m => m.MeterialtypeModule) },
+  
   {
     path: '**',
     redirectTo: 'auth/login',

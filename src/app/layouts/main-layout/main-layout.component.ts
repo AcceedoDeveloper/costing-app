@@ -12,6 +12,8 @@ import { autoLogout } from '../../auth/state/auth.actions';
 export class MainLayoutComponent {
   sidenavOpened: boolean = false; 
   disableClose: boolean = true;
+  username = 'admin'; 
+  role = 'Admin'; 
 
   constructor(
     private store: Store

@@ -6,6 +6,8 @@ import { User } from '../../../../models/users.model';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { loadRoles } from '../../store/master.action';
+import { selectAllbaseRoles } from '../../store/master.selector';
 
 @Component({
   selector: 'app-adduser',
@@ -13,11 +15,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./adduser.component.css']
 })
 export class AdduserComponent implements OnInit {
+  roles$: Observable<string[]>;
   users$: Observable<User[]>;
   count$: Observable<number>;
   userForm: FormGroup;
   isEditMode: boolean = false;
-  editUserId: string | null = null;
+  editUserId: string | undefined = undefined; // Changed from string | null to string | undefined
 
   constructor(
     private store: Store,
@@ -25,31 +28,33 @@ export class AdduserComponent implements OnInit {
     public dialogRef: MatDialogRef<AdduserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user?: User }
   ) {
+
+    this.store.dispatch(loadRoles());
+    this.roles$ = this.store.select(selectAllbaseRoles);
+  
     this.users$ = this.store.select(getUsers);
     this.count$ = this.store.select(getUserCount);
 
-    // Initialize form with fields required by the server
     this.userForm = this.fb.group({
-      UserCode: ['', this.data?.user ? [] : [Validators.required]], // Required only for create
+      UserCode: ['', this.data?.user ? [] : [Validators.required]],
       UserName: ['', Validators.required],
       department: ['', Validators.required],
       role: ['', Validators.required],
       userName: ['', Validators.required],
-     password: ['', this.data?.user ? [] : [Validators.required]]
+      password: ['', this.data?.user ? [] : [Validators.required]]
     });
 
     if (data?.user) {
       this.isEditMode = true;
-      this.editUserId = data.user.id ;
+      this.editUserId = data.user._id; // This is fine since _id is string | undefined
 
-      
       this.userForm.patchValue({
         UserCode: data.user.UserCode,
         UserName: data.user.UserName,
         department: data.user.department,
         role: data.user.role,
-        userName: data.user.userName ||  '',
-        password: '' 
+        userName: data.user.userName || '',
+        password: '',
       });
     }
   }
@@ -58,34 +63,30 @@ export class AdduserComponent implements OnInit {
 
   submitUser(): void {
     if (this.userForm.valid) {
-      // Prepare user object based on mode
       const formValue = this.userForm.value;
       let user: User;
 
-      if (this.isEditMode) {
+      if (this.isEditMode && this.editUserId) {
         user = {
+          _id: this.editUserId,
           UserCode: formValue.UserCode,
           UserName: formValue.UserName,
           department: formValue.department,
           role: formValue.role,
           userName: formValue.userName,
-          password: formValue.password || this.data.user?.password
+          password: formValue.password || this.data.user?.password,
         };
-      } else {
-        user = {
-          UserCode: formValue.UserCode,
-          UserName: formValue.UserName,
-          department: formValue.department,
-          role: formValue.role,
-          userName: formValue.userName,
-          password: formValue.password
-        };
-      }
-
-      if (this.isEditMode) {
         console.log('Dispatching updateUser with:', user);
         this.store.dispatch(updateUser({ user }));
       } else {
+        user = {
+          UserCode: formValue.UserCode,
+          UserName: formValue.UserName,
+          department: formValue.department,
+          role: formValue.role,
+          userName: formValue.userName,
+          password: formValue.password,
+        };
         console.log('Dispatching createUser with:', user);
         this.store.dispatch(createUser({ user }));
       }
@@ -97,6 +98,4 @@ export class AdduserComponent implements OnInit {
   cancel(): void {
     this.dialogRef.close();
   }
-
-  
 }

@@ -15,12 +15,19 @@ import { ToastrModule } from 'ngx-toastr';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { userReducer } from './store/master.reducer';
+import { roleReducer } from './store/master.reducer';
 import { UserEffects } from './store/master.effects';
 import { USER_STATE_NAME } from './store/master.selector';
+import {ROLE_STATE_NAME} from './store/master.selector';
+import { RoleComponent } from './role/role.component';
+import { FormsModule } from '@angular/forms'; 
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
-  declarations: [MasterComponent, AdduserComponent],
+  declarations: [MasterComponent, AdduserComponent, RoleComponent],
   imports: [
+    MatSelectModule,
+     FormsModule,
     CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
@@ -32,8 +39,10 @@ import { USER_STATE_NAME } from './store/master.selector';
     MatInputModule,
     MasterRoutingModule,
     StoreModule.forFeature(USER_STATE_NAME, userReducer),
+    StoreModule.forFeature(ROLE_STATE_NAME, roleReducer ),
     EffectsModule.forFeature([UserEffects]),
     ToastrModule,
+   
   ]
 })
 export class MasterModule {}
