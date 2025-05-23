@@ -20,6 +20,8 @@ th.mat-header-cell, td.mat-cell {
 }
 
 .bold-header {
-  font-weight: bold; /* or use 'bold' */
-  font-size: 14px;
+  background-color: #5b84ff;
+  color: white;              
+  font-weight: 400;
+  font-size: 12px;
 }

@@ -11,30 +11,36 @@ import * as fromGrade from '../../store/grade.selectors';
   templateUrl: './addgrade.component.html',
   styleUrls: ['./addgrade.component.css']
 })
+
+
+
 export class AddgradeComponent implements OnInit {
+  constructor(private store: Store) {}
 
-  constructor(private store : Store){}
+  materialMap: { [key: string]: any[] } = {};
+  materialTypes: string[] = [];
 
- materialMap: { [key: string]: any[] } = {};
-materialTypes: string[] = [];
-filteredNames: any[] = [];
+  dropdowns: { selectedType: string | null; selectedName: string | null; filteredNames: any[] }[] = [
+    { selectedType: null, selectedName: null, filteredNames: [] }
+  ];
 
-selectedType: string | null = null;
-selectedName: string | null = null;
+  ngOnInit(): void {
+    this.store.dispatch(GradeActions.loadMaterialMap());
 
-ngOnInit(): void {
-  this.store.dispatch(GradeActions.loadMaterialMap());
+    this.store.select(fromGrade.selectMaterialMap).subscribe(materialMap => {
+      this.materialMap = materialMap;
+      this.materialTypes = Object.keys(materialMap);
+    });
+  }
 
-  this.store.select(fromGrade.selectMaterialMap).subscribe(materialMap => {
-    console.log('data', materialMap);
-    this.materialMap = materialMap;
-    this.materialTypes = Object.keys(materialMap);
-  });
+  onTypeChange(index: number, selectedType: string): void {
+    const filtered = this.materialMap[selectedType] || [];
+    this.dropdowns[index].filteredNames = filtered;
+    this.dropdowns[index].selectedName = null;
+  }
+
+  addDropdown(): void {
+    this.dropdowns.push({ selectedType: null, selectedName: null, filteredNames: [] });
+  }
 }
 
-onTypeChange(type: string): void {
-  this.filteredNames = this.materialMap[type] || [];
-  this.selectedName = null; // Reset name selection
-}
-
-}

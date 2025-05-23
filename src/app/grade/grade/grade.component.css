@@ -17,11 +17,21 @@ th.mat-header-cell, td.mat-cell {
 }
 
 th.mat-header-cell {
- 
-  font-weight: bold;
+  color: #ffffff;
+  background-color: #5b84ff;
+  border-bottom: 1px solid #000000;
+  font-weight: 400;
+  font-size: 12px;
+  
 }
 
 
 ::ng-deep .mat-paginator {
   background-color:  #ededf0; 
+}
+
+
+/* Table header background color */
+.custom-grade-table th[mat-header-cell] {
+ 
 }
