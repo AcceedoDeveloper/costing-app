@@ -5,6 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Process } from '../../models/process.model'; // Adjust the path as needed
 import * as ProcessActions from '../store/material-type.actions'; // Adjust the import as needed
 import { selectAllProcesses } from '../store/material-type.selectors';
+import { MatDialog } from '@angular/material/dialog';
+
+import {ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-process-type',
@@ -21,7 +24,7 @@ export class ProcessTypeComponent implements OnInit {
   newProcessName: string = '';
   isSaving = false;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.store.dispatch(ProcessActions.loadProcesses());
@@ -58,8 +61,20 @@ export class ProcessTypeComponent implements OnInit {
   }
 
   deleteProcess(id: string) {
-    this.store.dispatch(ProcessActions.deleteProcess({ id }));
-  }
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this process?'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(ProcessActions.deleteProcess({ id }));
+    }
+  });
+}
 
   cancelAction() {
     this.resetForm();

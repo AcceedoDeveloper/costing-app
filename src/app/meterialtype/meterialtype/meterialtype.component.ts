@@ -5,6 +5,9 @@ import { MaterialType } from '../../models/material-type.model';
 import * as MaterialTypeActions from '../store/material-type.actions';
 import * as fromMaterialType from '../store/material-type.selectors';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'app-meterialtype',
@@ -22,7 +25,7 @@ export class MeterialtypeComponent implements OnInit {
   newMaterialType: string = '';
   isSaving = false; // Added for optional loading state
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.store.dispatch(MaterialTypeActions.loadMaterialTypes());
@@ -69,9 +72,22 @@ export class MeterialtypeComponent implements OnInit {
     this.newMaterialType = material.name;
   }
 
-  deleteMaterialType(id: string) {
-    this.store.dispatch(MaterialTypeActions.deleteMaterialType({ id }));
-  }
+ deleteMaterialType(id: string) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this material type?'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(MaterialTypeActions.deleteMaterialType({ id }));
+    }
+  });
+}
+
 
   
 

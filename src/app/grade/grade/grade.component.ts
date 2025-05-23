@@ -8,6 +8,8 @@ import { Observable } from 'rxjs';
 import { Grade } from '../../models/garde.model';
 import * as GradeActions from '../store/grade.actions';
 import * as fromGrade from '../store/grade.selectors';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'app-grade',
@@ -46,11 +48,22 @@ export class GradeComponent implements OnInit {
     });
   }
 
-  deleteGrade(gradeNo: string) {
-  if (confirm('Are you sure you want to delete this grade?')) {
-    this.store.dispatch(GradeActions.deleteGrade({ gradeNo }));
-  }
+  deleteGrade(gradeNo: string): void {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Delete Confirmation',
+      message: 'Are you sure you want to delete this grade?'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(GradeActions.deleteGrade({ gradeNo }));
+    }
+  });
 }
+
 
 
 

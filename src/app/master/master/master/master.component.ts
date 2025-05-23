@@ -9,6 +9,8 @@ import { getUsers, getUserCount } from '../store/master.selector';
 import { User } from '../../../models/users.model';
 import { Observable } from 'rxjs';
 import { Userget } from '../../../models/users.model';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'app-master',
@@ -60,11 +62,21 @@ export class MasterComponent implements OnInit {
     });
   }
 
-  deleteUser(user: Userget) {
-    if (confirm(`Are you sure you want to delete ${user.UserName}?`)) {
-      console.log(user._id);
+ deleteUser(user: Userget) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Delete Confirmation',
+      message: `Are you sure you want to delete user "${user.UserName}"?`
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
       this.store.dispatch(deleteUser({ id: user._id }));
       this.store.dispatch(loadUsers());
     }
-  }
+  });
+}
+
 }

@@ -8,6 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Material } from '../../models/material.model';
 import { AddMaterialComponent} from './add-material/add-material.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'app-material',
@@ -57,14 +59,23 @@ export class MaterialComponent implements OnInit, AfterViewInit {
     console.log('Delete clicked for:', material);
   }
 
- deleteMaterial(meterial: Material) {
-      if (confirm(`Are you sure you want to delete ${meterial.name}?`)) {
-        console.log(meterial.name);
-        this.store.dispatch(deleteMaterial({ id: meterial._id }));
-          this.store.dispatch(loadMaterials());
-          
-      }
+ deleteMaterial(material: Material): void {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Delete Confirmation',
+      message: `Are you sure you want to delete ${material.name}?`
     }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(deleteMaterial({ id: material._id }));
+      this.store.dispatch(loadMaterials());
+    }
+  });
+}
+
 
     openAddMeterialPopup(){
        this.dialog.open(AddMaterialComponent, {

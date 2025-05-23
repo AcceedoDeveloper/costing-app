@@ -5,6 +5,8 @@ import { Role } from '../../../models/role.model';
 import * as RoleActions from '../store/master.action';
 import { selectAllRoles } from '../store/master.selector';
 import { MatTableDataSource } from '@angular/material/table';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-role',
@@ -21,7 +23,7 @@ export class RoleComponent implements OnInit {
   newRoleName: string = '';
   isSaving = false;
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.store.dispatch(RoleActions.loadRoles());
@@ -59,8 +61,21 @@ export class RoleComponent implements OnInit {
   }
 
   deleteRole(id: string) {
-    this.store.dispatch(RoleActions.deleteRole({ id }));
-  }
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Delete Confirmation',
+      message: 'Are you sure you want to delete this role?'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(RoleActions.deleteRole({ id }));
+    }
+  });
+}
+
 
   cancelAction() {
     this.resetForm();

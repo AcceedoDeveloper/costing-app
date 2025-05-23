@@ -38,16 +38,18 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 
-
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,  
-    LoadingSpinnerComponent,  MainLayoutComponent, AuthLayoutComponent,
+    LoadingSpinnerComponent,  MainLayoutComponent, AuthLayoutComponent, ConfirmDialogComponent,
    
   ],
   imports: [
+     MatDialogModule,
     RouterModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
