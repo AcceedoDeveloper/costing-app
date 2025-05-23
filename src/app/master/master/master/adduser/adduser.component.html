@@ -1,11 +1,11 @@
-<div class="p-4">
-  <h2 class="text-xl font-bold mb-4">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+<div class="">
+  <h2 class="text-xl font-bold ">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
   <form [formGroup]="userForm" (ngSubmit)="submitUser()">
   
     <div class="box">
      
     
-      <mat-form-field *ngIf="!isEditMode" appearance="outline" class="matfiles">
+      <mat-form-field *ngIf="!isEditMode" appearance="standard" class="matfiles">
         <mat-label>User Code</mat-label>
         <input matInput id="UserCode" formControlName="UserCode" placeholder="Enter user code" />
         <mat-error *ngIf="userForm.get('UserCode')?.hasError('required')">
@@ -14,7 +14,7 @@
       </mat-form-field>
 
     
-      <mat-form-field appearance="outline" class="matfiles">
+      <mat-form-field appearance="standard" class="matfiles">
         <mat-label>Department</mat-label>
         <input matInput id="department" formControlName="department" placeholder="Enter department" />
         <mat-error *ngIf="userForm.get('department')?.hasError('required')">
@@ -29,7 +29,7 @@
     
     <div class="box">
       
-      <mat-form-field appearance="outline" class="matfiles">
+      <mat-form-field appearance="standard" class="matfiles">
         <mat-label>User Name</mat-label>
         <input matInput id="UserName" formControlName="UserName" placeholder="Enter user name" />
         <mat-error *ngIf="userForm.get('UserName')?.hasError('required')">
@@ -41,7 +41,7 @@
      
 
 
-      <mat-form-field appearance="outline" class="matfiles">
+      <mat-form-field appearance="standard" class="matfiles">
   <mat-label>Role</mat-label>
   <mat-select id="role" formControlName="role">
     <mat-option *ngFor="let role of roles$ | async" [value]="role.name">
@@ -58,7 +58,7 @@
 
 
      <div class="box">
-      <mat-form-field appearance="outline" class="matfiles">
+      <mat-form-field appearance="standard" class="matfiles">
         <mat-label>User Name (login)</mat-label>
         <input matInput id="userName" formControlName="userName" placeholder="Enter login userName" />
         <mat-error *ngIf="userForm.get('userName')?.hasError('required')">
@@ -68,7 +68,7 @@
 
 
       
-      <mat-form-field appearance="outline" class="matfiles">
+      <mat-form-field appearance="standard" class="matfiles">
         <mat-label>Password</mat-label>
         <input matInput id="password" type="password" formControlName="password" placeholder="Enter password" />
         <mat-error *ngIf="userForm.get('password')?.hasError('required')">

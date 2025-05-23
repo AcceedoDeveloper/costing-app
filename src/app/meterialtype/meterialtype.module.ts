@@ -18,9 +18,10 @@ import { FormsModule } from '@angular/forms';
 
 import { materialTypeReducer } from './store/material-type.reducer';
 import { MaterialTypeEffects } from './store/material-type.effects';
+import { ProcessTypeComponent } from './process-type/process-type.component';
 
 @NgModule({
-  declarations: [MeterialtypeComponent],
+  declarations: [MeterialtypeComponent, ProcessTypeComponent],
   imports: [
     MatTableModule,
     MatFormFieldModule,

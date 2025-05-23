@@ -48,14 +48,14 @@ export class MasterComponent implements OnInit {
 
   openAddUserPopup() {
     this.dialog.open(AdduserComponent, {
-      width: '500px',
+      width: '450px',
     });
   }
 
   openEditUserPopup(user: Userget) {
     console.log('employee', user._id);
     this.dialog.open(AdduserComponent, {
-      width: '500px',
+      width: '450px',
       data: { user }
     });
   }
