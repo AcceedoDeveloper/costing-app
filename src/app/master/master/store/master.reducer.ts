@@ -148,7 +148,6 @@ const _roleReducer = createReducer(
 
 export function roleReducer(state: RoleState | undefined, action: any) {
   const newState = _roleReducer(state, action);
-  console.log('RoleReducer received action:', action);
-  console.log('Role new state:', newState);
+  
   return newState;
 }

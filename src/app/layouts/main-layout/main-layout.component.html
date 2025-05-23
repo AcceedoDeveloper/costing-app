@@ -4,43 +4,73 @@
     
     <mat-nav-list>
       <mat-list-item>
-        <button  [routerLink]="['/master']" mat-button>
-          <mat-icon>supervisor_account</mat-icon> Master
+        <button  [routerLink]="['/dashboard']" mat-button>
+          <mat-icon>dashboard</mat-icon> Dashboard
         </button>
       </mat-list-item>
-      <mat-list-item>
-        <button [routerLink]="['/master/role']" mat-button>
-          <mat-icon>person</mat-icon> User
+
+
+      <mat-list-item (click)="isAdminMenuOpen = !isAdminMenuOpen">
+        <button mat-button>
+          <mat-icon>admin_panel_settings</mat-icon> Admin
+          <mat-icon style="margin-left:auto">{{ isAdminMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
         </button>
       </mat-list-item>
+
+      <div *ngIf="isAdminMenuOpen" class="nested-list">
+          <mat-list-item>
+            <button [routerLink]="['/master']" mat-button routerLinkActive="active">
+              <mat-icon>person</mat-icon> User
+            </button>
+          </mat-list-item>
+          <mat-list-item>
+            <button [routerLink]="['/master/role']" mat-button routerLinkActive="active">
+              <mat-icon>shield</mat-icon> Role
+            </button>
+          </mat-list-item>
+      </div>
+
+      <mat-list-item (click)="isMasterMenuOpen = !isMasterMenuOpen">
+          <button mat-button>
+            <mat-icon>settings</mat-icon> Master
+            <mat-icon style="margin-left:auto">{{ isMasterMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+      </mat-list-item>
+
+
+
+          <div *ngIf="isMasterMenuOpen" class="nested-list">
+              <mat-list-item>
+                <button [routerLink]="['/material']" mat-button routerLinkActive="active">
+                  <mat-icon>construction</mat-icon> Material
+                </button>
+              </mat-list-item>
+              <mat-list-item>
+                <button [routerLink]="['/grade']" mat-button routerLinkActive="active">
+                  <mat-icon>grade</mat-icon> Grade
+                </button>
+              </mat-list-item>
+              <mat-list-item>
+                <button [routerLink]="['/meterialtype']" mat-button routerLinkActive="active">
+                  <mat-icon>text_fields</mat-icon> Material Type
+                </button>
+              </mat-list-item>
+            </div>
+      
       <mat-list-item>
         <button [routerLink]="['/posts']" mat-button>
           <mat-icon>home</mat-icon> Home
         </button>
       </mat-list-item>
-      <mat-list-item>
-        <button [routerLink]="['/material']" mat-button>
-          <mat-icon>construction</mat-icon> Material
-        </button>
-      </mat-list-item>
-          <mat-list-item>
-        <button [routerLink]="['/meterialtype']" mat-button>
-          <mat-icon>text_fields</mat-icon> Material Type
-        </button>
-      </mat-list-item>
-
-       <mat-list-item>
-        <button [routerLink]="['/grade']" mat-button>
-          <mat-icon>grade</mat-icon> Grade
-        </button>
-      </mat-list-item>
      
-      <mat-list-item>
-        <button (click)="onLogout($event)" [routerLink]="['/auth/login']" mat-button>
-          <mat-icon>logout</mat-icon> Logout
-        </button>
-      </mat-list-item>
+
+     
+     
+     
     </mat-nav-list>
+
+
+    
   </mat-drawer>
   
  <mat-drawer-content>

@@ -15,6 +15,9 @@ export class MainLayoutComponent {
   username = 'admin'; 
   role = 'Admin'; 
 
+  isAdminMenuOpen: boolean = false;
+  isMasterMenuOpen: boolean = false;
+
   constructor(
     private store: Store
   ) {}

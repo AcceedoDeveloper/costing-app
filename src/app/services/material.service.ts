@@ -32,7 +32,7 @@ export class MaterialService {
 
   
   updateMaterial(material: Material): Observable<Material> {
-    return this.http.put<Material>(`${this.apiUrl}/updateMaterial`, material);
+    return this.http.put<Material>(`${this.apiUrl}/updateMaterial/${material._id}`, material);
   }
 
 

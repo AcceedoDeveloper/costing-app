@@ -30,7 +30,13 @@ export class MasterComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(loadUsers());
+    this.store.select(getUsers).subscribe(users => {
+    console.log('Users from Store:', users);
+    this.dataSource.data = users;
+    this.dataSource.paginator = this.paginator;
+  });
     this.users$.subscribe(users => {
+      console.log("data", users);
       this.dataSource.data = users;
       this.dataSource.paginator = this.paginator;
     });

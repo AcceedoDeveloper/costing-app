@@ -27,7 +27,7 @@ private apiUrl = 'http://localhost:3005';
     const updatedUser: Partial<User> = {
       UserName: user.UserName,
       department: user.department,
-      role: user.role,
+      role: typeof user.role === 'object' && user.role !== null ? user.role.name : user.role,
       userName: user.userName,
       password: user.password
     };

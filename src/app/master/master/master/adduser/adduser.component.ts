@@ -6,7 +6,7 @@ import { User } from '../../../../models/users.model';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { loadRoles } from '../../store/master.action';
+import { loadRoles, loadUsers } from '../../store/master.action';
 import { selectAllbaseRoles } from '../../store/master.selector';
 
 @Component({
@@ -40,8 +40,8 @@ export class AdduserComponent implements OnInit {
       UserName: ['', Validators.required],
       department: ['', Validators.required],
       role: ['', Validators.required],
-      userName: ['', Validators.required],
-      password: ['', this.data?.user ? [] : [Validators.required]]
+      userName: [''],
+      password: ['']
     });
 
     if (data?.user) {
@@ -52,7 +52,7 @@ export class AdduserComponent implements OnInit {
         UserCode: data.user.UserCode,
         UserName: data.user.UserName,
         department: data.user.department,
-        role: data.user.role,
+        role: typeof data.user.role === 'string' ? data.user.role : data.user.role?.name,
         userName: data.user.userName || '',
         password: '',
       });
@@ -78,6 +78,7 @@ export class AdduserComponent implements OnInit {
         };
         console.log('Dispatching updateUser with:', user);
         this.store.dispatch(updateUser({ user }));
+        this.store.dispatch(loadUsers());
       } else {
         user = {
           UserCode: formValue.UserCode,
