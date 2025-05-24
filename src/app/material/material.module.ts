@@ -17,10 +17,12 @@ import { MaterialEffects } from './store/material.effects';
 import { AddMaterialComponent } from './material/add-material/add-material.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent],
   imports: [
+    MatSelectModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatPaginatorModule,

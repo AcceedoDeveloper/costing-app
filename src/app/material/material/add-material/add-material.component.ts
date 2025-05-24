@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { createMaterial, updateMaterial, loadMaterials} from '../../store/material.actions';
 import { Material } from '../../../models/material.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {getMaterialMap } from '../../store/material.selector';
+import { loadMaterialMap } from '../../store/material.actions';
 
 @Component({
   selector: 'app-add-material',
@@ -15,6 +17,8 @@ export class AddMaterialComponent implements OnInit {
   materialForm: FormGroup;
   isEditMode = false;
   materialId?: string;
+  materialTypeKeys: string[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -30,16 +34,24 @@ export class AddMaterialComponent implements OnInit {
       unitCost: [0, [Validators.required, Validators.min(0.01)]],
     });
 
-    if (data && data.isEditMode) {
-    this.isEditMode = true;
-    this.materialId = data.material._id; 
-    this.materialForm.patchValue(data.material); 
-  }
+   if (data && data.isEditMode) {
+  this.isEditMode = true;
+  this.materialId = data.material._id;
+  this.materialForm.patchValue(data.material);
+}
+
   }
 
-  ngOnInit(): void {
-    
-  }
+
+
+ngOnInit(): void {
+  this.store.dispatch(loadMaterialMap()); 
+  this.store.select(getMaterialMap).subscribe((materialMap) => {
+    this.materialTypeKeys = Object.keys(materialMap); 
+  });
+}
+
+
 
  submitMaterial(): void {
   if (this.materialForm.valid) {

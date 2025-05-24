@@ -32,3 +32,18 @@ export const deleteGradeFailure = createAction(
   '[Grade] Delete Grade Failure',
   props<{ error: any }>()
 );
+
+export const addGrade = createAction(
+  '[Grade] Add Grade',
+  props<{ grade: any }>()
+);
+
+export const addGradeSuccess = createAction(
+  '[Grade] Add Grade Success',
+  props<{ response: any }>()
+);
+
+export const addGradeFailure = createAction(
+  '[Grade] Add Grade Failure',
+  props<{ error: any }>()
+);

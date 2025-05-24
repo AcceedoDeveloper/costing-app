@@ -11,6 +11,7 @@ import * as fromGrade from '../store/grade.selectors';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 
+
 @Component({
   selector: 'app-grade',
   templateUrl: './grade.component.html',
@@ -20,9 +21,10 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 
 
 export class GradeComponent implements OnInit {
+  isEditMode: boolean = false;
   grades$!: Observable<Grade[]>;
   dataSource!: MatTableDataSource<Grade>;
-  displayedColumns: string[] = ['gradeNo', 'name', 'price', 'totalQuantity', 'materialsUsed', 'actions', 'delete'];
+displayedColumns: string[] = ['gradeNo', 'name',  'rawMaterial', 'actions', 'delete'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -44,7 +46,7 @@ export class GradeComponent implements OnInit {
 
   openAddMeterialPopup() {
     this.dialog.open(AddgradeComponent, {
-      width: '500px',
+      width: '480px',
     });
   }
 
@@ -60,10 +62,19 @@ export class GradeComponent implements OnInit {
   dialogRef.afterClosed().subscribe(result => {
     if (result === 'confirm') {
       this.store.dispatch(GradeActions.deleteGrade({ gradeNo }));
+      this.store.dispatch(GradeActions.loadGrades()); 
     }
   });
 }
 
+
+openeditMeterialPopup(grade: Grade):void {
+  console.log('Opening edit popup for grade:', grade);
+  this.dialog.open(AddgradeComponent, {
+    width: '480px',
+    data: { grade, isEditMode: true } // pass the grade data and edit mode flag to the popup
+  });
+}
 
 
 

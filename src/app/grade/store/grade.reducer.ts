@@ -3,6 +3,7 @@ import * as GradeActions from './grade.actions';
 import { Grade } from '../../models/garde.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 
+
 export interface GradeState {
   grades: Grade[];
    materialMap: { [key: string]: MaterialItem[] };
@@ -32,6 +33,14 @@ export const gradeReducer = createReducer(
     ...state,
     error
   })),
+  on(GradeActions.addGradeSuccess, (state, { response }) => ({
+    ...state,
+    grades: [...state.grades, response]
+  })),
+  on(GradeActions.addGradeFailure, (state, { error }) => ({
+    ...state,
+    error
+  }))
 
 
 );

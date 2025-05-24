@@ -91,6 +91,9 @@ mat-form-field {
   width: 200px;
 }
 
+.custom-table th[mat-header-cell]:nth-child(2) {
+  padding-left: 16px; /* Adjust the value as needed */
+}
 
 
 

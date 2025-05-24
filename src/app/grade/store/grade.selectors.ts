@@ -11,3 +11,15 @@ export const selectGradeError = createSelector(selectGradeState, state => state.
 
 
 export const selectMaterialMap = createSelector(selectGradeState, state => state.materialMap);
+
+export const selectGradeResponse = createSelector(
+  selectGradeState,
+  (state: GradeState) => state.grades
+);
+
+
+
+export const selectGradeLoading = createSelector(
+  selectGradeState,
+  (state: GradeState) => state.error === null && state.grades.length === 0
+);

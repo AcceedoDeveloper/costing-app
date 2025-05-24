@@ -37,4 +37,8 @@ getMaterialMap() {
   return this.http.delete<{ message: string }>(`http://localhost:3005/deleteGrade/${gradeNo}`);
 }
 
+   addGrade(gradeData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/addGrade`, gradeData);
+  }
+
 }

@@ -10,6 +10,7 @@
         mat-raised-button
         color="primary"
         (click)="isEditMode ? updateProcess() : addProcess()"
+        [disabled]="newProcessName.trim().length === 0"
       >
         <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
         {{ isEditMode ? 'Update' : 'Add' }}

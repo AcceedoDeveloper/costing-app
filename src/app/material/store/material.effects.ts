@@ -10,13 +10,15 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , updateMaterial, updateMaterialSuccess, updateMaterialFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
+import { GradeService} from '../../services/grade.service';
+import { loadMaterialMap, loadMaterialMapSuccess, loadMaterialMapFailure } from './material.actions';
 
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 
 export class MaterialEffects {
-    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService) {}
+    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService, private gradeService: GradeService) {}
 
 
  loadMaterials$ = createEffect(() =>
@@ -101,6 +103,23 @@ updateMaterialSuccess$ = createEffect(() =>
   );
 });
 
+
+
+loadMaterialMap$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(loadMaterialMap),
+    mergeMap(() =>
+      this.gradeService.getMaterialMap().pipe(
+        map(response =>
+          loadMaterialMapSuccess({ materialMap: response.materialMap }) // ✅ FIXED HERE
+        ),
+        catchError(error =>
+          of(loadMaterialMapFailure({ error }))
+        )
+      )
+    )
+  )
+);
 
 }
 

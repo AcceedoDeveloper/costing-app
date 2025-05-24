@@ -10,6 +10,7 @@
         mat-raised-button
         color="primary"
         (click)="isEditMode ? updateMaterial() : addMaterial()"
+        [disabled]="newMaterialType.trim().length === 0"
       >
         <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
         {{ isEditMode ? 'Update' : 'Add' }}

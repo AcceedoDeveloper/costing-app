@@ -58,4 +58,22 @@ loadMaterialMap$ = createEffect(() =>
 );
 
 
+  addGrade$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(GradeActions.addGrade),
+      mergeMap(action =>
+        this.gradeService.addGrade(action.grade).pipe(
+          map(response => {
+            this.toastr.success('Grade added successfully!', 'Success'); // ✅ success toast
+            return GradeActions.addGradeSuccess({ response });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to add grade.', 'Error'); // ✅ error toast
+            return of(GradeActions.addGradeFailure({ error }));
+          })
+        )
+      )
+    )
+  );
+
 }

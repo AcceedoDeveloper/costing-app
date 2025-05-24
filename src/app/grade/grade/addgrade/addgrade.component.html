@@ -1,31 +1,63 @@
-<div *ngFor="let group of dropdowns; let i = index" style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-  
-  <!-- Type Dropdown -->
-  <mat-form-field appearance="outline" style="width: 150px;">
-    <mat-label>Type</mat-label>
-    <mat-select [(ngModel)]="group.selectedType" (selectionChange)="onTypeChange(i, $event.value)">
-      <mat-option *ngFor="let type of materialTypes" [value]="type">
-        {{ type }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+<div class="form-container">
+  <div class="grade-fields-container">
+    <!-- Grade Name -->
+    <mat-form-field appearance="outline" class="grade-field">
+      <mat-label>Grade Name</mat-label>
+      <input matInput [(ngModel)]="gradeName" placeholder="Enter grade name" />
+    </mat-form-field>
 
-  <!-- Name Dropdown -->
-  <mat-form-field appearance="outline" style="width: 150px;">
-    <mat-label>Name</mat-label>
-    <mat-select [(ngModel)]="group.selectedName" [disabled]="!group.selectedType">
-      <mat-option *ngFor="let name of group.filteredNames" [value]="name.name">
-        {{ name.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <!-- Grade Number -->
+    <mat-form-field appearance="outline" class="grade-field">
+      <mat-label>Grade Number</mat-label>
+      <input matInput [(ngModel)]="gradeNo" placeholder="Enter grade number" />
+    </mat-form-field>
+  </div>
 
-  <!-- Add Button (only on the last row and if it's filled) -->
-  <button
-    mat-icon-button
-    color="primary"
-    (click)="addDropdown()"
-    *ngIf="i === dropdowns.length - 1 && group.selectedType && group.selectedName">
-    <mat-icon>add</mat-icon>
-  </button>
+  <!-- Scrollable dropdowns container -->
+  <div class="dropdowns-scroll-container">
+    <div class="dropdowns-wrapper">
+      <div *ngFor="let group of dropdowns; let i = index" class="dropdown-group">
+        <!-- Type Dropdown -->
+        <mat-form-field appearance="standard" class="type-field">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="group.selectedType" (selectionChange)="onTypeChange(i, $event.value)">
+            <mat-option *ngFor="let type of materialTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Name Dropdown -->
+        <mat-form-field appearance="standard" class="name-field">
+          <mat-label>Name</mat-label>
+          <mat-select [(ngModel)]="group.selectedName" [disabled]="!group.selectedType">
+            <mat-option *ngFor="let name of group.filteredNames" [value]="name.name">
+              {{ name.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Quantity Input -->
+        <mat-form-field appearance="standard" class="quantity-field">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" [(ngModel)]="group.quantity" />
+        </mat-form-field>
+
+        <!-- Add Button (positioned outside) -->
+        <button
+          mat-icon-button
+          color="primary"
+          class="add-button"
+          (click)="addDropdown()"
+          *ngIf="i === dropdowns.length - 1 && group.selectedType && group.selectedName && group.quantity">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="submit-button-container">
+    <button mat-raised-button color="primary" (click)="submitGrade()">Submit Grade</button>
+  </div>
 </div>

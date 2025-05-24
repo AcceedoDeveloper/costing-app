@@ -1,14 +1,17 @@
 import { createReducer, on } from '@ngrx/store';
 import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess 
-  , createMaterialSuccess, updateMaterialSuccess
+  , createMaterialSuccess, updateMaterialSuccess, loadMaterialMapSuccess, loadMaterialMapFailure
 } from './material.actions';
 import { Material } from '../../models/material.model';
+import {MaterialItem} from '../../models/MaterialMap.model';
+
 
 
 interface MaterialState {
   materials: Material[];
   count: number;
   error: string | null;
+  materialMap: { [key: string]: MaterialItem[] };
 }
 
 
@@ -16,6 +19,7 @@ const initialState: MaterialState = {
   materials: [],
   count: 0,
   error: null,
+  materialMap: {},
 };
 
 const _materialReducer = createReducer(
@@ -51,6 +55,14 @@ const _materialReducer = createReducer(
     count: state.count + 1,
     error: null,
   })),
+  on(loadMaterialMapSuccess, (state, action) => ({
+    ...state,
+    materialMap: action.materialMap,
+  })),
+  on(loadMaterialMapFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  }))
 );
 
 export function materialReducer(state: MaterialState | undefined, action: any) {

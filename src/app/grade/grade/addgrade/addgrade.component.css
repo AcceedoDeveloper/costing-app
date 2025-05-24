@@ -1,0 +1,136 @@
+/* Main container */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  max-height: 70vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Grade fields container */
+.grade-fields-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 94%;
+}
+
+/* Grade fields */
+.grade-field {
+  flex: 1;
+  min-width: 150px;
+  max-width: 300px;
+}
+
+/* Scrollable dropdown area */
+.dropdowns-scroll-container {
+  overflow-y: auto; /* Keep vertical scrolling */
+  overflow-x: hidden; /* Disable horizontal scrolling */
+  max-height: calc(70vh - 220px);
+  position: relative;
+  padding-right: 40px; /* Adjust to match the space needed for the add button */
+  box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.dropdowns-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Each dropdown row */
+.dropdown-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  padding-right: 40px; /* Space for the add button */
+  width: 100%; /* Ensure the group doesn't exceed the container */
+  box-sizing: border-box;
+}
+
+/* Form fields */
+.type-field, .name-field, .quantity-field {
+  flex: 1;
+  min-width: 120px;
+}
+
+.type-field {
+  max-width: 150px;
+}
+
+.name-field {
+  max-width: 150px;
+}
+
+.quantity-field {
+  max-width: 100px;
+}
+
+/* Add button positioned outside */
+.add-button {
+  position: absolute;
+  right: -43px; /* Move the button inside the container to avoid overflow */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Submit button */
+.submit-button-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Scrollbar styling */
+.dropdowns-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dropdowns-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.dropdowns-scroll-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.dropdowns-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .grade-fields-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .grade-field {
+    min-width: 100%;
+  }
+
+  .dropdown-group {
+    flex-wrap: wrap;
+    padding-right: 0;
+  }
+
+  .add-button {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    margin-left: auto;
+  }
+
+  .type-field, .name-field, .quantity-field {
+    min-width: calc(50% - 5px);
+  }
+}

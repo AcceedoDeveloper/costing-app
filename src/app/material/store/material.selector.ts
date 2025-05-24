@@ -13,4 +13,13 @@ export const getMaterials = createSelector(
     console.log('Selector state:', state); // Add this for debugging
     return state.materials;
   }
+
+  
+);
+
+
+
+export const getMaterialMap = createSelector(
+  getMaterialState,
+  (state) => state.materialMap
 );

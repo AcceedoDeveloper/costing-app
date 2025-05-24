@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Material} from '../../models/material.model';
+import {MaterialItem} from '../../models/MaterialMap.model';
+
 
 
 export const LOAD_MATERIALS = '[Material page] load materials';
@@ -31,4 +33,17 @@ export const updateMaterialSuccess = createAction(UPDATE_MATERIAL_SUCCESS, props
 export const updateMaterialFailure = createAction(
   '[Material] Update Material Failure',
   props<{ error: string }>()
+);
+
+
+
+
+export const loadMaterialMap = createAction('[Grade] Load Material Map');
+export const loadMaterialMapSuccess = createAction(
+  '[Grade] Load Material Map Success',
+  props<{ materialMap: { [key: string]: MaterialItem[] } }>()
+);
+export const loadMaterialMapFailure = createAction(
+  '[Grade] Load Material Map Failure',
+  props<{ error: any }>()
 );
