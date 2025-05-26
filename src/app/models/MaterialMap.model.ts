@@ -15,3 +15,9 @@ export interface Roles {
   _id: string;
   name: string;
 }
+
+
+export interface MaterialMapResponse {
+  materialMap: MaterialMap;
+  roleMap: Roles[];
+}

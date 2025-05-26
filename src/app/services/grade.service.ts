@@ -5,6 +5,11 @@ import { Grade } from '../models/garde.model';
 import { MaterialItem} from '../models/MaterialMap.model';
 import { Roles } from '../models/MaterialMap.model';
 import { map } from 'rxjs/operators';
+import {  tap } from 'rxjs/operators';
+import { MaterialMapResponse } from '../models/MaterialMap.model';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 
 
 @Injectable({
@@ -16,10 +21,17 @@ export class GradeService {
   constructor(private http: HttpClient) { }
 
 
-  // grade.service.ts
-getMaterialMap() {
-  return this.http.get<{ materialMap: { [key: string]: MaterialItem[] } }>('http://localhost:3005/data');
+getMaterialMap(): Observable<MaterialMapResponse> {
+  return this.http.get<MaterialMapResponse>('http://localhost:3005/data').pipe(
+   
+    catchError(error => {
+     
+      return throwError(() => error);
+    })
+  );
 }
+
+
 
 
   getRoles(): Observable<Roles[]> {
@@ -40,5 +52,10 @@ getMaterialMap() {
    addGrade(gradeData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/addGrade`, gradeData);
   }
+
+  updateGrade(id: string, gradeData: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/updateGrade/${id}`, gradeData);
+}
+
 
 }

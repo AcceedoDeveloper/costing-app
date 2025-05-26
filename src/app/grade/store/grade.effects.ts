@@ -5,6 +5,7 @@ import * as GradeActions from './grade.actions';
 import { catchError, map, mergeMap,  } from 'rxjs/operators';
 import { of} from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { tap } from 'rxjs/operators';
 
 
 @Injectable()
@@ -42,20 +43,23 @@ export class GradeEffects {
 );
 
 loadMaterialMap$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(GradeActions.loadMaterialMap),
-    mergeMap(() =>
-      this.gradeService.getMaterialMap().pipe(
-        map(response =>
-          GradeActions.loadMaterialMapSuccess({ materialMap: response.materialMap }) // ✅ FIXED HERE
-        ),
-        catchError(error =>
-          of(GradeActions.loadMaterialMapFailure({ error }))
+    this.actions$.pipe(
+      ofType(GradeActions.loadMaterialMap),
+      mergeMap(() =>
+        this.gradeService.getMaterialMap().pipe(
+          map(response =>
+            GradeActions.loadMaterialMapSuccess({ materialMap: response.materialMap })
+          ),
+          tap(action => console.log('Material Map Data:', action.materialMap)), // Log the materialMap data
+          catchError(error =>
+            of(GradeActions.loadMaterialMapFailure({ error })).pipe(
+              tap(() => console.log('Error loading material map:', error)) // Optional: Log errors as well
+            )
+          )
         )
       )
     )
-  )
-);
+  );
 
 
   addGrade$ = createEffect(() =>
@@ -75,5 +79,24 @@ loadMaterialMap$ = createEffect(() =>
       )
     )
   );
+
+  updateGrade$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(GradeActions.updateGrade),
+    mergeMap(action =>
+      this.gradeService.updateGrade(action.id, action.grade).pipe(
+        map(updatedGrade => {
+          this.toastr.success('Grade updated successfully!', 'Success');
+          return GradeActions.updateGradeSuccess({ updatedGrade });
+        }),
+        catchError(error => {
+          this.toastr.error('Failed to update grade.', 'Error');
+          return of(GradeActions.updateGradeFailure({ error }));
+        })
+      )
+    )
+  )
+);
+
 
 }

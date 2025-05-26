@@ -40,7 +40,19 @@ export const gradeReducer = createReducer(
   on(GradeActions.addGradeFailure, (state, { error }) => ({
     ...state,
     error
-  }))
+  })),
+
+  on(GradeActions.updateGradeSuccess, (state, { updatedGrade }) => ({
+  ...state,
+  grades: state.grades.map(grade =>
+    grade._id === updatedGrade._id ? updatedGrade : grade
+  )
+})),
+on(GradeActions.updateGradeFailure, (state, { error }) => ({
+  ...state,
+  error
+}))
+
 
 
 );

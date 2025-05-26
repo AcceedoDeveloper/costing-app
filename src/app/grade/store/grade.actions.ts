@@ -47,3 +47,18 @@ export const addGradeFailure = createAction(
   '[Grade] Add Grade Failure',
   props<{ error: any }>()
 );
+
+export const updateGrade = createAction(
+  '[Grade] Update Grade',
+  props<{ id: string, grade: any }>()
+);
+
+export const updateGradeSuccess = createAction(
+  '[Grade] Update Grade Success',
+  props<{ updatedGrade: any }>()
+);
+
+export const updateGradeFailure = createAction(
+  '[Grade] Update Grade Failure',
+  props<{ error: any }>()
+);
