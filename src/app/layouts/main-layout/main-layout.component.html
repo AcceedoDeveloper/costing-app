@@ -9,7 +9,6 @@
         </button>
       </mat-list-item>
 
-
       <mat-list-item (click)="isAdminMenuOpen = !isAdminMenuOpen">
         <button mat-button>
           <mat-icon>admin_panel_settings</mat-icon> Admin
@@ -38,6 +37,31 @@
               <mat-icon>group</mat-icon> Department
             </button>
           </mat-list-item>
+          <!-- Material Input Nested Menu -->
+          <mat-list-item (click)="isMaterialInputOpen = !isMaterialInputOpen">
+            <button mat-button>
+              <mat-icon>input</mat-icon> Material Input
+              <mat-icon style="margin-left:auto">{{ isMaterialInputOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+             </button>
+          </mat-list-item>
+
+          <div *ngIf="isMaterialInputOpen" class="nested-list">
+             <mat-list-item>
+              <button [routerLink]="['/master/meterialinput']" mat-button routerLinkActive="active">
+                <mat-icon>layers</mat-icon> Casting
+              </button>
+          </mat-list-item>
+            <mat-list-item>
+              <button [routerLink]="['/master/meterialinput/core']" mat-button routerLinkActive="active">
+                <mat-icon>layers</mat-icon> Core
+              </button>
+          </mat-list-item>
+          <mat-list-item>
+              <button [routerLink]="['/master/meterialinput/moulding']" mat-button routerLinkActive="active">
+                  <mat-icon>view_module</mat-icon> Moulding
+              </button>
+          </mat-list-item>
+        </div>
       </div>
 
       <mat-list-item (click)="isMasterMenuOpen = !isMasterMenuOpen">

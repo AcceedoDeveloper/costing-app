@@ -45,7 +45,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   declarations: [
     AppComponent,
     HeaderComponent,  
-    LoadingSpinnerComponent,  MainLayoutComponent, AuthLayoutComponent, ConfirmDialogComponent,
+    LoadingSpinnerComponent,  MainLayoutComponent, AuthLayoutComponent, ConfirmDialogComponent, 
    
   ],
   imports: [
