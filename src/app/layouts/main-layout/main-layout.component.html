@@ -33,6 +33,11 @@
               <mat-icon>person</mat-icon> Customer
             </button>
           </mat-list-item>
+           <mat-list-item>
+            <button [routerLink]="['/master/department']" mat-button routerLinkActive="active">
+              <mat-icon>group</mat-icon> Department
+            </button>
+          </mat-list-item>
       </div>
 
       <mat-list-item (click)="isMasterMenuOpen = !isMasterMenuOpen">

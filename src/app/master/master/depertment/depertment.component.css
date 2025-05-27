@@ -1,0 +1,106 @@
+.department-container {
+  margin: 20px auto; /* Center the container vertically */
+  width: 60%;        /* Adjust width as needed */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px; /* Add spacing below header */
+}
+
+.custom-table {
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: none !important;
+  width: 40%; /* Decreased width */
+  margin: 0 auto; /* Center the table */
+}
+
+.custom-table th,
+.custom-table td {
+  border-bottom: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  width: 85%;
+}
+
+/* Column widths */
+.custom-table th[mat-header-cell][matColumnDef="name"],
+.custom-table td[mat-cell][matColumnDef="name"] {
+  width: 70%;
+}
+
+.custom-table th[mat-header-cell][matColumnDef="actions"],
+.custom-table td[mat-cell][matColumnDef="actions"] {
+  width: 30%;
+}
+
+.add-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+button[mat-raised-button],
+button[mat-button] {
+  min-width: 40px;
+  padding: 0 8px;
+  height: 32px;
+  line-height: 48px;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+}
+
+button[mat-raised-button] mat-icon,
+button[mat-button] mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.custom-table th {
+  color: #5b84ff;
+  font-weight: 500;
+  text-align: left;
+  background-color: #f5f5f5;
+  border-bottom: #000000;
+  font-size: 14px;
+}
+
+.custom-table tr {
+  background-color: #fafafa;
+}
+
+.custom-table tr:hover {
+  background-color: #f0f0f0;
+}
+
+button[mat-icon-button] {
+  margin-right: 4px;
+}
+
+mat-form-field {
+  height: 48px;
+  width: 200px;
+}
+
+.custom-table th[mat-header-cell]:nth-child(2) {
+  padding-left: 16px; /* Adjust the value as needed */
+}
+
+
+
+.custom-table th[mat-header-cell] {
+  color: #ffffff;
+  background-color: #5b84ff;
+  border-bottom: 1px solid #000000;
+   font-weight: 400;
+  font-size: 12px;
+}

@@ -19,11 +19,24 @@ import {
   addCustomerFailure,
   deleteCustomerSuccess,
   deleteCustomerFailure,
+  loadDepartments,
+  loadDepartmentsSuccess,
+  loadDepartmentsFailure,
+  addDepartment,
+  addDepartmentSuccess,
+  addDepartmentFailure,
+  updateDepartmentSuccess,
+  updateDepartmentFailure,
+  deleteDepartmentSuccess,
+  deleteDepartmentFailure,
+
+
 } from '../store/master.action';
 import * as RoleActions from '../store/master.action';  // Adjust path accordingly
 import { User } from '../../../models/users.model';
 import { Role, Customer } from '../../../models/role.model';  // Adjust path accordingly
 import { Roles} from '../../../models/MaterialMap.model';
+import { Department } from '../../../models/users.model';
 
 // --- User State ---
 export interface UserState {
@@ -31,6 +44,7 @@ export interface UserState {
   roles: Role[];
   users: User[];
   customers: Customer[];
+  departments: Department[];
   count: number;
   error?: string | null;
 }
@@ -40,7 +54,8 @@ const initialUserState: UserState = {
   roles: [],
   count: 0,
   rolesb: [],
-  customers: []
+  customers: [],
+  departments: []
 };
 
 // User Reducer
@@ -133,6 +148,49 @@ on(deleteCustomerSuccess, (state, { id }) => ({
   error: null
 })),
 on(deleteCustomerFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
+on(loadDepartmentsSuccess, (state, { departments }) => ({
+  ...state,
+  departments: departments,
+  error: null
+})),
+
+on(loadDepartmentsFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
+on(addDepartmentSuccess, (state, { department }) => ({
+  ...state,
+  departments: [...state.departments, department],
+  error: null
+})),
+on(addDepartmentFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
+on(updateDepartmentSuccess, (state, { department }) => ({
+  ...state,
+  departments: state.departments.map(d =>
+    d._id === department._id ? department : d
+  ),
+  error: null
+})),
+on(updateDepartmentFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
+on(deleteDepartmentSuccess, (state, { id }) => ({
+  ...state,
+  departments: state.departments.filter(d => d._id !== id),
+  error: null
+})),
+on(deleteDepartmentFailure, (state, { error }) => ({
   ...state,
   error
 })),

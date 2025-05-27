@@ -39,3 +39,14 @@ export interface Userget {
   token?: string;
   userName?: string;
 }
+
+
+
+export interface Department {
+  _id?: string;
+  name: string;
+  lowerCaseName?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
+}

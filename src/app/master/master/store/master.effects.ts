@@ -265,4 +265,78 @@ deleteCustomer$ = createEffect(() =>
   )
 );
 
+  loadDepartments$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.loadDepartments),
+      mergeMap(() =>
+        this.roleService.getDepartments().pipe(
+          map(departments => UserActions.loadDepartmentsSuccess({ departments })),
+          catchError(error => {
+            console.error('Error loading departments:', error);
+            return of(UserActions.loadDepartmentsFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+
+  addDepartment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.addDepartment),
+      mergeMap(action =>
+        this.roleService.addDepartment(action.department).pipe(
+          map(department => {
+            this.toastr.success('Department added successfully!', 'Success');
+            return UserActions.addDepartmentSuccess({ department });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to add department.', 'Error');
+            console.error('Error adding department:', error);
+            return of(UserActions.addDepartmentFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+
+  updateDepartment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.updateDepartment),
+      mergeMap(action =>
+        this.roleService.updateDepartment(action.id, action.data).pipe(
+          map(department => {
+            this.toastr.success('Department updated successfully!', 'Success');
+            return UserActions.updateDepartmentSuccess({ department });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to update department.', 'Error');
+            console.error('Error updating department:', error);
+            return of(UserActions.updateDepartmentFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+
+  deleteDepartment$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.deleteDepartment),
+      mergeMap(action =>
+        this.roleService.deleteDepartment(action.id).pipe(
+          map(() => {
+            this.toastr.success('Department deleted successfully!', 'Success');
+            return UserActions.deleteDepartmentSuccess({ id: action.id });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to delete department.', 'Error');
+            console.error('Error deleting department:', error);
+            return of(UserActions.deleteDepartmentFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+
+
+
 }

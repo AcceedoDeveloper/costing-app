@@ -23,9 +23,10 @@ import { RoleComponent } from './role/role.component';
 import { FormsModule } from '@angular/forms'; 
 import { MatSelectModule } from '@angular/material/select';
 import { CustomerComponent } from './customer/customer.component';
+import { DepertmentComponent } from './depertment/depertment.component';
 
 @NgModule({
-  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent],
+  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent],
   imports: [
     MatSelectModule,
      FormsModule,

@@ -32,6 +32,9 @@ export const selectCustomers = createSelector(
 
 
 
-
+export const selectDepartments = createSelector(
+  getUserState,
+  (state) => state.departments
+);
 
 

@@ -3,6 +3,7 @@ import { User } from '../../../models/users.model';
 import {Role} from '../../../models/role.model';
 import { Roles } from 'src/app/models/MaterialMap.model';
 import { Customer } from '../../../models/role.model';
+import { Department } from '../../../models/users.model';
 
 export const CREATE_USER = '[user page] create user';
 export const CREATE_USER_SUCCESS = '[user page] create user success';
@@ -116,5 +117,63 @@ export const deleteCustomerSuccess = createAction(
 
 export const deleteCustomerFailure = createAction(
   '[Customer] Delete Customer Failure',
+  props<{ error: string }>()
+);
+
+
+export const loadDepartments = createAction('[Department] Load Departments');
+export const loadDepartmentsSuccess = createAction(
+  '[Department] Load Departments Success',
+  props<{ departments: Department[] }>()
+);
+export const loadDepartmentsFailure = createAction(
+  '[Department] Load Departments Failure',
+  props<{ error: string }>()
+);
+
+
+export const addDepartment = createAction(
+  '[Department] Add Department',
+  props<{ department: Partial<Department> }>()
+);
+
+export const addDepartmentSuccess = createAction(
+  '[Department] Add Department Success',
+  props<{ department: Department }>()
+);
+
+export const addDepartmentFailure = createAction(
+  '[Department] Add Department Failure',
+  props<{ error: string }>()
+);
+
+export const updateDepartment = createAction(
+  '[Department] Update Department',
+  props<{ id: string; data: Partial<Department> }>()
+);
+
+export const updateDepartmentSuccess = createAction(
+  '[Department] Update Department Success',
+  props<{ department: Department }>()
+);
+
+export const updateDepartmentFailure = createAction(
+  '[Department] Update Department Failure',
+  props<{ error: string }>()
+);
+
+
+export const deleteDepartment = createAction(
+  '[Department] Delete Department',
+  props<{ id: string }>()
+);
+
+export const deleteDepartmentSuccess = createAction(
+  '[Department] Delete Department Success',
+  props<{ id: string }>()
+);
+
+export const deleteDepartmentFailure = createAction(
+  '[Department] Delete Department Failure',
   props<{ error: string }>()
 );

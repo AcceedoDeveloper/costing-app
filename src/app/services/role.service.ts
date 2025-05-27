@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Role } from '../models/role.model';
+import { Role,  } from '../models/role.model';
 import { Observable } from 'rxjs';
 import { Customer } from '../models/role.model'; 
 import { tap } from 'rxjs/operators';
+import { Department } from '../models/users.model';
 
 
 @Injectable({
@@ -51,5 +52,22 @@ export class RoleService {
   deleteCustomer(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/deleteCustomer/${id}`);
   }
+
+  getDepartments(): Observable<Department[]> {
+    return this.http.get<Department[]>(`${this.baseUrl}/getDept`);
+  }
+
+  addDepartment(department: Partial<Department>): Observable<Department> {
+    return this.http.post<Department>(`${this.baseUrl}/addDept`, department);
+  }
+
+  updateDepartment(id: string, data: Partial<Department>): Observable<Department> {
+    return this.http.put<Department>(`${this.baseUrl}/updateDept/${id}`, data);
+  }
+
+  deleteDepartment(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/deleteDept/${id}`);
+  }
+
 
 }
