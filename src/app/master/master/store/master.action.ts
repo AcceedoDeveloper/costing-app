@@ -177,3 +177,18 @@ export const deleteDepartmentFailure = createAction(
   '[Department] Delete Department Failure',
   props<{ error: string }>()
 );
+
+
+export const loadDepartmentUsers = createAction(
+  '[Department] Load Department Users'
+);
+
+export const loadDepartmentUsersSuccess = createAction(
+  '[Department] Load Department Users Success',
+  props<{ users: { _id: string; name: string }[] }>()
+);
+
+export const loadDepartmentUsersFailure = createAction(
+  '[Department] Load Department Users Failure',
+  props<{ error: string }>()
+);

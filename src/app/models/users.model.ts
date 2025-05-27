@@ -50,3 +50,9 @@ export interface Department {
   updatedAt?: string;
   __v?: number;
 }
+
+
+export interface DepartmentUser {
+  _id: string;
+  name: string;
+}

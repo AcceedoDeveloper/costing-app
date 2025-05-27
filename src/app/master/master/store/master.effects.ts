@@ -337,6 +337,20 @@ deleteCustomer$ = createEffect(() =>
     )
   );
 
+  loadDepartmentUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.loadDepartmentUsers),
+      mergeMap(() =>
+        this.roleService.getDepartmentUsers().pipe(
+          map(users => UserActions.loadDepartmentUsersSuccess({ users })),
+          catchError(error => {
+            console.error('Error loading department users:', error);
+            return of(UserActions.loadDepartmentUsersFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
 
 
 }

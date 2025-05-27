@@ -38,3 +38,7 @@ export const selectDepartments = createSelector(
 );
 
 
+export const getDepartmentUsers = createSelector(
+  getUserState,
+  (state) => state.departmentUsers
+);

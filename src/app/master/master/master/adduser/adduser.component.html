@@ -14,13 +14,18 @@
       </mat-form-field>
 
     
-      <mat-form-field appearance="standard" class="matfiles">
-        <mat-label>Department</mat-label>
-        <input matInput id="department" formControlName="department" placeholder="Enter department" />
-        <mat-error *ngIf="userForm.get('department')?.hasError('required')">
-          Department is required
-        </mat-error>
-      </mat-form-field>
+   <mat-form-field appearance="standard" class="matfiles">
+  <mat-label>Department</mat-label>
+  <mat-select id="department" formControlName="department">
+    <mat-option *ngFor="let dept of departmentList" [value]="dept.name">
+      {{ dept.name }}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="userForm.get('department')?.hasError('required')">
+    Department is required
+  </mat-error>
+</mat-form-field>
+
 
       
       

@@ -12,6 +12,7 @@ import { Userget } from '../../../models/users.model';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 
+
 @Component({
   selector: 'app-master',
   templateUrl: './master.component.html',
@@ -31,6 +32,9 @@ export class MasterComponent implements OnInit {
   }
 
   ngOnInit() {
+  
+
+
     this.store.dispatch(loadUsers());
     this.store.select(getUsers).subscribe(users => {
     console.log('Users from Store:', users);

@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { loadRoles, loadUsers } from '../../store/master.action';
 import { selectAllbaseRoles } from '../../store/master.selector';
+import { loadDepartmentUsers } from '../../store/master.action';
+import { getDepartmentUsers } from '../../store/master.selector';
 
 @Component({
   selector: 'app-adduser',
@@ -15,6 +17,7 @@ import { selectAllbaseRoles } from '../../store/master.selector';
   styleUrls: ['./adduser.component.css']
 })
 export class AdduserComponent implements OnInit {
+  departmentList: any[] = [];
   roles$: Observable<string[]>;
   users$: Observable<User[]>;
   count$: Observable<number>;
@@ -59,7 +62,13 @@ export class AdduserComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+      this.store.dispatch(loadDepartmentUsers());
+    this.store.select(getDepartmentUsers).subscribe(departmentUsers => {
+    console.log('Department Users:', departmentUsers);
+    this.departmentList = departmentUsers.departmentMap || [];
+  });
+  }
 
   submitUser(): void {
     if (this.userForm.valid) {

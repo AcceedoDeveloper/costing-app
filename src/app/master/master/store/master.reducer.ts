@@ -29,6 +29,9 @@ import {
   updateDepartmentFailure,
   deleteDepartmentSuccess,
   deleteDepartmentFailure,
+  loadDepartmentUsers,
+  loadDepartmentUsersSuccess,
+  loadDepartmentUsersFailure,
 
 
 } from '../store/master.action';
@@ -37,6 +40,7 @@ import { User } from '../../../models/users.model';
 import { Role, Customer } from '../../../models/role.model';  // Adjust path accordingly
 import { Roles} from '../../../models/MaterialMap.model';
 import { Department } from '../../../models/users.model';
+import { DepartmentUser } from '../../../models/users.model';
 
 // --- User State ---
 export interface UserState {
@@ -45,6 +49,7 @@ export interface UserState {
   users: User[];
   customers: Customer[];
   departments: Department[];
+  departmentUsers: DepartmentUser[];
   count: number;
   error?: string | null;
 }
@@ -55,7 +60,8 @@ const initialUserState: UserState = {
   count: 0,
   rolesb: [],
   customers: [],
-  departments: []
+  departments: [],
+  departmentUsers: [],
 };
 
 // User Reducer
@@ -194,6 +200,22 @@ on(deleteDepartmentFailure, (state, { error }) => ({
   ...state,
   error
 })),
+
+on(loadDepartmentUsers, (state) => ({
+  ...state,
+  error: null
+})),
+on(loadDepartmentUsersSuccess, (state, { users }) => ({
+  ...state,
+  departmentUsers: users,
+  error: null
+})),
+on(loadDepartmentUsersFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
+
 
 );
 

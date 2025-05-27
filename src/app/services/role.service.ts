@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Customer } from '../models/role.model'; 
 import { tap } from 'rxjs/operators';
 import { Department } from '../models/users.model';
+import { DepartmentUser } from '../models/users.model';
 
 
 @Injectable({
@@ -67,6 +68,10 @@ export class RoleService {
 
   deleteDepartment(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/deleteDept/${id}`);
+  }
+
+  getDepartmentUsers(): Observable<DepartmentUser[]> {
+    return this.http.get<DepartmentUser[]>(`${this.baseUrl}/data`);
   }
 
 
