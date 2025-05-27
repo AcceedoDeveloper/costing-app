@@ -6,3 +6,12 @@ export interface Role {
   createdAt?: string;
   updatedAt?: string;
 }
+
+
+
+export interface Customer {
+  _id: string;
+  name: string;
+  lowerCaseName: string;
+  __v: number;
+}

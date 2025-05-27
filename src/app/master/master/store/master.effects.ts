@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 import * as UserActions from './master.action';
 import * as RoleActions from './master.action';
@@ -185,4 +186,83 @@ export class UserEffects {
       )
     )
   );
+
+
+  
+loadCustomers$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UserActions.loadCustomers),
+    mergeMap(() =>
+      this.roleService.getCustomers().pipe(
+        tap(customers => {
+          console.log('Loaded customers:', customers);
+        }),
+        map(customers => UserActions.loadCustomersSuccess({ customers })),
+        catchError(error => {
+          console.error('Error loading customers:', error);
+          return of(UserActions.loadCustomersFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
+
+
+updateCustomer$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UserActions.updateCustomer),
+    mergeMap(({ id, data }) =>
+      this.roleService.updateCustomer(id, data).pipe(
+        map((customer) => {
+          this.toastr.success('Customer updated successfully!', 'Success');
+          return UserActions.updateCustomerSuccess({ customer });
+        }),
+        catchError((error) =>{
+          this.toastr.error('Failed to update customer.', 'Error');
+          console.error('Error updating customer:', error);
+          return of(UserActions.updateCustomerFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
+
+addCustomer$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UserActions.addCustomer),
+    mergeMap(({ customer }) =>
+      this.roleService.addCustomer(customer).pipe(
+        map((newCustomer) => {
+          this.toastr.success('Customer added successfully!', 'Success');
+          return UserActions.addCustomerSuccess({ customer: newCustomer });
+        }),
+        catchError((error) =>{
+          this.toastr.error('Failed to add customer.', 'Error');
+          console.error('Error adding customer:', error);
+          return of(UserActions.addCustomerFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
+
+deleteCustomer$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UserActions.deleteCustomer),
+    mergeMap(({ id }) =>
+      this.roleService.deleteCustomer(id).pipe(
+        map(() => {
+          this.toastr.success('Customer deleted successfully!', 'Success');
+          return UserActions.deleteCustomerSuccess({ id });
+        }),
+        catchError((error) =>{
+          this.toastr.error('Failed to delete customer.', 'Error');
+          console.error('Error deleting customer:', error);
+          return of(UserActions.deleteCustomerFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
+
 }

@@ -9,11 +9,20 @@ import {
   deleteUserFailure,
   loadbaseRoles,
   loadbaseRolesSuccess,
-  loadbaseRolesFailure
+  loadbaseRolesFailure,
+  loadCustomersSuccess,
+  loadCustomersFailure,
+  updateCustomerSuccess,
+  updateCustomerFailure,
+  addCustomer,
+  addCustomerSuccess,
+  addCustomerFailure,
+  deleteCustomerSuccess,
+  deleteCustomerFailure,
 } from '../store/master.action';
 import * as RoleActions from '../store/master.action';  // Adjust path accordingly
 import { User } from '../../../models/users.model';
-import { Role } from '../../../models/role.model';  // Adjust path accordingly
+import { Role, Customer } from '../../../models/role.model';  // Adjust path accordingly
 import { Roles} from '../../../models/MaterialMap.model';
 
 // --- User State ---
@@ -21,6 +30,7 @@ export interface UserState {
   rolesb:Roles[];
   roles: Role[];
   users: User[];
+  customers: Customer[];
   count: number;
   error?: string | null;
 }
@@ -29,7 +39,8 @@ const initialUserState: UserState = {
   users: [],
   roles: [],
   count: 0,
-  rolesb:[]
+  rolesb: [],
+  customers: []
 };
 
 // User Reducer
@@ -81,7 +92,51 @@ const _userReducer = createReducer(
   on(loadbaseRolesFailure, (state, { error }) => ({
     ...state,
     error,
-  }))
+  })),
+
+  on(loadCustomersSuccess, (state, action) => ({
+  ...state,
+  customers: action.customers,
+  error: null
+})),
+on(loadCustomersFailure, (state, action) => ({
+  ...state,
+  error: action.error
+})),
+
+on(updateCustomerSuccess, (state, { customer }) => ({
+  ...state,
+  customers: state.customers.map(c =>
+    c._id === customer._id ? customer : c
+  ),
+  error: null
+})),
+
+on(updateCustomerFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
+on(addCustomerSuccess, (state, { customer }) => ({
+  ...state,
+  customers: [...state.customers, customer],
+  error: null
+})),
+on(addCustomerFailure, (state, { error }) => ({   
+  ...state,
+  error
+})),
+
+on(deleteCustomerSuccess, (state, { id }) => ({
+  ...state,
+  customers: state.customers.filter(c => c._id !== id),
+  error: null
+})),
+on(deleteCustomerFailure, (state, { error }) => ({
+  ...state,
+  error
+})),
+
 );
 
 export function userReducer(state: UserState | undefined, action: any) {
@@ -90,13 +145,89 @@ export function userReducer(state: UserState | undefined, action: any) {
   return newState;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // --- Role State ---
 export interface RoleState {
+  customers: Customer[];
   roles: Role[];
   error: string | null;
 }
 
 const initialRoleState: RoleState = {
+  customers: [],
   roles: [],
   error: null,
 };
@@ -143,7 +274,12 @@ const _roleReducer = createReducer(
   on(RoleActions.deleteRoleFailure, (state, { error }) => ({
     ...state,
     error,
-  }))
+  })),
+
+
+
+
+
 );
 
 export function roleReducer(state: RoleState | undefined, action: any) {

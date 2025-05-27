@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { User } from '../../../models/users.model';
 import {Role} from '../../../models/role.model';
 import { Roles } from 'src/app/models/MaterialMap.model';
+import { Customer } from '../../../models/role.model';
 
 export const CREATE_USER = '[user page] create user';
 export const CREATE_USER_SUCCESS = '[user page] create user success';
@@ -57,3 +58,63 @@ export const loadbaseRoles = createAction('[Roles] Load Roles');
 export const loadbaseRolesSuccess = createAction('[Role] Load Roles Success', props<{ roles: Roles[] }>());
 export const loadbaseRolesFailure = createAction('[Role] Load Roles Failure', props<{ error: string }>());
 
+export const loadCustomers = createAction('[Customer] Load Customers');
+export const loadCustomersSuccess = createAction(
+  '[Customer] Load Customers Success',
+  props<{ customers: Customer[] }>()
+);
+export const loadCustomersFailure = createAction(
+  '[Customer] Load Customers Failure',
+  props<{ error: string }>()
+);
+
+
+export const updateCustomer = createAction(
+  '[Customer] Update Customer',
+  props<{ id: string; data: Partial<Customer> }>()
+);
+
+export const updateCustomerSuccess = createAction(
+  '[Customer] Update Customer Success',
+  props<{ customer: Customer }>()
+);
+
+export const updateCustomerFailure = createAction(
+  '[Customer] Update Customer Failure',
+  props<{ error: string }>()
+);
+
+
+
+export const addCustomer = createAction(
+  '[Customer] Add Customer',  
+  props<{ customer: Partial<Customer> }>()
+);
+
+export const addCustomerSuccess = createAction(
+  '[Customer] Add Customer Success',
+  props<{ customer: Customer }>()
+);
+
+
+export const addCustomerFailure = createAction(
+  '[Customer] Add Customer Failure',
+  props<{ error: string }>()
+);
+
+
+export const deleteCustomer = createAction(
+  '[Customer] Delete Customer',
+  props<{ id: string }>()
+);
+
+
+export const deleteCustomerSuccess = createAction(
+  '[Customer] Delete Customer Success',
+  props<{ id: string }>()
+);
+
+export const deleteCustomerFailure = createAction(
+  '[Customer] Delete Customer Failure',
+  props<{ error: string }>()
+);

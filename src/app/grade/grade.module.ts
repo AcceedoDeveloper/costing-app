@@ -28,12 +28,13 @@ import { AddgradeComponent } from './grade/addgrade/addgrade.component';
 
 import { gradeReducer } from './store/grade.reducer';
 import { GradeEffects } from './store/grade.effects';
-
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
   declarations: [GradeComponent, AddgradeComponent],
   imports: [
+    MatExpansionModule,
     MatSelectModule,
     MatOptionModule,
     CommonModule,

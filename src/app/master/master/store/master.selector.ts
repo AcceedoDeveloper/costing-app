@@ -25,5 +25,13 @@ export const selectRoleError = createSelector(
   (state) => state.error
 );
 
+export const selectCustomers = createSelector(
+  getUserState,
+  (state) => state.customers
+);
+
+
+
+
 
 
