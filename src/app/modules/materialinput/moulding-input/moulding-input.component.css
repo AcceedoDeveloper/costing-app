@@ -1,0 +1,34 @@
+.moulding-card {
+  width: 400px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.moulding-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.label {
+  font-weight: 600;
+  color: #333;
+  padding-top: 10px;
+}
+
+.value {
+  color: #555;
+}
+.value input {
+  width: 60%;
+  padding: 4px;
+  border: none; 
+  border-radius: 0; 
+  margin-right: 8px;
+  background: transparent; /* Optional: Make background transparent */
+}
+
+.value input:focus {
+  outline: none; /* Remove the focus outline */
+}

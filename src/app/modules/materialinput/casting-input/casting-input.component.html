@@ -1,1 +1,133 @@
-<p>casting-input works!</p>
+<mat-card class="casting-card" *ngFor="let item of castingData">
+  <!-- Casting Weight -->
+  <div class="casting-row">
+    <div class="label">Casting Weight</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.CastingWeight; else editCastingWeight">
+        {{ item.CastingWeight }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'CastingWeight')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editCastingWeight>
+        <input [(ngModel)]="editableData[item._id].CastingWeight" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'CastingWeight')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'CastingWeight')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Cavities -->
+  <div class="casting-row">
+    <div class="label">Cavities</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.Cavities; else editCavities">
+        {{ item.Cavities }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'Cavities')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editCavities>
+        <input [(ngModel)]="editableData[item._id].Cavities" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'Cavities')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'Cavities')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Pouring Weight -->
+  <div class="casting-row">
+    <div class="label">Pouring Weight</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.PouringWeight; else editPouringWeight">
+        {{ item.PouringWeight }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'PouringWeight')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editPouringWeight>
+        <input [(ngModel)]="editableData[item._id].PouringWeight" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'PouringWeight')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'PouringWeight')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Weight Per Kg -->
+  <div class="casting-row">
+    <div class="label">Weight Per Kg</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.CastingWeightPerKg; else editCastingWeightPerKg">
+        {{ item.CastingWeightPerKg }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'CastingWeightPerKg')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editCastingWeightPerKg>
+        <input [(ngModel)]="editableData[item._id].CastingWeightPerKg" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'CastingWeightPerKg')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'CastingWeightPerKg')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Yield -->
+  <div class="casting-row">
+    <div class="label">Yeild</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.Yeild; else editYeild">
+        {{ item.Yeild }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'Yeild')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editYeild>
+        <input [(ngModel)]="editableData[item._id].Yeild" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'Yeild')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'Yeild')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Material Returned -->
+  <div class="casting-row">
+    <div class="label">Material Returned</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.MaterialReturned; else editMaterialReturned">
+        {{ item.MaterialReturned }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'MaterialReturned')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editMaterialReturned>
+        <input [(ngModel)]="editableData[item._id].MaterialReturned" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'MaterialReturned')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'MaterialReturned')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</mat-card>

@@ -41,6 +41,14 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 
 import { MatDialogModule } from '@angular/material/dialog';
+
+
+import { CommonModule } from '@angular/common';
+
+
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,6 +57,7 @@ import { MatDialogModule } from '@angular/material/dialog';
    
   ],
   imports: [
+    CommonModule,
      MatDialogModule,
     RouterModule,
     MatProgressSpinnerModule,

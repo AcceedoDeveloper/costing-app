@@ -1,1 +1,89 @@
-<p>core-input works!</p>
+<mat-card class="core-card" *ngFor="let item of coreData">
+  <!-- Core Sand -->
+  <div class="core-row">
+    <div class="label">Core Sand</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.CoreSand; else editCoreSand">
+        {{ item.CoreSand }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'CoreSand')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editCoreSand>
+        <input [(ngModel)]="editableData[item._id].CoreSand" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'CoreSand')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'CoreSand')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Core Weight -->
+  <div class="core-row">
+    <div class="label">Core Weight</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.CoreWeight; else editCoreWeight">
+        {{ item.CoreWeight }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'CoreWeight')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editCoreWeight>
+        <input [(ngModel)]="editableData[item._id].CoreWeight" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'CoreWeight')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'CoreWeight')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Shooting Per Shift -->
+  <div class="core-row">
+    <div class="label">Shooting Per Shift</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.ShootingPerShift; else editShootingPerShift">
+        {{ item.ShootingPerShift }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'ShootingPerShift')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editShootingPerShift>
+        <input [(ngModel)]="editableData[item._id].ShootingPerShift" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'ShootingPerShift')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'ShootingPerShift')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Cores Per Mould -->
+  <div class="core-row">
+    <div class="label">Cores Per Mould</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.coresPerMould; else editCoresPerMould">
+        {{ item.coresPerMould }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'coresPerMould')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editCoresPerMould>
+        <input [(ngModel)]="editableData[item._id].coresPerMould" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'coresPerMould')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'coresPerMould')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</mat-card>

@@ -1,1 +1,67 @@
-<p>moulding-input works!</p>
+<mat-card class="moulding-card" *ngFor="let item of mouldingData">
+  <!-- Bake Moulding -->
+  <div class="moulding-row">
+    <div class="label">Bake Moulding</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.BakeMoulding; else editBakeMoulding">
+        {{ item.BakeMoulding }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'BakeMoulding')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editBakeMoulding>
+        <input [(ngModel)]="editableData[item._id].BakeMoulding" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'BakeMoulding')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'BakeMoulding')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Moulding Weight -->
+  <div class="moulding-row">
+    <div class="label">Moulding Weight</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.MouldingWeight; else editMouldingWeight">
+        {{ item.MouldingWeight }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'MouldingWeight')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editMouldingWeight>
+        <input [(ngModel)]="editableData[item._id].MouldingWeight" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'MouldingWeight')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'MouldingWeight')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Moulds Per Heat -->
+  <div class="moulding-row">
+    <div class="label">Moulds Per Heat</div>
+    <div class="value">
+      <ng-container *ngIf="!editMode[item._id]?.MouldsPerHeat; else editMouldsPerHeat">
+        {{ item.MouldsPerHeat }}
+        <button mat-icon-button (click)="toggleEditMode(item._id, 'MouldsPerHeat')">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #editMouldsPerHeat>
+        <input [(ngModel)]="editableData[item._id].MouldsPerHeat" type="number" />
+        <button mat-icon-button (click)="saveField(item, 'MouldsPerHeat')">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="cancelEdit(item._id, 'MouldsPerHeat')">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</mat-card>
