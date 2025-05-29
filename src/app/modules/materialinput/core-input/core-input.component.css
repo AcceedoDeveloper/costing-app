@@ -4,6 +4,8 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+
+
 .core-row {
   display: flex;
   justify-content: space-between;
@@ -19,6 +21,7 @@
 
 .value {
   color: #555;
+  
 }
 .value input {
   width: 60%;

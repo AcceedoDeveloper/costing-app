@@ -1,34 +1,77 @@
-.casting-card {
-  width: 400px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
-.casting-row {
+.grid-section {
+ 
+  border-radius: 8px;
+  padding: 16px;
+ 
+}
+
+.casting-card, .core-card, .moulding-card {
+  margin: 16px 0;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.casting-row, .core-row, .moulding-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 8px;
+  align-items: center;
 }
 
 .label {
-  font-weight: 600;
-  color: #333;
-  padding-top: 10px;
+  font-weight: bold;
+  width: 150px;
+  flex-shrink: 0;
 }
 
 .value {
-  color: #555;
-}
-.value input {
-  width: 60%;
-  padding: 4px;
-  border: none; 
-  border-radius: 0; 
-  margin-right: 8px;
-  background: transparent; /* Optional: Make background transparent */
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
-.value input:focus {
-  outline: none; /* Remove the focus outline */
+input {
+  margin-right: 8px;
+  width: 100px;
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+button[mat-icon-button] {
+  margin-left: 8px;
+}
+
+h2 {
+  margin-top: 0;
+  color: #3f51b5;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .casting-row, .core-row, .moulding-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .value {
+    width: 100%;
+    margin-top: 4px;
+    justify-content: flex-start;
+  }
 }
