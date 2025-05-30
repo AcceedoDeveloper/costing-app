@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MeterialtypeRoutingModule } from './meterialtype-routing.module';
 import { MeterialtypeComponent } from './meterialtype/meterialtype.component';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 
 import { MatTableModule } from '@angular/material/table';
@@ -23,6 +24,7 @@ import { ProcessTypeComponent } from './process-type/process-type.component';
 @NgModule({
   declarations: [MeterialtypeComponent, ProcessTypeComponent],
   imports: [
+    MatButtonToggleModule,
     MatTableModule,
     MatFormFieldModule,
     MatButtonModule,

@@ -25,3 +25,24 @@ th.mat-header-cell, td.mat-cell {
   font-weight: 400;
   font-size: 12px;
 }
+
+.table-controls {
+  padding: 0 8%;
+}
+
+.mat-button-toggle-group {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+}
+
+.button {
+  margin-right: 10%;
+}
+
+.bold-header {
+  background-color: #5b84ff;
+  color: white;
+  font-weight: 400;
+  font-size: 12px;
+}
+

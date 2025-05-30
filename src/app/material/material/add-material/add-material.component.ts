@@ -67,7 +67,7 @@ ngOnInit(): void {
       this.store.dispatch(loadMaterials())
        
     }
-
+    this.store.dispatch(loadMaterialMap());
     this.dialogRef.close();  
   }
 }

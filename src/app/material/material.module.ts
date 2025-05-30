@@ -18,10 +18,13 @@ import { AddMaterialComponent } from './material/add-material/add-material.compo
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent],
   imports: [
+    MatButtonToggleModule,
     MatSelectModule,
     ReactiveFormsModule,
     MatDialogModule,
