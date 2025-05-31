@@ -1,86 +1,90 @@
-.material-container {
-  margin: 40px;
-  width: 60%;
-  margin-left: 17%;
+
+
+
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f3f3;
+      margin: 0;
+      padding: 0;
+    }
+
+    .circular-button {
+      height: 40px;
+      width: 10px;
+      border-radius: 50%;
 }
 
-.header {
+    .table-container {
+      width: 600px;
+      margin: 10px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  margin-left: 25%;
+  margin-right: 25%;
 }
 
-.toggle-group {
-  display: flex;
-  align-items: center;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background-color: #fff;
+    }
+
+    th {
+      text-align: left;
+      padding: 14px 20px;
+      color: #5b84ff;
+      font-weight: bold;
+      border-bottom: 2px solid #5b84ff;
+    }
+
+    td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #eeee;
+      font-weight: 500;
+    }
+
+    /* Thin vertical line before Actions in only tbody */
+    td.actions {
+      border-left: 1px solid #ccc;
+      padding-left: 20px;
+    }
+
+    .actions i {
+      margin-right: 15px;
+      font-size: 16px;
+      color: #000;
+      cursor: pointer;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+  
+
+  td mat-icon{
+    font-size: 20px;
+    cursor: pointer;
+   
+  }
+
+  .icon {
+  cursor: pointer;
+  margin-right: 10px; /* Adjust gap as needed */
 }
 
-.add-section {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-mat-form-field {
-  height: 48px;
-  width: 200px;
-}
-
-button[mat-raised-button],
-button[mat-button] {
-  height: 32px;
-  line-height: 48px;
-  padding: 0 12px;
-  min-width: 80px;
-  display: flex;
-  align-items: center;
-}
-
-/* Button icons style */
-button[mat-raised-button] mat-icon,
-button[mat-button] mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-}
-
-.custom-table {
-  border-collapse: collapse;
-  background-color: #fff;
-  box-shadow: none !important;
-  width: 100%;
-}
-
-.custom-table th,
-.custom-table td {
-  border-bottom: 1px solid #e0e0e0;
-  border-right: 1px solid #e0e0e0;
-  width: 80%;
-}
-
-.custom-table th {
-  color: #ffffff;
-  background-color: #5b84ff;
-  border-bottom: 1px solid #000000;
-  font-weight: 400;
-  font-size: 12px;
-  text-align: left;
-}
-
-.custom-table tr {
-  background-color: #fafafa;
-}
-
-.custom-table tr:hover {
-  background-color: #f0f0f0;
-}
-
-button[mat-icon-button] {
-  margin-right: 4px;
-}
-
-.custom-table th[mat-header-cell]:nth-child(2) {
-  padding-left: 16px;
+.icon:last-child {
+  margin-right: 0;
 }
