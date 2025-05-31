@@ -1,125 +1,10 @@
-<mat-drawer-container class="drawer-container" autosize>
-  <mat-drawer #drawer mode="over" [opened]="sidenavOpened" position="start">
-    <mat-toolbar  style="background-color: #5b84ff;" >Cost Management</mat-toolbar>
-    
-    <mat-nav-list>
-      <mat-list-item>
-        <button  [routerLink]="['/dashboard']" mat-button>
-          <mat-icon>dashboard</mat-icon> Dashboard
-        </button>
-      </mat-list-item>
 
-      <mat-list-item (click)="isAdminMenuOpen = !isAdminMenuOpen">
-        <button mat-button>
-          <mat-icon>admin_panel_settings</mat-icon> Admin
-          <mat-icon style="margin-left:auto">{{ isAdminMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-        </button>
-      </mat-list-item>
-
-      <div *ngIf="isAdminMenuOpen" class="nested-list">
-          <mat-list-item>
-            <button [routerLink]="['/master']" mat-button routerLinkActive="active">
-              <mat-icon>person</mat-icon> User
-            </button>
-          </mat-list-item>
-          <mat-list-item>
-            <button [routerLink]="['/master/role']" mat-button routerLinkActive="active">
-              <mat-icon>shield</mat-icon> Role
-            </button>
-          </mat-list-item>
-          <mat-list-item>
-            <button [routerLink]="['/master/customer']" mat-button routerLinkActive="active">
-              <mat-icon>person</mat-icon> Customer
-            </button>
-          </mat-list-item>
-           <mat-list-item>
-            <button [routerLink]="['/master/department']" mat-button routerLinkActive="active">
-              <mat-icon>group</mat-icon> Department
-            </button>
-          </mat-list-item>
-          <!-- Material Input Nested Menu -->
-          <mat-list-item (click)="isMaterialInputOpen = !isMaterialInputOpen">
-            <button mat-button>
-              <mat-icon>input</mat-icon> Material Input
-              <mat-icon style="margin-left:auto">{{ isMaterialInputOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-             </button>
-          </mat-list-item>
-
-          <div *ngIf="isMaterialInputOpen" class="nested-list">
-             <mat-list-item>
-              <button [routerLink]="['/master/meterialinput']" mat-button routerLinkActive="active">
-                <mat-icon>layers</mat-icon> Casting
-              </button>
-          </mat-list-item>
-            <mat-list-item>
-              <button [routerLink]="['/master/meterialinput/core']" mat-button routerLinkActive="active">
-                <mat-icon>layers</mat-icon> Core
-              </button>
-          </mat-list-item>
-          <mat-list-item>
-              <button [routerLink]="['/master/meterialinput/moulding']" mat-button routerLinkActive="active">
-                  <mat-icon>view_module</mat-icon> Moulding
-              </button>
-          </mat-list-item>
-        </div>
-      </div>
-
-      <mat-list-item (click)="isMasterMenuOpen = !isMasterMenuOpen">
-          <button mat-button>
-            <mat-icon>settings</mat-icon> Master
-            <mat-icon style="margin-left:auto">{{ isMasterMenuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-      </mat-list-item>
-
-
-
-          <div *ngIf="isMasterMenuOpen" class="nested-list">
-              <mat-list-item>
-                <button [routerLink]="['/material']" mat-button routerLinkActive="active">
-                  <mat-icon>construction</mat-icon> Material
-                </button>
-              </mat-list-item>
-              <mat-list-item>
-                <button [routerLink]="['/grade']" mat-button routerLinkActive="active">
-                  <mat-icon>grade</mat-icon> Grade
-                </button>
-              </mat-list-item>
-               <mat-list-item>
-                <button [routerLink]="['/meterialtype/ProcessType']" mat-button routerLinkActive="active">
-                  <mat-icon>account_tree</mat-icon>Process Type
-                </button>
-              </mat-list-item>
-            </div>
-      
-      <mat-list-item>
-        <button [routerLink]="['/posts']" mat-button>
-          <mat-icon>home</mat-icon> Home
-        </button>
-      </mat-list-item>
-     
-
-     
-     
-     
-    </mat-nav-list>
-
-
-    
-  </mat-drawer>
-  
- <mat-drawer-content>
     <mat-toolbar color="primary">
-      <button mat-icon-button (click)="toggleSidenav()">
-        <mat-icon>menu</mat-icon>
-      </button>
       <span>Costing Management</span>
-      <!-- Spacer to push logout button to the right -->
       <span style="flex: 1 1 auto;"></span>
-      <!-- Circular Logout Button with Menu -->
       <button mat-icon-button class="logout-button" [matMenuTriggerFor]="userMenu" matTooltip="User Profile" matTooltipPosition="below">
         <mat-icon>account_circle</mat-icon>
       </button>
-      <!-- User Menu -->
       <mat-menu #userMenu="matMenu" xPosition="before">
         <div class="user-info">
           <div class="user-details">
@@ -133,8 +18,123 @@
         </div>
       </mat-menu>
     </mat-toolbar>
+
+
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item [routerLink]="['/dashboard']" >
+       <div class="nav-item-content">
+         <mat-icon>dashboard</mat-icon>
+            <span>Dashboard</span>
+        </div>
+      </a>
+    </mat-nav-list>
+      
+    <mat-nav-list>
+      <a mat-list-item 
+       [matMenuTriggerFor]="adminMenu"
+   #adminMenuTrigger="matMenuTrigger"
+   
+      >
+       <div class="nav-item-content">
+         <mat-icon>admin_panel_settings</mat-icon>
+            <span class="font">User Management
+            </span>
+        </div>
+      </a>
+    </mat-nav-list>
+
+        <mat-nav-list>
+      <a mat-list-item  [routerLink]="['/material']" >
+       <div class="nav-item-content">
+         <mat-icon >inventory</mat-icon>
+            <span>Material Management</span>
+        </div>
+      </a>
+    </mat-nav-list>
+     <mat-nav-list>
+      <a mat-list-item 
+       [matMenuTriggerFor]="ProcessMenu"
+   #ProcessMenuTrigger="matMenuTrigger"
+   
+      >
+       <div class="nav-item-content">
+         <mat-icon>settings</mat-icon>
+            <span>Process Management</span>
+        </div>
+      </a>
+    </mat-nav-list>
+    
+    <mat-nav-list>
+      <a mat-list-item [routerLink]="['/master/customer']">
+       <div class="nav-item-content">
+         <mat-icon >person</mat-icon>
+            <span>Customer Details</span>
+        </div>
+      </a>
+    </mat-nav-list>
+
+     <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" >
+       <div class="nav-item-content">
+         <mat-icon >assessment</mat-icon>
+            <span>Reports</span>
+        </div>
+      </a>
+    </mat-nav-list>
+    
+   
+  </mat-drawer>
+  <mat-drawer-content>
     <div class="main-content">
       <router-outlet></router-outlet>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
+
+
+
+
+
+<mat-menu #adminMenu="matMenu"
+
+yPosition="below" class="admin-menu">
+  <button mat-menu-item [routerLink]="['/master']">
+    <mat-icon>person</mat-icon>
+    <span>User</span>
+  </button>
+  <button mat-menu-item [routerLink]="['/master/role']">
+    <mat-icon>supervisor_account</mat-icon>
+    <span>Role</span>
+  </button>
+  <button mat-menu-item [routerLink]="['/master/customer']">
+    <mat-icon>groups</mat-icon>
+    <span>Customer</span>
+  </button>
+  <button mat-menu-item routerLink="/supplier">
+    <mat-icon>group</mat-icon>
+    <span>Supplier</span>
+  </button>
+  <button mat-menu-item [routerLink]="['/master/department']">
+    <mat-icon>domain</mat-icon>
+    <span>Department</span>
+  </button>
+
+</mat-menu>
+
+
+<mat-menu #ProcessMenu="matMenu"
+
+yPosition="below" class="admin-menu">
+  <button mat-menu-item [routerLink]="['/master/meterialinput']" >
+   <mat-icon>calculate</mat-icon>
+    <span>Casting Input</span>
+  </button>
+   <button mat-menu-item [routerLink]="['/grade']" >
+   <mat-icon>grade</mat-icon>
+    <span>Grade</span>
+  </button>
+  
+
+</mat-menu>

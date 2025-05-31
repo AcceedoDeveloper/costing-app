@@ -1,69 +1,23 @@
-
-.drawer-container {
-    height: 100vh; 
-  }
-  
- 
-  mat-toolbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    
-  }
-  
-
-  mat-drawer {
-    width: 250px; 
-    background-color: #ffffff; 
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); 
-    z-index: 1001; 
-  }
-  
-  
-  mat-drawer-content {
-    padding: 0; 
-  }
-  
-
-  .main-content {
-    padding: 16px; 
-    height: calc(100vh - 64px); 
-    overflow: auto; 
-  }
-  
- 
-  mat-nav-list mat-list-item button {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 0 16px;
-    height: 48px;
-    color: #333; 
-  }
-  
-  
-  mat-nav-list mat-list-item button mat-icon {
-    margin-right: 16px; 
-  }
-  
- 
-  mat-nav-list mat-list-item button:hover {
-    background-color: #f0f0f0;
-  }
-  
- 
-  :host ::ng-deep .mat-drawer-backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .mat-toolbar.mat-primary {
-    background: #5b84ff;
-    color: #fff;
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+ border-bottom: 1px solid #ccc;
 }
 
-/* Circular logout button styling */
+.main-content {
+  padding: 16px;
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.mat-toolbar.mat-primary {
+  background: #ffffff;
+  color: #000000;
+}
+
 .logout-button {
-  background-color: #ff4d4f; /* Red background for logout */
+  background-color: #ff4d4f;
   color: white;
   width: 40px;
   height: 40px;
@@ -76,7 +30,7 @@
 }
 
 .logout-button:hover {
-  background-color: #d9363e; /* Darker red on hover */
+  background-color: #d9363e;
 }
 
 .logout-button mat-icon {
@@ -85,7 +39,6 @@
   height: 20px;
 }
 
-/* User menu styling */
 .user-info {
   padding: 10px;
   display: flex;
@@ -111,12 +64,94 @@
   color: #666;
 }
 
-mat-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.example-container {
+  width: auto;
+  background: #eee;
+  height: calc(100vh - 64px); /* Ensure container fits below toolbar */
 }
 
-mat-menu-item mat-icon {
-  color: #ff4d4f;
+mat-drawer {
+  padding-top: 20px;
+  width: 75px;
+  background: #ffffff;
+  color: #333;
+   border-right: 1px solid #ccc;
+  overflow: hidden !important; /* Prevent overflow in the drawer */
+  height: calc(100vh - 64px); /* Match container height */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+}
+
+
+mat-drawer::-webkit-scrollbar {
+  display: none;
+}
+
+mat-nav-list {
+  padding: 0;
+  overflow: hidden; 
+  display: flex;
+  flex-direction: column; 
+
+}
+
+a[mat-list-item] {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  text-decoration: none;
+  margin-bottom: 20px; 
+  margin-bottom: 25px;
+}
+
+.nav-item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+a[mat-list-item] span {
+  text-align: center;
+  line-height: 11px;
+  margin: 0 5px;
+  font-size: 10px;
+  margin-bottom: 20px;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+}
+
+a[mat-list-item] mat-icon {
+  margin-top: 6px;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 25px;
+  width: 20px;
+  height: 20px;
+}
+
+
+a[mat-list-item].active-link {
+  background-color: #ff4081;
+  color: white;
+}
+
+a[mat-list-item].active-link span,
+a[mat-list-item].active-link mat-icon {
+  color: white;
+}
+
+::ng-deep .mat-menu-panel.custom-menu {
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+
+::ng-deep .mat-menu-panel.custom-menu.mat-menu-before,
+::ng-deep .mat-menu-panel.custom-menu.mat-menu-after,
+::ng-deep .mat-menu-panel.custom-menu.ng-trigger {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  pointer-events: auto;
 }

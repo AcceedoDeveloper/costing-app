@@ -27,6 +27,7 @@
     "@ngrx/router-store": "^10.1.2",
     "@ngrx/store": "^10.1.2",
     "@ngrx/store-devtools": "^10.1.2",
+    "boxicons": "^2.1.4",
     "moment": "^2.30.1",
     "ngx-toastr": "^13.2.1",
     "rxjs": "~6.5.5",
