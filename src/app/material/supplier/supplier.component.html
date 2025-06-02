@@ -1,0 +1,47 @@
+
+
+  <div class="header">
+    <h2>Supplier List</h2>
+    <button mat-raised-button color="primary" (click)="addSupplier()">Add Supplier</button>
+  </div>
+
+<div class="table-container">
+ 
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Material Type</th>
+        <th>Material Name</th>
+        <th>Product Cost</th>
+        <th>Address</th>
+        <th>Quality</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let supplier of paginatedSuppliers">
+  <td>{{ supplier.name }}</td>
+  <td>{{ supplier.materialType }}</td>
+  <td>{{ supplier.materialName }}</td>
+  <td>{{ supplier.ratePerKg }}</td>
+  <td>{{ supplier.address }}</td>
+  <td>{{ supplier.quantity }}</td>
+  <td class="actions">
+    <mat-icon class="icon" aria-label="Edit supplier" (click)="startEdit(supplier)">edit</mat-icon>
+    <mat-icon class="icon" aria-label="Delete supplier" (click)="deleteSupplier(supplier._id)">delete</mat-icon>
+  </td>
+</tr>
+
+    </tbody>
+  </table>
+
+  <!-- Paginator -->
+  <mat-paginator
+    [length]="suppliers.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)"
+    aria-label="Select page of suppliers"
+  ></mat-paginator>
+</div>

@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { materialTypeReducer } from './store/material-type.reducer';
 import { MaterialTypeEffects } from './store/material-type.effects';
 import { ProcessTypeComponent } from './process-type/process-type.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [MeterialtypeComponent, ProcessTypeComponent],
@@ -30,6 +31,7 @@ import { ProcessTypeComponent } from './process-type/process-type.component';
     MatButtonModule,
      MatInputModule,
      MatIconModule,
+    MatPaginatorModule,
     CommonModule,
     MeterialtypeRoutingModule,
     FormsModule,

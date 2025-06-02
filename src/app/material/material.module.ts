@@ -19,11 +19,23 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { SupplierComponent } from './supplier/supplier.component';
+import { AddSupplierComponent } from './supplier/add-supplier/add-supplier.component';
+
+
+
+
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
+
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent],
   imports: [
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatButtonToggleModule,
     MatSelectModule,
     ReactiveFormsModule,

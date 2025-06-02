@@ -1,9 +1,14 @@
 import { createReducer, on } from '@ngrx/store';
 import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess 
-  , createMaterialSuccess, updateMaterialSuccess, loadMaterialMapSuccess, loadMaterialMapFailure
+  , createMaterialSuccess, updateMaterialSuccess, loadMaterialMapSuccess, 
+  loadMaterialMapFailure, loadSuppliers, loadSuppliersSuccess, loadSuppliersFailure
+  , addSupplier, addSupplierSuccess, addSupplierFailure
+  , deleteSupplier, deleteSupplierSuccess, deleteSupplierFailure
+  , updateSupplier, updateSupplierSuccess, updateSupplierFailure
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
+import { Supplier } from '../../models/Supplier.model';
 
 
 
@@ -12,6 +17,7 @@ interface MaterialState {
   count: number;
   error: string | null;
   materialMap: { [key: string]: MaterialItem[] };
+  suppliers: Supplier[];
 }
 
 
@@ -20,6 +26,7 @@ const initialState: MaterialState = {
   count: 0,
   error: null,
   materialMap: {},
+  suppliers: [],
 };
 
 const _materialReducer = createReducer(
@@ -62,7 +69,74 @@ const _materialReducer = createReducer(
   on(loadMaterialMapFailure, (state, action) => ({
     ...state,
     error: action.error,
+  })),
+
+
+  on(loadSuppliersSuccess, (state, action) => ({
+    ...state,
+    suppliers: action.suppliers,
+    error: null,
+  })),
+  on(loadSuppliersFailure, (state, action) => ({
+    ...state,
+    suppliers: [],
+    error: action.error,
+  })),
+
+  on(loadSuppliers, (state) => ({
+    ...state,
+    suppliers: [],
+    error: null,
+  })),
+
+
+  on(addSupplier, (state) => ({
+    ...state,
+    error: null,
+  })),
+  on(addSupplierSuccess, (state, action) => ({
+    ...state,
+    suppliers: [...state.suppliers, action.supplier],
+    error: null,
+  })),
+  on(addSupplierFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  })),
+
+  on(deleteSupplier, (state) => ({
+    ...state,
+    error: null,
+  })),
+  on(deleteSupplierSuccess, (state, action) => ({
+    ...state,
+    suppliers: state.suppliers.filter(supplier => supplier._id !== action.id),
+    error: null,
+  })),
+  on(deleteSupplierFailure, (state, action) => ({
+    ...state,
+    error: action.error,
+  })),
+
+  on(updateSupplier, (state) => ({
+    ...state,
+    error: null,
+  })),
+  on(updateSupplierSuccess, (state, action) => ({
+  ...state,
+  suppliers: state.suppliers.map(supplier =>
+    supplier._id === action.supplier._id ? action.supplier : supplier
+  ),
+  error: null,
+}))
+,
+  on(updateSupplierFailure, (state, action) => ({
+    ...state,
+    error: action.error,
   }))
+
+
+
 );
 
 export function materialReducer(state: MaterialState | undefined, action: any) {

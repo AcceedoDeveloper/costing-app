@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Material} from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
+import { Supplier } from '../../models/Supplier.model';
 
 
 
@@ -46,4 +47,59 @@ export const loadMaterialMapSuccess = createAction(
 export const loadMaterialMapFailure = createAction(
   '[Grade] Load Material Map Failure',
   props<{ error: any }>()
+);
+
+
+
+export const loadSuppliers = createAction('[Supplier] Load Suppliers');
+export const loadSuppliersSuccess = createAction(
+  '[Supplier] Load Suppliers Success',
+  props<{ suppliers: Supplier[] }>()
+);
+export const loadSuppliersFailure = createAction(
+  '[Supplier] Load Suppliers Failure',
+  props<{ error: string }>()
+);
+
+
+export const addSupplier = createAction(
+  '[Supplier] Add Supplier',
+  props<{ supplier: Supplier }>()
+);
+export const addSupplierSuccess = createAction(
+  '[Supplier] Add Supplier Success',
+  props<{ supplier: Supplier }>()
+);
+export const addSupplierFailure = createAction(
+  '[Supplier] Add Supplier Failure',
+  props<{ error: string }>()
+);
+
+
+export const deleteSupplier = createAction(
+  '[Supplier] Delete Supplier', 
+  props<{ id: string }>()
+);
+export const deleteSupplierSuccess = createAction(
+  '[Supplier] Delete Supplier Success',
+  props<{ id: string }>()
+);
+
+export const deleteSupplierFailure = createAction(
+  '[Supplier] Delete Supplier Failure',
+  props<{ error: string }>()
+);
+
+
+export const updateSupplier = createAction(
+  '[Supplier] Update Supplier',
+  props<{ supplier: Supplier }>()
+);
+export const updateSupplierSuccess = createAction(
+  '[Supplier] Update Supplier Success',
+  props<{ supplier: Supplier }>()
+);
+export const updateSupplierFailure = createAction(
+  '[Supplier] Update Supplier Failure',
+  props<{ error: string }>()
 );

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable,  } from 'rxjs';
 import { Material } from '../models/material.model';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import {Supplier} from '../models/Supplier.model';
 
 
 
@@ -35,5 +36,22 @@ export class MaterialService {
     return this.http.put<Material>(`${this.apiUrl}/updateMaterial/${material._id}`, material);
   }
 
+
+getSuppliers(): Observable<Supplier[]> {
+  return this.http.get<Supplier[]>(`${this.apiUrl}/getSupplier`);
+}
+
+  addSupplier(supplier: Supplier): Observable<Supplier> {
+    return this.http.post<Supplier>(`${this.apiUrl}/addSupplier`, supplier);
+  }
+
+  updateSupplier(supplier: Supplier): Observable<Supplier> {
+    console.log('Updating supplier:', supplier._id, supplier);
+    return this.http.put<Supplier>(`${this.apiUrl}/updateSupplier/${supplier._id}`, supplier);
+  }
+
+  deleteSupplier(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/deleteSupplier/${id}`);
+  }
 
 }

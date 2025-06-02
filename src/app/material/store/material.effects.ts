@@ -8,6 +8,10 @@ import {Material} from '../../models/material.model';
 import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , deleteMaterial, deleteMaterialSuccess, createMaterial, createMaterialSuccess
   , updateMaterial, updateMaterialSuccess, updateMaterialFailure
+  , loadSuppliers, loadSuppliersSuccess, loadSuppliersFailure
+  , addSupplier, addSupplierSuccess, addSupplierFailure
+  , deleteSupplier, deleteSupplierSuccess
+  ,  updateSupplier, updateSupplierSuccess, updateSupplierFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import { GradeService} from '../../services/grade.service';
@@ -121,10 +125,76 @@ loadMaterialMap$ = createEffect(() =>
   )
 );
 
+
+loadSuppliers$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType('[Supplier] Load Suppliers'),
+    mergeMap(() =>
+      this.materialService.getSuppliers().pipe(
+        map(suppliers => loadSuppliersSuccess({ suppliers })),
+        catchError(error => of(loadSuppliersFailure({ error: error.message })))
+      )
+    )
+  )
+);
+
+
+addSupplier$ = createEffect(() => {
+  return this.actions$.pipe(
+    ofType(addSupplier),
+    mergeMap((action) => {
+      return this.materialService.addSupplier(action.supplier).pipe(
+        map((supplier) => {
+          this.toastr.success('Supplier added successfully!', 'Success'); // ✅ Toastr for success
+          return addSupplierSuccess({ supplier });
+        }),
+        catchError((error) => {
+          this.toastr.error('Failed to add supplier.', 'Error'); // ✅ Toastr for error
+          return of(addSupplierFailure({ error: error.message }));
+        })
+      );
+    })
+  );
+});
+
+
+delectSupplier$ = createEffect(() => {
+  return this.actions$.pipe(
+    ofType(deleteSupplier),
+    mergeMap((action) => {
+      return this.materialService.deleteSupplier(action.id).pipe(
+        map(() => {
+          this.toastr.success('Supplier deleted successfully!', 'Success'); // ✅ Toastr for success
+          return deleteSupplierSuccess({ id: action.id });
+        }),
+        catchError((error) => {
+          this.toastr.error('Failed to delete supplier.', 'Error'); // ✅ Toastr for error
+          return of({ type: '[Supplier] Delete Supplier Failed' });
+        })
+      );
+    })
+  );
+});
+
+
+updateSupplier$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updateSupplier),
+    mergeMap(action =>
+      this.materialService.updateSupplier(action.supplier).pipe(
+        map(() => {
+          this.toastr.success('Supplier updated successfully!', 'Success');
+          return updateSupplierSuccess({ supplier: action.supplier });
+        }),
+        catchError(error => {
+          this.toastr.error('Failed to update supplier.', 'Error');
+          return of(updateSupplierFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
+
+
+
 }
-
-
-
-
-
-
