@@ -1,9 +1,68 @@
-.box{
-    display: flex;
-    gap: 5px;
+.form-container {
+  display: flex;
+  flex-direction: column;
 }
 
-.button-group{
-    display: flex;
-    gap: 5px;
+
+
+mat-radio-group {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+button[color="primary"] {
+  background-color: #5b84ff;
+  color: white;
+}
+
+button[color="primary"]:hover {
+  background-color: #4a73e8;
+}
+
+button[color="warn"] {
+  background-color: #ff4081;
+  color: white;
+}
+
+button[color="warn"]:hover {
+  background-color: #e6396f;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+
+  flex-wrap: wrap;
+}
+
+.half-width {
+  width: calc(50% - 8px);
+}
+
+.third-width {
+  width: calc(33.33% - 10.66px);
+}
+
+.full-width {
+  width: 100%;
 }

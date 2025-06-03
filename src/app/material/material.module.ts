@@ -22,6 +22,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SupplierComponent } from './supplier/supplier.component';
 import { AddSupplierComponent } from './supplier/add-supplier/add-supplier.component';
 
+import { FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 
 
@@ -34,6 +37,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent],
   imports: [
+    FormsModule,
+    MatRadioModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonToggleModule,
