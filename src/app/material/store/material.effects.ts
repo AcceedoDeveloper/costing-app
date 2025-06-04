@@ -12,8 +12,10 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , addSupplier, addSupplierSuccess, addSupplierFailure
   , deleteSupplier, deleteSupplierSuccess
   ,  updateSupplier, updateSupplierSuccess, updateSupplierFailure
+  , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
+import {MaterialTypeService} from '../../services/material-type.service';
 import { GradeService} from '../../services/grade.service';
 import { loadMaterialMap, loadMaterialMapSuccess, loadMaterialMapFailure } from './material.actions';
 
@@ -22,7 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable()
 
 export class MaterialEffects {
-    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService, private gradeService: GradeService) {}
+    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService, private gradeService: GradeService, private materialTypeService: MaterialTypeService) {}
 
 
  loadMaterials$ = createEffect(() =>
@@ -190,6 +192,18 @@ updateSupplier$ = createEffect(() =>
           this.toastr.error('Failed to update supplier.', 'Error');
           return of(updateSupplierFailure({ error: error.message }));
         })
+      )
+    )
+  )
+);
+
+loadCustomerDetails$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(loadCustomerDetails),
+    mergeMap(() =>
+      this.materialTypeService.getCustomerDetails().pipe(
+        map(customers => loadCustomerDetailsSuccess({ customers })),
+        catchError(error => of(loadCustomerDetailsFailure({ error: error.message })))
       )
     )
   )

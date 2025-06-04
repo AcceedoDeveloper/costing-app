@@ -5,19 +5,22 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , addSupplier, addSupplierSuccess, addSupplierFailure
   , deleteSupplier, deleteSupplierSuccess, deleteSupplierFailure
   , updateSupplier, updateSupplierSuccess, updateSupplierFailure
+  , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 import { Supplier } from '../../models/Supplier.model';
+import {Customerdetails} from '../../models/Customer-details.model';
 
 
 
-interface MaterialState {
+ export  interface MaterialState {
   materials: Material[];
   count: number;
   error: string | null;
   materialMap: { [key: string]: MaterialItem[] };
   suppliers: Supplier[];
+  customers: Customerdetails[];
 }
 
 
@@ -27,6 +30,7 @@ const initialState: MaterialState = {
   error: null,
   materialMap: {},
   suppliers: [],
+  customers: [],
 };
 
 const _materialReducer = createReducer(
@@ -133,7 +137,25 @@ const _materialReducer = createReducer(
   on(updateSupplierFailure, (state, action) => ({
     ...state,
     error: action.error,
+  })),
+
+  on(loadCustomerDetails, (state) => ({
+    ...state,
+    customers: [],
+    error: null,
+  })),
+  on(loadCustomerDetailsSuccess, (state, action) => ({
+    ...state,
+    customers: action.customers,
+    error: null,
+  })),
+  on(loadCustomerDetailsFailure, (state, action) => ({
+    ...state,
+    customers: [],
+    error: action.error,
   }))
+
+
 
 
 

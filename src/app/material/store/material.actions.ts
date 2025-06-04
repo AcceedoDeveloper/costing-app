@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { Material} from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 import { Supplier } from '../../models/Supplier.model';
+import { Customerdetails } from '../../models/Customer-details.model';
 
 
 
@@ -101,5 +102,16 @@ export const updateSupplierSuccess = createAction(
 );
 export const updateSupplierFailure = createAction(
   '[Supplier] Update Supplier Failure',
+  props<{ error: string }>()
+);
+
+
+export const loadCustomerDetails = createAction('[Customer] Load Customer Details');
+export const loadCustomerDetailsSuccess = createAction(
+  '[Customer] Load Customer Details Success',
+  props<{ customers: Customerdetails[] }>()
+);
+export const loadCustomerDetailsFailure = createAction(
+  '[Customer] Load Customer Details Failure',
   props<{ error: string }>()
 );

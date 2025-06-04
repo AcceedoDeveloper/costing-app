@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MaterialType } from '../models/material-type.model';
+import {Customerdetails} from '../models/Customer-details.model';
 
 @Injectable({ providedIn: 'root' })
 export class MaterialTypeService {
@@ -24,4 +25,11 @@ export class MaterialTypeService {
   deleteMaterialType(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/deleteMaterialType/${id}`);
   }
+
+  getCustomerDetails(): Observable<Customerdetails[]> {
+    return this.http.get<Customerdetails[]>(`${this.apiUrl}/get-customers`);
+  }
+
+
+
 }

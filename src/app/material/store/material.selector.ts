@@ -1,5 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
+ 
+
 export const MATERIAL_STATE_NAME = 'materials';
 const getMaterialState = createFeatureSelector<any>(MATERIAL_STATE_NAME);
 const getSuppliersState = createSelector(getMaterialState, (state) => state.suppliers);
@@ -33,4 +35,7 @@ export const getSuppliers = createSelector(
   }
 );
 
-
+export const getCustomerDetails = createSelector(
+  getMaterialState,
+  (state) => state.customers
+);
