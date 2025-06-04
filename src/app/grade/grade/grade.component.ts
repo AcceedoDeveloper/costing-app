@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,6 +22,11 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 
 
 export class GradeComponent implements OnInit {
+  gradesList: Grade[] = [];
+allMaterials: { name: string, unitCost: number }[] = [];
+gradeColumns: { gradeNo: string, gradeName: string }[] = [];
+materialQuantityMap: { [materialName: string]: { [gradeNo: string]: number } } = {};
+
   materialMap: { [key: string]: any[] } = {};
    materialTypes: string[] = [];
    private gradeData: Grade | null = null;
@@ -58,6 +64,36 @@ displayedColumns: string[] = ['gradeNo', 'name',  'rawMaterial', 'actions', 'del
 
    
   });
+
+  this.grades$ = this.store.select(fromGrade.selectAllGrades);
+this.grades$.subscribe(grades => {
+  this.gradesList = grades;
+  this.gradeColumns = grades.map(g => ({
+    gradeNo: g.gradeNo,
+    gradeName: g.name,
+  }));
+
+  // Collect materials and quantities
+  const materialSet = new Map<string, { name: string; unitCost: number }>();
+  this.materialQuantityMap = {};
+
+  grades.forEach(grade => {
+    grade.rawMaterial?.forEach(material => {
+      material.materialsUsed.forEach(item => {
+materialSet.set(item.name, { name: item.name, unitCost: 0 }); // Mock value
+
+        if (!this.materialQuantityMap[item.name]) {
+          this.materialQuantityMap[item.name] = {};
+        }
+
+        this.materialQuantityMap[item.name][grade.gradeNo] = item.quantity;
+      });
+    });
+  });
+
+  this.allMaterials = Array.from(materialSet.values());
+});
+
     
   }
 
@@ -89,11 +125,13 @@ openeditMeterialPopup(grade: Grade):void {
   console.log('Opening edit popup for grade:', grade);
   this.dialog.open(AddgradeComponent, {
     width: '480px',
-    data: { grade, isEditMode: true } // pass the grade data and edit mode flag to the popup
+    data: { grade, isEditMode: true } 
   });
 }
 
+getQuantity(materialName: string, gradeNo: string): number | string {
+  return this.materialQuantityMap?.[materialName]?.[gradeNo] ?? '-';
+}
 
 
 }
-

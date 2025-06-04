@@ -1,92 +1,76 @@
 
-
-
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f3f3;
-      margin: 0;
-      padding: 0;
-    }
-
-    .circular-button {
-      height: 40px;
-      width: 10px;
-      border-radius: 50%;
+/* Outer wrapper containing both form and table */
+.table-wrapper {
+  width: 600px;
+  margin: 20px auto;
 }
 
-    .table-container {
-      width: 600px;
-      margin: 10px auto;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-
-
-.header[_ngcontent-xnj-c243] {
-    display: flex
-;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 25%;
+/* Form aligned right above the table */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
+/* Table container with background and shadow */
+.table-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
 
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+thead {
+  background-color: #fff;
+}
 
-    thead {
-      background-color: #fff;
-    }
+th {
+  text-align: left;
+  padding: 14px 20px;
+  color: #5b84ff;
+  font-weight: bold;
+  border-bottom: 2px solid #5b84ff;
+}
 
-    th {
-      text-align: left;
-      padding: 14px 20px;
-      color: #5b84ff;
-      font-weight: bold;
-      border-bottom: 2px solid #5b84ff;
-    }
+td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #eeee;
+  font-weight: 500;
+}
 
-    td {
-      padding: 14px 20px;
-      border-bottom: 1px solid #eeee;
-      font-weight: 500;
-    }
+td.actions {
+  border-left: 1px solid #ccc;
+  padding-left: 20px;
+}
 
-    /* Thin vertical line before Actions in only tbody */
-    td.actions {
-      border-left: 1px solid #ccc;
-      padding-left: 20px;
-    }
-
-    .actions i {
-      margin-right: 15px;
-      font-size: 16px;
-      color: #000;
-      cursor: pointer;
-    }
-
-    tr:hover {
-      background-color: #f9f9f9;
-    }
-  
-
-  td mat-icon{
-    font-size: 20px;
-    cursor: pointer;
-   
-  }
-
-  .icon {
+.icon {
+  font-size: 20px;
+  color: #000;
   cursor: pointer;
-  margin-right: 10px; /* Adjust gap as needed */
+  margin-right: 10px;
 }
 
 .icon:last-child {
   margin-right: 0;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Button styling */
+.circular-button {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  min-width: 40px;
+  padding: 0;
 }
