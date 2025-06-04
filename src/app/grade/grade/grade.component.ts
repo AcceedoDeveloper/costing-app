@@ -21,6 +21,9 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 
 
 export class GradeComponent implements OnInit {
+  materialMap: { [key: string]: any[] } = {};
+   materialTypes: string[] = [];
+   private gradeData: Grade | null = null;
   isEditMode: boolean = false;
   grades$!: Observable<Grade[]>;
   dataSource!: MatTableDataSource<Grade>;
@@ -41,6 +44,20 @@ displayedColumns: string[] = ['gradeNo', 'name',  'rawMaterial', 'actions', 'del
       this.dataSource.data = grades;
       this.dataSource.paginator = this.paginator;
     });
+
+
+
+    this.store.dispatch(GradeActions.loadMaterialMap());
+
+  this.store.select(fromGrade.selectMaterialMap).subscribe(materialMap => {
+    this.materialMap = materialMap;
+
+    console.log('Material Map:', materialMap); 
+
+    this.materialTypes = Object.keys(materialMap);
+
+   
+  });
     
   }
 

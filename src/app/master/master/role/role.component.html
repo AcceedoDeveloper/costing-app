@@ -1,68 +1,52 @@
-<div class="role-container">
-  <div class="header">
-    <div class="spacer"></div>
-    <div class="add-section">
-      <mat-form-field appearance="standard">
-        <mat-label>Role Name</mat-label>
-        <input matInput [(ngModel)]="newRoleName" />
-      </mat-form-field>
-     <button
-  mat-raised-button
-  color="primary"
-  (click)="isEditMode ? updateRole() : addRole()"
-  [disabled]="newRoleName.trim().length === 0"
->
-  <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
-  {{ isEditMode ? 'Update' : 'Add' }}
-</button>
-
-      <button
-        mat-button
-        color="warn"
-        *ngIf="isEditMode"
-        (click)="cancelAction()"
-      >
-        <mat-icon>cancel</mat-icon>
-        Cancel
-      </button>
-    </div>
+<div class="header">
+  <div class="toggle-group">
+    <!-- Optional toggle buttons -->
   </div>
 
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    class="custom-table"
-    style="width: 100%; margin-top: 16px"
-  >
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Role Name </th>
-      <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
-    </ng-container>
+  <div class="add-section">
+    <mat-form-field appearance="standard">
+      <mat-label>Role Name</mat-label>
+      <input matInput [(ngModel)]="newRoleName" />
+    </mat-form-field>
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let element">
-        <button
-          mat-icon-button
-          (click)="startEdit(element)"
-          aria-label="Edit Role"
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          (click)="deleteRole(element._id)"
-          aria-label="Delete Role"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+    <button
+      mat-raised-button
+      class="circular-button primary-button"
+      color="primary"
+      (click)="isEditMode ? updateRole() : addRole()"
+      [disabled]="newRoleName.trim().length === 0"
+    >
+      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+    </button>
 
-    <!-- Table Headers and Rows -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <button
+      mat-button
+      color="warn"
+      *ngIf="isEditMode"
+      (click)="cancelAction()"
+    >
+      <mat-icon>cancel</mat-icon>
+      Cancel
+    </button>
+  </div>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 80%;">Role Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of roles$ | async">
+        <td>{{ role.name }}</td>
+        <td class="actions">
+          <mat-icon aria-label="edit role" class="icon" (click)="startEdit(role)">edit</mat-icon>
+          <mat-icon aria-label="Delete role" class="icon" (click)="deleteRole(role._id)">delete</mat-icon>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </div>

@@ -1,61 +1,55 @@
-<div class="customer-container">
-  <div class="header">
-    <div class="spacer"></div>
-    <div class="add-section">
-      <mat-form-field appearance="standard">
-        <mat-label>Customer Name</mat-label>
-        <input matInput [(ngModel)]="newCustomerName" />
-      </mat-form-field>
-
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="isEditMode ? updateCustomer() : addCustomer()"
-        [disabled]="newCustomerName.trim().length === 0"
-      >
-        <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
-        {{ isEditMode ? 'Update' : 'Add' }}
-      </button>
-
-      <button
-        mat-button
-        color="warn"
-        *ngIf="isEditMode"
-        (click)="cancelAction()"
-      >
-        <mat-icon>cancel</mat-icon>
-        Cancel
-      </button>
-    </div>
+<div class="header">
+  <!-- Empty Left Side (Toggle Group Placeholder) -->
+  <div class="toggle-group">
+    <!-- No toggle buttons added -->
   </div>
 
-  <table
-    mat-table
-    [dataSource]="customers"
-    class="custom-table"
-    style="width: 100%; margin-top: 16px"
-  >
-    <!-- Customer Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Customer Name </th>
-      <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
-    </ng-container>
+  <!-- Right Side: Form Input and Buttons -->
+  <div class="add-section">
+    <mat-form-field appearance="standard">
+      <mat-label>Customer Name</mat-label>
+      <input matInput [(ngModel)]="newCustomerName" />
+    </mat-form-field>
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Actions </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-icon-button (click)="startEdit(element)" aria-label="Edit">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button (click)="deleteCustomer(element._id)" aria-label="Delete">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+    <button
+      mat-raised-button
+      class="circular-button primary-button"
+      color="primary"
+      (click)="isEditMode ? updateCustomer() : addCustomer()"
+      [disabled]="newCustomerName.trim().length === 0"
+    >
+      <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
+    </button>
 
-    <!-- Table Headers and Rows -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <button
+      mat-button
+      color="warn"
+      *ngIf="isEditMode"
+      (click)="cancelAction()"
+    >
+      <mat-icon>cancel</mat-icon>
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!-- Customer Table -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 80%;">Customer Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let element of customers">
+        <td>{{ element.name }}</td>
+        <td class="actions">
+          <mat-icon aria-label="Edit customer" class="icon" (click)="startEdit(element)">edit</mat-icon>
+          <mat-icon aria-label="Delete customer" class="icon" (click)="deleteCustomer(element._id)">delete</mat-icon>
+        </td>
+      </tr>
+    </tbody>
   </table>
 </div>
