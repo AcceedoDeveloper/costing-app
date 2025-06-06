@@ -32,9 +32,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { EditGradeComponent } from './grade/edit-grade/edit-grade.component';
 
 
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+
 @NgModule({
   declarations: [GradeComponent, AddgradeComponent, EditGradeComponent],
   imports: [
+    MatCardModule,
+    MatCheckboxModule,
     MatExpansionModule,
     MatSelectModule,
     MatOptionModule,

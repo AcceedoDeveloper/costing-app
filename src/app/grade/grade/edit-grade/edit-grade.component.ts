@@ -13,6 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./edit-grade.component.css']
 })
 export class EditGradeComponent implements OnInit {
+  
   materialMap: { [key: string]: any[] } = {};
   fullGradeData!: Grade;
   showDropdown: { [key: string]: boolean } = {};
@@ -94,13 +95,13 @@ export class EditGradeComponent implements OnInit {
     this.showDropdown[type] = false;
   }
 
-  removeSelectedMaterials(type: string): void {
-    const section = this.fullGradeData.rawMaterial?.find(r => r.type === type);
-    if (section) {
-      section.materialsUsed = section.materialsUsed.filter(mat => !mat.selected);
-      console.log(`Removed selected materials from ${type}`, this.fullGradeData);
-    }
+  removeMaterial(type: string, materialToRemove: any) {
+  const targetRaw = this.fullGradeData.rawMaterial?.find(r => r.type === type);
+  if (targetRaw) {
+    targetRaw.materialsUsed = targetRaw.materialsUsed.filter(m => m !== materialToRemove);
   }
+}
+
 
 updateGrade(): void {
   if (this.fullGradeData?.rawMaterial) {
@@ -116,6 +117,8 @@ updateGrade(): void {
   // 👇 Close the dialog and send result back
   this.dialogRef.close(this.fullGradeData);
 }
-
+close(){
+  this.dialogRef.close();
+}
 
 }

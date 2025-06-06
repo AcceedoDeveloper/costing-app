@@ -1,48 +1,55 @@
-<div *ngIf="fullGradeData">
-  <h2>Edit Grade - {{ fullGradeData.name }}</h2>
+<div class="popup-overlay" *ngIf="fullGradeData">
+  <div class="popup-container">
+    <div class="popup-header">
+      <div class="grade-info">
+        <p><strong>Grade No:</strong> {{ fullGradeData.gradeNo }} <strong>Grade Name:</strong> {{ fullGradeData.name }}</p>
+      </div>
+    </div>
+    
+    <div class="popup-content">
+      <div *ngFor="let raw of fullGradeData.rawMaterial" class="material-section">
+        <div class="material-header">
+          <h3>{{ raw.type }}</h3>
+          <button class="add-button" (click)="toggleDropdown(raw.type)">+</button>
+        </div>
 
-  <p><strong>Grade No:</strong> {{ fullGradeData.gradeNo }}</p>
-  <p><strong>Grade Name:</strong> {{ fullGradeData.name }}</p>
+        <!-- Dropdown for selecting materials -->
+        <div class="select-container" *ngIf="showDropdown[raw.type]">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Select Material</mat-label>
+            <mat-select (selectionChange)="addMaterial(raw.type, $event.value)">
+              <mat-option *ngFor="let material of materialMap[raw.type]" [value]="material._id">
+                {{ material.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-  <div *ngFor="let raw of fullGradeData.rawMaterial">
-    <h3>
-      {{ raw.type }}
-      <button mat-icon-button color="primary" (click)="toggleDropdown(raw.type)">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-    </h3>
+        <!-- Card layout for materials -->
+        <div class="material-list">
+          <div *ngFor="let mat of raw.materialsUsed" class="material-card">
+            <div class="material-card-content">
+              <div class="material-checkbox">
+                <ng-container *ngIf="mat.selected; else checkboxTpl">
+                  <mat-icon class="delete-icon" (click)="mat.selected = false">delete</mat-icon>
+                </ng-container>
+                <ng-template #checkboxTpl>
+                  <input type="checkbox" [(ngModel)]="mat.selected" />
+                </ng-template>
+              </div>
+              <div class="material-name">{{ mat.name }}</div>
+              <div class="material-quantity">
+                <input type="number" [(ngModel)]="mat.quantity" class="quantity-input" placeholder="Quantity" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Dropdown for selecting materials -->
-    <mat-form-field appearance="fill" *ngIf="showDropdown[raw.type]">
-      <mat-label>Select Material</mat-label>
-      <mat-select (selectionChange)="addMaterial(raw.type, $event.value)">
-        <mat-option *ngFor="let material of materialMap[raw.type]" [value]="material._id">
-          {{ material.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
-      <thead>
-        <tr>
-          <th>Select</th>
-          <th>Name</th>
-          <th>Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let mat of raw.materialsUsed">
-          <td><input type="checkbox" [(ngModel)]="mat.selected" /></td>
-          <td>{{ mat.name }}</td>
-          <td>
-            <input type="number" [(ngModel)]="mat.quantity" style="width: 100%;" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button mat-button color="warn" (click)="removeSelectedMaterials(raw.type)">Remove Selected</button>
+    <div class="popup-footer">
+      <button (click)="close()" class="cancel-button">Cancel</button>
+      <button class="update-button" (click)="updateGrade()">Update</button>
+    </div>
   </div>
-
-  <button mat-button color="primary" (click)="updateGrade()">Update</button>
 </div>
