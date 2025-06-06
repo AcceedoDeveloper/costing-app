@@ -2,6 +2,7 @@ export interface NestedMaterialUsed {
   name: string;
   quantity: number;
   objectId: string;
+  selected?: boolean;
 }
 
 export interface RawMaterial {

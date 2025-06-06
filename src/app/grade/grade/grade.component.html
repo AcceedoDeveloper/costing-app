@@ -17,12 +17,31 @@
       <th rowspan="2">Material</th>
       <th rowspan="2">Unit Cost</th>
       <ng-container *ngFor="let grade of gradeColumns">
-        <th>{{ grade.gradeNo }}</th>
+       <th>{{ grade.gradeNo }}
+  <button
+    mat-icon-button
+    color="warn"
+    (click)="deleteGrade(grade._id)"
+    aria-label="Delete grade"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
+</th>
+
       </ng-container>
     </tr>
     <tr>
       <ng-container *ngFor="let grade of gradeColumns">
-        <th>{{ grade.gradeName }}</th>
+        <th>{{ grade.gradeName }}
+          <button
+    mat-icon-button
+    color="accent"
+     (click)="openeditMeterialPopup(grade)" 
+    aria-label="Edit grade"
+  >
+    <mat-icon>edit</mat-icon>
+  </button>
+        </th>
       </ng-container>
     </tr>
   </thead>
@@ -37,14 +56,20 @@
 
       <!-- Loop over each material inside the category -->
       <tr *ngFor="let material of materialMap[category]">
-        <td>{{ material.name }}</td>
+        <td>{{ material.name }}   </td>
         <td>₹{{ material.unitCost }}</td>
 
         <!-- Fill quantity based on gradeColumns -->
         <ng-container *ngFor="let grade of gradeColumns">
-  <td>
-    {{ getQuantity(material.name, grade.gradeNo) }}
-  </td>
+ <td>
+  <ng-container *ngIf="getQuantity(material.name, grade.gradeNo) !== null; else dash">
+    Qty: {{ getQuantity(material.name, grade.gradeNo) }} 
+    (₹{{ material.unitCost * getQuantity(material.name, grade.gradeNo) }})
+  </ng-container>
+  <ng-template #dash>-</ng-template>
+</td>
+
+
 </ng-container>
 
       </tr>

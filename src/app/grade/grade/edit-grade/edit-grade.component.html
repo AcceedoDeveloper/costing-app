@@ -1,0 +1,48 @@
+<div *ngIf="fullGradeData">
+  <h2>Edit Grade - {{ fullGradeData.name }}</h2>
+
+  <p><strong>Grade No:</strong> {{ fullGradeData.gradeNo }}</p>
+  <p><strong>Grade Name:</strong> {{ fullGradeData.name }}</p>
+
+  <div *ngFor="let raw of fullGradeData.rawMaterial">
+    <h3>
+      {{ raw.type }}
+      <button mat-icon-button color="primary" (click)="toggleDropdown(raw.type)">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </h3>
+
+    <!-- Dropdown for selecting materials -->
+    <mat-form-field appearance="fill" *ngIf="showDropdown[raw.type]">
+      <mat-label>Select Material</mat-label>
+      <mat-select (selectionChange)="addMaterial(raw.type, $event.value)">
+        <mat-option *ngFor="let material of materialMap[raw.type]" [value]="material._id">
+          {{ material.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <table border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Name</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let mat of raw.materialsUsed">
+          <td><input type="checkbox" [(ngModel)]="mat.selected" /></td>
+          <td>{{ mat.name }}</td>
+          <td>
+            <input type="number" [(ngModel)]="mat.quantity" style="width: 100%;" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button mat-button color="warn" (click)="removeSelectedMaterials(raw.type)">Remove Selected</button>
+  </div>
+
+  <button mat-button color="primary" (click)="updateGrade()">Update</button>
+</div>
