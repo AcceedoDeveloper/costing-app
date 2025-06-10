@@ -14,6 +14,8 @@ export interface Customer {
   name: string;
   lowerCaseName: string;
   __v: number;
+  address: string;
+  phoneNo: string;
 }
 
 export interface ProcessType {

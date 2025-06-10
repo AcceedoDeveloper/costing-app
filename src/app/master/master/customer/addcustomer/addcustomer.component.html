@@ -1,0 +1,42 @@
+<div class="">
+  <h2 class="text-xl font-bold">{{ isEditMode ? 'Edit Customer' : 'Add Customer' }}</h2>
+  <form [formGroup]="customerForm" (ngSubmit)="submitCustomer()">
+    <div class="box">
+      <mat-form-field appearance="standard" class="matfiles">
+        <mat-label>Name</mat-label>
+        <input matInput id="name" formControlName="name" placeholder="Enter customer name" />
+        <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
+          Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="standard" class="matfiles">
+        <mat-label>Address</mat-label>
+        <input matInput id="address" formControlName="address" placeholder="Enter address" />
+        <mat-error *ngIf="customerForm.get('address')?.hasError('required')">
+          Address is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="box">
+      <mat-form-field appearance="standard" class="matfiles">
+        <mat-label>Phone Number</mat-label>
+        <input matInput id="phoneNo" formControlName="phoneNo" placeholder="Enter phone number" />
+        <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('required')">
+          Phone Number is required
+        </mat-error>
+        <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('pattern')">
+          Please enter a valid 10-digit phone number
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="button">
+      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid">
+        {{ isEditMode ? 'Update' : 'Create' }} Customer
+      </button>
+    </div>
+  </form>
+</div>

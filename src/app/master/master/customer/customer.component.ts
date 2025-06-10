@@ -8,7 +8,8 @@ import { addCustomer } from '../store/master.action';
 import { deleteCustomer } from '../store/master.action'; // Adjust the import path as necessary
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-
+import { AddcustomerComponent} from './addcustomer/addcustomer.component';
+import { Customer } from '../../../models/Customer-details.model';
 
 
 @Component({
@@ -94,6 +95,19 @@ deleteCustomer(id: string) {
     }
   });
 }
+
+ openAddCustomer(customer?: Customer): void {
+    const dialogRef = this.dialog.open(AddcustomerComponent, {
+      width: '400px',
+      data: customer ? { customer } : {}
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.store.dispatch(loadCustomers()); // Refresh customer list
+    });
+  }
+
+
 
   cancelAction() {
     this.isEditMode = false;

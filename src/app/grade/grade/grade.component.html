@@ -23,6 +23,9 @@
               <button mat-icon-button color="warn" (click)="deleteGrade(grade._id)">
                 <mat-icon>delete</mat-icon>
               </button>
+               <button mat-icon-button color="accent" (click)="openeditMeterialPopup(grade)">
+                <mat-icon>edit</mat-icon>
+              </button>
             </th>
           </ng-container>
         </tr>
@@ -30,9 +33,7 @@
           <ng-container *ngFor="let grade of gradeColumns">
             <th>
               {{ grade.gradeName }}
-              <button mat-icon-button color="accent" (click)="openeditMeterialPopup(grade)">
-                <mat-icon>edit</mat-icon>
-              </button>
+             
             </th>
           </ng-container>
         </tr>

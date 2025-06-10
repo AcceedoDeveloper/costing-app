@@ -3,34 +3,8 @@
   <div class="toggle-group">
     <!-- No toggle buttons added -->
   </div>
-
-  <!-- Right Side: Form Input and Buttons -->
-  <div class="add-section">
-    <mat-form-field appearance="standard">
-      <mat-label>Customer Name</mat-label>
-      <input matInput [(ngModel)]="newCustomerName" />
-    </mat-form-field>
-
-    <button
-      mat-raised-button
-      class="circular-button primary-button"
-      color="primary"
-      (click)="isEditMode ? updateCustomer() : addCustomer()"
-      [disabled]="newCustomerName.trim().length === 0"
-    >
-      <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
-    </button>
-
-    <button
-      mat-button
-      color="warn"
-      *ngIf="isEditMode"
-      (click)="cancelAction()"
-    >
-      <mat-icon>cancel</mat-icon>
-      Cancel
-    </button>
-  </div>
+  <button (click)="openAddCustomer()">Add Customer</button>
+  
 </div>
 
 <!-- Customer Table -->
@@ -38,15 +12,19 @@
   <table>
     <thead>
       <tr>
-        <th style="width: 80%;">Customer Name</th>
-        <th>Actions</th>
+        <th style="width: 30%;">Customer Name</th>
+        <th style="width: 30%;">Address</th>
+        <th style="width: 20%;">Phone.No</th>
+        <th style="width: 20%;">Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let element of customers">
         <td>{{ element.name }}</td>
+        <td>{{ element.address }}</td>
+        <td>{{ element.phoneNo }}</td>
         <td class="actions">
-          <mat-icon aria-label="Edit customer" class="icon" (click)="startEdit(element)">edit</mat-icon>
+          <mat-icon aria-label="Edit customer" class="icon" (click)="openAddCustomer(element)">edit</mat-icon>
           <mat-icon aria-label="Delete customer" class="icon" (click)="deleteCustomer(element._id)">delete</mat-icon>
         </td>
       </tr>

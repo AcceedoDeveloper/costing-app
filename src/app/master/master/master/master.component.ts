@@ -10,6 +10,7 @@ import { User } from '../../../models/users.model';
 import { Observable } from 'rxjs';
 import { Userget } from '../../../models/users.model';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import { PageEvent } from '@angular/material/paginator';
 
 
 
@@ -18,13 +19,21 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
   templateUrl: './master.component.html',
   styleUrls: ['./master.component.css']
 })
+
+
 export class MasterComponent implements OnInit {
+   users: User[] = [];
+  paginatedUsers: User[] = [];
+  pageSize = 5;
+  pageIndex = 0;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   users$: Observable<User[]>;
   userCount$: Observable<number>;
   dataSource = new MatTableDataSource<User>();
   displayedColumns: string[] = ['UserCode', 'UserName', 'department', 'role', 'actions', 'delete'];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+ 
 
   constructor(private dialog: MatDialog, private store: Store) {
     this.users$ = this.store.select(getUsers);
@@ -40,12 +49,28 @@ export class MasterComponent implements OnInit {
     console.log('Users from Store:', users);
     this.dataSource.data = users;
     this.dataSource.paginator = this.paginator;
+     this.users$.subscribe(users => {
+      this.users = users;
+      this.updatePaginatedUsers();
+    });
   });
     this.users$.subscribe(users => {
       console.log("data", users);
       this.dataSource.data = users;
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  updatePaginatedUsers() {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedUsers = this.users.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedUsers();
   }
 
   ngAfterViewInit() {

@@ -52,3 +52,10 @@ thead th {
 .data{
   width: 30px;
 }
+
+.button-container{
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}

@@ -24,9 +24,10 @@ import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { CustomerComponent } from './customer/customer.component';
 import { DepertmentComponent } from './depertment/depertment.component';
+import { AddcustomerComponent } from './customer/addcustomer/addcustomer.component';
 
 @NgModule({
-  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent],
+  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent, AddcustomerComponent, ],
   imports: [
     MatSelectModule,
      FormsModule,

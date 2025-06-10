@@ -1,61 +1,35 @@
-<div  class="table-controls d-flex justify-content-between align-items-center">
-
-
-<button mat-raised-button color="primary" (click)="openAddMeterialPopup()" >Add Meterial</button>
+<div class="header">
+  <h2>Material List</h2>
+  <button mat-raised-button color="primary" (click)="openAddMeterialPopup()">Add Material</button>
 </div>
 
-
-<div class="container mx-auto p-4">
- 
-  <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" class="w-full">
-    
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef class="bold-header">name</th>
-        <td mat-cell *matCellDef="let material">{{ material.name }}</td>
-      </ng-container>
-
-    
-      <ng-container matColumnDef="type">
-        <th mat-header-cell *matHeaderCellDef class="bold-header">type</th>
-        <td mat-cell *matCellDef="let material">{{ material.materialType }}</td>
-      </ng-container>
-
-     
-      <ng-container matColumnDef="unitCost">
-        <th mat-header-cell *matHeaderCellDef class="bold-header">unitCost</th>
-        <td mat-cell *matCellDef="let material">{{ material.unitCost }}</td>
-      </ng-container>
-
-     
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="bold-header">actions</th>
-        <td mat-cell *matCellDef="let material">
-            <button mat-icon-button (click)="onEdit(material)" >
-            <mat-icon>edit</mat-icon>
-          </button>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Unit Cost</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let material of paginatedMaterials">
+        <td>{{ material.name }}</td>
+        <td>{{ material.materialType }}</td>
+        <td>₹{{ material.unitCost }}</td>
+        <td class="actions">
+          <mat-icon class="icon" (click)="onEdit(material)">edit</mat-icon>
+          <mat-icon class="icon" (click)="deleteMaterial(material)">delete</mat-icon>
         </td>
-      </ng-container>
+      </tr>
+    </tbody>
+  </table>
 
-     
-      
-      <ng-container matColumnDef="delete">
-        <th mat-header-cell *matHeaderCellDef class="bold-header">Delete</th>
-        <td mat-cell *matCellDef="let material">
-          <button mat-icon-button (click)="deleteMaterial(material)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons
-      aria-label="Select page of users">
-    </mat-paginator>
-  </div>
+  <mat-paginator
+    [length]="materials.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </div>
