@@ -5,7 +5,19 @@
         <p><strong>Grade No:</strong> {{ fullGradeData.gradeNo }} <strong>Grade Name:</strong> {{ fullGradeData.name }}</p>
       </div>
     </div>
-    
+
+    <!-- Dynamic material type buttons -->
+    <div class="add-type-buttons">
+      <button
+        class="add-type-btn"
+        *ngFor="let type of availableMaterialTypes"
+        (click)="addMaterialType(type)"
+        [disabled]="isMaterialTypeAdded(type)"
+      >
+        + Add {{ type }}
+      </button>
+    </div>
+
     <div class="popup-content">
       <div *ngFor="let raw of fullGradeData.rawMaterial" class="material-section">
         <div class="material-header">
@@ -25,13 +37,13 @@
           </mat-form-field>
         </div>
 
-        <!-- Card layout for materials -->
+        <!-- Material cards -->
         <div class="material-list">
           <div *ngFor="let mat of raw.materialsUsed" class="material-card">
             <div class="material-card-content">
               <div class="material-checkbox">
                 <ng-container *ngIf="mat.selected; else checkboxTpl">
-                  <mat-icon class="delete-icon" (click)="mat.selected = false">delete</mat-icon>
+                  <mat-icon class="delete-icon" (click)="removeMaterial(raw.type, mat)">delete</mat-icon>
                 </ng-container>
                 <ng-template #checkboxTpl>
                   <input type="checkbox" [(ngModel)]="mat.selected" />
