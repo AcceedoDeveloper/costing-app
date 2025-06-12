@@ -36,11 +36,12 @@ import { CustomerdetailsComponent } from './customerdetails/customerdetails.comp
 import { ProcessComponent } from './process/process.component';
 import { AddprocessComponent } from './process/addprocess/addprocess.component';
 
-import { GradeModule } from '../grade/grade.module'; 
+import { GradeModule } from '../grade/grade.module';
+import { MaterialtypeComponent } from './materialtype/materialtype.component'; 
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent],
   imports: [
     GradeModule,
     MatCheckboxModule,

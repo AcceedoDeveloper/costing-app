@@ -8,12 +8,16 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure,
   addProcess, addProcessFailure, addProcessSuccess
   , loadProcesses, loadProcessesFailure, loadProcessesSuccess
+  , loadMaterialTypesFailure, loadMaterialTypesSuccess, updateMaterialTypeFailure
+  , deleteMaterialTypeFailure, deleteMaterialTypeSuccess, updateMaterialTypeSuccess
+  , addMaterialTypeFailure, addMaterialTypeSuccess
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 import { Supplier } from '../../models/Supplier.model';
 import {Customerdetails} from '../../models/Customer-details.model';
 import { Process } from '../../models/process.model';
+import { MaterialType} from '../../models/material-type.model';
 
 
 
@@ -25,6 +29,7 @@ import { Process } from '../../models/process.model';
   suppliers: Supplier[];
   customers: Customerdetails[];
   process: Process[];
+   materialTypes: MaterialType[];
 }
 
 
@@ -35,7 +40,8 @@ const initialState: MaterialState = {
   materialMap: {},
   suppliers: [],
   customers: [],
-  process: []
+  process: [],
+  materialTypes: [],
 };
 
 const _materialReducer = createReducer(
@@ -184,6 +190,24 @@ const _materialReducer = createReducer(
     error,
     loading: false
   })),
+
+  on(loadMaterialTypesSuccess, (state, { materialTypes }) => ({ ...state, materialTypes })),
+  on(addMaterialTypeSuccess, (state, { material }) => ({ ...state, materialTypes: [...state.materialTypes, material] })),
+  on(updateMaterialTypeSuccess, (state, { material }) => ({
+    ...state,
+    materialTypes: state.materialTypes.map(mt => mt._id === material._id ? material : mt)
+  })),
+  on(deleteMaterialTypeSuccess, (state, { id }) => ({
+    ...state,
+    materialTypes: state.materialTypes.filter(mt => mt._id !== id)
+  })),
+  on(
+    loadMaterialTypesFailure,
+    addMaterialTypeFailure,
+    updateMaterialTypeFailure,
+    deleteMaterialTypeFailure,
+    (state, { error }) => ({ ...state, error })
+  ),
 
 
 

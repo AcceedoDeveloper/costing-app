@@ -20,7 +20,12 @@
       <ng-container *ngFor="let process of processes; let i = index">
         <tr>
           <td>{{ process.processName }}</td>
-          <td>{{ process.grade }}</td>
+          <td>
+  <ng-container *ngFor="let g of process.grade; let last = last">
+    {{ g.name }}<span *ngIf="!last">, </span>
+  </ng-container>
+</td>
+
           <td>
             {{ process.rawMaterial.length }} materials
           </td>

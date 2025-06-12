@@ -139,10 +139,7 @@ yPosition="below" class="admin-menu">
    <mat-icon>grade</mat-icon>
     <span>Grade</span>
   </button>
-  <button mat-menu-item [routerLink]="['/meterialtype/ProcessType']" >
-   <mat-icon>grade</mat-icon>
-    <span>Process Type</span>
-  </button>
+
   <button mat-menu-item [routerLink]="['/material/process']" >
    <mat-icon>grade</mat-icon>
     <span>Process</span>
@@ -154,12 +151,12 @@ yPosition="below" class="admin-menu">
 <mat-menu #meterialMenu= "matMenu"
 yPosition="below" class="admin-menu">
 
- <button mat-menu-item [routerLink]="['/material']" >
+ <button mat-menu-item [routerLink]="['/material/list']" >
   <mat-icon>inventory_2</mat-icon> 
 
     <span>Material</span>
   </button>
-  <button mat-menu-item [routerLink]="['/meterialtype']" >
+  <button mat-menu-item [routerLink]="['/material/material/type']" >
    <mat-icon>category</mat-icon> 
 
     <span>Material Type </span>

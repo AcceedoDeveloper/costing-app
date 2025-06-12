@@ -21,8 +21,10 @@ export class ProcessComponent implements OnInit {
     this.store.dispatch(loadProcesses());
 
     this.store.select(getAllProcesses).subscribe((data: Process[]) => {
+      console.log(data);
       this.processes = data;
     });
+   
   }
 
   toggleExpand(index: number): void {

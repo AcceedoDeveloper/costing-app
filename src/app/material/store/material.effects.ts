@@ -15,6 +15,10 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure
   , addProcess, addProcessFailure, addProcessSuccess
   , loadProcesses, loadProcessesSuccess, loadProcessesFailure
+  , loadMaterialTypes, loadMaterialTypesFailure, loadMaterialTypesSuccess
+  , addMaterialType, addMaterialTypeFailure, addMaterialTypeSuccess
+  , updateMaterialType, updateMaterialTypeFailure, updateMaterialTypeSuccess
+  , deleteMaterialType, deleteMaterialTypeFailure, deleteMaterialTypeSuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -231,6 +235,72 @@ addProcess$ = createEffect(() =>
         this.processservices.addProcess(action.process).pipe(
           map(process => addProcessSuccess({ process })),
           catchError(error => of(addProcessFailure({ error })))
+        )
+      )
+    )
+  );
+
+  load$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadMaterialTypes),
+      mergeMap(() =>
+        this.materialTypeService.getMaterialTypes().pipe(
+          map(materialTypes => loadMaterialTypesSuccess({ materialTypes })),
+          catchError(error => of(loadMaterialTypesFailure({ error })))
+        )
+      )
+    )
+  );
+
+    add$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addMaterialType),
+      mergeMap(({ material }) =>
+        this.materialTypeService.addMaterialType(material).pipe(
+          map(material => {
+            this.toastr.success('Material type added successfully!', 'Success');
+            return addMaterialTypeSuccess({ material });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to add material type.', 'Error');
+            return of(addMaterialTypeFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+
+  update$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateMaterialType),
+      mergeMap(({ id, material }) =>
+        this.materialTypeService.updateMaterialType(id, material).pipe(
+          map(updated => {
+            this.toastr.success('Material type updated successfully!', 'Success');
+            return updateMaterialTypeSuccess({ material: updated });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to update material type.', 'Error');
+            return of(updateMaterialTypeFailure({ error: error.message }));
+          })
+        )
+      )
+    )
+  );
+
+  delete$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteMaterialType),
+      mergeMap(({ id }) =>
+        this.materialTypeService.deleteMaterialType(id).pipe(
+          map(() => {
+            this.toastr.success('Material type deleted successfully!', 'Success');
+            return deleteMaterialTypeSuccess({ id });
+          }),
+          catchError(error => {
+            this.toastr.error('Failed to delete material type.', 'Error');
+            return of(deleteMaterialTypeFailure({ error: error.message }));
+          })
         )
       )
     )

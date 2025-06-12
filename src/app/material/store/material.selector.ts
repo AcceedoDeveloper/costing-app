@@ -47,3 +47,8 @@ export const getAllProcesses = createSelector (
   getMaterialState, 
    (state) => state.processes
 );
+
+export const selectAllMaterialTypes = createSelector(
+  getMaterialState,
+  (state) => state.materialTypes
+)
