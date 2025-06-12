@@ -24,6 +24,8 @@ import { AddSupplierComponent } from './supplier/add-supplier/add-supplier.compo
 
 import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 
 
@@ -31,13 +33,17 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CustomerdetailsComponent } from './customerdetails/customerdetails.component';
+import { ProcessComponent } from './process/process.component';
+import { AddprocessComponent } from './process/addprocess/addprocess.component';
 
-
+import { GradeModule } from '../grade/grade.module'; 
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent],
   imports: [
+    GradeModule,
+    MatCheckboxModule,
     FormsModule,
     MatRadioModule,
     MatDatepickerModule,

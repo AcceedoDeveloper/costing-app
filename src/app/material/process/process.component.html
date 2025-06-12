@@ -1,0 +1,61 @@
+
+
+
+<div class="header">
+  <h2>Process List</h2>
+  <button mat-raised-button color="primary" (click)="openAddMaterial()">Add Process</button>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Process Name</th>
+        <th>Grade Name</th>
+        <th>Raw Material</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let process of processes; let i = index">
+        <tr>
+          <td>{{ process.processName }}</td>
+          <td>{{ process.grade }}</td>
+          <td>
+            {{ process.rawMaterial.length }} materials
+          </td>
+          <td class="actions">
+            <mat-icon class="icon" (click)="toggleExpand(i)">
+              {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
+            </mat-icon>
+          </td>
+        </tr>
+
+        <tr *ngIf="expandedIndex === i">
+          <td colspan="4">
+            <table class="sub-table">
+              <thead>
+                <tr>
+                  <th>Material Type</th>
+                  <th>Material Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let raw of process.rawMaterial">
+                  <ng-container *ngFor="let material of raw.materialsUsed">
+                    <tr>
+                      <td>{{ raw.type }}</td>
+                      <td>{{ material.name }}</td>
+                      <td>{{ material.quantity }}</td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

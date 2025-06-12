@@ -2,44 +2,82 @@
   overflow-x: auto;
   max-width: 100%;
   border: 1px solid #ccc;
+  position: relative;
 }
 
 table {
   border-collapse: collapse;
   min-width: 1200px;
   width: max-content;
+  table-layout: fixed; /* Ensures consistent column widths */
 }
 
 th, td {
   border: 1px solid #999;
   padding: 8px;
   white-space: nowrap;
-  min-width: 100px;
   background-color: white;
 }
 
 thead th {
-  background-color: #f0f0f0;
+  
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 10;
 }
 
-.fixed-col {
+/* First fixed column (Material) - Updated to 180px */
+th.fixed-col:first-child,
+td.fixed-col:first-child {
   position: sticky;
   left: 0;
-  z-index: 4;
-  background-color: #fff;
-  width: 30px;
+  z-index: 5;
+  background-color: white;
+  width: 180px; /* Updated to 180px */
+  min-width: 180px;
+  max-width: 180px;
+  white-space: normal;
+  box-shadow: 1px 0 0 0 #999;
 }
 
+/* Second fixed column (Unit Cost) - Updated to 130px */
+th.fixed-col:nth-child(2),
+td.fixed-col:nth-child(2) {
+  position: sticky;
+  left: 180px; /* Must match first column's new width (180px) */
+  z-index: 5;
+  background-color: white;
+  width: 130px; /* Updated to 130px */
+  min-width: 130px;
+  max-width: 130px;
+  box-shadow: 1px 0 0 0 #999;
+  border-left: 1px solid #999;
+}
 
+/* Update category cells to match first column width */
+td.fixed-col.category {
+  z-index: 5;
+  width: 180px; /* Updated to match new first column width */
+  min-width: 180px;
+  max-width: 180px;
+}
+/* Header cells */
+thead th.fixed-col {
+  z-index: 15;
+}
 
+/* Category cells */
 .category {
   font-weight: bold;
   background-color: #e6f7ff;
 }
 
+td.fixed-col.category {
+  z-index: 5;
+  width: 100px; /* Match first column width */
+}
+
+/* Scrollbar styling */
 .table-wrapper::-webkit-scrollbar {
   height: 10px;
 }
@@ -49,11 +87,13 @@ thead th {
   border-radius: 5px;
 }
 
-.data{
-  width: 30px;
+/* Data cells */
+.data {
+  min-width: 30px; /* Minimum width for scrollable columns */
 }
 
-.button-container{
+/* Button container */
+.button-container {
   margin-bottom: 10px;
   display: flex;
   align-items: center;

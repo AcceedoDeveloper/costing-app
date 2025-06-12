@@ -13,10 +13,13 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , deleteSupplier, deleteSupplierSuccess
   ,  updateSupplier, updateSupplierSuccess, updateSupplierFailure
   , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure
+  , addProcess, addProcessFailure, addProcessSuccess
+  , loadProcesses, loadProcessesSuccess, loadProcessesFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
 import { GradeService} from '../../services/grade.service';
+import { ProcessService } from '../../services/process.service';
 import { loadMaterialMap, loadMaterialMapSuccess, loadMaterialMapFailure } from './material.actions';
 
 import { ToastrService } from 'ngx-toastr';
@@ -24,7 +27,7 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable()
 
 export class MaterialEffects {
-    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService, private gradeService: GradeService, private materialTypeService: MaterialTypeService) {}
+    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService, private gradeService: GradeService, private materialTypeService: MaterialTypeService, private processservices : ProcessService) {}
 
 
  loadMaterials$ = createEffect(() =>
@@ -208,6 +211,30 @@ loadCustomerDetails$ = createEffect(() =>
     )
   )
 );
+
+loadProcesses$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadProcesses),
+      mergeMap(() =>
+        this.processservices.getProcesses().pipe(
+          map(processes => loadProcessesSuccess({ processes })),
+          catchError(error => of(loadProcessesFailure({ error })))
+        )
+      )
+    )
+  );
+
+addProcess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addProcess),
+      mergeMap(action =>
+        this.processservices.addProcess(action.process).pipe(
+          map(process => addProcessSuccess({ process })),
+          catchError(error => of(addProcessFailure({ error })))
+        )
+      )
+    )
+  );
 
 
 

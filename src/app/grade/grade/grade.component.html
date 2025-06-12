@@ -20,10 +20,10 @@
           <ng-container *ngFor="let grade of gradeColumns">
             <th>
               {{ grade.gradeNo }}
-              <button mat-icon-button color="warn" (click)="deleteGrade(grade._id)">
+              <button mat-icon-button  (click)="deleteGrade(grade._id)">
                 <mat-icon>delete</mat-icon>
               </button>
-               <button mat-icon-button color="accent" (click)="openeditMeterialPopup(grade)">
+               <button mat-icon-button  (click)="openeditMeterialPopup(grade)">
                 <mat-icon>edit</mat-icon>
               </button>
             </th>

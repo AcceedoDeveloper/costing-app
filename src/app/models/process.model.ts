@@ -1,7 +1,15 @@
-export interface Process {
-  _id: string;
+export interface MaterialUsed {
   name: string;
-  lowerCaseName: string;
-  createdAt: string;
-  updatedAt: string;
+  quantity: number;
+}
+
+export interface RawMaterial {
+  type: string;
+  materialsUsed: MaterialUsed[];
+}
+
+export interface Process {
+  processName: string;
+  grade: string;
+  rawMaterial: RawMaterial[];
 }

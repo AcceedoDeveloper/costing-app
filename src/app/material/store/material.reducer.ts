@@ -5,12 +5,15 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , addSupplier, addSupplierSuccess, addSupplierFailure
   , deleteSupplier, deleteSupplierSuccess, deleteSupplierFailure
   , updateSupplier, updateSupplierSuccess, updateSupplierFailure
-  , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure
+  , loadCustomerDetails, loadCustomerDetailsSuccess, loadCustomerDetailsFailure,
+  addProcess, addProcessFailure, addProcessSuccess
+  , loadProcesses, loadProcessesFailure, loadProcessesSuccess
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 import { Supplier } from '../../models/Supplier.model';
 import {Customerdetails} from '../../models/Customer-details.model';
+import { Process } from '../../models/process.model';
 
 
 
@@ -21,6 +24,7 @@ import {Customerdetails} from '../../models/Customer-details.model';
   materialMap: { [key: string]: MaterialItem[] };
   suppliers: Supplier[];
   customers: Customerdetails[];
+  process: Process[];
 }
 
 
@@ -31,6 +35,7 @@ const initialState: MaterialState = {
   materialMap: {},
   suppliers: [],
   customers: [],
+  process: []
 };
 
 const _materialReducer = createReducer(
@@ -153,8 +158,32 @@ const _materialReducer = createReducer(
     ...state,
     customers: [],
     error: action.error,
-  }))
+  })),
 
+   on(addProcess, state => ({ ...state, loading: true })),
+  on(addProcessSuccess, (state, { process }) => ({
+    ...state,
+    processes: [...state.process, process],
+    loading: false
+  })),
+  on(addProcessFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  })),
+
+
+   on(loadProcesses, state => ({ ...state, loading: true })),
+  on(loadProcessesSuccess, (state, { processes }) => ({
+    ...state,
+    processes,
+    loading: false
+  })),
+  on(loadProcessesFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  })),
 
 
 

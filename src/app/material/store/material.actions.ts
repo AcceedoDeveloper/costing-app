@@ -3,6 +3,7 @@ import { Material} from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 import { Supplier } from '../../models/Supplier.model';
 import { Customerdetails } from '../../models/Customer-details.model';
+import { Process } from '../../models/process.model';
 
 
 
@@ -115,3 +116,14 @@ export const loadCustomerDetailsFailure = createAction(
   '[Customer] Load Customer Details Failure',
   props<{ error: string }>()
 );
+
+
+
+export const addProcess = createAction('[Process] Add Process', props<{ process: Process }>());
+export const addProcessSuccess = createAction('[Process] Add Process Success', props<{ process: Process }>());
+export const addProcessFailure = createAction('[Process] Add Process Failure', props<{ error: any }>());
+
+
+export const loadProcesses = createAction('[Process] Load Processes');
+export const loadProcessesSuccess = createAction('[Process] Load Processes Success', props<{ processes: Process[] }>());
+export const loadProcessesFailure = createAction('[Process] Load Processes Failure', props<{ error: any }>());

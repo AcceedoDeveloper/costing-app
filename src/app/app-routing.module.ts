@@ -41,11 +41,7 @@ const routes: Routes = [
         loadChildren: () => 
           import('./grade/grade.module').then(m => m.GradeModule)
       },
-      {
-        path: 'meterialtype',
-        loadChildren: () =>
-          import('./meterialtype/meterialtype.module').then(m => m.MeterialtypeModule)
-      },
+  
       {
         path: 'dashboard',
         loadChildren: () =>
@@ -72,7 +68,6 @@ const routes: Routes = [
     ],
   },
   { path: 'grade', loadChildren: () => import('./grade/grade.module').then(m => m.GradeModule) },
-  { path: 'meterialtype', loadChildren: () => import('./meterialtype/meterialtype.module').then(m => m.MeterialtypeModule) },
   { path: 'dashboard', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule) },
   
   {

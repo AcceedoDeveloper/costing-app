@@ -11,6 +11,8 @@ export const getMaterialCount = createSelector(getMaterialState, (state) => stat
 
 
 
+
+
 export const getMaterials = createSelector(
   getMaterialState, 
   (state) => {
@@ -38,4 +40,10 @@ export const getSuppliers = createSelector(
 export const getCustomerDetails = createSelector(
   getMaterialState,
   (state) => state.customers
+);
+
+
+export const getAllProcesses = createSelector (
+  getMaterialState, 
+   (state) => state.processes
 );
