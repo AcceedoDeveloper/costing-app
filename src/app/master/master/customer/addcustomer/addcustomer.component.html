@@ -1,41 +1,56 @@
-<div class="">
-  <h2 class="text-xl font-bold">{{ isEditMode ? 'Edit Customer' : 'Add Customer' }}</h2>
-  <form [formGroup]="customerForm" (ngSubmit)="submitCustomer()">
-    <div class="box">
-      <mat-form-field appearance="standard" class="matfiles">
-        <mat-label>Name</mat-label>
-        <input matInput id="name" formControlName="name" placeholder="Enter customer name" />
-        <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
-          Name is required
-        </mat-error>
-      </mat-form-field>
+<div class="customer-form-container">
+  <div class="form-header">
+    <h2 class="form-title">{{ isEditMode ? 'Edit Customer' : 'Add Customer' }}</h2>
+    <p class="form-subtitle">{{ isEditMode ? 'Update existing customer details' : 'Add a new customer to the system' }}</p>
+  </div>
+  
+  <form [formGroup]="customerForm" (ngSubmit)="submitCustomer()" class="customer-form">
+    <div class="form-content">
+      <!-- Name and Phone in one row -->
+      <div class="form-row">
+        <!-- Name Field -->
+        <mat-form-field appearance="outline" class="name-field">
+          <mat-label>Name</mat-label>
+          <input matInput id="name" formControlName="name" placeholder="Enter customer name" />
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="customerForm.get('name')?.hasError('required')">
+            Name is required
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="standard" class="matfiles">
+        <!-- Phone Number Field -->
+        <mat-form-field appearance="outline" class="phone-field">
+          <mat-label>Phone Number</mat-label>
+          <input matInput id="phoneNo" formControlName="phoneNo" placeholder="Enter phone number" />
+          <mat-icon matSuffix>phone</mat-icon>
+          <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('required')">
+            Phone Number is required
+          </mat-error>
+          <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('pattern')">
+            Please enter a valid 10-digit phone number
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Address Field (full width, using textarea) -->
+      <mat-form-field appearance="outline" class="address-field">
         <mat-label>Address</mat-label>
-        <input matInput id="address" formControlName="address" placeholder="Enter address" />
+        <textarea matInput id="address" formControlName="address" placeholder="Enter customer address (e.g., 123 Main St, City, State, ZIP)" rows="4"></textarea>
+        <mat-icon matSuffix>location_on</mat-icon>
         <mat-error *ngIf="customerForm.get('address')?.hasError('required')">
           Address is required
         </mat-error>
       </mat-form-field>
     </div>
 
-    <div class="box">
-      <mat-form-field appearance="standard" class="matfiles">
-        <mat-label>Phone Number</mat-label>
-        <input matInput id="phoneNo" formControlName="phoneNo" placeholder="Enter phone number" />
-        <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('required')">
-          Phone Number is required
-        </mat-error>
-        <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('pattern')">
-          Please enter a valid 10-digit phone number
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="button">
-      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid">
-        {{ isEditMode ? 'Update' : 'Create' }} Customer
+    <div class="form-actions">
+      <button mat-stroked-button color="warn" type="button" (click)="cancel()" class="cancel-btn">
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="customerForm.invalid" class="submit-btn">
+        <mat-icon>{{ isEditMode ? 'update' : 'add' }}</mat-icon>
+        {{ isEditMode ? 'Update Customer' : 'Create Customer' }}
       </button>
     </div>
   </form>

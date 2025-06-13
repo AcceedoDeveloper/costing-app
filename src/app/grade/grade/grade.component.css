@@ -1,9 +1,13 @@
-/* Updated CSS for Material Grades Table with Fixed Headers */
+/* Container with clean background */
 .container {
   padding: 16px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  border-radius: 8px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
+/* Header section with simple layout */
 .header-section {
   display: flex;
   justify-content: space-between;
@@ -12,112 +16,126 @@
 }
 
 h2 {
-  color: #3f51b5;
-  font-weight: 500;
+  color: #1e293b;
+  font-weight: 600;
   margin: 0;
   font-size: 1.25rem;
 }
 
+/* Add Grade button with subtle accent */
 .add-grade-button {
-  background-color: #3f51b5;
-  color: white;
-  border-radius: 4px;
-  padding: 6px 12px;
-  min-width: auto;
-  height: 36px;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+  background-color: #3b82f6 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  height: 36px !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
 .add-grade-button:hover {
-  background-color: #303f9f;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  background-color: #2563eb !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Table wrapper with minimal border */
 .table-wrapper {
   overflow-x: auto;
   overflow-y: auto;
   max-width: 100%;
-  max-height: 500px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  max-height: 480px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
   position: relative;
   -webkit-overflow-scrolling: touch;
+  background: #ffffff; /* Ensure wrapper background is solid */
 }
 
+/* Table styling */
 table {
   border-collapse: collapse;
   min-width: 100%;
   table-layout: fixed;
-  background-color: white;
+  background-color: #ffffff;
 }
 
+/* Table cells with balanced padding */
 th, td {
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e2e8f0;
   padding: 8px 12px;
   text-align: center;
   line-height: 1.4;
   background-clip: padding-box;
 }
 
+/* Sticky header with neutral background */
 thead {
-  background-color: #f5f5f5;
+  background: #f1f5f9;
 }
 
 thead th {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: #f5f5f5;
+  background: #f1f5f9;
   font-weight: 500;
+  font-size: 0.8rem;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-/* Fixed Columns - Material (400px) */
+/* Fixed Columns - Material (360px) */
 th.fixed-col:first-child,
 td.fixed-col:first-child {
   position: sticky;
   left: 0;
-  z-index: 15;
-  width: 400px;
-  min-width: 400px;
-  max-width: 400px;
+  z-index: 15; /* Higher z-index to stay above scrollbar */
+  width: 360px;
+  min-width: 360px;
+  max-width: 360px;
   white-space: normal;
-  background-color: inherit;
-  box-shadow: 2px 0 3px rgba(0,0,0,0.1);
+  background-color: #ffffff; /* Solid background to hide scrollbar */
+  box-shadow: 2px 0 3px rgba(0, 0, 0, 0.06);
   text-align: left;
   padding-left: 16px;
   padding-right: 16px;
 }
 
-/* Fixed Columns - Unit Cost (90px) */
+/* Fixed Columns - Unit Cost (95px) */
 th.fixed-col:nth-child(2),
 td.fixed-col:nth-child(2) {
   position: sticky;
-  left: 400px;
-  z-index: 15;
-  width: 90px;
-  min-width: 90px;
-  max-width: 90px;
-  background-color: inherit;
-  box-shadow: 1px 0 0 0 #e0e0e0;
-  border-left: 1px solid #e0e0e0;
+  left: 360px;
+  z-index: 15; /* Higher z-index to stay above scrollbar */
+  width: 95px;
+  min-width: 95px;
+  max-width: 95px;
+  background-color: #ffffff; /* Solid background to hide scrollbar */
+  box-shadow: 1px 0 0 0 #e2e8f0;
+  border-left: 1px solid #e2e8f0;
 }
 
 /* Ensure sticky headers and columns overlap correctly */
 thead th.fixed-col {
-  z-index: 20;
-  background-color: #f5f5f5;
+  z-index: 20; /* Even higher z-index for header fixed columns */
+  background: #f1f5f9; /* Match thead background */
 }
 
 /* Grade Headers */
 .grade-header {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
   padding: 8px 10px;
-  background-color: #f5f5f5;
+  background: #f1f5f9;
 }
 
 .grade-header-content {
@@ -129,12 +147,13 @@ thead th.fixed-col {
 
 .grade-number {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: #1e293b;
 }
 
 .grade-name {
-  font-size: 0.85rem;
-  color: #555;
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
 .grade-actions {
@@ -143,49 +162,50 @@ thead th.fixed-col {
   margin-top: 4px;
 }
 
+/* Action buttons with minimal hover */
 .action-button {
   width: 28px;
   height: 28px;
   line-height: 28px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .action-button mat-icon {
-  font-size: 18px;
-  color: #555;
+  font-size: 16px;
+  color: #64748b;
 }
 
 .action-button:hover {
-  background-color: #f0f0f0;
+  background-color: #e2e8f0;
 }
 
 .action-button:hover mat-icon {
-  color: #3f51b5;
+  color: #3b82f6;
 }
 
 /* Category Rows */
 .category-row {
-  background-color: #f0f7ff;
+  background-color: #f8fafc;
 }
 
 .category-row td.fixed-col {
-  background-color: #f0f7ff !important;
+  background-color: #f8fafc !important;
 }
 
 .category-cell {
   font-weight: 600;
-  color: #1a5fb4;
+  color: #1e293b;
   padding: 10px 16px;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 /* Material Rows */
 .material-row:hover {
-  background-color: #f8f8f8;
+  background-color: #f1f5f9;
 }
 
 .material-row:hover td.fixed-col {
-  background-color: #f8f8f8 !important;
+  background-color: #f1f5f9 !important;
 }
 
 .material-name {
@@ -194,45 +214,57 @@ thead th.fixed-col {
   white-space: normal;
   word-break: break-word;
   line-height: 1.5;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  color: #1e293b;
 }
 
 .unit-cost {
-  color: #2e7d32;
+  color: #2563eb;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 /* Data Cells */
 .data-cell {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+  width: 100px;
+  min-width: 100px;
+  max-width: 100px;
   padding: 8px 10px;
 }
 
 .quantity {
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  color: #1e293b;
 }
 
 .total-cost {
-  color: #666;
-  font-size: 0.85rem;
+  color: #64748b;
+  font-size: 0.75rem;
   margin-top: 2px;
 }
 
 /* Scrollbar Styling */
 .table-wrapper::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
-  background-color: #a0a0a0;
-  border-radius: 4px;
+  background-color: #64748b;
+  border-radius: 3px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
 }
 
 .table-wrapper::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: #e2e8f0;
+  border-radius: 3px;
+}
+
+/* Ensure scrollbar remains opaque during interaction */
+.table-wrapper::-webkit-scrollbar-thumb:active {
+  background-color: #475569;
 }

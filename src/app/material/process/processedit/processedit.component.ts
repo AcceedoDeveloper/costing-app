@@ -108,4 +108,30 @@ save(): void {
   cancel(): void {
     this.dialogRef.close();
   }
+
+
+  addMaterial(): void {
+  const group = this.fb.group({
+    type: ['', Validators.required],
+    name: ['', Validators.required],
+    quantity: [0, [Validators.required, Validators.min(1)]]
+  });
+
+  this.materialFormArray.push(group);
+}
+
+removeMaterial(index: number): void {
+  this.materialFormArray.removeAt(index);
+}
+
+onTypeChange(index: number): void {
+  const control = this.materialFormArray.at(index);
+  control.get('name')?.reset(); // Reset name field if type changes
+}
+
+// Get material names based on selected type
+getMaterialsForType(type: string): any[] {
+  return this.materialMap[type] || [];
+}
+
 }

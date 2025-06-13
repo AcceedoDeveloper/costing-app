@@ -1,4 +1,95 @@
-.button{
+.form-actions{
     display: flex;
     gap: 10px;
+}
+
+
+.customer-form-container {
+  .form-header {
+    padding-bottom: 1rem;
+
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+  }
+
+  .customer-form {
+    .form-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-row {
+      gap: 1.5rem;
+      width: 100%;
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    .name-field,
+    .phone-field {
+      flex: 1;
+    }
+
+    .address-field {
+      width: 100%;
+
+      /* Style the textarea for the address field */
+      textarea {
+        min-height: 100px; /* Set a taller height for the textarea */
+        padding: 12px 16px; /* Add padding for better appearance */
+        line-height: 1.5; /* Ensure text is vertically spaced */
+        resize: vertical; /* Allow vertical resizing only */
+      }
+
+      /* Adjust the mat-form-field wrapper to accommodate the taller textarea */
+      .mat-form-field-wrapper {
+        padding-bottom: 0; /* Remove extra padding */
+      }
+
+      /* Ensure the suffix icon aligns properly */
+      mat-icon.matSuffix {
+        align-self: flex-start; /* Align the icon to the top */
+        margin-top: 12px; /* Match the textarea padding */
+      }
+    }
+
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+
+      &.cancel-btn {
+        padding: 0 1.5rem;
+      }
+
+      &.submit-btn {
+        padding: 0 2rem;
+      }
+    }
+  }
 }
