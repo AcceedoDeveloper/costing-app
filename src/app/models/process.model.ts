@@ -9,6 +9,7 @@ export interface RawMaterial {
 }
 
 export interface Process {
+  _id?: string;
   processName: string;
   grade: string;
   rawMaterial: RawMaterial[];

@@ -1,5 +1,6 @@
 <div class="container">
-  <div class="button-container">
+  <div class="header-section">
+    <h2>Material Grades</h2>
     <button
       mat-raised-button
       color="primary"
@@ -15,25 +16,22 @@
     <table>
       <thead>
         <tr>
-          <th class="fixed-col" rowspan="2">Material</th>
-          <th class="fixed-col" rowspan="2">Unit Cost</th>
+          <th class="fixed-col">Material</th>
+          <th class="fixed-col">Unit Cost</th>
           <ng-container *ngFor="let grade of gradeColumns">
-            <th>
-              {{ grade.gradeNo }}
-              <button mat-icon-button  (click)="deleteGrade(grade._id)">
-                <mat-icon>delete</mat-icon>
-              </button>
-               <button mat-icon-button  (click)="openeditMeterialPopup(grade)">
-                <mat-icon>edit</mat-icon>
-              </button>
-            </th>
-          </ng-container>
-        </tr>
-        <tr>
-          <ng-container *ngFor="let grade of gradeColumns">
-            <th>
-              {{ grade.gradeName }}
-             
+            <th class="grade-header">
+              <div class="grade-header-content">
+                <span class="grade-number">{{ grade.gradeNo }}</span>
+                <div class="grade-actions">
+                  <button mat-icon-button (click)="deleteGrade(grade._id)" matTooltip="Delete grade" class="action-button">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="openeditMeterialPopup(grade)" matTooltip="Edit grade" class="action-button">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="grade-name">{{ grade.gradeName }}</div>
             </th>
           </ng-container>
         </tr>
@@ -41,22 +39,22 @@
       <tbody>
         <ng-container *ngFor="let category of materialTypes">
           <!-- Category Row -->
-          <tr>
-            <td class="fixed-col category">{{ category }}:</td>
+          <tr class="category-row">
+            <td class="fixed-col category-cell">{{ category }}</td>
             <td class="fixed-col"></td>
             <td [attr.colspan]="gradeColumns.length"></td>
           </tr>
 
           <!-- Material Rows -->
-          <tr *ngFor="let material of materialMap[category]">
-            <td class="fixed-col">{{ material.name }}</td>
-            <td class="fixed-col">₹{{ material.unitCost }}</td>
+          <tr *ngFor="let material of materialMap[category]" class="material-row">
+            <td class="fixed-col material-name">{{ material.name }}</td>
+            <td class="fixed-col unit-cost">₹{{ material.unitCost | number }}</td>
 
             <ng-container *ngFor="let grade of gradeColumns">
-              <td class="data">
+              <td class="data-cell">
                 <ng-container *ngIf="getQuantity(material.name, grade.gradeNo) !== null; else dash">
-                  Qty: {{ getQuantity(material.name, grade.gradeNo) }} <br />
-                  (₹{{ material.unitCost * getQuantity(material.name, grade.gradeNo) | number: '1.1-2' }})
+                  <div class="quantity">Qty: {{ getQuantity(material.name, grade.gradeNo) }}</div>
+                  <div class="total-cost">(₹{{ material.unitCost * getQuantity(material.name, grade.gradeNo) | number: '1.1-2' }})</div>
                 </ng-container>
                 <ng-template #dash>-</ng-template>
               </td>

@@ -11,6 +11,8 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , loadMaterialTypesFailure, loadMaterialTypesSuccess, updateMaterialTypeFailure
   , deleteMaterialTypeFailure, deleteMaterialTypeSuccess, updateMaterialTypeSuccess
   , addMaterialTypeFailure, addMaterialTypeSuccess
+  , deleteProcess, deleteProcessFailure, deleteProcessSuccess
+  , updateProcess, updateProcessFailure, updateProcessSuccess
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
@@ -28,7 +30,7 @@ import { MaterialType} from '../../models/material-type.model';
   materialMap: { [key: string]: MaterialItem[] };
   suppliers: Supplier[];
   customers: Customerdetails[];
-  process: Process[];
+  processes: Process[];
    materialTypes: MaterialType[];
 }
 
@@ -40,7 +42,7 @@ const initialState: MaterialState = {
   materialMap: {},
   suppliers: [],
   customers: [],
-  process: [],
+  processes: [],
   materialTypes: [],
 };
 
@@ -166,12 +168,13 @@ const _materialReducer = createReducer(
     error: action.error,
   })),
 
-   on(addProcess, state => ({ ...state, loading: true })),
-  on(addProcessSuccess, (state, { process }) => ({
-    ...state,
-    processes: [...state.process, process],
-    loading: false
-  })),
+ on(addProcessSuccess, (state, { process }) => ({
+  ...state,
+  processes: [...state.processes, process], // ✅ Correct plural
+  loading: false
+}))
+,
+ 
   on(addProcessFailure, (state, { error }) => ({
     ...state,
     error,
@@ -208,6 +211,35 @@ const _materialReducer = createReducer(
     deleteMaterialTypeFailure,
     (state, { error }) => ({ ...state, error })
   ),
+
+  on(deleteProcess, (state) => ({
+  ...state,
+  loading: true
+})),
+
+on(deleteProcessSuccess, (state, { id }) => ({
+  ...state,
+  processes: state.processes.filter(p => p._id !== id),
+  loading: false
+})),
+
+on(deleteProcessFailure, (state, { error }) => ({
+  ...state,
+  error,
+  loading: false
+})),
+
+on(updateProcessSuccess, (state, { process }) => ({
+  ...state,
+  processes: state.processes.map(p => p._id === process._id ? process : p),
+  loading: false
+})),
+
+on(updateProcessFailure, (state, { error }) => ({
+  ...state,
+  error,
+  loading: false
+}))
 
 
 

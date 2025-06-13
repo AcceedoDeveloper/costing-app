@@ -144,3 +144,34 @@ export const updateMaterialTypeFailure = createAction('[MaterialType] Update Fai
 export const deleteMaterialType = createAction('[MaterialType] Delete', props<{ id: string }>());
 export const deleteMaterialTypeSuccess = createAction('[MaterialType] Delete Success', props<{ id: string }>());
 export const deleteMaterialTypeFailure = createAction('[MaterialType] Delete Failure', props<{ error: any }>());
+
+
+export const deleteProcess = createAction(
+  '[Process] Delete Process',
+  props<{ id: string }>()
+);
+
+export const deleteProcessSuccess = createAction(
+  '[Process] Delete Process Success',
+  props<{ id: string }>()
+);
+
+export const deleteProcessFailure = createAction(
+  '[Process] Delete Process Failure',
+  props<{ error: any }>()
+);
+
+export const updateProcess = createAction(
+  '[Process] Update Process',
+  props<{ id: string; process: Partial<Process> }>()
+);
+
+export const updateProcessSuccess = createAction(
+  '[Process] Update Process Success',
+  props<{ process: Process }>()
+);
+
+export const updateProcessFailure = createAction(
+  '[Process] Update Process Failure',
+  props<{ error: any }>()
+);

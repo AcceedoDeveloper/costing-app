@@ -37,11 +37,12 @@ import { ProcessComponent } from './process/process.component';
 import { AddprocessComponent } from './process/addprocess/addprocess.component';
 
 import { GradeModule } from '../grade/grade.module';
-import { MaterialtypeComponent } from './materialtype/materialtype.component'; 
+import { MaterialtypeComponent } from './materialtype/materialtype.component';
+import { ProcesseditComponent } from './process/processedit/processedit.component'; 
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent],
   imports: [
     GradeModule,
     MatCheckboxModule,

@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Edit Raw Materials</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <table class="edit-table">
+      <thead>
+        <tr>
+          <th>Material Type</th>
+          <th>Material Name</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody formArrayName="materialFormArray">
+        <tr *ngFor="let mat of materialFormArray.controls; let i = index" [formGroupName]="i">
+          <td>{{ mat.get('type')?.value }}</td>
+          <td>{{ mat.get('name')?.value }}</td>
+          <td>
+            <input matInput type="number" formControlName="quantity" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

@@ -33,6 +33,9 @@
             <mat-icon class="icon" (click)="toggleExpand(i)">
               {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
             </mat-icon>
+            <mat-icon (click)="deleteProcess(process._id)" class="icon">delete</mat-icon>
+            <mat-icon (click)="editAllMaterials(process._id)" class="icon">edit</mat-icon>
+
           </td>
         </tr>
 

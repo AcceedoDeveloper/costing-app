@@ -19,6 +19,8 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , addMaterialType, addMaterialTypeFailure, addMaterialTypeSuccess
   , updateMaterialType, updateMaterialTypeFailure, updateMaterialTypeSuccess
   , deleteMaterialType, deleteMaterialTypeFailure, deleteMaterialTypeSuccess
+  , deleteProcess, deleteProcessFailure, deleteProcessSuccess
+  , updateProcess , updateProcessFailure, updateProcessSuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -229,16 +231,64 @@ loadProcesses$ = createEffect(() =>
   );
 
 addProcess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(addProcess),
-      mergeMap(action =>
-        this.processservices.addProcess(action.process).pipe(
-          map(process => addProcessSuccess({ process })),
-          catchError(error => of(addProcessFailure({ error })))
-        )
+  this.actions$.pipe(
+    ofType(addProcess),
+    mergeMap(action =>
+      this.processservices.addProcess(action.process).pipe(
+        tap(() => this.toastr.success('Process added successfully!', 'Success')),
+        mergeMap(() => [
+          loadProcesses()
+        ]),
+        catchError(error => {
+          this.toastr.error('Failed to add process.', 'Error');
+          return of(addProcessFailure({ error }));
+        })
       )
     )
-  );
+  )
+);
+
+
+
+updateProcess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updateProcess),
+    mergeMap(action =>
+      this.processservices.updateProcess(action.id, action.process).pipe(
+        tap(() => this.toastr.success('Process updated successfully!', 'Success')),
+        mergeMap(() => [
+          loadProcesses()
+        ]),
+        catchError(error => {
+          this.toastr.error('Failed to update process.', 'Error');
+          return of(updateProcessFailure({ error }));
+        })
+      )
+    )
+  )
+);
+
+
+
+
+
+ deleteProcess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(deleteProcess),
+    mergeMap(action =>
+      this.processservices.deleteProcess(action.id).pipe(
+        tap(() => this.toastr.success('Process deleted successfully!', 'Success')),
+        map(() => deleteProcessSuccess({ id: action.id })),
+        catchError(error => {
+          this.toastr.error('Failed to delete process.', 'Error');
+          return of(deleteProcessFailure({ error }));
+        })
+      )
+    )
+  )
+);
+
+
 
   load$ = createEffect(() =>
     this.actions$.pipe(

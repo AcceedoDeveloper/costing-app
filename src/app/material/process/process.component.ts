@@ -5,6 +5,9 @@ import { Store } from '@ngrx/store';
 import { loadProcesses } from '../store/material.actions';
 import { getAllProcesses } from '../store/material.selector';
 import { Process } from '../../models/process.model';
+import { deleteProcess } from '../store/material.actions';
+import { ProcesseditComponent } from './processedit/processedit.component';
+import { ConfirmDialogComponent} from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-process',
@@ -36,4 +39,39 @@ export class ProcessComponent implements OnInit {
       width: '600px'
     });
   }
+
+ deleteProcess(id: string) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this process?'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(deleteProcess({ id }));
+    }
+  });
+}
+
+
+editAllMaterials(id: string): void {
+  const process = this.processes.find(p => p._id === id);
+
+  if (process) {
+    console.log('🔍 Full process object:', process);
+
+    this.dialog.open(ProcesseditComponent, {
+      width: '700px',
+      data: process  
+    });
+  } else {
+    console.error('Process not found for ID:', id);
+  }
+}
+
+
+
 }
