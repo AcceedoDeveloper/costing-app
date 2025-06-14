@@ -16,10 +16,15 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./material.component.css']
 })
 export class MaterialComponent implements OnInit, AfterViewInit {
+  selectedMaterialType: string = '';
+  materialTypes: string[] = []; 
+  searchTerm: string = '';
+  sortedPriceHistory: { unitCost: number; date: string }[] = [];
+  expandedHistoryIndex: number | null = null;
   materials: Material[] = [];
   paginatedMaterials: Material[] = [];
 
-  pageSize = 5;
+  pageSize = 25;
   pageIndex = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -31,10 +36,11 @@ export class MaterialComponent implements OnInit, AfterViewInit {
     this.store.dispatch(loadMaterials());
 
     this.store.select(getMaterials).subscribe((materials: Material[]) => {
-      console.log('Materials from Store:', materials);
-      this.materials = materials;
-      this.updatePaginatedMaterials();
-    });
+    this.materials = materials;
+    this.materialTypes = [...new Set(materials.map(m => m.materialType))];
+    this.applyFilter();
+});
+
   }
 
   ngAfterViewInit(): void {
@@ -47,11 +53,12 @@ export class MaterialComponent implements OnInit, AfterViewInit {
     this.paginatedMaterials = this.materials.slice(startIndex, endIndex);
   }
 
-  onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.updatePaginatedMaterials();
-  }
+onPageChange(event: PageEvent): void {
+  this.pageIndex = event.pageIndex;
+  this.pageSize = event.pageSize;
+  this.applyFilter();
+}
+
 
   openAddMeterialPopup(): void {
     this.dialog.open(AddMaterialComponent, {
@@ -83,4 +90,53 @@ export class MaterialComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  applyFilter(): void {
+  const filtered = this.selectedMaterialType
+    ? this.materials.filter(m => m.materialType === this.selectedMaterialType)
+    : this.materials;
+
+  const startIndex = this.pageIndex * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.paginatedMaterials = filtered.slice(startIndex, endIndex);
+}
+
+applyFilterMaterial(): void {
+  let filtered = this.selectedMaterialType
+    ? this.materials.filter(m => m.materialType === this.selectedMaterialType)
+    : [...this.materials];
+
+  if (this.searchTerm) {
+    filtered = filtered.filter(m =>
+      m.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  const startIndex = this.pageIndex * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.paginatedMaterials = filtered.slice(startIndex, endIndex);
+}
+
+
+toggleHistoryPopup(index: number): void {
+  if (this.expandedHistoryIndex === index) {
+    this.expandedHistoryIndex = null;
+  } else {
+    const selectedMaterial = this.paginatedMaterials[index];
+
+    // Clone the price history array before sorting
+    const sortedHistory = [...(selectedMaterial.priceHistory ?? [])].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    // Store the sorted history in a local variable (optional)
+    this.sortedPriceHistory = sortedHistory;
+
+    this.expandedHistoryIndex = index;
+  }
+}
+
+
+
+
 }

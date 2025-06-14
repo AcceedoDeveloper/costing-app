@@ -1,23 +1,86 @@
-<div class="header">
-  <h2>Material List</h2>
-  <button mat-raised-button color="primary" (click)="openAddMeterialPopup()">Add Material</button>
+<div class="table-containr">
+
+  <!-- Header inside table container -->
+  <div class="header">
+    <div class="header-left">
+      <h2>Material List</h2>
+
+      <mat-form-field appearance="standard" class="material-filter">
+        <mat-label>Filter by Material Type</mat-label>
+        <mat-select [(value)]="selectedMaterialType" (selectionChange)="applyFilter()">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let type of materialTypes" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="standard" class="search-box">
+        <mat-label>Search Material</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchTerm"
+          (input)="applyFilterMaterial()"
+          placeholder="Enter material name"
+        />
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="openAddMeterialPopup()">
+      Add Material
+    </button>
+  </div>
+
+
 </div>
 
 <div class="table-container">
   <table>
     <thead>
       <tr>
-        <th>Name</th>
+        <th>Material Type</th>
+        <th>Material Name</th>
         <th>Type</th>
         <th>Unit Cost</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let material of paginatedMaterials">
-        <td>{{ material.name }}</td>
+      <tr *ngFor="let material of paginatedMaterials; let i = index">
         <td>{{ material.materialType }}</td>
-        <td>₹{{ material.unitCost }}</td>
+        <td>{{ material.name }}</td>
+        <td>{{ material.houseType }}</td>
+        <td style="position: relative">
+          ₹{{ material.unitCost }}
+          <mat-icon
+            class="icon history-icon"
+            matTooltip="View Price History"
+            (click)="toggleHistoryPopup(i)"
+            aria-label="View History"
+          >
+            info
+          </mat-icon>
+
+  <!-- Inline history popup -->
+<div *ngIf="expandedHistoryIndex === i" class="history-popup show">
+  <mat-icon class="close-icon" (click)="expandedHistoryIndex = null">close</mat-icon>
+  <p class="popup-title">Pervious Cost details:</p>
+
+  <div *ngIf="sortedPriceHistory.length > 0; else noHistory">
+    <div *ngFor="let history of sortedPriceHistory" class="history-item">
+      <span class="price">₹{{ history.unitCost }}</span>
+      <span class="date">{{ history.date | date: 'yyyy-MM-dd' }}</span>
+    </div>
+  </div>
+
+  <ng-template #noHistory>
+    <p>No history available</p>
+  </ng-template>
+</div>
+
+
+        </td>
+
         <td class="actions">
           <mat-icon class="icon" (click)="onEdit(material)">edit</mat-icon>
           <mat-icon class="icon" (click)="deleteMaterial(material)">delete</mat-icon>
@@ -29,7 +92,8 @@
   <mat-paginator
     [length]="materials.length"
     [pageSize]="pageSize"
-    [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)">
+    [pageSizeOptions]="[25, 50, 100]"
+    (page)="onPageChange($event)"
+  >
   </mat-paginator>
 </div>

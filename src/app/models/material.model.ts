@@ -8,4 +8,5 @@ export interface Material {
   updatedAt?: string; 
   houseType?: string; // Optional field for material type
   materialType?: string; // Optional field for material type
+  priceHistory?: { unitCost: number; date: string }[];
 }
