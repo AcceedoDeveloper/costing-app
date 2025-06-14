@@ -40,29 +40,57 @@
         </tr>
 
         <tr *ngIf="expandedIndex === i">
-          <td colspan="4">
-            <table class="sub-table">
-              <thead>
-                <tr>
-                  <th>Material Type</th>
-                  <th>Material Name</th>
-                  <th>Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container *ngFor="let raw of process.rawMaterial">
-                  <ng-container *ngFor="let material of raw.materialsUsed">
-                    <tr>
-                      <td>{{ raw.type }}</td>
-                      <td>{{ material.name }}</td>
-                      <td>{{ material.quantity }}</td>
-                    </tr>
-                  </ng-container>
-                </ng-container>
-              </tbody>
-            </table>
-          </td>
+  <td colspan="4">
+    <!-- Raw Material Table -->
+    <h4>Raw Materials</h4>
+    <table class="sub-table">
+      <thead>
+        <tr>
+          <th>Material Type</th>
+          <th>Material Name</th>
+          <th>Quantity</th>
         </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let raw of process.rawMaterial">
+          <ng-container *ngFor="let material of raw.materialsUsed">
+            <tr>
+              <td>{{ raw.type }}</td>
+              <td>{{ material.name }}</td>
+              <td>{{ material.quantity }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <!-- Grade Table -->
+    <h4>Grades</h4>
+   <table class="sub-table">
+  <thead>
+    <tr>
+      <th>Grade Material Type</th>
+      <th>Grade Material</th>
+      <th>Grade Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let grade of process.grade">
+      <ng-container *ngFor="let raw of grade.rawMaterial">
+        <ng-container *ngFor="let material of raw.materialsUsed">
+          <tr>
+            <td>{{ raw.type }}</td>
+            <td>{{ material.name }}</td>
+            <td>{{ material.quantity }}</td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>
+
+  </td>
+</tr>
       </ng-container>
     </tbody>
   </table>
