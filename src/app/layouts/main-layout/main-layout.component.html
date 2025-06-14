@@ -20,146 +20,148 @@
     </mat-toolbar>
 
 
-<mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
-    <mat-nav-list>
-      <a mat-list-item [routerLink]="['/dashboard']" >
-       <div class="nav-item-content">
-         <mat-icon>dashboard</mat-icon>
-            <span>Dashboard</span>
+<!-- Sidebar and Content -->
+<div class="sidenav-container">
+  <aside class="custom-sidenav">
+    <div class="sidenav-header"></div>
+    <ul class="nav-list">
+      <!-- Dashboard -->
+      <li class="nav-item" routerLink="/dashboard" routerLinkActive="active-link">
+        <div class="nav-item-content">
+          <div class="icon-wrapper">
+            <span class="material-icons nav-icon">dashboard</span>
+          </div>
+          <span class="nav-text">Dashboard</span>
         </div>
-      </a>
-    </mat-nav-list>
-      
-    <mat-nav-list>
-      <a mat-list-item 
-       [matMenuTriggerFor]="adminMenu"
-   #adminMenuTrigger="matMenuTrigger"
-   
-      >
-       <div class="nav-item-content">
-         <mat-icon>admin_panel_settings</mat-icon>
-            <span class="font">User Management
-            </span>
+      </li>
+
+      <!-- User Management -->
+      <li class="nav-item has-submenu">
+        <div class="nav-item-content">
+          <div class="icon-wrapper">
+            <span class="material-icons nav-icon">group</span>
+          </div>
+          <span class="nav-text">User 
+            management
+          </span>
+          
         </div>
-      </a>
-    </mat-nav-list>
+        <ul class="submenu">
+          <li routerLink="/master">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">person</span>
+            </div>
+            <span>User</span>
+          </li>
+          <li routerLink="/master/role">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">security</span>
+            </div>
+            <span>Role</span>
+          </li>
+          <li routerLink="/master/customer">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">people</span>
+            </div>
+            <span>Customer</span>
+          </li>
+          <li routerLink="/material/suppliers">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">business</span>
+            </div>
+            <span>Supplier</span>
+          </li>
+          <li routerLink="/master/department">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">apartment</span>
+            </div>
+            <span>Department</span>
+          </li>
+        </ul>
+      </li>
 
-        <mat-nav-list>
-      <a mat-list-item  
-       [matMenuTriggerFor]="meterialMenu"
-   #meterialMenuTrigger="matMenuTrigger"
-   
-  >
-       <div class="nav-item-content">
-         <mat-icon >inventory</mat-icon>
-            <span>Material Management</span>
+      <!-- Material Management -->
+      <li class="nav-item has-submenu">
+        <div class="nav-item-content">
+          <div class="icon-wrapper">
+            <span class="material-icons nav-icon">inventory_2</span>
+          </div>
+          <span class="nav-text">Material 
+            management
+          </span>
+         
         </div>
-      </a>
-    </mat-nav-list>
-     <mat-nav-list>
-      <a mat-list-item 
-       [matMenuTriggerFor]="ProcessMenu"
-   #ProcessMenuTrigger="matMenuTrigger"
-   
-      >
-       <div class="nav-item-content">
-         <mat-icon>settings</mat-icon>
-            <span>Process Management</span>
+        <ul class="submenu">
+          <li routerLink="/material/list">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">category</span>
+            </div>
+            <span>Material</span>
+          </li>
+          <li routerLink="/material/material/type">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">list_alt</span>
+            </div>
+            <span>Material Type</span>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Process Management -->
+      <li class="nav-item has-submenu">
+        <div class="nav-item-content">
+          <div class="icon-wrapper">
+            <span class="material-icons nav-icon">engineering</span>
+          </div>
+          <span class="nav-text">Process 
+            management
+          </span>
+       
         </div>
-      </a>
-    </mat-nav-list>
-    
-    <mat-nav-list>
-      <a mat-list-item [routerLink]="['/material/customer-details']">
-       <div class="nav-item-content">
-         <mat-icon >person</mat-icon>
-            <span>Customer Details</span>
+        <ul class="submenu">
+          <li routerLink="master/meterialinput">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">input</span>
+            </div>
+            <span>Casting Input</span>
+          </li>
+          <li routerLink="/grade">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">grade</span>
+            </div>
+            <span>Grade</span>
+          </li>
+          <li routerLink="/material/process">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">settings</span>
+            </div>
+            <span>Process</span>
+          </li>
+        </ul>
+      </li>
+
+      <!-- Customers -->
+      <li class="nav-item" routerLink="/material/customer-details" routerLinkActive="active-link">
+        <div class="nav-item-content">
+          <div class="icon-wrapper">
+            <span class="material-icons nav-icon">person</span>
+          </div>
+          <span class="nav-text">Customers</span>
         </div>
-      </a>
-    </mat-nav-list>
+      </li>
 
-     <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard" >
-       <div class="nav-item-content">
-         <mat-icon >assessment</mat-icon>
-            <span>Reports</span>
+      <!-- Reports -->
+      <li class="nav-item" routerLink="/reports" routerLinkActive="active-link">
+        <div class="nav-item-content">
+          <div class="icon-wrapper">
+            <span class="material-icons nav-icon">bar_chart</span>
+          </div>
+          <span class="nav-text">Reports</span>
         </div>
-      </a>
-    </mat-nav-list>
-    
-   
-  </mat-drawer>
-  <mat-drawer-content>
-    <div class="main-content">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-drawer-content>
-</mat-drawer-container>
-
-
-
-
-
-<mat-menu #adminMenu="matMenu"
-
-yPosition="below" class="admin-menu">
-  <button mat-menu-item [routerLink]="['/master']">
-    <mat-icon>person</mat-icon>
-    <span>User</span>
-  </button>
-  <button mat-menu-item [routerLink]="['/master/role']">
-    <mat-icon>supervisor_account</mat-icon>
-    <span>Role</span>
-  </button>
-  <button mat-menu-item [routerLink]="['/master/customer']">
-    <mat-icon>groups</mat-icon>
-    <span>Customer</span>
-  </button>
-  <button mat-menu-item [routerLink]="['/material/suppliers']">
-    <mat-icon>group</mat-icon>
-    <span>Supplier</span>
-  </button>
-  <button mat-menu-item [routerLink]="['/master/department']">
-    <mat-icon>domain</mat-icon>
-    <span>Department</span>
-  </button>
-
-</mat-menu>
-
-
-<mat-menu #ProcessMenu="matMenu"
-
-yPosition="below" class="admin-menu">
-  <button mat-menu-item [routerLink]="['/master/meterialinput']" >
-   <mat-icon>calculate</mat-icon>
-    <span>Casting Input</span>
-  </button>
-   <button mat-menu-item [routerLink]="['/grade']" >
-   <mat-icon>grade</mat-icon>
-    <span>Grade</span>
-  </button>
-
-  <button mat-menu-item [routerLink]="['/material/process']" >
-   <mat-icon>grade</mat-icon>
-    <span>Process</span>
-  </button>
-
-</mat-menu>
-
-
-<mat-menu #meterialMenu= "matMenu"
-yPosition="below" class="admin-menu">
-
- <button mat-menu-item [routerLink]="['/material/list']" >
-  <mat-icon>inventory_2</mat-icon> 
-
-    <span>Material</span>
-  </button>
-  <button mat-menu-item [routerLink]="['/material/material/type']" >
-   <mat-icon>category</mat-icon> 
-
-    <span>Material Type </span>
-  </button>
-
-</mat-menu>
+      </li>
+    </ul>
+  </aside>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

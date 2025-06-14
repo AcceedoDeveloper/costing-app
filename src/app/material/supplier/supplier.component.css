@@ -5,13 +5,14 @@ body {
   padding: 0;
 }
 
-.header{
+.header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-left: 30px;
-  margin-right: 30px;
- 
+  align-items: center;          /* Align items vertically centered */
+  justify-content: space-between;  /* Space between title and button */
+  width: 90%;
+  max-width: 1200px;
+  margin: 30px auto 16px auto;  /* Add clean spacing above and below */
+  padding: 0;
 }
 
 .table-container {

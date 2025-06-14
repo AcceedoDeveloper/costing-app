@@ -1,13 +1,10 @@
-
-
-
 <div class="header">
   <h2>Process List</h2>
   <button mat-raised-button color="primary" (click)="openAddMaterial()">Add Process</button>
 </div>
 
 <div class="table-container">
-  <table>
+  <table class="main-table">
     <thead>
       <tr>
         <th>Process Name</th>
@@ -18,14 +15,13 @@
     </thead>
     <tbody>
       <ng-container *ngFor="let process of processes; let i = index">
-        <tr>
+        <tr class="main-row">
           <td>{{ process.processName }}</td>
           <td>
-  <ng-container *ngFor="let g of process.grade; let last = last">
-    {{ g.name }}<span *ngIf="!last">, </span>
-  </ng-container>
-</td>
-
+            <ng-container *ngFor="let g of process.grade; let last = last">
+              {{ g.name }}<span *ngIf="!last">, </span>
+            </ng-container>
+          </td>
           <td>
             {{ process.rawMaterial.length }} materials
           </td>
@@ -35,62 +31,66 @@
             </mat-icon>
             <mat-icon (click)="deleteProcess(process._id)" class="icon">delete</mat-icon>
             <mat-icon (click)="editAllMaterials(process._id)" class="icon">edit</mat-icon>
-
           </td>
         </tr>
 
-        <tr *ngIf="expandedIndex === i">
-  <td colspan="4">
-    <!-- Raw Material Table -->
-    <h4>Raw Materials</h4>
-    <table class="sub-table">
-      <thead>
-        <tr>
-          <th>Material Type</th>
-          <th>Material Name</th>
-          <th>Quantity</th>
+        <tr *ngIf="expandedIndex === i" class="expanded-row">
+          <td colspan="4">
+            <div class="dropdown-container">
+              <!-- Raw Material Table -->
+              <div class="dropdown-table">
+                <h4>Raw Materials</h4>
+                <table class="sub-table">
+                  <thead>
+                    <tr>
+                      <th>Material Type</th>
+                      <th>Material Name</th>
+                      <th>Material Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let raw of process.rawMaterial">
+                      <ng-container *ngFor="let material of raw.materialsUsed">
+                        <tr>
+                          <td>{{ raw.type }}</td>
+                          <td>{{ material.name }}</td>
+                          <td>{{ material.quantity }}</td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Grade Table -->
+              <div class="dropdown-table">
+                <h4>Grades</h4>
+                <table class="sub-table">
+                  <thead>
+                    <tr>
+                      <th>Grade Material Type</th>
+                      <th>Grade Material</th>
+                      <th>Grade Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let grade of process.grade">
+                      <ng-container *ngFor="let raw of grade.rawMaterial">
+                        <ng-container *ngFor="let material of raw.materialsUsed">
+                          <tr>
+                            <td>{{ raw.type }}</td>
+                            <td>{{ material.name }}</td>
+                            <td>{{ material.quantity }}</td>
+                          </tr>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </td>
         </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let raw of process.rawMaterial">
-          <ng-container *ngFor="let material of raw.materialsUsed">
-            <tr>
-              <td>{{ raw.type }}</td>
-              <td>{{ material.name }}</td>
-              <td>{{ material.quantity }}</td>
-            </tr>
-          </ng-container>
-        </ng-container>
-      </tbody>
-    </table>
-
-    <!-- Grade Table -->
-    <h4>Grades</h4>
-   <table class="sub-table">
-  <thead>
-    <tr>
-      <th>Grade Material Type</th>
-      <th>Grade Material</th>
-      <th>Grade Quantity</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let grade of process.grade">
-      <ng-container *ngFor="let raw of grade.rawMaterial">
-        <ng-container *ngFor="let material of raw.materialsUsed">
-          <tr>
-            <td>{{ raw.type }}</td>
-            <td>{{ material.name }}</td>
-            <td>{{ material.quantity }}</td>
-          </tr>
-        </ng-container>
-      </ng-container>
-    </ng-container>
-  </tbody>
-</table>
-
-  </td>
-</tr>
       </ng-container>
     </tbody>
   </table>

@@ -2,7 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 30px;
+  margin: 10px auto 0px auto; /* Add 10px space below */
+  max-width: 1200px;
+  width: 90%;
+  padding: 10px 0;
 }
 
 .table-container {
