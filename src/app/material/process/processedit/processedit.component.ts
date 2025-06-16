@@ -34,51 +34,50 @@ export class ProcesseditComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  const rawMaterialCopy = this.data.rawMaterial.map(raw => ({
-    ...raw,
-    materialsUsed: raw.materialsUsed.map(material => ({ ...material }))
-  }));
-
-  this.initForm(rawMaterialCopy);
+ngOnInit(): void {
   this.store.dispatch(GradeActions.loadMaterialMap());
+  this.store.dispatch(GradeActions.loadGrades());
 
-    // Subscribe to materialMap to update local variables
-    this.materialMap$.subscribe(materialMap => {
-      this.materialMap = materialMap;
-      this.materialTypes = Object.keys(materialMap);
-      console.log('Material Map:', this.materialMap);
-      console.log('Material Types:', this.materialTypes);
-    });
-    this.grades$ = this.store.select(fromGrade.selectAllGrades);
-  this.store.dispatch(GradeActions.loadGrades()); // Dispatch action to fetch all grades
+  this.materialMap$.subscribe(materialMap => {
+    this.materialMap = materialMap;
+    this.materialTypes = Object.keys(materialMap);
+  });
 
-  const grade = this.data.grade?.[0] || {};
+  this.grades$ = this.store.select(fromGrade.selectAllGrades);
 
+  // Initialize the form structure once
   this.form = this.fb.group({
-    materialFormArray: this.materialFormArray,
+    materialFormArray: this.fb.array([]),
     grade: this.fb.group({
-      _id: [grade._id || '']
+      _id: [this.data.grade?.[0]?._id || '']
     })
   });
 
+  // Set the local reference to the form array
+  this.materialFormArray = this.form.get('materialFormArray') as FormArray;
+
+  // Always clear first, then populate (to avoid duplicates)
+  this.materialFormArray.clear();
   this.initForm(this.data.rawMaterial);
 }
 
 
+
+
   initForm(rawMaterial: any[]): void {
-    rawMaterial.forEach(raw => {
-      raw.materialsUsed.forEach((mat: any) => {
-        this.materialFormArray.push(
-          this.fb.group({
-            type: [raw.type],
-            name: [mat.name],
-            quantity: [mat.quantity, [Validators.required, Validators.min(1)]]
-          })
-        );
-      });
+  rawMaterial.forEach(raw => {
+    raw.materialsUsed.forEach((mat: any) => {
+      this.materialFormArray.push(
+        this.fb.group({
+          type: [raw.type],
+          name: [mat.name],
+          quantity: [mat.quantity, [Validators.required, Validators.min(1)]]
+        })
+      );
     });
-  }
+  });
+}
+
 
 save(): void {
   if (this.form.valid) {
