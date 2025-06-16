@@ -17,6 +17,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class MaterialComponent implements OnInit, AfterViewInit {
   selectedMaterialType: string = '';
+  selectedHouseType: string = '';
   materialTypes: string[] = []; 
   searchTerm: string = '';
   sortedPriceHistory: { unitCost: number; date: string }[] = [];
@@ -134,6 +135,28 @@ toggleHistoryPopup(index: number): void {
 
     this.expandedHistoryIndex = index;
   }
+}
+
+
+
+applyFilterMaterialbyHouseType(): void {
+  let filtered = this.selectedMaterialType
+    ? this.materials.filter(m => m.materialType === this.selectedMaterialType)
+    : [...this.materials];
+
+  if (this.selectedHouseType) {
+    filtered = filtered.filter(m => m.houseType === this.selectedHouseType);
+  }
+
+  if (this.searchTerm) {
+    filtered = filtered.filter(m =>
+      m.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  const startIndex = this.pageIndex * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.paginatedMaterials = filtered.slice(startIndex, endIndex);
 }
 
 

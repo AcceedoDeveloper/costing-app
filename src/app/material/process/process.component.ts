@@ -61,7 +61,7 @@ editAllMaterials(id: string): void {
   const process = this.processes.find(p => p._id === id);
 
   if (process) {
-    console.log('🔍 Full process object:', process);
+    console.log('Full process object:', process);
 
     this.dialog.open(ProcesseditComponent, {
       width: '700px',

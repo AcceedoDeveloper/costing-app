@@ -14,6 +14,7 @@ import * as fromGrade from '../../../grade/store/grade.selectors';
   styleUrls: ['./processedit.component.css']
 })
 export class ProcesseditComponent implements OnInit {
+  grades$!: Observable<any[]>;
   materialMap$!: Observable<{ [key: string]: any[] }>;
   materialMap: { [key: string]: any[] } = {};
   materialTypes: string[] = [];
@@ -49,6 +50,19 @@ export class ProcesseditComponent implements OnInit {
       console.log('Material Map:', this.materialMap);
       console.log('Material Types:', this.materialTypes);
     });
+    this.grades$ = this.store.select(fromGrade.selectAllGrades);
+  this.store.dispatch(GradeActions.loadGrades()); // Dispatch action to fetch all grades
+
+  const grade = this.data.grade?.[0] || {};
+
+  this.form = this.fb.group({
+    materialFormArray: this.materialFormArray,
+    grade: this.fb.group({
+      _id: [grade._id || '']
+    })
+  });
+
+  this.initForm(this.data.rawMaterial);
 }
 
 
@@ -71,7 +85,6 @@ save(): void {
     const flatMaterials = this.materialFormArray.value;
 
     const rawMaterialMap: { [type: string]: any[] } = {};
-
     flatMaterials.forEach(mat => {
       if (!rawMaterialMap[mat.type]) {
         rawMaterialMap[mat.type] = [];
@@ -84,22 +97,27 @@ save(): void {
       materialsUsed
     }));
 
-    const gradeName = Array.isArray(this.data.grade) ? this.data.grade[0]?.name : this.data.grade;
+    const selectedGradeId = this.form.get('grade._id')?.value;
 
-    const updatedProcess = {
-      processName: this.data.processName,
-      rawMaterial: reconstructedRawMaterial,
-      grade: gradeName || ''
-    };
+    this.grades$.subscribe(grades => {
+      const selectedGrade = grades.find(g => g._id === selectedGradeId);
+      const gradeName = selectedGrade?.name || '';
 
-    console.log('data', updatedProcess);
-    this.store.dispatch(updateProcess({ id: this.data._id, process: updatedProcess }));
+      const updatedProcess = {
+        processName: this.data.processName,
+        rawMaterial: reconstructedRawMaterial,
+        grade: gradeName
+      };
 
-    this.dialogRef.close();
+      console.log('data', updatedProcess);
+      this.store.dispatch(updateProcess({ id: this.data._id, process: updatedProcess }));
+      this.dialogRef.close();
+    });
   } else {
     this.form.markAllAsTouched();
   }
 }
+
 
 
 

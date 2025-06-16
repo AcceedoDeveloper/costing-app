@@ -40,7 +40,6 @@ export class AddprocessComponent implements OnInit {
       materials: this.fb.array([])
     });
 
-    // Load grades and material map from store
     this.store.dispatch(GradeActions.loadGrades());
     this.store.dispatch(GradeActions.loadMaterialMap());
 
@@ -50,47 +49,48 @@ export class AddprocessComponent implements OnInit {
       this.materialMap = materialMap;
       this.materialTypes = Object.keys(materialMap);
     });
-
-    // Update validations based on checkbox selection
-    this.processForm.get('type')?.valueChanges.subscribe((values: string[]) => {
-      const gradeCtrl = this.processForm.get('grade');
-      const materialsCtrl = this.processForm.get('materials');
-
-      if (values.includes('grade')) {
-        gradeCtrl?.setValidators(Validators.required);
-      } else {
-        gradeCtrl?.clearValidators();
-      }
-
-      if (values.includes('material') && this.materials.length === 0) {
-        this.addMaterial();
-      } else if (!values.includes('material')) {
-        while (this.materials.length !== 0) {
-          this.materials.removeAt(0);
-        }
-      }
-
-      gradeCtrl?.updateValueAndValidity();
-    });
   }
 
   get materials(): FormArray {
     return this.processForm.get('materials') as FormArray;
   }
 
-  onCheckboxChange(event: any): void {
+  isChecked(type: string): boolean {
+    return (this.processForm.get('type') as FormArray).value.includes(type);
+  }
+
+  onExclusiveCheckboxChange(selectedType: string, isChecked: boolean): void {
     const typeArray: FormArray = this.processForm.get('type') as FormArray;
 
-    if (event.checked) {
-      typeArray.push(new FormControl(event.source.value));
+    // Remove all current selections
+    while (typeArray.length !== 0) {
+      typeArray.removeAt(0);
+    }
+
+    // Add new selection
+    if (isChecked) {
+      typeArray.push(new FormControl(selectedType));
+    }
+
+    const gradeCtrl = this.processForm.get('grade');
+    const materialsCtrl = this.processForm.get('materials');
+
+    if (selectedType === 'grade') {
+      gradeCtrl?.setValidators(Validators.required);
+      if (materialsCtrl instanceof FormArray) {
+        while (materialsCtrl.length > 0) {
+          materialsCtrl.removeAt(0);
+        }
+      }
     } else {
-      const index = typeArray.controls.findIndex(
-        x => x.value === event.source.value
-      );
-      if (index !== -1) {
-        typeArray.removeAt(index);
+      gradeCtrl?.clearValidators();
+      gradeCtrl?.setValue('');
+      if (materialsCtrl instanceof FormArray && materialsCtrl.length === 0) {
+        this.addMaterial();
       }
     }
+
+    gradeCtrl?.updateValueAndValidity();
   }
 
   createMaterialGroup(): FormGroup {
@@ -117,30 +117,30 @@ export class AddprocessComponent implements OnInit {
     });
   }
 
-onSubmit(): void {
-  if (this.processForm.valid) {
-    const formValue = this.processForm.value;
+  onSubmit(): void {
+    if (this.processForm.valid) {
+      const formValue = this.processForm.value;
 
-    const payload = {
-      processName: formValue.processName,
-      grade: formValue.grade,
-      rawMaterial: formValue.materials.map((material: any) => ({
-        type: material.selectedType,
-        materialsUsed: [
-          {
-            name: material.selectedName,
-            quantity: material.quantity
-          }
-        ]
-      }))
-    };
+      const payload = {
+        processName: formValue.processName,
+        grade: formValue.grade,
+        rawMaterial: formValue.materials.map((material: any) => ({
+          type: material.selectedType,
+          materialsUsed: [
+            {
+              name: material.selectedName,
+              quantity: material.quantity
+            }
+          ]
+        }))
+      };
 
-    this.store.dispatch(addProcess({ process: payload }));
-    this.dialogRef.close();
-  } else {
-    this.processForm.markAllAsTouched();
+      this.store.dispatch(addProcess({ process: payload }));
+      this.dialogRef.close();
+    } else {
+      this.processForm.markAllAsTouched();
+    }
   }
-}
 
   onCancel(): void {
     this.dialogRef.close();

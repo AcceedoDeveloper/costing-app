@@ -42,6 +42,18 @@
     </mat-error>
   </mat-form-field>
 
+
+  <mat-form-field appearance="outline" class="full-width">
+  <mat-label>Effective Till Date</mat-label>
+  <input matInput [matDatepicker]="picker" formControlName="effectiveTill" placeholder="Choose a date">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+  <mat-error *ngIf="materialForm.get('effectiveTillDate')?.hasError('required')">
+    Effective date is required
+  </mat-error>
+</mat-form-field>
+
+
   <div class="button-group">
     <button mat-raised-button color="primary" type="submit" [disabled]="materialForm.invalid">
       {{ isEditMode ? 'Update' : 'Submit' }}

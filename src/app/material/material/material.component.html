@@ -24,6 +24,14 @@
           placeholder="Enter material name"
         />
       </mat-form-field>
+
+      <div class="radio-group">
+  <mat-radio-group [(ngModel)]="selectedHouseType" (change)="applyFilterMaterialbyHouseType()">
+    <mat-radio-button value="in-house">In-House</mat-radio-button>
+    <mat-radio-button style="margin-left: 5px;" value="supplier">Supplier</mat-radio-button>
+  </mat-radio-group>
+</div>
+
     </div>
 
     <button mat-raised-button color="primary" (click)="openAddMeterialPopup()">

@@ -18,13 +18,14 @@
         <tr class="main-row">
           <td>{{ process.processName }}</td>
           <td>
-            <ng-container *ngFor="let g of process.grade; let last = last">
-              {{ g.name }}<span *ngIf="!last">, </span>
+            <ng-container *ngIf="process.grade?.length > 0; else noGrades">
+              <ng-container *ngFor="let g of process.grade; let last = last">
+                {{ g.name }}<span *ngIf="!last">, </span>
+              </ng-container>
             </ng-container>
+            <ng-template #noGrades>-</ng-template>
           </td>
-          <td>
-            {{ process.rawMaterial.length }} materials
-          </td>
+          <td>{{ process.rawMaterial?.length || 0 }} materials</td>
           <td class="actions">
             <mat-icon class="icon" (click)="toggleExpand(i)">
               {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
@@ -37,8 +38,10 @@
         <tr *ngIf="expandedIndex === i" class="expanded-row">
           <td colspan="4">
             <div class="dropdown-container">
+
               <!-- Raw Material Table -->
-              <div class="dropdown-table">
+              <div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0"
+                   [class.full-width]="!process.grade || process.grade.length === 0">
                 <h4>Raw Materials</h4>
                 <table class="sub-table">
                   <thead>
@@ -63,7 +66,8 @@
               </div>
 
               <!-- Grade Table -->
-              <div class="dropdown-table">
+              <div class="dropdown-table" *ngIf="process.grade?.length > 0"
+                   [class.full-width]="!process.rawMaterial || process.rawMaterial.length === 0">
                 <h4>Grades</h4>
                 <table class="sub-table">
                   <thead>
@@ -88,6 +92,7 @@
                   </tbody>
                 </table>
               </div>
+
             </div>
           </td>
         </tr>

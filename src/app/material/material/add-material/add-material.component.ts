@@ -46,6 +46,7 @@ export class AddMaterialComponent implements OnInit {
       name: ['', Validators.required],
       type: ['', Validators.required],
       unitCost: [0, [Validators.required, Validators.min(0.01)]],
+       effectiveTill: ['', Validators.required],
     });
 
     this.supplierMaterialForm = this.fb.group({
@@ -68,13 +69,18 @@ export class AddMaterialComponent implements OnInit {
       this.materialTypeKeys = Object.keys(materialMap);
 
       // Patch form values only after types are loaded
-      if (this.isEditMode && this.data?.material) {
-        this.materialForm.patchValue({
-          name: this.data.material.name,
-          type: this.data.material.materialType,
-          unitCost: this.data.material.unitCost,
-        });
-      }
+     if (this.isEditMode && this.data?.material) {
+  this.materialForm.patchValue({
+  name: this.data.material.name,
+  type: this.data.material.materialType,
+  unitCost: this.data.material.unitCost,
+  effectiveTill: this.data.material.effectiveTill
+    ? new Date(this.data.material.effectiveTill)
+    : null
+});
+
+}
+
     });
 
     // Load suppliers
@@ -130,12 +136,15 @@ export class AddMaterialComponent implements OnInit {
         materialType: formValue.type,
         houseType: 'in-house',
         unitCost: formValue.unitCost,
+        effectiveTill: this.formatDateToLocal(formValue.effectiveTill),
         _id: this.materialId,
       };
 
       if (this.isEditMode && this.materialId) {
+        console.log('data', material);
         this.store.dispatch(updateMaterial({ material }));
       } else {
+        console.log('data', material);
         this.store.dispatch(createMaterial({ material }));
         this.store.dispatch(loadMaterials());
       }
@@ -178,6 +187,14 @@ export class AddMaterialComponent implements OnInit {
     }
   }
 }
+
+formatDateToLocal(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 
 
   cancel(): void {

@@ -98,7 +98,6 @@ mat-toolbar {
 
 .nav-item.active-link {
   background-color: #ffffff;
-  border-left: 4px solid #ff4d4f;
 }
 
 .has-submenu:hover .submenu {
