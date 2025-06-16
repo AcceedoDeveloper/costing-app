@@ -61,14 +61,13 @@ editAllMaterials(id: string): void {
   const process = this.processes.find(p => p._id === id);
 
   if (process) {
-    // Deep clone the process object to prevent mutation
     const clonedProcess = JSON.parse(JSON.stringify(process));
 
     console.log('Full process object:', clonedProcess);
 
     this.dialog.open(ProcesseditComponent, {
       width: '700px',
-      data: clonedProcess  // Pass the clone, not the original
+      data: clonedProcess  
     });
   } else {
     console.error('Process not found for ID:', id);

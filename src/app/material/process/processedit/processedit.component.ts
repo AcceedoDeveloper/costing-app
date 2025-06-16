@@ -6,6 +6,7 @@ import { updateProcess } from '../../store/material.actions';
 import { Observable } from 'rxjs';
 import * as GradeActions from '../../../grade/store/grade.actions';
 import * as fromGrade from '../../../grade/store/grade.selectors';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -98,7 +99,7 @@ save(): void {
 
     const selectedGradeId = this.form.get('grade._id')?.value;
 
-    this.grades$.subscribe(grades => {
+    this.grades$.pipe(take(1)).subscribe(grades => {
       const selectedGrade = grades.find(g => g._id === selectedGradeId);
       const gradeName = selectedGrade?.name || '';
 
