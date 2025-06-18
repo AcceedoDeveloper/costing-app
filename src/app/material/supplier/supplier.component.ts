@@ -21,9 +21,14 @@ export class SupplierComponent implements OnInit {
   suppliers: Supplier[] = [];
   paginatedSuppliers: Supplier[] = [];
 
+  selectedMaterialType: string = '';
+searchTerm: string = '';
+materialTypes: string[] = [];
+
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  pageSize = 5;
+  pageSize = 25;
   pageIndex = 0;
 
   constructor(private dialog: MatDialog, private store: Store) {}
@@ -37,6 +42,9 @@ export class SupplierComponent implements OnInit {
     console.log('Suppliers from store:', suppliers); 
 
     this.suppliers = suppliers;
+    this.materialTypes = [...new Set(suppliers.map(s => s.materialType))];
+
+  this.applyFilter();
     this.updatePaginatedSuppliers();
   });
 }
@@ -51,7 +59,7 @@ export class SupplierComponent implements OnInit {
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.updatePaginatedSuppliers();
+     this.applyFilter();
   }
 
   addSupplier() {
@@ -88,4 +96,23 @@ deleteSupplier(id: string) {
     }
   });
 }
+
+applyFilter() {
+  let filtered = this.suppliers;
+
+  if (this.selectedMaterialType) {
+    filtered = filtered.filter(s => s.materialType === this.selectedMaterialType);
+  }
+
+  if (this.searchTerm) {
+    filtered = filtered.filter(s =>
+      s.materialName.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  const startIndex = this.pageIndex * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.paginatedSuppliers = filtered.slice(startIndex, endIndex);
+}
+
 }

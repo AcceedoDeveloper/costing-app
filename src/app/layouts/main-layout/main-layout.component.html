@@ -92,24 +92,31 @@
          
         </div>
         <ul class="submenu">
+           <li routerLink="/material/material/type">
+            <div class="icon-wrapper">
+              <span class="material-icons submenu-icon">list_alt</span>
+            </div>
+            <span>Material Type</span>
+          </li>
           <li routerLink="/material/list">
             <div class="icon-wrapper">
               <span class="material-icons submenu-icon">category</span>
             </div>
             <span>Material</span>
           </li>
-          <li routerLink="/material/material/type">
+           <li routerLink="/grade">
             <div class="icon-wrapper">
-              <span class="material-icons submenu-icon">list_alt</span>
+              <span class="material-icons submenu-icon">grade</span>
             </div>
-            <span>Material Type</span>
+            <span>Grade</span>
           </li>
+         
         </ul>
       </li>
 
       <!-- Process Management -->
       <li class="nav-item has-submenu">
-        <div class="nav-item-content">
+        <div class="nav-item-content" routerLink="/material/process">
           <div class="icon-wrapper">
             <span class="material-icons nav-icon">engineering</span>
           </div>
@@ -118,26 +125,14 @@
           </span>
        
         </div>
-        <ul class="submenu">
-          <li routerLink="master/meterialinput">
-            <div class="icon-wrapper">
-              <span class="material-icons submenu-icon">input</span>
-            </div>
-            <span>Casting Input</span>
-          </li>
-          <li routerLink="/grade">
-            <div class="icon-wrapper">
-              <span class="material-icons submenu-icon">grade</span>
-            </div>
-            <span>Grade</span>
-          </li>
+        <!-- <ul class="submenu">
           <li routerLink="/material/process">
             <div class="icon-wrapper">
               <span class="material-icons submenu-icon">settings</span>
             </div>
             <span>Process</span>
           </li>
-        </ul>
+        </ul> -->
       </li>
 
       <!-- Customers -->

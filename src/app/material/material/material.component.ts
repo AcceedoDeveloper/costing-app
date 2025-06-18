@@ -17,7 +17,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class MaterialComponent implements OnInit, AfterViewInit {
   selectedMaterialType: string = '';
-  selectedHouseType: string = '';
+  selectedHouseType: string = 'supplier';
   materialTypes: string[] = []; 
   searchTerm: string = '';
   sortedPriceHistory: { unitCost: number; date: string }[] = [];
@@ -40,6 +40,7 @@ export class MaterialComponent implements OnInit, AfterViewInit {
     this.materials = materials;
     this.materialTypes = [...new Set(materials.map(m => m.materialType))];
     this.applyFilter();
+    this.applyFilterMaterialbyHouseType();
 });
 
   }

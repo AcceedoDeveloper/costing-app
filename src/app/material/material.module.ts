@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-
+import { MatStepperModule } from '@angular/material/stepper';
 
 
 
@@ -42,10 +42,15 @@ import { MaterialtypeComponent } from './materialtype/materialtype.component';
 import { ProcesseditComponent } from './process/processedit/processedit.component';
 import { AddcustomerdetailsComponent } from './customerdetails/addcustomerdetails/addcustomerdetails.component'; 
 
+import { MatOptionModule } from '@angular/material/core';
+
+
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent],
   imports: [
+   MatOptionModule,
     MatTooltipModule,
+     MatStepperModule ,
     GradeModule,
     MasterModule,
     MatCheckboxModule,

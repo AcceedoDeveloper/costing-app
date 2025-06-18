@@ -75,5 +75,25 @@ tr:hover {
   padding: 0;
 }
 
+/* Stepper aligned bottom-right inside the table-container */
+.stepper-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  background-color: transparent;
+}
 
+/* Optional: control stepper size */
+.stepper-wrapper mat-horizontal-stepper {
+  width: auto;
+  max-width: 300px;
+}
 
+.mat-step-header{
+  background-color: transparent;
+}
+
+.navigate-router{
+  background-color: transparent;
+  cursor: pointer;
+}

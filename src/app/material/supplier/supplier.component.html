@@ -1,9 +1,35 @@
 
 
-  <div class="header">
-    <h2>Supplier List</h2>
-    <button mat-raised-button color="primary" (click)="addSupplier()">Add Supplier</button>
+<div class="header">
+  <h2>Supplier List</h2>
+
+
+  <div class="filter">
+    <mat-form-field appearance="standard" class="material-filter">
+    <mat-label>Filter by Material Type</mat-label>
+    <mat-select [(value)]="selectedMaterialType" (selectionChange)="applyFilter()">
+      <mat-option value="">All</mat-option>
+      <mat-option *ngFor="let type of materialTypes" [value]="type">
+        {{ type }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="standard" class="search-box">
+    <mat-label>Search Supplier</mat-label>
+    <input
+      matInput
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+      placeholder="Enter supplier name"
+    />
+  </mat-form-field>
+
   </div>
+  
+  <button mat-raised-button color="primary" (click)="addSupplier()">Add Supplier</button>
+</div>
+
 
 <div class="table-container">
  
@@ -40,7 +66,7 @@
   <mat-paginator
     [length]="suppliers.length"
     [pageSize]="pageSize"
-    [pageSizeOptions]="[5, 10, 20]"
+    [pageSizeOptions]="[25, 50, 100]"
     (page)="onPageChange($event)"
     aria-label="Select page of suppliers"
   ></mat-paginator>

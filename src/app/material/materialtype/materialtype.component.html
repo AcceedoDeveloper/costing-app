@@ -24,25 +24,40 @@
       Cancel
     </button>
   </div>
+<!-- Table Section -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 80%;">Material Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let material of materialTypes$ | async">
+        <td>{{ material.name }}</td>
+        <td class="actions">
+          <mat-icon aria-label="Edit material type" class="icon" (click)="startEdit(material)">edit</mat-icon>
+          <mat-icon aria-label="Delete material type" class="icon" (click)="deleteMaterialType(material._id)">delete</mat-icon>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <!-- Table Section -->
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th style="width: 80%;">Material Type</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let material of materialTypes$ | async">
-          <td>{{ material.name }}</td>
-          <td class="actions">
-            <mat-icon aria-label="Edit material type" class="icon" (click)="startEdit(material)">edit</mat-icon>
-            <mat-icon aria-label="Delete material type" class="icon" (click)="deleteMaterialType(material._id)">delete</mat-icon>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+ 
+</div>
+ <!-- Stepper positioned at the bottom right -->
+  <div class="stepper-wrapper">
+    <mat-horizontal-stepper [selectedIndex]="0" linear class="navigate-router">
+      <mat-step [completed]="false" label="Material type"></mat-step>
+      <mat-step [completed]="false" label="Material"  >
+         <ng-template matStepLabel>
+      <a [routerLink]="['/material/list']" style="text-decoration: none; color: inherit;">
+        Material
+      </a>
+    </ng-template>
+      </mat-step>
+    </mat-horizontal-stepper>
   </div>
 </div>
+

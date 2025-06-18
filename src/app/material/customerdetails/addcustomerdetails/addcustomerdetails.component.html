@@ -1,1 +1,98 @@
-<p>addcustomerdetails works!</p>
+<!-- Toggle Stepper Mode -->
+<button mat-button color="primary" (click)="isLinear = !isLinear" id="toggle-linear">
+  {{ !isLinear ? 'Enable linear mode' : 'Disable linear mode' }}
+</button>
+
+<!-- Stepper -->
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <!-- Step 1: Name -->
+  <mat-step [stepControl]="firstFormGroup">
+  <form [formGroup]="firstFormGroup">
+    <ng-template matStepLabel>Customer Details</ng-template>
+
+    <!-- Customer Name -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Customer Name</mat-label>
+      <input matInput placeholder="Enter customer name" formControlName="customerName" required />
+    </mat-form-field>
+
+    <!-- Part No -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Part No</mat-label>
+      <input matInput placeholder="Enter part number" formControlName="partNo" required />
+    </mat-form-field>
+
+    <!-- Drawing -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Drawing</mat-label>
+      <input matInput placeholder="Enter drawing details" formControlName="drawing" required />
+    </mat-form-field>
+
+    <div>
+      <button mat-button matStepperNext color="primary">Next</button>
+    </div>
+  </form>
+</mat-step>
+
+<mat-step [stepControl]="secondFormGroup">
+  <form [formGroup]="secondFormGroup">
+    <ng-template matStepLabel>Engineering Design</ng-template>
+
+    <!-- Casting Weight -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Casting Weight (kg)</mat-label>
+      <input matInput type="number" placeholder="Enter casting weight" formControlName="castingWeight" required />
+    </mat-form-field>
+
+    <!-- Cavities -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Cavities</mat-label>
+      <input matInput type="number" placeholder="Enter number of cavities" formControlName="cavities" required />
+    </mat-form-field>
+
+    <!-- Pouring Weight -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Pouring Weight (kg)</mat-label>
+      <input matInput type="number" placeholder="Enter pouring weight" formControlName="pouringWeight" required />
+    </mat-form-field>
+
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext color="primary">Next</button>
+    </div>
+  </form>
+</mat-step>
+
+
+  <!-- Step 3: Done -->
+  <mat-step [stepControl]="thirdFormGroup">
+  <form [formGroup]="thirdFormGroup">
+    <ng-template matStepLabel>Process</ng-template>
+
+    <!-- Process Dropdown with Multiple Selection -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Select Processes</mat-label>
+      <mat-select formControlName="selectedProcesses" multiple>
+        <mat-option *ngFor="let process of processList" [value]="process">
+          {{ process }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext color="primary">Next</button>
+    </div>
+  </form>
+</mat-step>
+
+
+   <mat-step>
+    <ng-template matStepLabel>Genarate Code</ng-template>
+    <p>You are now done.</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button color="accent" (click)="stepper.reset()">Reset</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

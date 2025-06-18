@@ -7,11 +7,11 @@ body {
 
 .header {
   display: flex;
-  align-items: center;          /* Align items vertically centered */
-  justify-content: space-between;  /* Space between title and button */
+  align-items: center;         
+  justify-content: space-between;  
   width: 90%;
   max-width: 1200px;
-  margin: 30px auto 16px auto;  /* Add clean spacing above and below */
+  margin: 0px auto 0px auto;  
   padding: 0;
 }
 
@@ -101,7 +101,7 @@ td {
 }
 
 td.actions {
-  padding: 14px 20px;
+  padding: 10px 10px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -200,4 +200,12 @@ mat-paginator {
   .mat-paginator-icon {
     width: 20px;
   }
+}
+
+
+.filter{
+  display: flex;
+  gap: 20px;
+  align-items: start;
+  margin-right: 30%;
 }
