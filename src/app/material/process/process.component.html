@@ -7,74 +7,49 @@
   <table class="main-table">
     <thead>
       <tr>
-        <th>Process Name</th>
-        <th>Grade Name</th>
-        <th>Raw Material</th>
-        <th>Action</th>
+        <th class="col-process">Process Name</th>
+        <th class="col-grade">Grade / Raw Material</th>
+        <th class="col-action">Action</th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let process of processes; let i = index">
         <tr class="main-row">
-          <td>{{ process.processName }}</td>
-          <td>
-            <ng-container *ngIf="process.grade?.length > 0; else noGrades">
+          <td class="col-process">{{ process.processName }}</td>
+          <td class="col-grade">
+            <span *ngIf="(process.grade?.length || 0) === 0 && (process.rawMaterial?.length || 0) === 0"> - </span>
+            <ng-container *ngIf="process.grade?.length > 0">
               <ng-container *ngFor="let g of process.grade; let last = last">
                 {{ g.name }}<span *ngIf="!last">, </span>
-              </ng-container>
+              </ng-container><br />
             </ng-container>
-            <ng-template #noGrades>-</ng-template>
+            <ng-container *ngIf="process.rawMaterial?.length > 0">
+              Materials
+            </ng-container>
           </td>
-          <td>{{ process.rawMaterial?.length || 0 }} materials</td>
-          <td class="actions">
-            <mat-icon class="icon" (click)="toggleExpand(i)">
-              {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
-            </mat-icon>
-            <mat-icon (click)="deleteProcess(process._id)" class="icon">delete</mat-icon>
-            <mat-icon (click)="editAllMaterials(process._id)" class="icon">edit</mat-icon>
+          <td class="col-action">
+            <div class="actions">
+              <mat-icon class="icon" (click)="toggleExpand(i)">
+                {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
+              </mat-icon>
+              <mat-icon (click)="deleteProcess(process._id)" class="icon">delete</mat-icon>
+              <mat-icon (click)="editAllMaterials(process._id)" class="icon">edit</mat-icon>
+            </div>
           </td>
         </tr>
 
         <tr *ngIf="expandedIndex === i" class="expanded-row">
-          <td colspan="4">
-            <div class="dropdown-container">
-
-              <!-- Raw Material Table -->
-              <div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0"
-                   [class.full-width]="!process.grade || process.grade.length === 0">
-                <h4>Raw Materials</h4>
-                <table class="sub-table">
-                  <thead>
-                    <tr>
-                      <th>Material Type</th>
-                      <th>Material Name</th>
-                      <th>Material Quantity</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <ng-container *ngFor="let raw of process.rawMaterial">
-                      <ng-container *ngFor="let material of raw.materialsUsed">
-                        <tr>
-                          <td>{{ raw.type }}</td>
-                          <td>{{ material.name }}</td>
-                          <td>{{ material.quantity }}</td>
-                        </tr>
-                      </ng-container>
-                    </ng-container>
-                  </tbody>
-                </table>
-              </div>
-
+          <td colspan="3">
+            <div class="dropdown-container single-column">
               <!-- Grade Table -->
-              <div class="dropdown-table" *ngIf="process.grade?.length > 0"
-                   [class.full-width]="!process.rawMaterial || process.rawMaterial.length === 0">
-                <h4>Grades</h4>
+              <div class="dropdown-table" *ngIf="process.grade?.length > 0">
+                
                 <table class="sub-table">
                   <thead>
                     <tr>
-                      <th>Grade Material Type</th>
-                      <th>Grade Material</th>
-                      <th>Grade Quantity</th>
+                      <th class="col-process">Grade Material Type</th>
+                      <th class="col-grade">Grade Material</th>
+                      <th class="col-action">Grade Quantity</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -82,9 +57,9 @@
                       <ng-container *ngFor="let raw of grade.rawMaterial">
                         <ng-container *ngFor="let material of raw.materialsUsed">
                           <tr>
-                            <td>{{ raw.type }}</td>
-                            <td>{{ material.name }}</td>
-                            <td>{{ material.quantity }}</td>
+                            <td class="col-process">{{ raw.type }}</td>
+                            <td class="col-grade">{{ material.name }}</td>
+                            <td class="col-action">{{ material.quantity }}</td>
                           </tr>
                         </ng-container>
                       </ng-container>
@@ -93,6 +68,30 @@
                 </table>
               </div>
 
+              <!-- Raw Material Table -->
+              <div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0">
+               
+                <table class="sub-table">
+                  <thead>
+                    <tr>
+                      <th class="col-process">Material Type</th>
+                      <th class="col-grade">Material Name</th>
+                      <th class="col-action">Material Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let raw of process.rawMaterial">
+                      <ng-container *ngFor="let material of raw.materialsUsed">
+                        <tr>
+                          <td class="col-process">{{ raw.type }}</td>
+                          <td class="col-grade">{{ material.name }}</td>
+                          <td class="col-action">{{ material.quantity }}</td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </td>
         </tr>

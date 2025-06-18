@@ -37,15 +37,17 @@ import { ProcessComponent } from './process/process.component';
 import { AddprocessComponent } from './process/addprocess/addprocess.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GradeModule } from '../grade/grade.module';
+import { MasterModule } from '../master/master/master.module';
 import { MaterialtypeComponent } from './materialtype/materialtype.component';
-import { ProcesseditComponent } from './process/processedit/processedit.component'; 
-
+import { ProcesseditComponent } from './process/processedit/processedit.component';
+import { AddcustomerdetailsComponent } from './customerdetails/addcustomerdetails/addcustomerdetails.component'; 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent],
   imports: [
     MatTooltipModule,
     GradeModule,
+    MasterModule,
     MatCheckboxModule,
     FormsModule,
     MatRadioModule,
