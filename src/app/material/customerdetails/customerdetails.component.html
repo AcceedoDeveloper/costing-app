@@ -1,6 +1,6 @@
 <div class="header">
   <h2>Customer Details</h2>
-  <button mat-raised-button color="primary" (click)="addCustomerDetails()" >addCustomerDetails</button>
+  <button mat-raised-button color="primary" (click)="addCustomerDetails()">Add Customer Details</button>
 </div>
 
 <div class="table-container">
@@ -8,25 +8,30 @@
     <thead>
       <tr>
         <th>Customer Name</th>
-        <th>Grade Name</th>
-        <th>Process Type</th>
-        <th>Input Type</th>
+        <th>Drawing No</th>
+        <th>Part No</th>
+        <th>No of Process</th>
+        <th>Rate/Kg</th>
+        <th>Previous Cost</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let customer of selectedCustomerDetails$ | async">
+      <ng-container >
         <tr>
-          <td>{{ customer.customerName }}</td>
-          <td>{{ customer.grade }}</td>
-          <td>{{ customer.processType }}</td>
+          <td>TVS</td>
+          <td>568</td>
+          <td>89</td>
+          <td>14 Process</td>
+          <td>569</td>
+          <td>420</td>
           <td>
-            <span *ngIf="customer.castingInputs?.length">Casting Inputs</span>
-            <span *ngIf="customer.coreInputs?.length">
-              <span *ngIf="customer.castingInputs?.length">, </span>Core Inputs
-            </span>
-            <span *ngIf="customer.mouldingInputs?.length">
-              <span *ngIf="customer.castingInputs?.length || customer.coreInputs?.length">, </span>Moulding Inputs
-            </span>
+            <button mat-icon-button  >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button >
+              <mat-icon>delete</mat-icon>
+            </button>
           </td>
         </tr>
       </ng-container>

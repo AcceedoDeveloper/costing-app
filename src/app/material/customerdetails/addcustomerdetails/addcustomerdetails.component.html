@@ -36,7 +36,7 @@
 
 <mat-step [stepControl]="secondFormGroup">
   <form [formGroup]="secondFormGroup">
-    <ng-template matStepLabel>Engineering Design</ng-template>
+    <ng-template matStepLabel>Engineering</ng-template>
 
     <!-- Casting Weight -->
     <mat-form-field appearance="fill" class="full-width">
@@ -86,6 +86,27 @@
   </form>
 </mat-step>
 
+   
+  <mat-step [stepControl]="thirdFormGroup">
+  <form [formGroup]="thirdFormGroup">
+    <ng-template matStepLabel>Review Cost</ng-template>
+
+    <!-- Process Dropdown with Multiple Selection -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Select Processes</mat-label>
+      <mat-select formControlName="selectedProcesses" multiple>
+        <mat-option *ngFor="let process of processList" [value]="process">
+          {{ process }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext color="primary">Next</button>
+    </div>
+  </form>
+</mat-step>
 
    <mat-step>
     <ng-template matStepLabel>Genarate Code</ng-template>

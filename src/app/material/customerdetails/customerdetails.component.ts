@@ -29,7 +29,7 @@ export class CustomerdetailsComponent implements OnInit {
 
 addCustomerDetails(){
   this.dialog.open(AddcustomerdetailsComponent,{
-    width: '750px',
+    width: '850px',
     height: '550px',
     autoFocus: false,
   });
