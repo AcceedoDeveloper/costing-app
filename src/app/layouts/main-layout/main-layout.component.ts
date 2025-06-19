@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { autoLogout } from '../../auth/state/auth.actions';
+import { selectAuthState } from '../../auth/state/auth.selector';
+import { AppState } from '../../store/app.state';
 
 @Component({
   selector: 'app-main-layout',
@@ -12,13 +14,20 @@ export class MainLayoutComponent {
 
 
 
-  username: string = 'admin';
-  role: string = 'Admin';
+  username: string = '';
+  role: string = '';
 
-  constructor(private store: Store) {}
+  constructor(private store: Store<AppState>) {}
+
 
  
-
+ ngOnInit(): void {
+    this.store.select(selectAuthState).subscribe((authState) => {
+      if (authState.user) {
+        this.username = authState.user.userName || 'unknown';
+      }
+    });
+  }
 
 
  

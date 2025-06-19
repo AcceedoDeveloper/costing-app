@@ -1,4 +1,23 @@
 .full-width {
   width: 100%;
-  margin-bottom: 16px;
+  
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+
+.process-table-scroll {
+  max-height: 250px; /* Set desired height */
+  overflow-y: auto;
+  margin-top: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Optional: Fix header while scrolling */
+.process-table-scroll table {
+  min-width: 100%;
 }
