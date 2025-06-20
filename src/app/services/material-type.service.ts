@@ -37,6 +37,10 @@ export class MaterialTypeService {
   return this.http.post<CustomerProcess>(`${this.apiUrl}/add-Customers`, customer);
 }
 
+updateCustomerDetails(id: string, customer: CustomerProcess): Observable<CustomerProcess> {
+  return this.http.put<CustomerProcess>(`${this.apiUrl}/update-Customer/${id}`, customer);
+}
+
 
   
 

@@ -184,10 +184,26 @@ export const addCustomerDetails = createAction(
 
 export const addCustomerDetailsSuccess = createAction(
   '[Customer] Add Customer Details Success',
-  props<{ customer: CustomerProcess }>()
+  props<{ customer: CustomerProcess , id: string}>()
 );
 
 export const addCustomerDetailsFailure = createAction(
   '[Customer] Add Customer Details Failure',
+  props<{ error: string }>()
+);
+
+
+export const updateCustomerDetails = createAction(
+  '[Customer] Update Customer Details',
+  props<{ id: string; customer: CustomerProcess }>()
+);
+
+export const updateCustomerDetailsSuccess = createAction(
+  '[Customer] Update Customer Details Success',
+  props<{ customer: CustomerProcess }>()
+);
+
+export const updateCustomerDetailsFailure = createAction(
+  '[Customer] Update Customer Details Failure',
   props<{ error: string }>()
 );

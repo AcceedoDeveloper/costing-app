@@ -206,7 +206,7 @@
         <th>Grade Material Type</th>
         <th>Grade Material</th>
         <th>Grade Cost</th>
-        <th>Customize Cost</th>
+        <th>Update Cost</th>
       </tr>
     </thead>
     <tbody>
@@ -219,16 +219,11 @@
                   <td>{{ raw.type }}</td>
                   <td>{{ material.name }}</td>
                   <td>{{ material.totalCost }}</td>
-                  <td>
-                    <input
-  matInput
-  type="number"
-  [(ngModel)]="material.customCost"
-  name="gradeCustomCost{{ gIndex }}{{ rIndex }}{{ mIndex }}"
-  [ngModelOptions]="{ standalone: true }"
-  placeholder="Enter cost" />
-
-                  </td>
+  <td>
+    <input type="number" [value]="material.totalCost"
+           (input)="onUpdatedValueChange($event.target.value, material)" />
+  </td>
+                  
                 </tr>
               </ng-container>
             </ng-container>
@@ -247,7 +242,7 @@
         <th>Material Type</th>
         <th>Material Name</th>
         <th>Material Cost</th>
-        <th>Customize Cost</th>
+      <th>Update Cost</th>
       </tr>
     </thead>
     <tbody>
@@ -257,17 +252,13 @@
             <tr>
               <td>{{ raw.type }}</td>
               <td>{{ material.name }}</td>
-              <td>{{ material.totalCost }}</td>
-              <td>
-                <input
-  matInput
-  type="number"
-  [(ngModel)]="material.customCost"
-  name="gradeCustomCost{{ gIndex }}{{ rIndex }}{{ mIndex }}"
-  [ngModelOptions]="{ standalone: true }"
-  placeholder="Enter cost" />
+             <td>{{ material.totalCost }}</td>
+  <td>
+    <input type="number" [value]="material.totalCost"
+           (input)="onUpdatedValueChange($event.target.value, material)" />
+  </td>
 
-              </td>
+             
             </tr>
           </ng-container>
         </ng-container>
@@ -286,7 +277,7 @@
 
     <div class="mt-3">
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext color="primary">Next</button>
+      <button mat-button matStepperNext color="primary" (click)="logReviewedProcess()">Next</button>
     </div>
   </form>
 </mat-step>
@@ -300,7 +291,7 @@
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button color="accent" (click)="stepper.reset()">Reset</button>
-       <button mat-button color="accent" (click)="submit()">Submit</button>
+       <button mat-button color="accent" (click)="submitdata()">Submit</button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>

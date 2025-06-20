@@ -22,6 +22,7 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , deleteProcess, deleteProcessFailure, deleteProcessSuccess
   , updateProcess , updateProcessFailure, updateProcessSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
+  ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -363,9 +364,10 @@ addCustomerDetails$ = createEffect(() =>
     ofType(addCustomerDetails),
     mergeMap(action =>
       this.materialTypeService.addCustomerDetails(action.customer).pipe(
-        map((customer: CustomerProcess) => {
+        map((response: CustomerProcess) => {
+          const id = response._id; // ✅ Extract ID here
           this.toastr.success('Customer added successfully', 'Success');
-          return addCustomerDetailsSuccess({ customer });
+          return addCustomerDetailsSuccess({ customer: response, id }); // ✅ Dispatch with ID
         }),
         catchError(error => {
           this.toastr.error('Failed to add customer', 'Error');
@@ -375,5 +377,25 @@ addCustomerDetails$ = createEffect(() =>
     )
   )
 );
+
+
+updateCustomerDetails$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updateCustomerDetails),
+    mergeMap(action =>
+      this.materialTypeService.updateCustomerDetails(action.id, action.customer).pipe(
+        map((updatedCustomer: CustomerProcess) => {
+          this.toastr.success('Customer updated successfully', 'Success');
+          return updateCustomerDetailsSuccess({ customer: updatedCustomer });
+        }),
+        catchError(error => {
+          this.toastr.error('Failed to update customer', 'Error');
+          return of(updateCustomerDetailsFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
+
 
 }

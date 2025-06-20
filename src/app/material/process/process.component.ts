@@ -24,9 +24,17 @@ export class ProcessComponent implements OnInit {
     this.store.dispatch(loadProcesses());
 
     this.store.select(getAllProcesses).subscribe((data: Process[]) => {
-      console.log(data);
-      this.processes = data;
-    });
+  console.log('Original Data:', data);
+
+  // Flatten grade array
+  this.processes = data.map(p => ({
+    ...p,
+    grade: Array.isArray(p.grade) && Array.isArray(p.grade[0]) ? p.grade[0] : p.grade
+  }));
+
+  console.log('Processed Data:', this.processes);
+});
+
    
   }
 
