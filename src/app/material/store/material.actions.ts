@@ -5,6 +5,7 @@ import { Supplier } from '../../models/Supplier.model';
 import { Customerdetails } from '../../models/Customer-details.model';
 import { Process } from '../../models/process.model';
 import {MaterialType } from '../../models/material-type.model';
+import { CustomerProcess } from '../../models/Customer-details.model';
 
 
 export const LOAD_MATERIALS = '[Material page] load materials';
@@ -174,4 +175,19 @@ export const updateProcessSuccess = createAction(
 export const updateProcessFailure = createAction(
   '[Process] Update Process Failure',
   props<{ error: any }>()
+);
+
+export const addCustomerDetails = createAction(
+  '[Customer] Add Customer Details',
+  props<{ customer: CustomerProcess }>()
+);
+
+export const addCustomerDetailsSuccess = createAction(
+  '[Customer] Add Customer Details Success',
+  props<{ customer: CustomerProcess }>()
+);
+
+export const addCustomerDetailsFailure = createAction(
+  '[Customer] Add Customer Details Failure',
+  props<{ error: string }>()
 );

@@ -21,13 +21,14 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , deleteMaterialType, deleteMaterialTypeFailure, deleteMaterialTypeSuccess
   , deleteProcess, deleteProcessFailure, deleteProcessSuccess
   , updateProcess , updateProcessFailure, updateProcessSuccess
+  , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
 import { GradeService} from '../../services/grade.service';
 import { ProcessService } from '../../services/process.service';
 import { loadMaterialMap, loadMaterialMapSuccess, loadMaterialMapFailure } from './material.actions';
-
+import { CustomerProcess } from '../../models/Customer-details.model';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
@@ -357,5 +358,22 @@ updateProcess$ = createEffect(() =>
   );
 
 
+addCustomerDetails$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(addCustomerDetails),
+    mergeMap(action =>
+      this.materialTypeService.addCustomerDetails(action.customer).pipe(
+        map((customer: CustomerProcess) => {
+          this.toastr.success('Customer added successfully', 'Success');
+          return addCustomerDetailsSuccess({ customer });
+        }),
+        catchError(error => {
+          this.toastr.error('Failed to add customer', 'Error');
+          return of(addCustomerDetailsFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
 
 }

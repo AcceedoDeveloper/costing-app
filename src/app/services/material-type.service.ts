@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MaterialType } from '../models/material-type.model';
 import {Customerdetails} from '../models/Customer-details.model';
+import { CustomerProcess } from '../models/Customer-details.model';
 
 @Injectable({ providedIn: 'root' })
 export class MaterialTypeService {
@@ -30,6 +31,14 @@ export class MaterialTypeService {
     return this.http.get<Customerdetails[]>(`${this.apiUrl}/get-customers`);
   }
 
+
+
+ addCustomerDetails(customer: CustomerProcess): Observable<CustomerProcess> {
+  return this.http.post<CustomerProcess>(`${this.apiUrl}/add-Customers`, customer);
+}
+
+
+  
 
 
 }

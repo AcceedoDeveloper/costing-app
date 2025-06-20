@@ -22,45 +22,196 @@
   min-width: 100%;
 }
 
-
-.scrollable-table-container {
-  max-height: 300px; /* or whatever fits your layout */
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 16px;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9;
+  margin: 0;
+  padding: 50px 0;
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 900px;
+  margin: 30px auto 40px auto;
+  padding: 0;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
 .table-container {
-  max-height: 400px;
-  overflow-y: auto;
-  margin-top: 16px;
+  margin: 30px auto;
+  width: 100%;
+  max-width: 900px;
+  background-color: #efefef;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+
 }
 
 .main-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Column widths and alignment */
+.main-table thead tr th:nth-child(1),
+.main-table tbody tr td:nth-child(1) {
+  width: 25%;
+  text-align: left ;
+}
+
+.main-table thead tr th:nth-child(2),
+.main-table tbody tr td:nth-child(2) {
+  width: 26%;
+  text-align: left;
+}
+
+.main-table thead tr th:nth-child(3),
+.main-table tbody tr td:nth-child(3) {
+  width: 15%;
+  text-align: center;
+}
+
+/* REMOVE the padding-left that breaks centering */
+.main-table thead tr th:nth-child(3) {
+  padding-left: 0 !important;
 }
 
 .main-table th,
 .main-table td {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+  padding: 14px 20px;
+  font-size: 15px;
+  border-bottom: 1px solid #ddd;
+  background-color: white;
+  white-space: nowrap;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.main-table thead {
+  background-color: #fafafa;
+}
+
+.main-table th {
+  font-weight: 600;
+  color: #5b84ff;
+  border-bottom: 2px solid #5b84ff;
+}
+
+/* Action icon wrapper centered */
+.actions {
+  display: flex;
+  justify-content: center;   /* ✅ Center horizontally */
+  align-items: center;
+  gap: 12px;
+}
+
+/* Icons */
+mat-icon.icon {
+  cursor: pointer;
+  font-size: 24px;
+  color: #555;
+  transition: color 0.2s;
+}
+
+mat-icon.icon:hover {
+  color: #000;
+}
+
+/* Expanded content row */
+.expanded-row {
+  background-color: #f9f9f9;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.expanded-row td {
+  padding: 0;
+}
+
+/* Dropdown section */
+.dropdown-container.single-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.dropdown-table {
+  width: 100%;
+}
+
+.dropdown-table h4 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
   text-align: left;
 }
 
-.col-action .icon {
-  cursor: pointer;
-  margin-right: 8px;
-}
-
+/* ✅ Sub-table styling */
 .sub-table {
   width: 100%;
-  margin-top: 10px;
   border-collapse: collapse;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  table-layout: auto;
 }
 
 .sub-table th,
 .sub-table td {
-  border: 1px solid #ccc;
-  padding: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;     /* ✅ Make sure everything is centered */
+  white-space: normal;
+  word-break: break-word;
+}
+
+.sub-table th {
+  background-color: #f0f0f0;
+  color: #444;
+  font-weight: 600;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .main-table th,
+  .main-table td {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .sub-table th,
+  .sub-table td {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
 }

@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-
+import { addCustomerDetails} from '../../store/material.actions';
 import { CastingInput } from '../../../models/casting-input.model';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
@@ -25,6 +25,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   processes: Process[] =[];
   castingData: CastingInput[] = [];
   expandedProcessIndex: number | null = null;
+  
 
   @ViewChild('stepper') stepper!: MatStepper;
 
@@ -118,17 +119,32 @@ submit() {
   if (this.firstFormGroup.valid && this.secondFormGroup.valid && this.thirdFormGroup.valid) {
     const customerDetails = this.firstFormGroup.value;
     const engineeringDetails = this.secondFormGroup.value;
-    const selectedProcesses = this.thirdFormGroup.value;
+    const selectedProcesses = this.thirdFormGroup.get('selectedProcesses')?.value || [];
 
-    console.log('Customer Details:', customerDetails);
-    console.log('Engineering Details:', engineeringDetails);
-    console.log('Selected Processes:', selectedProcesses.selectedProcesses);
+   const finalPayload = {
+  CustomerName: customerDetails.customerName,
+  drawingNo: customerDetails.drawing,
+  partName: customerDetails.partNo,
+  processName: selectedProcesses.map((p: any) => p.processName),  // <-- fix here
+  castingInputs: true,
+  CastingWeight: engineeringDetails.castingWeight,
+  Cavities: engineeringDetails.cavities,
+  PouringWeight: engineeringDetails.pouringWeight,
+  mouldingInputs: false,
+  coreInputs: false
+};
+
+
+    console.log('Final Payload:', finalPayload);
+    this.store.dispatch(addCustomerDetails({ customer: finalPayload }));
+
   } else {
-    console.log(' One or more steps are invalid');
+    console.log('One or more steps are invalid');
   }
 
-  this.dialog.closeAll();
+ 
 }
+
 
 toggleExpandedRow(index: number, row: Process): void {
   this.expandedProcessIndex = this.expandedProcessIndex === index ? null : index;

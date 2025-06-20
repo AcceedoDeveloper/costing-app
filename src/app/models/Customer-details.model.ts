@@ -82,3 +82,22 @@ export interface MouldingInput {
   BakeMoulding: number;
   __v: number;
 }
+
+
+export interface CustomerProcess {
+  _id?: string;
+  CustomerName: string;
+  drawingNo: string;
+  partName: string;
+  processName: string[];
+  castingInputs: boolean;
+  CastingWeight: number;
+  Cavities: number;
+  PouringWeight: number;
+  mouldingInputs: boolean;
+  coreInputs: boolean;
+  processType?: any; // Optional or define correctly
+  grade?: any;       // Optional or define correctly
+  Inputs?: any;      // Optional or define correctly
+  __v?: number;
+}
