@@ -125,9 +125,22 @@ submit() {
   this.dialog.closeAll();
 }
 
-toggleExpandedRow(index: number): void {
+toggleExpandedRow(index: number, row: Process): void {
   this.expandedProcessIndex = this.expandedProcessIndex === index ? null : index;
+  console.log('Expanded Process:', row);
 }
+
+getProcessByRow(row: Process): Process {
+  return row;
+}
+
+expandedReviewIndex: number | null = null;
+
+toggleExpandedReview(index: number): void {
+  this.expandedReviewIndex = this.expandedReviewIndex === index ? null : index;
+}
+
+
 
 }
 

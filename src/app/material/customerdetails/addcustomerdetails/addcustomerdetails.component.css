@@ -21,3 +21,46 @@
 .process-table-scroll table {
   min-width: 100%;
 }
+
+
+.scrollable-table-container {
+  max-height: 300px; /* or whatever fits your layout */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 16px;
+}
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-top: 16px;
+}
+
+.main-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.main-table th,
+.main-table td {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.col-action .icon {
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.sub-table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+.sub-table th,
+.sub-table td {
+  border: 1px solid #ccc;
+  padding: 6px;
+}
