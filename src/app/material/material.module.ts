@@ -37,6 +37,7 @@ import { ProcessComponent } from './process/process.component';
 import { AddprocessComponent } from './process/addprocess/addprocess.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GradeModule } from '../grade/grade.module';
+import { MeterialtypeModule} from '../modules/materialinput/meterialinput.module';
 import { MasterModule } from '../master/master/master.module';
 import { MaterialtypeComponent } from './materialtype/materialtype.component';
 import { ProcesseditComponent } from './process/processedit/processedit.component';
@@ -52,6 +53,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatTooltipModule,
      MatStepperModule ,
     GradeModule,
+    MeterialtypeModule,
     MasterModule,
     MatCheckboxModule,
     FormsModule,

@@ -3,14 +3,17 @@ import {loadCustomers } from '../../../master/master/store/master.action';
 import { loadProcesses} from '../../store/material.actions';
 import { getAllProcesses} from '../../store/material.selector';
 import { selectCustomers } from '../../../master/master/store/master.selector';
+import {loadCastingInputs } from '../../../modules/materialinput/store/casting.actions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'; 
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
+import { CastingInput } from '../../../models/casting-input.model';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {Process } from '../../../models/process.model';
-
+import { selectCastingInputs } from '../../../modules/materialinput/store/casting.selectors';
 @Component({
   selector: 'app-addcustomerdetails',
   templateUrl: './addcustomerdetails.component.html',
@@ -20,6 +23,8 @@ export class AddcustomerdetailsComponent implements OnInit {
   customer$ : Observable<any>;
   customer: any[] = [];
   processes: Process[] =[];
+  castingData: CastingInput[] = [];
+  expandedProcessIndex: number | null = null;
 
   @ViewChild('stepper') stepper!: MatStepper;
 
@@ -30,11 +35,14 @@ export class AddcustomerdetailsComponent implements OnInit {
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
 
-  constructor(private store: Store, private fb: FormBuilder) {} 
+  constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog) {} 
 
  ngOnInit(): void {
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
+    this.store.dispatch(loadCastingInputs());
+
+
 
     this.customer$ = this.store.select(selectCustomers);
     this.customer$.subscribe(customer => {
@@ -47,13 +55,6 @@ export class AddcustomerdetailsComponent implements OnInit {
       this.processes = data;
     });
 
-    
-
-  this.firstFormGroup = this.fb.group({
-  customerName: ['', Validators.required],
-  partNo: ['', Validators.required],
-  drawing: ['', Validators.required]
-});
 
 
 this.secondFormGroup = this.fb.group({
@@ -67,6 +68,39 @@ this.secondFormGroup = this.fb.group({
 });
 
 
+this.store.select(selectCastingInputs).subscribe((castingInputs) => {
+  if (castingInputs && castingInputs.length > 0) {
+    const input = castingInputs[0];
+
+  
+    this.secondFormGroup.patchValue({
+      castingWeight: input.CastingWeight,
+      cavities: input.Cavities,
+      pouringWeight: input.PouringWeight,
+      goodCastingWeight: input.CastingWeightPerKg,
+      yield: input.Yeild,
+      materialReturned: input.MaterialReturned,
+      yieldPercentage: input.Yeild 
+    });
+
+    console.log('Patched form with:', input);
+  }
+});
+
+
+
+    
+
+  this.firstFormGroup = this.fb.group({
+  customerName: ['', Validators.required],
+  partNo: ['', Validators.required],
+  drawing: ['', Validators.required]
+});
+
+
+
+
+
 
 this.thirdFormGroup = this.fb.group({
   selectedProcesses: [[], Validators.required]
@@ -74,5 +108,26 @@ this.thirdFormGroup = this.fb.group({
 
 
   }
+
+submit() {
+  if (this.firstFormGroup.valid && this.secondFormGroup.valid && this.thirdFormGroup.valid) {
+    const customerDetails = this.firstFormGroup.value;
+    const engineeringDetails = this.secondFormGroup.value;
+    const selectedProcesses = this.thirdFormGroup.value;
+
+    console.log('Customer Details:', customerDetails);
+    console.log('Engineering Details:', engineeringDetails);
+    console.log('Selected Processes:', selectedProcesses.selectedProcesses);
+  } else {
+    console.log(' One or more steps are invalid');
+  }
+
+  this.dialog.closeAll();
+}
+
+toggleExpandedRow(index: number): void {
+  this.expandedProcessIndex = this.expandedProcessIndex === index ? null : index;
+}
+
 }
 

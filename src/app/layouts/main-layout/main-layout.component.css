@@ -114,7 +114,7 @@ mat-toolbar {
 
 /* Icon styling */
 .icon-wrapper {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .material-icons.nav-icon {
@@ -128,7 +128,8 @@ mat-toolbar {
 }
 
 .nav-text {
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 12px;
   color: #333333;
   display: block;
 }

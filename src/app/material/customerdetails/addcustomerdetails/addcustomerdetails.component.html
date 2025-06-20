@@ -113,23 +113,94 @@
 <div *ngIf="thirdFormGroup.get('selectedProcesses')?.value?.length > 0" class="process-table-scroll">
   <table mat-table [dataSource]="thirdFormGroup.get('selectedProcesses')?.value" class="mat-elevation-z1 full-width">
     
-    
+    <!-- Index -->
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef>No.</th>
       <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
     </ng-container>
 
-  
+    <!-- Process Name -->
     <ng-container matColumnDef="processName">
       <th mat-header-cell *matHeaderCellDef>Process Name</th>
-      <td mat-cell *matCellDef="let element">{{ element.trim() }}</td>
+      <td mat-cell *matCellDef="let element; let i = index">
+        <span>{{ element.trim() }}</span>
+        <mat-icon class="ml-2 cursor-pointer" (click)="toggleExpandedRow(i)">
+          {{ expandedProcessIndex === i ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </td>
     </ng-container>
 
-    
+    <!-- Table header and row definitions -->
     <tr mat-header-row *matHeaderRowDef="['index', 'processName']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['index', 'processName']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['index', 'processName']; let i = index"></tr>
+
+    <!-- Expanded row -->
+    <tr *ngIf="expandedProcessIndex === i">
+      <td colspan="2">
+        <!-- You can fetch the full process object from this.processes using the name -->
+        <ng-container *ngFor="let fullProcess of processes">
+          <ng-container *ngIf="fullProcess.processName.trim() === row.trim()">
+
+            <!-- Grade Table -->
+            <div *ngIf="fullProcess.grade?.length > 0" class="nested-table">
+              <h4>Grade Materials</h4>
+              <table class="sub-table">
+                <thead>
+                  <tr>
+                    <th>Material Type</th>
+                    <th>Material Name</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let grade of fullProcess.grade">
+                    <ng-container *ngFor="let raw of grade.rawMaterial">
+                      <ng-container *ngFor="let mat of raw.materialsUsed">
+                        <tr>
+                          <td>{{ raw.type }}</td>
+                          <td>{{ mat.name }}</td>
+                          <td>{{ mat.quantity }}</td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Raw Material Table -->
+            <div *ngIf="fullProcess.rawMaterial?.length > 0" class="nested-table mt-2">
+              <h4>Raw Materials</h4>
+              <table class="sub-table">
+                <thead>
+                  <tr>
+                    <th>Material Type</th>
+                    <th>Material Name</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let raw of fullProcess.rawMaterial">
+                    <ng-container *ngFor="let mat of raw.materialsUsed">
+                      <tr>
+                        <td>{{ raw.type }}</td>
+                        <td>{{ mat.name }}</td>
+                        <td>{{ mat.quantity }}</td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+
   </table>
 </div>
+
 
 
 
@@ -162,6 +233,7 @@
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button color="accent" (click)="stepper.reset()">Reset</button>
+       <button mat-button color="accent" (click)="submit()">Submit</button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>
