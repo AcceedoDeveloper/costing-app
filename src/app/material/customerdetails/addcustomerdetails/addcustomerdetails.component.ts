@@ -34,6 +34,8 @@ export class AddcustomerdetailsComponent implements OnInit {
   isLinear = false;
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
+  forthFormGroup!: FormGroup;
+
 
   constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog) {} 
 
@@ -97,6 +99,9 @@ this.store.select(selectCastingInputs).subscribe((castingInputs) => {
   drawing: ['', Validators.required]
 });
 
+this.forthFormGroup = this.fb.group({
+  // Add relevant fields if needed
+});
 
 
 
@@ -140,6 +145,9 @@ toggleExpandedReview(index: number): void {
   this.expandedReviewIndex = this.expandedReviewIndex === index ? null : index;
 }
 
+trackByIndex(index: number, item: any): number {
+  return index;
+}
 
 
 }

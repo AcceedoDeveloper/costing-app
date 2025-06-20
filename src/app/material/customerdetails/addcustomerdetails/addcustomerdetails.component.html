@@ -154,8 +154,8 @@
 
 
    
-<mat-step [stepControl]="thirdFormGroup">
-  <form [formGroup]="thirdFormGroup">
+<mat-step [stepControl]="forthFormGroup">
+  <form [formGroup]="forthFormGroup">
     <ng-template matStepLabel>Review Cost</ng-template>
 
     <div *ngIf="thirdFormGroup.get('selectedProcesses')?.value?.length > 0" class="table-container">
@@ -199,54 +199,82 @@
                 <div class="dropdown-container single-column">
 
                   <!-- Grade Material Table -->
-                  <div class="dropdown-table" *ngIf="process.grade?.length > 0">
-                    <table class="sub-table">
-                      <thead>
-                        <tr>
-                          <th>Grade Material Type</th>
-                          <th>Grade Material</th>
-                          <th>Grade Cost</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <ng-container *ngFor="let grade of process.grade">
-                          <ng-container *ngFor="let raw of grade.rawMaterial">
-                            <ng-container *ngFor="let material of raw.materialsUsed">
-                              <tr>
-                                <td>{{ raw.type }}</td>
-                                <td>{{ material.name }}</td>
-                                <td>{{ material.totalCost }}</td>
-                              </tr>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
-                      </tbody>
-                    </table>
-                  </div>
+<div class="dropdown-table" *ngIf="process.grade?.length > 0">
+  <table class="sub-table">
+    <thead>
+      <tr>
+        <th>Grade Material Type</th>
+        <th>Grade Material</th>
+        <th>Grade Cost</th>
+        <th>Customize Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let grade of process.grade; let gIndex = index">
+        <ng-container *ngIf="grade.rawMaterial?.length > 0">
+          <ng-container *ngFor="let raw of grade.rawMaterial; let rIndex = index">
+            <ng-container *ngIf="raw.materialsUsed?.length > 0">
+              <ng-container *ngFor="let material of raw.materialsUsed; let mIndex = index; trackBy: trackByIndex">
+                <tr>
+                  <td>{{ raw.type }}</td>
+                  <td>{{ material.name }}</td>
+                  <td>{{ material.totalCost }}</td>
+                  <td>
+                    <input
+  matInput
+  type="number"
+  [(ngModel)]="material.customCost"
+  name="gradeCustomCost{{ gIndex }}{{ rIndex }}{{ mIndex }}"
+  [ngModelOptions]="{ standalone: true }"
+  placeholder="Enter cost" />
 
-                  <!-- Raw Material Table -->
-                  <div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0">
-                    <table class="sub-table">
-                      <thead>
-                        <tr>
-                          <th>Material Type</th>
-                          <th>Material Name</th>
-                          <th>Material Cost</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <ng-container *ngFor="let raw of process.rawMaterial">
-                          <ng-container *ngFor="let material of raw.materialsUsed">
-                            <tr>
-                              <td>{{ raw.type }}</td>
-                              <td>{{ material.name }}</td>
-                              <td>{{ material.totalCost }}</td>
-                            </tr>
-                          </ng-container>
-                        </ng-container>
-                      </tbody>
-                    </table>
-                  </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+
+<!-- Raw Material Table -->
+<div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0">
+  <table class="sub-table">
+    <thead>
+      <tr>
+        <th>Material Type</th>
+        <th>Material Name</th>
+        <th>Material Cost</th>
+        <th>Customize Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let raw of process.rawMaterial; let rIndex = index">
+        <ng-container *ngIf="raw.materialsUsed?.length > 0">
+          <ng-container *ngFor="let material of raw.materialsUsed; let mIndex = index; trackBy: trackByIndex">
+            <tr>
+              <td>{{ raw.type }}</td>
+              <td>{{ material.name }}</td>
+              <td>{{ material.totalCost }}</td>
+              <td>
+                <input
+  matInput
+  type="number"
+  [(ngModel)]="material.customCost"
+  name="gradeCustomCost{{ gIndex }}{{ rIndex }}{{ mIndex }}"
+  [ngModelOptions]="{ standalone: true }"
+  placeholder="Enter cost" />
+
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
 
                 </div>
               </td>

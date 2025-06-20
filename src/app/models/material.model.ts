@@ -10,4 +10,5 @@ export interface Material {
   materialType?: string; // Optional field for material type
   priceHistory?: { unitCost: number; date: string }[];
   effectiveTill?: string;
+  customCost?: number;
 }
