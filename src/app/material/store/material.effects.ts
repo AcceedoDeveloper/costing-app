@@ -398,4 +398,19 @@ updateCustomerDetails$ = createEffect(() =>
 );
 
 
+loadCustomerDetailsIN$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(loadCustomerDetails),
+    mergeMap(() =>
+      this.materialTypeService.getCustomerDetails().pipe(
+        map(customers => loadCustomerDetailsSuccess({ customers })),
+        catchError(error =>
+          of(loadCustomerDetailsFailure({ error: error.message }))
+        )
+      )
+    )
+  )
+);
+
+
 }

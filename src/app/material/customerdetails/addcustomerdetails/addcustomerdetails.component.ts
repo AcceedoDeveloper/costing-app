@@ -17,6 +17,8 @@ import { selectCastingInputs } from '../../../modules/materialinput/store/castin
 import { getCustomerWithId } from '../../store/material.selector';
 import { updateCustomerDetails } from '../../store/material.actions';
 import { take } from 'rxjs/operators';
+import { MatDialogRef } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-addcustomerdetails',
@@ -43,7 +45,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   forthFormGroup!: FormGroup;
 
 
-  constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog) {} 
+  constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog,  private dialogRef: MatDialogRef<AddcustomerdetailsComponent>) {} 
 
  ngOnInit(): void {
     this.store.dispatch(loadCustomers());
@@ -71,6 +73,7 @@ export class AddcustomerdetailsComponent implements OnInit {
 
 
 
+
 this.secondFormGroup = this.fb.group({
   castingWeight: ['', Validators.required],
   cavities: ['', Validators.required],
@@ -82,24 +85,29 @@ this.secondFormGroup = this.fb.group({
 });
 
 
-this.store.select(selectCastingInputs).subscribe((castingInputs) => {
-  if (castingInputs && castingInputs.length > 0) {
-    const input = castingInputs[0];
+this.secondFormGroup.valueChanges.subscribe(values => {
+  const castingWeight = parseFloat(values.castingWeight) || 0;
+  const cavities = parseFloat(values.cavities) || 0;
+  const pouringWeight = parseFloat(values.pouringWeight) || 0;
 
-  
+  if (castingWeight && cavities && pouringWeight) {
+    // Perform calculations
+    const yieldPercentage = (castingWeight * cavities) / pouringWeight;
+    const goodCastingWeight = Math.round(yieldPercentage * 1050);
+    const yieldVal = (goodCastingWeight / 1050) * 100;
+    const materialReturned = 1050 - goodCastingWeight;
+
+    // Update the form
     this.secondFormGroup.patchValue({
-      castingWeight: input.CastingWeight,
-      cavities: input.Cavities,
-      pouringWeight: input.PouringWeight,
-      goodCastingWeight: input.CastingWeightPerKg,
-      yield: input.Yeild,
-      materialReturned: input.MaterialReturned,
-      yieldPercentage: input.Yeild 
-    });
-
-    console.log('Patched form with:', input);
+      goodCastingWeight: goodCastingWeight,
+      yield: yieldVal.toFixed(2),
+      materialReturned: materialReturned.toFixed(2),
+      yieldPercentage: yieldPercentage.toFixed(2)
+    }, { emitEvent: false }); // Avoid infinite loop
   }
 });
+
+
 
 this.store.select(getCustomerWithId).subscribe((state) => {
   console.log('👀 Selector State:', state); // Add this log
@@ -158,6 +166,7 @@ submit() {
 
     console.log('Final Payload:', finalPayload);
     this.store.dispatch(addCustomerDetails({ customer: finalPayload }));
+     
 
   } else {
     console.log('One or more steps are invalid');
@@ -369,6 +378,7 @@ submitdata() {
       if (state?.id) {
         console.log('✅ Dispatching Update for ID:', state.id);
         this.store.dispatch(updateCustomerDetails({ id: state.id, customer: updatePayload }));
+        this.dialogRef.close(true); 
       } else {
         console.warn('❌ No ID found in state to update');
       }

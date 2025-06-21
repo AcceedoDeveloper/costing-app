@@ -101,3 +101,23 @@ export interface CustomerProcess {
   Inputs?: any;      // Optional or define correctly
   __v?: number;
 }
+
+
+
+
+export interface CustomerdetailsIn {
+  _id: string;
+  CustomerName: {
+    _id: string;
+    name: string;
+    lowerCaseName: string;
+  };
+  drawingNo: string;
+  partName: string;
+  processName: any[]; // can type strongly later
+  Inputs: {
+    castingInputs: string[];
+    coreInputs: string[];
+    mouldingInputs: string[];
+  };
+}
