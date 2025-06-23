@@ -11,30 +11,27 @@
         <th>Drawing No</th>
         <th>Part No</th>
         <th>No of Process</th>
-        <th>Rate/Kg</th>
         <th>Previous Cost</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <ng-container >
-        <tr>
-          <td>TVS</td>
-          <td>568</td>
-          <td>89</td>
-          <td>14 Process</td>
-          <td>569</td>
-          <td>420</td>
-          <td>
-            <button mat-icon-button  >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </ng-container>
-    </tbody>
+  <ng-container *ngFor="let customer of customerDetails">
+    <tr>
+      <td>{{ customer.CustomerName.name }}</td>
+      <td>{{ customer.drawingNo }}</td>
+      <td>{{ customer.partName }}</td>
+      <td>{{ customer.processName?.length }} Process</td>
+      <td>{{ getFirstProcessCost(customer) }}</td>
+
+      <td>
+        <button mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-container>
+</tbody>
+
   </table>
 </div>

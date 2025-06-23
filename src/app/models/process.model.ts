@@ -11,6 +11,6 @@ export interface RawMaterial {
 export interface Process {
   _id?: string;
   processName: string;
-  grade: string;
+  grade: string | string[];
   rawMaterial: RawMaterial[];
 }

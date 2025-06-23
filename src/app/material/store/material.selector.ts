@@ -52,3 +52,17 @@ export const selectAllMaterialTypes = createSelector(
   getMaterialState,
   (state) => state.materialTypes
 )
+
+export const getCustomersProcess = createSelector(
+  getMaterialState,
+  (state) => state.customersProcess
+);
+
+
+export const getCustomerWithId = createSelector(
+  getMaterialState,
+  (state) => ({
+    customer: state.customer,
+    id: state.id
+  })
+);
