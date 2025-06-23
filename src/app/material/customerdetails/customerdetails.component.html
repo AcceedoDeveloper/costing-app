@@ -23,10 +23,9 @@
       <td>{{ customer.partName }}</td>
       <td>{{ customer.processName?.length }} Process</td>
       <td>{{ getFirstProcessCost(customer) }}</td>
-
       <td>
         <button mat-icon-button>
-          <mat-icon>delete</mat-icon>
+          <mat-icon (click)="delete(customer._id)" >delete</mat-icon>
         </button>
       </td>
     </tr>

@@ -204,36 +204,56 @@
   <table class="sub-table">
     <thead>
       <tr>
-        <th>Grade Material Type</th>
-        <th>Grade Material</th>
+        <th>Material Name</th>
         <th>Grade Cost</th>
-        <th>Update Cost</th>
+        
+        <th>Unit Cost</th>
+        <th>Quality</th>
+        <th>Updated Quality Cost</th>
+        
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let grade of process.grade; let gIndex = index">
+      <ng-container *ngFor="let grade of process.grade">
         <ng-container *ngIf="grade.rawMaterial?.length > 0">
-          <ng-container *ngFor="let raw of grade.rawMaterial; let rIndex = index">
-            <ng-container *ngIf="raw.materialsUsed?.length > 0">
-              <ng-container *ngFor="let material of raw.materialsUsed; let mIndex = index; trackBy: trackByIndex">
+          <ng-container *ngFor="let raw of grade.rawMaterial">
+            <!-- Material Type Row with Toggle Icon -->
+            <tr class="material-type-row">
+              <td colspan="5" class="material-type-header">
+                <div class="material-type-flex">
+                  Material Type: {{ raw.type }}
+                  <mat-icon class="toggle-icon" (click)="toggleMaterialType(raw.type)">
+                    {{ expandedMaterialTypes[raw.type] ? 'expand_less' : 'expand_more' }}
+                  </mat-icon>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Material Rows -->
+            <ng-container *ngIf="expandedMaterialTypes[raw.type]">
+              <ng-container *ngFor="let material of raw.materialsUsed; trackBy: trackByIndex">
                 <tr>
-                  <td>{{ raw.type }}</td>
                   <td>{{ material.name }}</td>
-                  <td>{{ material.totalCost }}</td>
-  <td>
-    <input type="number" [value]="material.totalCost"
-           (input)="onUpdatedValueChange($event.target.value, material)" />
-  </td>
+                 <td>{{ material.totalCost | number: '1.1-1' }}</td>
                   
+                  <td>{{material.unitCost }}</td>
+                  <td>{{material.quantity }}</td>
+                  <td>
+                    <input type="number" [value]="material.quantity"
+                           (input)="onUpdatedValueChange($event.target.value, material)" />
+                  </td>
                 </tr>
               </ng-container>
             </ng-container>
+
           </ng-container>
         </ng-container>
       </ng-container>
     </tbody>
   </table>
 </div>
+
+
 
 <!-- Raw Material Table -->
 <div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0">
@@ -247,24 +267,39 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let raw of process.rawMaterial; let rIndex = index">
-        <ng-container *ngIf="raw.materialsUsed?.length > 0">
-          <ng-container *ngFor="let material of raw.materialsUsed; let mIndex = index; trackBy: trackByIndex">
-            <tr>
-              <td>{{ raw.type }}</td>
-              <td>{{ material.name }}</td>
-             <td>{{ material.totalCost }}</td>
-  <td>
-    <input type="number" [value]="material.totalCost"
-           (input)="onUpdatedValueChange($event.target.value, material)" />
-  </td>
+  <ng-container *ngFor="let group of groupedRawMaterials[i]">
 
-             
-            </tr>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-    </tbody>
+  <!-- Header Row for Material Type -->
+  <tr class="material-type-row">
+    <td colspan="4" class="material-type-header">
+      <div class="material-type-flex">
+        Material Type: {{ group.type }}
+        <mat-icon class="toggle-icon" (click)="toggleMaterialType(group.type)">
+          {{ expandedMaterialTypes[group.type] ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </div>
+    </td>
+  </tr>
+
+  <!-- Material Rows Inside -->
+  <ng-container *ngIf="expandedMaterialTypes[group.type]">
+    <ng-container *ngFor="let material of group.materials; let mIndex = index; trackBy: trackByIndex">
+      <tr>
+        <td>{{ group.type }}</td>
+        <td>{{ material.name }}</td>
+        <td>{{ material.totalCost }}</td>
+        <td>
+          <input type="number"
+                 [value]="material.totalCost"
+                 (input)="onUpdatedValueChange($event.target.value, material)" />
+        </td>
+      </tr>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+</tbody>
+
   </table>
 </div>
 

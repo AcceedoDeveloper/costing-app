@@ -221,3 +221,20 @@ export const loadCustomerDetailsFailureIN = createAction(
   '[Customer] Load Customer Details Failure',
   props<{ error: string }>()
 );
+
+
+
+export const deleteCustomer = createAction(
+  '[Customer] Delete Customer',
+  props<{ id: string }>()
+);
+
+export const deleteCustomerSuccess = createAction(
+  '[Customer] Delete Customer Success',
+  props<{ id: string }>()
+);
+
+export const deleteCustomerFailure = createAction(
+  '[Customer] Delete Customer Failure',
+  props<{ error: any }>()
+);

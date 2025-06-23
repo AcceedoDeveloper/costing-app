@@ -64,13 +64,13 @@ body {
 /* Column widths and alignment */
 .main-table thead tr th:nth-child(1),
 .main-table tbody tr td:nth-child(1) {
-  width: 25%;
+  width: 34%;
   text-align: left ;
 }
 
 .main-table thead tr th:nth-child(2),
 .main-table tbody tr td:nth-child(2) {
-  width: 26%;
+  width: 13%;
   text-align: left;
 }
 
@@ -214,4 +214,21 @@ mat-icon.icon:hover {
     font-size: 13px;
     padding: 8px 10px;
   }
+}
+
+.material-type-header {
+  font-weight: 600;
+  background: #f9f9f9;
+  padding: 8px;
+}
+
+.material-type-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-icon {
+  cursor: pointer;
+  color: #3f51b5;
 }

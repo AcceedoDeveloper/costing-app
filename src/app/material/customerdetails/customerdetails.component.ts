@@ -6,8 +6,10 @@ import { Observable } from 'rxjs';
 import { getCustomerDetails } from '../store/material.selector'; 
 import { MatDialog } from '@angular/material/dialog';
 import { AddcustomerdetailsComponent} from './addcustomerdetails/addcustomerdetails.component';
-import  { MaterialTypeService} from '../../services/material-type.service';
 import { CustomerdetailsIn } from '../../models/Customer-details.model';
+import { deleteCustomer } from '../store/material.actions';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'app-customerdetails',
@@ -18,7 +20,7 @@ export class CustomerdetailsComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   customerDetails : CustomerdetailsIn[] = [];
 
-  constructor(private store: Store<{ materials: MaterialState }>, private dialog : MatDialog, private materialService: MaterialTypeService) {}
+  constructor(private store: Store<{ materials: MaterialState }>, private dialog : MatDialog, ) {}
 
   ngOnInit(): void {
   this.store.dispatch(loadCustomerDetails());
@@ -26,34 +28,22 @@ export class CustomerdetailsComponent implements OnInit {
   this.selectedCustomerDetails$ = this.store.select(getCustomerDetails); 
 
   this.selectedCustomerDetails$.subscribe(data => {
+     this.customerDetails = data;
     console.log('Simplified Data:', data);
   });
 
-  this.materialService.getCustomerDetailsPeocess().subscribe({
-  next: (data) => {
-    this.customerDetails = data;
-    console.log('Customer Details:', this.customerDetails);
-  },
-  error: (err) => {
-    console.error('Failed to fetch customer details', err);
-  }
-});
+
 
 }
 
 addCustomerDetails() {
-  const dialogRef = this.dialog.open(AddcustomerdetailsComponent, {
+   this.dialog.open(AddcustomerdetailsComponent, {
     width: '850px',
     height: '550px',
     autoFocus: false,
   });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result === true) {
-      // Refresh the customer list manually
-      this.loadCustomerList();
-    }
-  });
+  
 }
 
 
@@ -62,17 +52,23 @@ getFirstProcessCost(customer: any): number {
   return customer?.processName?.length ? customer.processName[0].processCost : 0;
 }
 
-loadCustomerList() {
-  this.materialService.getCustomerDetailsPeocess().subscribe({
-    next: (data) => {
-      this.customerDetails = data;
-      console.log('🔄 Refreshed Customer Details:', this.customerDetails);
-    },
-    error: (err) => {
-      console.error('❌ Failed to refresh customer details', err);
+
+delete(id: string) {
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '300px',
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this customer?'
+    }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'confirm') {
+      this.store.dispatch(deleteCustomer({ id }));
     }
   });
 }
+
 
 
 

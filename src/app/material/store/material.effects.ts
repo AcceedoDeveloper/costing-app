@@ -23,6 +23,7 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , updateProcess , updateProcessFailure, updateProcessSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
+  , deleteCustomer, deleteCustomerFailure, deleteCustomerSuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -411,6 +412,19 @@ loadCustomerDetailsIN$ = createEffect(() =>
     )
   )
 );
+
+deleteCustomer$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(deleteCustomer),
+    mergeMap((action) =>
+      this.materialTypeService.delectCustomerDetails(action.id).pipe(
+        map(() => deleteCustomerSuccess({ id: action.id })),
+        catchError((error) => of(deleteCustomerFailure({ error })))
+      )
+    )
+  )
+);
+
 
 
 }

@@ -18,6 +18,7 @@ import { getCustomerWithId } from '../../store/material.selector';
 import { updateCustomerDetails } from '../../store/material.actions';
 import { take } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
+import { loadCustomerDetails } from '../../store/material.actions';
 
 
 @Component({
@@ -32,6 +33,9 @@ export class AddcustomerdetailsComponent implements OnInit {
   castingData: CastingInput[] = [];
   expandedProcessIndex: number | null = null;
   selectedProcessForEdit: any = null;
+  expandedMaterialTypes: { [key: string]: boolean } = {};
+  groupedRawMaterials: { [index: number]: any[] } = {};
+
   
 
   @ViewChild('stepper') stepper!: MatStepper;
@@ -61,14 +65,14 @@ export class AddcustomerdetailsComponent implements OnInit {
     });
 
     this.store.select(getAllProcesses).subscribe((data: Process[]) => {
-  console.log('Original Data:', data);
+
 
   this.processes = data.map(p => ({
     ...p,
     grade: Array.isArray(p.grade) && Array.isArray(p.grade[0]) ? p.grade[0] : p.grade
   }));
 
-  console.log('Processed Data:', this.processes);
+ 
 });
 
 
@@ -309,9 +313,14 @@ toggleExpandedReview(index: number): void {
   if (this.expandedReviewIndex !== null) {
     const selectedProcess = selectedProcesses[this.expandedReviewIndex];
     this.selectedProcessForEdit = this.deepClone(selectedProcess); // ✅
+
+    // 👇 NEW: Cache the grouped result only once per process
+    this.groupedRawMaterials[index] = this.groupRawMaterialsByType(selectedProcess.rawMaterial || []);
+    
     console.log('Selected for review:', this.selectedProcessForEdit);
   }
 }
+
 
 
 logReviewedProcess(): void {
@@ -387,13 +396,42 @@ submitdata() {
       }
     });
 
+
+    this.store.dispatch(loadCustomerDetails());
+    
+
   } else {
     console.warn('❌ One or more steps are invalid!');
   }
 }
 
+toggleMaterialType(type: string): void {
+  this.expandedMaterialTypes[type] = !this.expandedMaterialTypes[type];
+}
 
 
+
+isMaterialTypeExpanded(type: string): boolean {
+  return !!this.expandedMaterialTypes[type];
+}
+
+
+groupRawMaterialsByType(rawMaterialList: any[]): any[] {
+  const grouped: { [type: string]: any[] } = {};
+
+  for (const item of rawMaterialList) {
+    const key = item.type || 'Unknown';
+    if (!grouped[key]) {
+      grouped[key] = [];
+    }
+    grouped[key].push(...(item.materialsUsed || []));
+  }
+
+  return Object.entries(grouped).map(([type, materials]) => ({
+    type,
+    materials
+  }));
+}
 
 
 }

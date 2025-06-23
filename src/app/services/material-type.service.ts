@@ -45,6 +45,10 @@ getCustomerDetailsPeocess(): Observable<CustomerdetailsIn[]> {
   return this.http.get<CustomerdetailsIn[]>(`${this.apiUrl}/get-customers`);
 }
 
+
+delectCustomerDetails(id : String) {
+  return this.http.delete(`${this.apiUrl}/delete-Customer/${id}`);
+}
   
 
 

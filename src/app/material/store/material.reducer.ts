@@ -15,6 +15,7 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , updateProcess, updateProcessFailure, updateProcessSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
+  , deleteCustomerSuccess
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
@@ -274,7 +275,14 @@ on(updateCustomerDetailsSuccess, (state, { customer }) => ({
 on(updateCustomerDetailsFailure, (state, { error }) => ({
   ...state,
   error
+})),
+
+
+on(deleteCustomerSuccess, (state, { id }) => ({
+  ...state,
+  customers: state.customers.filter(c => c._id !== id),
 }))
+
 
 
 
