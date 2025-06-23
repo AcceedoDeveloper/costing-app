@@ -71,24 +71,30 @@ this.secondFormGroup = this.fb.group({
 });
 
 
-this.store.select(selectCastingInputs).subscribe((castingInputs) => {
-  if (castingInputs && castingInputs.length > 0) {
-    const input = castingInputs[0];
+this.secondFormGroup.valueChanges.subscribe(values => {
+  const castingWeight = parseFloat(values.castingWeight) || 0;
+  const cavities = parseFloat(values.cavities) || 0;
+  const pouringWeight = parseFloat(values.pouringWeight) || 0;
 
-  
+  if (castingWeight && cavities && pouringWeight) {
+    // Perform calculations
+    const yieldPercentage = (castingWeight * cavities) / pouringWeight;
+    const goodCastingWeight = Math.round(yieldPercentage * 1050);
+    const yieldVal = (goodCastingWeight / 1050) * 100;
+    const materialReturned = 1050 - goodCastingWeight;
+
+    // Update the form
     this.secondFormGroup.patchValue({
-      castingWeight: input.CastingWeight,
-      cavities: input.Cavities,
-      pouringWeight: input.PouringWeight,
-      goodCastingWeight: input.CastingWeightPerKg,
-      yield: input.Yeild,
-      materialReturned: input.MaterialReturned,
-      yieldPercentage: input.Yeild 
-    });
-
-    console.log('Patched form with:', input);
+      goodCastingWeight: goodCastingWeight,
+      yield: yieldVal.toFixed(2),
+      materialReturned: materialReturned.toFixed(2),
+      yieldPercentage: yieldPercentage.toFixed(2)
+    }, { emitEvent: false }); // Avoid infinite loop
   }
 });
+
+
+
 
 
 
