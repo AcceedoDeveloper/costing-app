@@ -4,6 +4,7 @@ import { Observable,  } from 'rxjs';
 import { Material } from '../models/material.model';
 import { map, tap } from 'rxjs/operators';
 import {Supplier} from '../models/Supplier.model';
+import { environment } from '../../environments/environment';
 
 
 
@@ -11,7 +12,7 @@ import {Supplier} from '../models/Supplier.model';
   providedIn: 'root'
 })
 export class MaterialService {
-  private apiUrl = 'http://localhost:3005';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 

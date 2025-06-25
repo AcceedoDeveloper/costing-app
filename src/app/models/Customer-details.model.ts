@@ -96,9 +96,9 @@ export interface CustomerProcess {
   PouringWeight: number;
   mouldingInputs: boolean;
   coreInputs: boolean;
-  processType?: any; // Optional or define correctly
-  grade?: any;       // Optional or define correctly
-  Inputs?: any;      // Optional or define correctly
+  processType?: any; 
+  grade?: any;       
+  Inputs?: any;     
   __v?: number;
 }
 

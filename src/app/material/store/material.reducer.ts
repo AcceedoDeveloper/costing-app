@@ -253,7 +253,7 @@ on(updateProcessFailure, (state, { error }) => ({
 on(addCustomerDetailsSuccess, (state, { customer }) => ({
   ...state,
   customersProcess: [...state.customersProcess, customer],
-  id: customer._id,
+  id: customer._id ?? null,
   error: null
 })),
 

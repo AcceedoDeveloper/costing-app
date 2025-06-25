@@ -188,8 +188,9 @@
                   <mat-icon class="icon" (click)="toggleExpandedReview(i)">
                     {{ expandedReviewIndex === i ? 'expand_less' : 'expand_more' }}
                   </mat-icon>
-                  <mat-icon class="icon">delete</mat-icon>
-                  <mat-icon class="icon">edit</mat-icon>
+                 
+
+                 {{ process.processCost }}
                 </div>
               </td>
             </tr>
@@ -239,8 +240,14 @@
                   <td>{{material.unitCost }}</td>
                   <td>{{material.quantity }}</td>
                   <td>
-                    <input type="number" [value]="material.quantity"
-                           (input)="onUpdatedValueChange($event.target.value, material)" />
+                    <input
+  class="updated-cost-input"
+  type="number"
+  [value]="material.quantity"
+  (input)="onUpdatedValueChange($event.target.value, material)"
+  placeholder="Enter new qty"
+/>
+
                   </td>
                 </tr>
               </ng-container>
@@ -259,19 +266,21 @@
 <div class="dropdown-table" *ngIf="process.rawMaterial?.length > 0">
   <table class="sub-table">
     <thead>
-      <tr>
-        <th>Material Type</th>
-        <th>Material Name</th>
-        <th>Material Cost</th>
-      <th>Update Cost</th>
-      </tr>
-    </thead>
+  <tr>
+    <th>Material Name</th>
+    <th>Material Cost</th>
+    <th>Unit Cost</th>
+    <th>Quantity</th>
+    <th>Updated Quantity Cost</th>
+  </tr>
+</thead>
+
     <tbody>
   <ng-container *ngFor="let group of groupedRawMaterials[i]">
 
   <!-- Header Row for Material Type -->
   <tr class="material-type-row">
-    <td colspan="4" class="material-type-header">
+    <td colspan="5" class="material-type-header">
       <div class="material-type-flex">
         Material Type: {{ group.type }}
         <mat-icon class="toggle-icon" (click)="toggleMaterialType(group.type)">
@@ -282,20 +291,28 @@
   </tr>
 
   <!-- Material Rows Inside -->
-  <ng-container *ngIf="expandedMaterialTypes[group.type]">
-    <ng-container *ngFor="let material of group.materials; let mIndex = index; trackBy: trackByIndex">
-      <tr>
-        <td>{{ group.type }}</td>
-        <td>{{ material.name }}</td>
-        <td>{{ material.totalCost }}</td>
-        <td>
-          <input type="number"
-                 [value]="material.totalCost"
-                 (input)="onUpdatedValueChange($event.target.value, material)" />
-        </td>
-      </tr>
-    </ng-container>
+  <!-- Material Rows Inside -->
+<ng-container *ngIf="expandedMaterialTypes[group.type]">
+  <ng-container *ngFor="let material of group.materials; let mIndex = index; trackBy: trackByIndex">
+    <tr>
+      <td>{{ material.name }}</td>
+      <td>{{ material.totalCost }}</td>
+      <td>{{ material.unitCost }}</td>
+      <td>{{ material.quantity }}</td>
+      <td>
+        <input
+  class="updated-cost-input"
+  type="number"
+  [value]="material.quantity"
+  (input)="onUpdatedValueChange($event.target.value, material)"
+  placeholder="Enter new qty"
+/>
+
+      </td>
+    </tr>
   </ng-container>
+</ng-container>
+
 </ng-container>
 
 </tbody>
@@ -313,6 +330,7 @@
 
     <div class="mt-3">
       <button mat-button matStepperPrevious>Back</button>
+      <button mat-button color="primary" (click)="saveAllProcesses()">Save All</button>
       <button mat-button matStepperNext color="primary" (click)="logReviewedProcess()">Next</button>
     </div>
   </form>

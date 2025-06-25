@@ -35,6 +35,10 @@ export class AddcustomerdetailsComponent implements OnInit {
   selectedProcessForEdit: any = null;
   expandedMaterialTypes: { [key: string]: boolean } = {};
   groupedRawMaterials: { [index: number]: any[] } = {};
+  editedProcessFlags: { [index: number]: boolean } = {};
+  editedProcesses: { [index: number]: any } = {};
+
+
 
   
 
@@ -260,25 +264,33 @@ onCustomCostChange(value: string, material: any): void {
 }
 
 onUpdatedValueChange(newVal: string, material: any): void {
-  const parsed = parseFloat(newVal);
-  if (isNaN(parsed)) {
+  const parsedQuantity = parseFloat(newVal);
+  if (isNaN(parsedQuantity)) {
     console.warn('Invalid input');
     return;
   }
+
+  if (!this.editedProcesses) this.editedProcesses = {};
+this.editedProcesses[this.expandedReviewIndex!] = this.deepClone(this.selectedProcessForEdit);
+
 
   if (!this.selectedProcessForEdit) {
     console.warn('No selected process to edit');
     return;
   }
 
-  // Update inside grade -> rawMaterial
+  // ✅ Update inside grade -> rawMaterial
   if (this.selectedProcessForEdit.grade) {
     for (let grade of this.selectedProcessForEdit.grade) {
       for (let raw of grade.rawMaterial || []) {
         raw.materialsUsed = raw.materialsUsed.map(m => {
           if (m.objectId === material.objectId) {
-            const updated = { ...m, totalCost: parsed };
-            console.log('Updated cost:', updated.name, '=>', updated.totalCost);
+            const updated = {
+              ...m,
+              quantity: parsedQuantity,
+              totalCost: parsedQuantity * m.unitCost // ✅ Recalculate total cost
+            };
+            console.log('✅ Updated Grade Material:', updated.name, '=> QTY:', updated.quantity, 'TOTAL:', updated.totalCost);
             return updated;
           }
           return m;
@@ -287,13 +299,17 @@ onUpdatedValueChange(newVal: string, material: any): void {
     }
   }
 
-  // Update inside rawMaterial
+  // ✅ Update inside rawMaterial
   if (this.selectedProcessForEdit.rawMaterial) {
     for (let raw of this.selectedProcessForEdit.rawMaterial) {
       raw.materialsUsed = raw.materialsUsed.map(m => {
         if (m.objectId === material.objectId) {
-          const updated = { ...m, totalCost: parsed };
-          console.log('Updated cost:', updated.name, '=>', updated.totalCost);
+          const updated = {
+            ...m,
+            quantity: parsedQuantity,
+            totalCost: parsedQuantity * m.unitCost // ✅ Recalculate total cost
+          };
+          console.log('✅ Updated Raw Material:', updated.name, '=> QTY:', updated.quantity, 'TOTAL:', updated.totalCost);
           return updated;
         }
         return m;
@@ -301,8 +317,10 @@ onUpdatedValueChange(newVal: string, material: any): void {
     }
   }
 
-  console.log('Updated cloned data:', this.selectedProcessForEdit);
+  console.log('✅ Final updated process clone:', this.selectedProcessForEdit);
+  this.editedProcessFlags[this.expandedReviewIndex!] = true;
 }
+
 
 
 
@@ -432,6 +450,47 @@ groupRawMaterialsByType(rawMaterialList: any[]): any[] {
     materials
   }));
 }
+
+
+saveProcessEdit(index: number): void {
+  // 👇 Sync back the edited data into FormGroup
+  const selectedProcesses = [...this.thirdFormGroup.get('selectedProcesses')?.value];
+  selectedProcesses[index] = this.selectedProcessForEdit;
+
+  this.thirdFormGroup.get('selectedProcesses')?.setValue(selectedProcesses);
+  this.editedProcessFlags[index] = false;
+
+  console.log('✅ Saved Process Index:', index);
+  console.log('Updated Process Data:', selectedProcesses[index]); // ✅ Now shows updated quantity
+}
+
+
+saveAllProcesses(): void {
+  const selectedProcesses = [...this.thirdFormGroup.get('selectedProcesses')?.value];
+  let didUpdate = false;
+
+  Object.keys(this.editedProcessFlags).forEach((keyStr) => {
+    const index = parseInt(keyStr, 10);
+
+    if (this.editedProcessFlags[index]) {
+      if (this.editedProcesses[index]) {
+        selectedProcesses[index] = this.editedProcesses[index]; // Use cached edit
+        delete this.editedProcesses[index]; // Clean up
+      }
+
+      this.editedProcessFlags[index] = false;
+      didUpdate = true;
+    }
+  });
+
+  if (didUpdate) {
+    this.thirdFormGroup.get('selectedProcesses')?.setValue(selectedProcesses);
+    console.log('✅ All changes saved:', selectedProcesses);
+  } else {
+    console.log('ℹ️ No edits to save.');
+  }
+}
+
 
 
 }

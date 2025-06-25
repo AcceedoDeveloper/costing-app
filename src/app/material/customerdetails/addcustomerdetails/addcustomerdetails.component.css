@@ -232,3 +232,28 @@ mat-icon.icon:hover {
   cursor: pointer;
   color: #3f51b5;
 }
+
+.updated-cost-input {
+  width: 100px;
+  padding: 4px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.updated-cost-input:focus {
+  outline: none;
+  border-color: #5073fb;
+  box-shadow: 0 0 5px rgba(80, 115, 251, 0.4);
+}
+
+.updated-cost-input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+td input.updated-cost-input {
+  display: block;
+  margin: 0 auto;
+}

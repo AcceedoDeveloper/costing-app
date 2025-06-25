@@ -9,6 +9,7 @@
         <div class="user-info">
           <div class="user-details">
             <span class="username">{{ username }}</span>
+            <span class="role">{{ role }}</span>
           </div>
           <button mat-menu-item (click)="onLogout($event)" [routerLink]="['/auth/login']">
             <mat-icon>logout</mat-icon>

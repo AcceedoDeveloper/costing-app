@@ -6,13 +6,14 @@ import { Customer } from '../models/role.model';
 import { tap } from 'rxjs/operators';
 import { Department } from '../models/users.model';
 import { DepartmentUser } from '../models/users.model';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
- private baseUrl = 'http://localhost:3005';
+ private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

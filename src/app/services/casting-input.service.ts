@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { CastingInput, MouldingInput, CoreInput } from '../models/casting-input.model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CastingInputService  {
-  private baseUrl = 'http://localhost:3005';
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

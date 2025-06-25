@@ -4,10 +4,11 @@ import { Observable } from 'rxjs';
 import { MaterialType } from '../models/material-type.model';
 import {Customerdetails, CustomerdetailsIn} from '../models/Customer-details.model';
 import { CustomerProcess } from '../models/Customer-details.model';
+import { environment} from '../../environments/environment'
 
 @Injectable({ providedIn: 'root' })
 export class MaterialTypeService {
-  private apiUrl = 'http://localhost:3005';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

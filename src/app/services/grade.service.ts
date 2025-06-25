@@ -9,6 +9,8 @@ import {  tap } from 'rxjs/operators';
 import { MaterialMapResponse } from '../models/MaterialMap.model';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 
 
 
@@ -16,20 +18,15 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class GradeService {
-  private baseUrl = 'http://localhost:3005';
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
-
 getMaterialMap(): Observable<MaterialMapResponse> {
-  return this.http.get<MaterialMapResponse>('http://localhost:3005/data').pipe(
-   
-    catchError(error => {
-     
-      return throwError(() => error);
-    })
-  );
-}
+    return this.http.get<MaterialMapResponse>(`${this.baseUrl}/data`).pipe(
+      catchError(error => throwError(() => error))
+    );
+  }
 
 
 

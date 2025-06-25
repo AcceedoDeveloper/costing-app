@@ -23,14 +23,17 @@ export class AuthService {
       );
   }
 
-  formatUser(data: AuthResponseData): User {
-    return new User(
-      data.user.UserId,
-      data.user.UserCode,
-      data.user.UserName,
-      data.token
-    );
-  }
+formatUser(data: AuthResponseData): User {
+  const roleName = data.user.role?.name || 'unknown'; // ✅ safe fallback
+  return new User(
+    data.user.UserId,
+    data.user.UserCode,
+    data.user.UserName,
+    data.token,
+    roleName
+  );
+}
+
 
   getErrorMessage(message: string): string {
     
@@ -56,7 +59,8 @@ export class AuthService {
         userData.userId,
         userData.userCode,
         userData.userName,
-        userData.token
+        userData.token,
+        userData.role
       );
     }
     return null;

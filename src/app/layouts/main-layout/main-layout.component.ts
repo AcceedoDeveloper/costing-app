@@ -25,6 +25,13 @@ export class MainLayoutComponent {
     this.store.select(selectAuthState).subscribe((authState) => {
       if (authState.user) {
         this.username = authState.user.userName || 'unknown';
+        if( this.username === 'admin') {
+          this.role = 'admin';
+        }
+        else{
+          this.role = authState.user.role || 'unknown';
+        }
+        console.log('User:', this.username, 'Role:', this.role);
       }
     });
   }
