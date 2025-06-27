@@ -2,55 +2,46 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MaterialType } from '../models/material-type.model';
-import {Customerdetails, CustomerdetailsIn} from '../models/Customer-details.model';
-import { CustomerProcess } from '../models/Customer-details.model';
-import { environment} from '../../environments/environment'
+import { Customerdetails, CustomerdetailsIn, CustomerProcess } from '../models/Customer-details.model';
+import { ConfigService } from '../shared/components/config.service'; // ✅
 
 @Injectable({ providedIn: 'root' })
 export class MaterialTypeService {
-  private apiUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private config: ConfigService) {}
 
   getMaterialTypes(): Observable<MaterialType[]> {
-    return this.http.get<MaterialType[]>(`${this.apiUrl}/getMaterialType`);
+    return this.http.get<MaterialType[]>(this.config.getCostingUrl('getMaterialType'));
   }
 
   addMaterialType(material: Partial<MaterialType>): Observable<MaterialType> {
-    return this.http.post<MaterialType>(`${this.apiUrl}/addMaterialType`, material);
+    return this.http.post<MaterialType>(this.config.getCostingUrl('addMaterialType'), material);
   }
 
   updateMaterialType(id: string, material: Partial<MaterialType>): Observable<MaterialType> {
-    return this.http.patch<MaterialType>(`${this.apiUrl}/updateMaterialType/${id}`, material);
+    return this.http.patch<MaterialType>(`${this.config.getCostingUrl('updateMaterialType')}/${id}`, material);
   }
 
   deleteMaterialType(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/deleteMaterialType/${id}`);
+    return this.http.delete(`${this.config.getCostingUrl('deleteMaterialType')}/${id}`);
   }
 
   getCustomerDetails(): Observable<Customerdetails[]> {
-    return this.http.get<Customerdetails[]>(`${this.apiUrl}/get-customers`);
+    return this.http.get<Customerdetails[]>(this.config.getCostingUrl('getCustomers'));
   }
 
+  addCustomerDetails(customer: CustomerProcess): Observable<CustomerProcess> {
+    return this.http.post<CustomerProcess>(this.config.getCostingUrl('addCustomers'), customer);
+  }
 
+  updateCustomerDetails(id: string, customer: CustomerProcess): Observable<CustomerProcess> {
+    return this.http.put<CustomerProcess>(`${this.config.getCostingUrl('updateCustomer')}/${id}`, customer);
+  }
 
- addCustomerDetails(customer: CustomerProcess): Observable<CustomerProcess> {
-  return this.http.post<CustomerProcess>(`${this.apiUrl}/add-Customers`, customer);
-}
+  getCustomerDetailsPeocess(): Observable<CustomerdetailsIn[]> {
+    return this.http.get<CustomerdetailsIn[]>(this.config.getCostingUrl('getCustomers'));
+  }
 
-updateCustomerDetails(id: string, customer: CustomerProcess): Observable<CustomerProcess> {
-  return this.http.put<CustomerProcess>(`${this.apiUrl}/update-Customer/${id}`, customer);
-}
-
-getCustomerDetailsPeocess(): Observable<CustomerdetailsIn[]> {
-  return this.http.get<CustomerdetailsIn[]>(`${this.apiUrl}/get-customers`);
-}
-
-
-delectCustomerDetails(id : String) {
-  return this.http.delete(`${this.apiUrl}/delete-Customer/${id}`);
-}
-  
-
-
+  delectCustomerDetails(id: string): Observable<any> {
+    return this.http.delete(`${this.config.getCostingUrl('deleteCustomer')}/${id}`);
+  }
 }

@@ -7,7 +7,7 @@ import { appReducer } from './store/app.state';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
@@ -46,8 +46,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 
 
-
-
+import { ConfigService } from './shared/components/config.service';
+export function initializeApp(configService: ConfigService) {
+  return () => configService.load();
+}
 
 @NgModule({
   declarations: [
@@ -91,9 +93,16 @@ import { CommonModule } from '@angular/common';
     }),
     BrowserAnimationsModule,
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
-  ],
+providers: [
+  {
+    provide: APP_INITIALIZER,
+    useFactory: initializeApp,
+    deps: [ConfigService],
+    multi: true
+  },
+  { provide: HTTP_INTERCEPTORS, useClass: AuthTokenInterceptor, multi: true },
+],
+
   bootstrap: [AppComponent],
  
 })

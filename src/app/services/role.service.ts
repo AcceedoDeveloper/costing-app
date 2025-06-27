@@ -1,50 +1,47 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Role,  } from '../models/role.model';
+import { Role, Customer } from '../models/role.model';
+import { Department, DepartmentUser } from '../models/users.model';
 import { Observable } from 'rxjs';
-import { Customer } from '../models/role.model'; 
 import { tap } from 'rxjs/operators';
-import { Department } from '../models/users.model';
-import { DepartmentUser } from '../models/users.model';
-import { environment } from '../../environments/environment';
-
+import { ConfigService } from '../shared/components/config.service'; // You already created this
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
- private baseUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private config: ConfigService
+  ) {}
 
   getRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${this.baseUrl}/getRole`);
+    return this.http.get<Role[]>(this.config.getCostingUrl('role'));
   }
 
   addRole(role: Partial<Role>): Observable<Role> {
-    return this.http.post<Role>(`${this.baseUrl}/addRole`, role);
+    return this.http.post<Role>(this.config.getCostingUrl('addRole'), role);
   }
 
   updateRole(id: string, role: Partial<Role>): Observable<Role> {
-    return this.http.put<Role>(`${this.baseUrl}/updateRole/${id}`, role);
+    return this.http.put<Role>(`${this.config.getCostingUrl('updateRole')}/${id}`, role);
   }
 
   deleteRole(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/deleteRole/${id}`);
+    return this.http.delete<void>(`${this.config.getCostingUrl('deleteRole')}/${id}`);
   }
 
   getCustomers(): Observable<Customer[]> {
-    return this.http.get<Customer[]>(`${this.baseUrl}/getCustomer`);
+    return this.http.get<Customer[]>(this.config.getCostingUrl('getCustomer'));
   }
 
-  updateCustomer(id: string, data: Partial<Customer>) {
-  return this.http.put<Customer>(`${this.baseUrl}/updateCustomer/${id}`, data);
-}
-
+  updateCustomer(id: string, data: Partial<Customer>): Observable<Customer> {
+    return this.http.put<Customer>(`${this.config.getCostingUrl('updateCustomer')}/${id}`, data);
+  }
 
   addCustomer(customer: Partial<Customer>): Observable<Customer> {
     console.log('Adding customer:', customer);
-    return this.http.post<Customer>(`${this.baseUrl}/addCustomer`, customer).pipe(
+    return this.http.post<Customer>(this.config.getCostingUrl('addCustomer'), customer).pipe(
       tap((newCustomer) => {
         console.log('Customer added:', newCustomer);
       })
@@ -52,28 +49,26 @@ export class RoleService {
   }
 
   deleteCustomer(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/deleteCustomer/${id}`);
+    return this.http.delete<void>(`${this.config.getCostingUrl('deleteCustomer')}/${id}`);
   }
 
   getDepartments(): Observable<Department[]> {
-    return this.http.get<Department[]>(`${this.baseUrl}/getDept`);
+    return this.http.get<Department[]>(this.config.getCostingUrl('getDept'));
   }
 
   addDepartment(department: Partial<Department>): Observable<Department> {
-    return this.http.post<Department>(`${this.baseUrl}/addDept`, department);
+    return this.http.post<Department>(this.config.getCostingUrl('addDept'), department);
   }
 
   updateDepartment(id: string, data: Partial<Department>): Observable<Department> {
-    return this.http.put<Department>(`${this.baseUrl}/updateDept/${id}`, data);
+    return this.http.put<Department>(`${this.config.getCostingUrl('updateDept')}/${id}`, data);
   }
 
   deleteDepartment(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/deleteDept/${id}`);
+    return this.http.delete<void>(`${this.config.getCostingUrl('deleteDept')}/${id}`);
   }
 
   getDepartmentUsers(): Observable<DepartmentUser[]> {
-    return this.http.get<DepartmentUser[]>(`${this.baseUrl}/data`);
+    return this.http.get<DepartmentUser[]>(this.config.getCostingUrl('getDeptUsers'));
   }
-
-
 }

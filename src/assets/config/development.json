@@ -1,0 +1,78 @@
+{
+  "baseUrl": "/",
+  "costingUrl": "http://localhost:3005/",
+  "backupUrl": "http://20.84.65.155:9011/",
+  "urls": [
+
+     { "name": "login", "url": "login" },
+
+    { "name": "role", "url": "getRole" },
+    { "name": "addRole", "url": "addRole" },
+    { "name": "updateRole", "url": "updateRole" },
+    { "name": "deleteRole", "url": "deleteRole" },
+    
+    { "name": "getCustomer", "url": "getCustomer" },
+    { "name": "addCustomer", "url": "addCustomer" },
+    { "name": "updateCustomer", "url": "updateCustomer" },
+    { "name": "deleteCustomer", "url": "deleteCustomer" },
+    
+    { "name": "getDept", "url": "getDept" },
+    { "name": "addDept", "url": "addDept" },
+    { "name": "updateDept", "url": "updateDept" },
+    { "name": "deleteDept", "url": "deleteDept" },
+
+    { "name": "getDeptUsers", "url": "data" },
+
+    { "name": "getGrade", "url": "getGrade" },
+    { "name": "addGrade", "url": "addGrade" },
+    { "name": "updateGrade", "url": "updateGrade" },
+    { "name": "deleteGrade", "url": "deleteGrade" },
+    { "name": "getMaterialMap", "url": "data" },
+    { "name": "getRoles", "url": "data" },
+
+
+
+    { "name": "getProcess", "url": "getProcess" },
+    { "name": "addProcess", "url": "addProcess" },
+    { "name": "updateProcessType", "url": "updateProcessType" },
+    { "name": "deleteProcessType", "url": "deleteProcessType" },
+
+    { "name": "getMaterial", "url": "getMaterial" },
+    { "name": "addMaterial", "url": "addMaterial" },
+    { "name": "updateMaterial", "url": "updateMaterial" },
+    { "name": "deleteMaterial", "url": "deleteMaterial" },
+
+    { "name": "getSupplier", "url": "getSupplier" },
+    { "name": "addSupplier", "url": "addSupplier" },
+    { "name": "updateSupplier", "url": "updateSupplier" },
+    { "name": "deleteSupplier", "url": "deleteSupplier" },
+
+
+
+     { "name": "getMaterialType", "url": "getMaterialType" },
+    { "name": "addMaterialType", "url": "addMaterialType" },
+    { "name": "updateMaterialType", "url": "updateMaterialType" },
+    { "name": "deleteMaterialType", "url": "deleteMaterialType" },
+
+    { "name": "getCustomers", "url": "get-customers" },
+    { "name": "addCustomers", "url": "add-Customers" },
+    { "name": "updateCustomer", "url": "update-Customer" },
+    { "name": "deleteCustomer", "url": "delete-Customer" },
+
+
+    { "name": "getCastingInputs", "url": "getCastingInputs" },
+    { "name": "updateCastingInputs", "url": "updateCastingInputs" },
+
+    { "name": "getMouldingInputs", "url": "getMouldingInputs" },
+    { "name": "updateMouldingInputs", "url": "updateMouldingInputs" },
+
+    { "name": "getCoreInputs", "url": "getCoreInputs" },
+    { "name": "updateCoreInputs", "url": "updateCoreInputs" },
+
+    
+    { "name": "createUser", "url": "createUser" },
+    { "name": "getUsers", "url": "getUsers" },
+    { "name": "updateUser", "url": "UpdateUser" },
+    { "name": "deleteUser", "url": "deleteUser" }
+  ]
+}

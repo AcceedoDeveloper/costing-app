@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { ConfigService } from '../shared/components/config.service';
 import { AuthResponseData } from '../models/AuthResponseData.model';
 import { User } from '../models/user.model';
 import { Store } from '@ngrx/store';
@@ -13,14 +13,13 @@ import { AppState } from '../store/app.state';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private store: Store<AppState>) {}
+  constructor(private http: HttpClient, private store: Store<AppState>, private config: ConfigService) {}
 
   login(username: string, password: string): Observable<AuthResponseData> {
+    const loginUrl = this.config.getCostingUrl('login');
     return this.http
-      .post<AuthResponseData>(`${environment.apiUrl}/login`, { username, password })
-      .pipe(
-        catchError(this.handleError)
-      );
+      .post<AuthResponseData>(loginUrl, { username, password })
+      .pipe(catchError(this.handleError));
   }
 
 formatUser(data: AuthResponseData): User {
