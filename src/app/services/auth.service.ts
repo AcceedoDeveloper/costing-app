@@ -24,7 +24,7 @@ export class AuthService {
   }
 
 formatUser(data: AuthResponseData): User {
-  const roleName = data.user.role?.name || 'unknown'; // ✅ safe fallback
+  const roleName = data.user.role?.name || 'unknown';
   return new User(
     data.user.UserId,
     data.user.UserCode,
