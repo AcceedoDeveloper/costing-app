@@ -73,6 +73,12 @@
     { "name": "createUser", "url": "createUser" },
     { "name": "getUsers", "url": "getUsers" },
     { "name": "updateUser", "url": "UpdateUser" },
-    { "name": "deleteUser", "url": "deleteUser" }
+    { "name": "deleteUser", "url": "deleteUser" },
+
+    { "name": "getAccountTypes", "url": "getAccountTypes" },
+{ "name": "addAccountType", "url": "addAccountType" },
+{ "name": "updateAccountType", "url": "updateAccountType" },
+{ "name": "deleteAccountType", "url": "deleteAccountType" }
+
   ]
 }

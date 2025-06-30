@@ -25,9 +25,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { CustomerComponent } from './customer/customer.component';
 import { DepertmentComponent } from './depertment/depertment.component';
 import { AddcustomerComponent } from './customer/addcustomer/addcustomer.component';
+import { OverHeadsComponent } from './over-heads/over-heads.component';
+import { PowerCostComponent } from './power-cost/power-cost.component';
+import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
 
 @NgModule({
-  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent, AddcustomerComponent, ],
+  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent, AddcustomerComponent, OverHeadsComponent, PowerCostComponent, SalaryWagesComponent, ],
   imports: [
     MatSelectModule,
      FormsModule,

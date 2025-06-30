@@ -61,33 +61,28 @@ body {
   overflow-x: auto;
 }
 
-/* Main Table Styling */
+/* Main table structure */
 .main-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+}
+/* Column 1: Process Name - aligned left */
+.main-table .col-process {
+  width: 50%;
+  text-align: left;
 }
 
-/* Column widths and alignment for main-table headers */
-.main-table thead tr th.col-process,
-.main-table tbody tr td.col-process {
-  width: 34%;
-  text-align: center;
+/* Column 2: Grade / Raw Material - aligned center */
+.main-table .col-grade {
+  width: 50%;
+  text-align: left;
 }
 
-.main-table thead tr th.base-col,
-.main-table tbody tr td.col-grade {
-  width: 43%; /* Matches .base-col width */
-  text-align: center;
+/* Column 3: Action - aligned right */
+.main-table .col-action {
+  width: 20%;
+  text-align: right;
 }
-
-.main-table thead tr th.col-action,
-.main-table tbody tr td.col-action {
-  width: 15%;
-  text-align: center;
-  padding-left: 0;
-}
-
 /* General table cell styling for main-table */
 .main-table th,
 .main-table td {

@@ -1,0 +1,58 @@
+<div class="header">
+  <div class="toggle-group"></div>
+
+  <div class="add-section">
+    <mat-form-field appearance="standard">
+      <mat-label>Overhead Name</mat-label>
+      <input matInput [(ngModel)]="newOverHeadName" [readonly]="isEditMode" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+      <mat-label>Code</mat-label>
+      <input matInput type="number" [(ngModel)]="newOverHeadCode" />
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      class="circular-button primary-button"
+      color="primary"
+      (click)="isEditMode ? updateOverHead() : addOverHead()"
+      [disabled]="newOverHeadName.trim().length === 0 || !newOverHeadCode"
+    >
+      <mat-icon>{{ isEditMode ? 'save' : 'add_business' }}</mat-icon>
+    </button>
+
+    <button
+      mat-button
+      color="warn"
+      *ngIf="isEditMode"
+      (click)="cancelAction()"
+    >
+      <mat-icon>cancel</mat-icon>
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Overhead Name</th>
+        <th>Code</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of overhead">
+        <td>{{ item.name }}</td>
+        <td>{{ item.code }}</td>
+        <td class="actions">
+          <mat-icon class="icon" (click)="startEdit(item)">edit</mat-icon>
+          <mat-icon class="icon" (click)="deleteOverHead(item._id)">delete</mat-icon>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

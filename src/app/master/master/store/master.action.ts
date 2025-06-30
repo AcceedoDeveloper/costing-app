@@ -4,6 +4,7 @@ import {Role} from '../../../models/role.model';
 import { Roles } from 'src/app/models/MaterialMap.model';
 import { Customer } from '../../../models/role.model';
 import { Department } from '../../../models/users.model';
+import {OverHead } from '../../../models/over-head.model';
 
 export const CREATE_USER = '[user page] create user';
 export const CREATE_USER_SUCCESS = '[user page] create user success';
@@ -191,4 +192,58 @@ export const loadDepartmentUsersSuccess = createAction(
 export const loadDepartmentUsersFailure = createAction(
   '[Department] Load Department Users Failure',
   props<{ error: string }>()
+);
+
+
+
+
+
+
+export const loadAccountTypes = createAction('[AccountType] Load All');
+export const loadAccountTypesSuccess = createAction(
+  '[AccountType] Load Success',
+  props<{ accountTypes: OverHead[] }>()
+);
+export const loadAccountTypesFailure = createAction(
+  '[AccountType] Load Failure',
+  props<{ error: any }>()
+);
+
+export const addAccountType = createAction(
+  '[AccountType] Add',
+  props<{ account: OverHead }>()
+);
+export const addAccountTypeSuccess = createAction(
+  '[AccountType] Add Success',
+  props<{ account: OverHead }>()
+);
+export const addAccountTypeFailure = createAction(
+  '[AccountType] Add Failure',
+  props<{ error: any }>()
+);
+
+export const updateAccountType = createAction(
+  '[AccountType] Update',
+  props<{ id: string, account: OverHead }>()
+);
+export const updateAccountTypeSuccess = createAction(
+  '[AccountType] Update Success',
+  props<{ account: OverHead }>()
+);
+export const updateAccountTypeFailure = createAction(
+  '[AccountType] Update Failure',
+  props<{ error: any }>()
+);
+
+export const deleteAccountType = createAction(
+  '[AccountType] Delete',
+  props<{ id: string }>()
+);
+export const deleteAccountTypeSuccess = createAction(
+  '[AccountType] Delete Success',
+  props<{ id: string }>()
+);
+export const deleteAccountTypeFailure = createAction(
+  '[AccountType] Delete Failure',
+  props<{ error: any }>()
 );

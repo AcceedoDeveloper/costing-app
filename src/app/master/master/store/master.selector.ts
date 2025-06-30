@@ -42,3 +42,9 @@ export const getDepartmentUsers = createSelector(
   getUserState,
   (state) => state.departmentUsers
 );
+
+
+export const getAccountTypes = createSelector(
+  getUserState,
+  (state) => state.accountTypes
+);
