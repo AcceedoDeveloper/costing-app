@@ -1,23 +1,30 @@
+/* General Styles */
 .full-width {
   width: 100%;
-  
 }
+
+
+.material-icons{
+  position: relative;
+  top: 6px;
+  font-size: 20px;
+  color: #3f51b5;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-
 .process-table-scroll {
-  max-height: 250px; /* Set desired height */
+  max-height: 250px;
   overflow-y: auto;
   margin-top: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-/* Optional: Fix header while scrolling */
 .process-table-scroll table {
   min-width: 100%;
 }
@@ -52,39 +59,36 @@ body {
   background-color: #efefef;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   overflow-x: auto;
-
 }
 
+/* Main Table Styling */
 .main-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
 }
 
-/* Column widths and alignment */
-.main-table thead tr th:nth-child(1),
-.main-table tbody tr td:nth-child(1) {
+/* Column widths and alignment for main-table headers */
+.main-table thead tr th.col-process,
+.main-table tbody tr td.col-process {
   width: 34%;
-  text-align: left ;
-}
-
-.main-table thead tr th:nth-child(2),
-.main-table tbody tr td:nth-child(2) {
-  width: 13%;
-  text-align: left;
-}
-
-.main-table thead tr th:nth-child(3),
-.main-table tbody tr td:nth-child(3) {
-  width: 15%;
   text-align: center;
 }
 
-/* REMOVE the padding-left that breaks centering */
-.main-table thead tr th:nth-child(3) {
-  padding-left: 0 !important;
+.main-table thead tr th.base-col,
+.main-table tbody tr td.col-grade {
+  width: 43%; /* Matches .base-col width */
+  text-align: center;
 }
 
+.main-table thead tr th.col-action,
+.main-table tbody tr td.col-action {
+  width: 15%;
+  text-align: center;
+  padding-left: 0;
+}
+
+/* General table cell styling for main-table */
 .main-table th,
 .main-table td {
   padding: 14px 20px;
@@ -93,9 +97,9 @@ body {
   background-color: white;
   white-space: nowrap;
   vertical-align: middle;
-  text-align: center;
 }
 
+/* Header-specific styling for main-table */
 .main-table thead {
   background-color: #fafafa;
 }
@@ -109,7 +113,7 @@ body {
 /* Action icon wrapper centered */
 .actions {
   display: flex;
-  justify-content: center;   /* ✅ Center horizontally */
+  justify-content: center;
   align-items: center;
   gap: 12px;
 }
@@ -156,7 +160,7 @@ mat-icon.icon:hover {
   text-align: left;
 }
 
-/* ✅ Sub-table styling */
+/* Sub-table Styling (nested tables) */
 .sub-table {
   width: 100%;
   border-collapse: collapse;
@@ -172,7 +176,7 @@ mat-icon.icon:hover {
   padding: 8px 16px;
   font-size: 13px;
   border-bottom: 1px solid #ddd;
-  text-align: center;     /* ✅ Make sure everything is centered */
+  text-align: center; /* Default centering for sub-table */
   white-space: normal;
   word-break: break-word;
 }
@@ -181,6 +185,54 @@ mat-icon.icon:hover {
   background-color: #f0f0f0;
   color: #444;
   font-weight: 600;
+}
+
+/* Material Type Row */
+.material-type-row {
+  background: #f9f9f9;
+}
+
+.material-type-header {
+  font-weight: 600;
+  padding: 8px;
+}
+
+.material-type-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-icon {
+  cursor: pointer;
+  color: #3f51b5;
+}
+
+/* Input for updated costs */
+.updated-cost-input {
+  width: 100px;
+  padding: 4px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.updated-cost-input:focus {
+  outline: none;
+  border-color: #5073fb;
+  box-shadow: 0 0 5px rgba(80, 115, 251, 0.4);
+}
+
+.updated-cost-input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+td input.updated-cost-input {
+  display: block;
+  margin: 0 auto;
 }
 
 /* Animation */
@@ -214,46 +266,4 @@ mat-icon.icon:hover {
     font-size: 13px;
     padding: 8px 10px;
   }
-}
-
-.material-type-header {
-  font-weight: 600;
-  background: #f9f9f9;
-  padding: 8px;
-}
-
-.material-type-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.toggle-icon {
-  cursor: pointer;
-  color: #3f51b5;
-}
-
-.updated-cost-input {
-  width: 100px;
-  padding: 4px 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #fff;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.updated-cost-input:focus {
-  outline: none;
-  border-color: #5073fb;
-  box-shadow: 0 0 5px rgba(80, 115, 251, 0.4);
-}
-
-.updated-cost-input::placeholder {
-  color: #aaa;
-  font-style: italic;
-}
-td input.updated-cost-input {
-  display: block;
-  margin: 0 auto;
 }

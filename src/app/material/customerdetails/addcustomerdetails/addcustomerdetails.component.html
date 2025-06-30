@@ -1,7 +1,10 @@
-<!-- Toggle Stepper Mode -->
-<button mat-button color="primary" (click)="isLinear = !isLinear" id="toggle-linear">
-  {{ !isLinear ? 'Enable linear mode' : 'Disable linear mode' }}
-</button>
+
+
+
+<h5>
+  <span class="material-icons">add_circle</span>
+  Add Customer Details
+</h5>
 
 <!-- Stepper -->
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
@@ -163,8 +166,8 @@
       <table class="main-table">
         <thead>
           <tr>
-            <th class="col-process">Process Name</th>
-            <th class="col-grade">Grade / Raw Material</th>
+            <th class="col-process base-col">Process Name</th>
+            <th class=" base-col">Grade / Raw Material</th>
             <th class="col-action">Action</th>
           </tr>
         </thead>

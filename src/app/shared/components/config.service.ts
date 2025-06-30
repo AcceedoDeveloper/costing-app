@@ -31,7 +31,7 @@ export class ConfigService {
   }
 
 getCostingUrl(name: string): string {
-  return this.config.costingUrl + this.getUrl(name); // ✅ CORRECT KEY FROM JSON
+  return this.config.costingUrl + this.getUrl(name); 
 }
 
 }

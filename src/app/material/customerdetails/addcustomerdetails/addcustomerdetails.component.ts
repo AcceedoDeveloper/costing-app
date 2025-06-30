@@ -13,7 +13,6 @@ import { CastingInput } from '../../../models/casting-input.model';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {Process } from '../../../models/process.model';
-import { selectCastingInputs } from '../../../modules/materialinput/store/casting.selectors';
 import { getCustomerWithId } from '../../store/material.selector';
 import { updateCustomerDetails } from '../../store/material.actions';
 import { take } from 'rxjs/operators';
