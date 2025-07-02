@@ -45,6 +45,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { CommonModule } from '@angular/common';
 
+import { GoogleChartsModule } from 'angular-google-charts';
 
 import { ConfigService } from './shared/components/config.service';
 export function initializeApp(configService: ConfigService) {
@@ -60,7 +61,8 @@ export function initializeApp(configService: ConfigService) {
   ],
   imports: [
     CommonModule,
-     MatDialogModule,
+     GoogleChartsModule,
+    MatDialogModule,
     RouterModule,
     MatProgressSpinnerModule,
     FlexLayoutModule,
