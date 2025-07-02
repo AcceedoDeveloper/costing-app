@@ -5,13 +5,14 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { GoogleChartsModule } from 'angular-google-charts';
+import { MatIconModule } from '@angular/material/icon';
 import { ReportComponent } from './report/report.component';
 
 
-
 @NgModule({
-  declarations: [DashboardComponent, ReportComponent],
+  declarations: [DashboardComponent, ReportComponent,],
   imports: [
+    MatIconModule,
     GoogleChartsModule,
     CommonModule,
     DashboardRoutingModule
