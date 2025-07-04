@@ -25,53 +25,8 @@ body {
   overflow-x: auto;
 }
 
-.add-section {
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
 mat-form-field {
   width: 200px;
-}
-
-.circular-button {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 40px;
-}
-
-.primary-button {
-  background-color: #ff4081;
-  color: white;
-}
-
-.primary-button:disabled {
-  background-color: #ccc;
-  color: #999;
-}
-
-.warn-button {
-  background-color: #666;
-  color: white;
-}
-
-.warn-button:hover {
-  background-color: #555;
-}
-
-.circular-button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
 }
 
 table {
@@ -96,8 +51,16 @@ td {
   padding: 14px 20px;
   border-bottom: 1px solid #ddd;
   font-weight: 500;
-  white-space: nowrap;
   vertical-align: middle;
+}
+
+/* Special handling for long text cells */
+.material-name-cell,
+.address-cell {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+  min-width: 150px;
 }
 
 td.actions {
@@ -105,6 +68,7 @@ td.actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  white-space: nowrap;
 }
 
 .actions mat-icon.icon {
@@ -120,10 +84,6 @@ td.actions {
   color: #ff4081;
 }
 
-.actions mat-icon.icon:last-child {
-  margin-right: 0;
-}
-
 tr:hover {
   background-color: #f9f9f9;
 }
@@ -134,7 +94,6 @@ mat-paginator {
   justify-content: end;
   padding: 10px;
   background: #fff;
- 
   border-radius: 0 0 10px 10px;
   height: 67px;
 }
@@ -156,6 +115,13 @@ mat-paginator {
   color: #5b84ff;
 }
 
+.filter {
+  display: flex;
+  gap: 20px;
+  align-items: start;
+  margin-right: 30%;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .table-container {
@@ -163,10 +129,11 @@ mat-paginator {
     margin: 20px 10px;
   }
 
-  .add-section {
+  .filter {
+    margin-right: 0;
     flex-direction: column;
-    align-items: stretch;
-    padding: 10px;
+    gap: 10px;
+    width: 100%;
   }
 
   mat-form-field {
@@ -178,10 +145,10 @@ mat-paginator {
     font-size: 14px;
   }
 
-
-
-  mat-paginator {
-    font-size: 14px;
+  .material-name-cell,
+  .address-cell {
+    max-width: 120px;
+    min-width: 100px;
   }
 }
 
@@ -191,7 +158,9 @@ mat-paginator {
     padding: 8px;
   }
 
- 
+  .actions mat-icon.icon {
+    font-size: 20px;
+  }
 
   mat-paginator {
     font-size: 12px;
@@ -200,12 +169,4 @@ mat-paginator {
   .mat-paginator-icon {
     width: 20px;
   }
-}
-
-
-.filter{
-  display: flex;
-  gap: 20px;
-  align-items: start;
-  margin-right: 30%;
 }

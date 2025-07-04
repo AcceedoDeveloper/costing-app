@@ -259,3 +259,35 @@
   animation: spin 2s linear infinite;
   display: inline-block;
 }
+
+
+
+@keyframes arrow-up-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes arrow-down-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.arrow-up {
+  color: #28a745; /* Green */
+  margin-left: 5px;
+  animation: arrow-up-bounce 1s infinite;
+}
+
+.arrow-down {
+  color: #dc3545; /* Red */
+  margin-left: 5px;
+  animation: arrow-down-bounce 1s infinite;
+}

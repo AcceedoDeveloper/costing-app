@@ -28,9 +28,10 @@ import { AddcustomerComponent } from './customer/addcustomer/addcustomer.compone
 import { OverHeadsComponent } from './over-heads/over-heads.component';
 import { PowerCostComponent } from './power-cost/power-cost.component';
 import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
+import { AddpowerCostComponent } from './power-cost/addpower-cost/addpower-cost.component';
 
 @NgModule({
-  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent, AddcustomerComponent, OverHeadsComponent, PowerCostComponent, SalaryWagesComponent, ],
+  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent, AddcustomerComponent, OverHeadsComponent, PowerCostComponent, SalaryWagesComponent, AddpowerCostComponent, ],
   imports: [
     MatSelectModule,
      FormsModule,

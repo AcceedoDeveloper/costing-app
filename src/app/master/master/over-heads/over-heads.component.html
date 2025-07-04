@@ -1,58 +1,30 @@
-<div class="header">
-  <div class="toggle-group"></div>
-
-  <div class="add-section">
-    <mat-form-field appearance="standard">
-      <mat-label>Overhead Name</mat-label>
-      <input matInput [(ngModel)]="newOverHeadName" [readonly]="isEditMode" />
-    </mat-form-field>
-
-    <mat-form-field appearance="standard">
-      <mat-label>Code</mat-label>
-      <input matInput type="number" [(ngModel)]="newOverHeadCode" />
-    </mat-form-field>
-
-    <button
-      mat-raised-button
-      class="circular-button primary-button"
-      color="primary"
-      (click)="isEditMode ? updateOverHead() : addOverHead()"
-      [disabled]="newOverHeadName.trim().length === 0 || !newOverHeadCode"
-    >
-      <mat-icon>{{ isEditMode ? 'save' : 'add_business' }}</mat-icon>
-    </button>
-
-    <button
-      mat-button
-      color="warn"
-      *ngIf="isEditMode"
-      (click)="cancelAction()"
-    >
-      <mat-icon>cancel</mat-icon>
-      Cancel
-    </button>
-  </div>
-</div>
-
-<!-- Table -->
-<div class="table-container">
-  <table>
+ <table>
     <thead>
       <tr>
-        <th>Overhead Name</th>
-        <th>Code</th>
-        <th>Actions</th>
+        <th rowspan="2">Overheads</th>
+        <th colspan="2">Cost</th>
+      </tr>
+      <tr>
+        <th>Previous Cost</th>
+        <th>Present Cost</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of overhead">
-        <td>{{ item.name }}</td>
-        <td>{{ item.code }}</td>
-        <td class="actions">
-          <mat-icon class="icon" (click)="startEdit(item)">edit</mat-icon>
-          <mat-icon class="icon" (click)="deleteOverHead(item._id)">delete</mat-icon>
+      <tr>
+        <td>Repairs Maintenance</td>
+        <td class="cost-text">
+          2023-09 = 56, 2024-09 = 58, 2024-10 = 60, 2024-11 = 62, 2024-12 = 65, 2025-01 = 66, 2025-02 = 68, 2025-03 = 70
+          , 2025-03 = 70
+          , 2025-03 = 70
+          , 2025-03 = 70
+          , 2025-03 = 70
+          , 2025-03 = 70
+          , 2025-03 = 70
+          , 2025-03 = 70
+
+
         </td>
+        <td>2025-09 = 90</td>
       </tr>
     </tbody>
   </table>
-</div>
