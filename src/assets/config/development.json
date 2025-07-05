@@ -80,7 +80,11 @@
 { "name": "updateAccountType", "url": "updateAccountType" },
 { "name": "deleteAccountType", "url": "deleteAccountType" },
 { "name": "getPowerCosts", "url": "getPowerCost"},
-{ "name": "updatedPowerCost", "url": "updatePowerCost"}
+{ "name": "updatedPowerCost", "url": "updatePowerCost"},
+{ "name": "getProduction", "url": "getProductionInputs"},
+{"name": "getProductionCosts", "url": "getProductionCost"},
+{"name": "updateProductionCosts", "url": "updateProductionCost"},
+{"name": "updateProductionInputs", "url": "updateProductionInputs"}
 
   ]
 }

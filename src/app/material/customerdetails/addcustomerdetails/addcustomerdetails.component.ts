@@ -3,13 +3,11 @@ import {loadCustomers } from '../../../master/master/store/master.action';
 import { loadProcesses} from '../../store/material.actions';
 import { getAllProcesses} from '../../store/material.selector';
 import { selectCustomers } from '../../../master/master/store/master.selector';
-import {loadCastingInputs } from '../../../modules/materialinput/store/casting.actions';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'; 
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { addCustomerDetails} from '../../store/material.actions';
-import { CastingInput } from '../../../models/casting-input.model';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {Process } from '../../../models/process.model';
@@ -29,7 +27,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   customer$ : Observable<any>;
   customer: any[] = [];
   processes: Process[] =[];
-  castingData: CastingInput[] = [];
+  
   expandedProcessIndex: number | null = null;
   selectedProcessForEdit: any = null;
   expandedMaterialTypes: { [key: string]: boolean } = {};
@@ -57,7 +55,7 @@ export class AddcustomerdetailsComponent implements OnInit {
  ngOnInit(): void {
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
-    this.store.dispatch(loadCastingInputs());
+   
 
 
 

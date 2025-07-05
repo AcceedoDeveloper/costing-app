@@ -4,6 +4,13 @@ import { loadPowerCosts} from '../../../master/master/store/master.action';
 import {getPowerCosts } from '../../../master/master/store/master.selector';
 import { PowerCost } from '../../../models/over-head.model';
 import {updatePowerCost } from '../store/casting.actions';
+import { CastingData } from '../../../models/casting-input.model';
+import { getCastingDetails} from '../store/casting.actions';
+import { selectCastingData  } from '../store/casting.selectors';
+import { getCostSummary } from '../store/casting.actions';
+import {selectProductionCost } from '../store/casting.selectors';
+import { CostSummary } from '../../../models/casting-input.model';
+import {updateProductionCost } from '../store/casting.actions';
 
 @Component({
   selector: 'app-casting-input',
@@ -13,10 +20,17 @@ import {updatePowerCost } from '../store/casting.actions';
 export class CastingInputComponent implements OnInit {
  
   powerCosts : PowerCost[] = [];
+  costsummary: CostSummary[] | null = null;
     activePopupId: string | null = null;
 
     editCostPerUnit = false;
 editableCostPerUnit: number | null = null;
+  castingData: CastingData[] | null = null;
+
+
+ editMode: { [key: string]: boolean } = {};
+editableItem: any = null;
+
 
 
 
@@ -27,6 +41,23 @@ editableCostPerUnit: number | null = null;
 
   ngOnInit(): void {
 
+    this.store.dispatch(getCostSummary());
+
+    this.store.pipe(select(selectProductionCost)).subscribe((costSummary: CostSummary[] | null) => {
+     
+        this.costsummary = costSummary;
+        console.log('Cost Summary:', this.costsummary);
+      
+    });
+
+
+    this.store.dispatch(getCastingDetails());
+    this.store.pipe(select(selectCastingData)).subscribe((castingData: CastingData[] | null) => {
+      
+        this.castingData = castingData;
+        console.log('Casting Data:', this.castingData);
+      
+    });
     this.store.dispatch(loadPowerCosts());
    this.store.select(getPowerCosts).subscribe((powerCosts: PowerCost[]) => {
     if (powerCosts) {
@@ -91,5 +122,47 @@ enableEdit(currentValue: number) {
   this.editableCostPerUnit = currentValue;
   this.editCostPerUnit = true;
 }
+
+
+enableEditMode(section: string, item: any) {
+  this.editMode[section] = true;
+  this.editableItem = { ...item, _id: item._id || item?.['_id'] }; // ensure _id is included
+   this.editableItem = JSON.parse(JSON.stringify(item))
+}
+
+cancelEditMode(section: string) {
+  this.editMode[section] = false;
+  this.editableItem = null;
+}
+
+saveChanges(section: string) {
+  const original = this.costsummary?.find(i => i._id === this.editableItem._id);
+
+  if (original) {
+    const updatedData: any = {
+      _id: original._id,
+    };
+
+    if (section === 'overhead') {
+      Object.assign(updatedData, this.editableItem.OverHeads);
+    }
+
+    if (section === 'salary') {
+      Object.assign(updatedData, this.editableItem.SalaryAndWages);
+    }
+
+    // If both should be sent together:
+    Object.assign(updatedData, this.editableItem.OverHeads, this.editableItem.SalaryAndWages);
+
+    console.log('Dispatching full updated payload:', updatedData);
+    this.store.dispatch(updateProductionCost({ id: original._id, costSummary: updatedData }));
+  }
+
+  this.cancelEditMode(section);
+}
+
+
+
+
 
 }

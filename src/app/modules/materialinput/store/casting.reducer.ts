@@ -1,94 +1,33 @@
 import { createReducer, on } from '@ngrx/store';
-import { loadCastingInputs, loadCastingInputsSuccess, loadCastingInputsFailure 
-, updateCastingInputSuccess, loadMouldingInputs, loadMouldingInputsSuccess, 
-loadMouldingInputsFailure, updateMouldingInput, updateMouldingInputSuccess, 
-updateMouldingInputFailure, loadCoreInputs, loadCoreInputsSuccess, loadCoreInputsFailure
-, updateCoreInput, updateCoreInputSuccess, updateCoreInputFailure, updatePowerCost, updatePowerCostSuccess, error
+import {  updatePowerCost, updatePowerCostSuccess, error, 
+  getCastingDetailsSuccess, getCostSummarySuccess,
+   updateProductionCost, updateProductionCostSuccess
+, updateCastingData, updateCastingDataSuccess
 } from './casting.actions';
-import { CastingInput, MouldingInput, CoreInput } from '../../../models/casting-input.model';
 import { PowerCost } from '../../../models/over-head.model';
+import { CastingData } from '../../../models/casting-input.model';
+import { CostSummary } from '../../../models/casting-input.model';
 
 
 
 export interface CastingState {
-  data: CastingInput[];
-  mouldingData: MouldingInput[];
+  castingData: CastingData[] | null;
   powerCosts: PowerCost[];
-  coreData: CoreInput[];
+  costSummary: CostSummary[] | null;
   error: string | null;
 
 }
 
 const initialState: CastingState = {
-  data: [],
-  mouldingData: [],
-  coreData: [],
+  castingData: null,
   powerCosts: [],
+  costSummary: null,
   error: null
 };
 
 export const castingReducer = createReducer(
   initialState,
-  on(loadCastingInputs, (state) => ({ ...state })),
-  on(loadCastingInputsSuccess, (state, { data }) => ({
-    ...state,
-    data,
-    error: null
-  })),
-  on(loadCastingInputsFailure, (state, { error }) => ({
-    ...state,
-    error
-  })),
-  on(updateCastingInputSuccess, (state, { updated }) => ({
-    ...state,
-    data: state.data.map(item => item._id === updated._id ? updated : item)
-  })),
-  on(loadMouldingInputsSuccess, (state, { data }) => ({
-    ...state,
-    mouldingData: data,
-    error: null
-  }))
-  , on(loadMouldingInputsFailure, (state, { error }) => ({
-    ...state,
-    error
-  })),
-
-  on(updateMouldingInput, (state, { id, data }) => ({
-    ...state,
-    mouldingData: state.mouldingData.map(item => item._id === id ? { ...item, ...data } : item)
-  })),
-  on(updateMouldingInputSuccess, (state, { updated }) => ({
-    ...state,
-    mouldingData: state.mouldingData.map(item => item._id === updated._id ? updated : item)
-  })),
-  on(updateMouldingInputFailure, (state, { error }) => ({
-    ...state,
-    error
-  })),
-
-
-  on(loadCoreInputsSuccess, (state, { data }) => ({
-    ...state,
-    coreData: data,
-    error: null
-  })),
-  on(loadCoreInputsFailure, (state, { error }) => ({
-    ...state,
-    error
-  })),
-
-  on(updateCoreInput, (state, { id, data }) => ({
-    ...state,
-    coreData: state.coreData.map(item => item._id === id ? { ...item, ...data } : item)
-  })),
-  on(updateCoreInputSuccess, (state, { updated }) => ({
-    ...state,
-    coreData: state.coreData.map(item => item._id === updated._id ? updated : item)
-  })),
-  on(updateCoreInputFailure, (state, { error }) => ({
-    ...state,
-    error
-  })),
+ 
 
   on(updatePowerCost, (state, { powerCost }) => ({
     ...state,
@@ -101,7 +40,44 @@ export const castingReducer = createReducer(
   on(error, (state, { error }) => ({
     ...state,
     error
+  })),
+
+
+  on(getCastingDetailsSuccess, (state, { castingData }) => ({
+    ...state,
+    castingData
+  })),
+
+  
+
+
+  on(getCostSummarySuccess, (state, { costSummary }) => ({
+    ...state,
+    costSummary
+  })),
+
+  on(updateProductionCost, (state, { costSummary }) => ({
+    ...state,
+    costSummary: state.costSummary?.map(item => item._id === costSummary._id ? { ...item, ...costSummary } : item) || []
+  })),
+
+  on(updateProductionCostSuccess, (state, { updatedCostSummary }) => ({
+    ...state,
+    costSummary: state.costSummary?.map(item => item._id === updatedCostSummary._id ? updatedCostSummary : item) || []
+  })),
+
+
+  on(updateCastingData, (state, { castingData }) => ({
+    ...state,
+    castingData: state.castingData?.map(item => item._id === castingData._id ? castingData : item) || []
+  })),
+  on(updateCastingDataSuccess, (state, { updatedCastingData }) => ({
+    ...state,
+    castingData: state.castingData?.map(item => item._id === updatedCastingData._id ? updatedCastingData : item) || []
   }))
+
+
+
 
 
 
