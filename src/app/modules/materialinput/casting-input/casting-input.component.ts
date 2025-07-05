@@ -67,18 +67,17 @@ saveCostPerUnit(item: PowerCost) {
     .padStart(2, '0')}-${today.getFullYear()}`;
 
   if (item._id && this.editableCostPerUnit !== null) {
-    const updatedpowerCost: PowerCost = {
+    const updatedPowerCost: PowerCost = {
+      ...item,
       costPerUnit: this.editableCostPerUnit,
-      effectiveDate: formattedDate,
-      _id: item._id,
-      previousCostDetails: item.previousCostDetails 
+      effectiveDate: formattedDate
     };
 
-    this.store.dispatch(updatePowerCost({ id: item._id, powerCost: updatedpowerCost }));
+    this.store.dispatch(updatePowerCost({ id: item._id, powerCost: updatedPowerCost }));
     this.store.dispatch(loadPowerCosts());
   }
 
-  this.editCostPerUnit = false;
+  this.cancelEditCostPerUnit();
 }
 
 

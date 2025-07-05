@@ -438,20 +438,27 @@ deleteAccountTypeEffect = createEffect(() =>
 
 
 getPowerCosts$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(RoleActions.loadPowerCosts),
-    mergeMap(() =>
-      this.powerService.getPowerCosts().pipe(
-        map(powerCosts =>
-          RoleActions.loadPowerCostsSuccess({ powerCosts })
-        ),
-        catchError(error =>
-          of(RoleActions.error({ error }))
+    this.actions$.pipe(
+      ofType(RoleActions.loadPowerCosts),
+      mergeMap(() =>
+        this.powerService.getPowerCosts().pipe(
+          map((powerCosts: any[]) => {
+           
+            const cleaned = powerCosts.map((item: any) => {
+              const real = item[0] ?? item['0'] ?? item;
+              return {
+                ...real,
+                latestPreviousCost:
+                  real.previousCostDetails?.[real.previousCostDetails.length - 1]?.cost ?? null
+              };
+            });
+            return RoleActions.loadPowerCostsSuccess({ powerCosts: cleaned });
+          }),
+          catchError(error => of(RoleActions.error({ error })))
         )
       )
     )
-  )
-);
+  );
 
 
 
