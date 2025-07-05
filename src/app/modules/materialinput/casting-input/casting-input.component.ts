@@ -75,6 +75,7 @@ editableCostPerUnit: number | null = null;
     }
   }>) {}
 
+  
   ngOnInit(): void {
     // Dispatch actions to load all data
     this.store.dispatch(loadCastingInputs());
