@@ -8,7 +8,7 @@ import { loadCastingInputs, loadCastingInputsSuccess, loadCastingInputsFailure
 , updateMouldingInput, updateMouldingInputSuccess, updateMouldingInputFailure
 , loadCoreInputs, loadCoreInputsSuccess, loadCoreInputsFailure
 , updateCoreInput, updateCoreInputSuccess, updateCoreInputFailure
-, updatePowerCost, updatePowerCostSuccess
+, updatePowerCost, updatePowerCostSuccess, error
  } from './casting.actions';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import {PowerService } from '../../../services/power.service';
@@ -112,21 +112,21 @@ export class CastingEffects {
   );
 
 
-
-  updatePowerCost$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(updatePowerCost),
-      mergeMap(action =>
-        this.powerService.updatePowerCost(action.powerCost).pipe(
-          map(updated => {
-            this.toastr.success('Power cost updated successfully');
-            return updatePowerCostSuccess({ updated });
-          }),
-          catchError(error => of(error({ error: error.message })))
-        )
+updatePowerCost$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updatePowerCost),
+    mergeMap(action =>
+      this.powerService.updatePowerCost(action.id, action.powerCost).pipe(
+        map(updated => {
+          this.toastr.success('Power cost updated successfully');
+          return updatePowerCostSuccess({ updated });
+        }),
+        catchError(err => of(error({ error: err.message })))
       )
     )
-  );
+  )
+);
+
 
 
 }

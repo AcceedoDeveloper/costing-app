@@ -61,7 +61,7 @@ export const updateCoreInputFailure = createAction(
 );
 
 
-export const updatePowerCost = createAction('[Casting] Update Power Cost', props<{ powerCost: PowerCost }>());
+export const updatePowerCost = createAction('[Casting] Update Power Cost', props<{ id : string; powerCost: PowerCost }>());
 export const updatePowerCostSuccess = createAction(
   '[Casting] Update Power Cost Success',
   props<{ updated: PowerCost }>()

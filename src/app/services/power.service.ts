@@ -25,12 +25,14 @@ getPowerCosts(): Observable<PowerCost[]> {
 }
 
 
-updatePowerCost(powerCost: PowerCost): Observable<PowerCost> {
+updatePowerCost(id: string, powerCost: PowerCost): Observable<PowerCost> {
   return this.http.put<PowerCost>(
-    this.configService.getCostingUrl('updatedPowerCost'),
+    `${this.configService.getCostingUrl('updatedPowerCost')}/${id}`,
     powerCost
   );
 }
+
+
 
 
 

@@ -224,17 +224,27 @@ togglePopup(id: string): void {
 
 
 saveCostPerUnit(item: PowerCost) {
-  const updatedData = {
-    costPerUnit: this.editableCostPerUnit,
-    effectiveDate: item.effectiveDate
-  };
-  console.log('Updated PowerCost:', updatedData);
+  const today = new Date();
+  const formattedDate = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}-${today.getFullYear()}`;
 
+  if (item._id && this.editableCostPerUnit !== null) {
+    const updatedpowerCost: PowerCost = {
+      costPerUnit: this.editableCostPerUnit,
+      effectiveDate: formattedDate,
+      _id: item._id,
+      previousCostDetails: item.previousCostDetails 
+    };
 
-
+    this.store.dispatch(updatePowerCost({ id: item._id, powerCost: updatedpowerCost }));
+    this.store.dispatch(loadPowerCosts());
+  }
 
   this.editCostPerUnit = false;
 }
+
+
 
 cancelEditCostPerUnit() {
   this.editCostPerUnit = false;
