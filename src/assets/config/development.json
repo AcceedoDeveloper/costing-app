@@ -78,7 +78,9 @@
     { "name": "getAccountTypes", "url": "getAccountTypes" },
 { "name": "addAccountType", "url": "addAccountType" },
 { "name": "updateAccountType", "url": "updateAccountType" },
-{ "name": "deleteAccountType", "url": "deleteAccountType" }
+{ "name": "deleteAccountType", "url": "deleteAccountType" },
+{ "name": "getPowerCosts", "url": "getPowerCost"},
+{ "name": "updatedPowerCost", "url": "updatePowerCost"}
 
   ]
 }

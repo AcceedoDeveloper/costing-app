@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,HostListener, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import {
   loadCastingInputs,
@@ -10,6 +10,10 @@ import {
 } from '../store/casting.actions';
 import { CastingInput, CoreInput, MouldingInput } from '../../../models/casting-input.model';
 import { map } from 'rxjs/operators';
+import { loadPowerCosts} from '../../../master/master/store/master.action';
+import {getPowerCosts } from '../../../master/master/store/master.selector';
+import { PowerCost } from '../../../models/over-head.model';
+import {updatePowerCost } from '../store/casting.actions';
 
 @Component({
   selector: 'app-casting-input',
@@ -20,6 +24,13 @@ export class CastingInputComponent implements OnInit {
   castingData: CastingInput[] = [];
   coreData: CoreInput[] = [];
   mouldingData: MouldingInput[] = [];
+  powerCosts : PowerCost[] = [];
+    activePopupId: string | null = null;
+
+    editCostPerUnit = false;
+editableCostPerUnit: number | null = null;
+
+
 
   displayedCastingColumns: string[] = [
     '_id',
@@ -69,6 +80,17 @@ export class CastingInputComponent implements OnInit {
     this.store.dispatch(loadCastingInputs());
     this.store.dispatch(loadCoreInputs());
     this.store.dispatch(loadMouldingInputs());
+    this.store.dispatch(loadPowerCosts());
+   this.store.select(getPowerCosts).subscribe((powerCosts: PowerCost[]) => {
+    if (powerCosts) {
+      this.powerCosts = powerCosts.map(item => ({
+        ...item,
+        latestPreviousCost: item.previousCostDetails?.[item.previousCostDetails.length - 1]?.cost || null
+      }));
+      console.log('Processed Power Costs:', this.powerCosts);
+    }
+  });
+
 
     // Subscribe to casting data
     this.store.pipe(select('casting'), map(state => state.data)).subscribe(data => {
@@ -186,4 +208,42 @@ export class CastingInputComponent implements OnInit {
       }
     }
   }
+
+togglePopup(id: string): void {
+    this.activePopupId = this.activePopupId === id ? null : id;
+  }
+
+  closePopup(): void {
+    this.activePopupId = null;
+  }
+
+  @HostListener('document:click')
+  onClickOutside(): void {
+    this.closePopup();
+  }
+
+
+saveCostPerUnit(item: PowerCost) {
+  const updatedData = {
+    costPerUnit: this.editableCostPerUnit,
+    effectiveDate: item.effectiveDate
+  };
+  console.log('Updated PowerCost:', updatedData);
+
+
+
+
+  this.editCostPerUnit = false;
+}
+
+cancelEditCostPerUnit() {
+  this.editCostPerUnit = false;
+  this.editableCostPerUnit = null;
+}
+
+enableEdit(currentValue: number) {
+  this.editableCostPerUnit = currentValue;
+  this.editCostPerUnit = true;
+}
+
 }

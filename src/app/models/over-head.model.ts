@@ -3,3 +3,14 @@ export interface OverHead {
   name: string;
   code: number;
 }
+
+
+export interface PowerCost {
+  _id?: string;
+  costPerUnit: number;
+  effectiveDate: string;
+  previousCostDetails?: any[]; 
+  __v?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}

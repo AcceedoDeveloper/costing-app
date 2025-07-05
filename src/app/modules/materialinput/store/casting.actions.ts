@@ -1,6 +1,10 @@
 // store/casting/casting.actions.ts
 import { createAction, props } from '@ngrx/store';
 import { CastingInput,  MouldingInput, CoreInput } from '../../../models/casting-input.model';
+import { PowerCost} from '../../../models/over-head.model';
+
+
+
 
 export const loadCastingInputs = createAction('[Casting] Load Casting Inputs');
 export const loadCastingInputsSuccess = createAction(
@@ -55,3 +59,11 @@ export const updateCoreInputFailure = createAction(
   '[Casting] Update Core Input Failure',
   props<{ error: string }>()
 );
+
+
+export const updatePowerCost = createAction('[Casting] Update Power Cost', props<{ powerCost: PowerCost }>());
+export const updatePowerCostSuccess = createAction(
+  '[Casting] Update Power Cost Success',
+  props<{ updated: PowerCost }>()
+);
+export const error = createAction('[Casting] Error', props<{ error: string }>());

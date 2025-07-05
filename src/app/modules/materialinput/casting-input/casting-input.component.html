@@ -307,4 +307,64 @@
   </mat-card>
 </div>
 
+
+<!-- Power Cost Inputs -->
+<div class="grid-section">
+  <h2>Power Costs</h2>
+  <mat-card class="power-card" *ngFor="let item of powerCosts">
+    <div class="power-row">
+  <div class="label">Cost Per Unit</div>
+  <div class="value">
+    <ng-container *ngIf="!editCostPerUnit; else editTemplate">
+      {{ item.costPerUnit }}
+      <mat-icon  (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
+    </ng-container>
+
+    <ng-template #editTemplate>
+      <input [(ngModel)]="editableCostPerUnit" type="number" />
+   <button mat-icon-button (click)="saveCostPerUnit(item)">
+  <mat-icon>save</mat-icon>
+</button>
+
+      <button mat-icon-button (click)="cancelEditCostPerUnit()">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </ng-template>
+  </div>
+</div>
+
+    <div class="power-row">
+      <div class="label">Effective Date</div>
+      <div class="value">{{ item.effectiveDate }}</div>
+    </div>
+
+
+
+
+<div class="power-row" style="position: relative;">
+  <div class="label">Previous Cost     </div>
+  <div class="value">
+    {{ item.latestPreviousCost }}
+    <mat-icon (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
+
+    <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
+      <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon> </h4>
+      <div *ngFor="let detail of item.previousCostDetails">
+        <p>Cost: {{ detail.cost }} | Date: {{ detail.date }}</p>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+   
+  </mat-card>
+</div>
+
+
 </div>

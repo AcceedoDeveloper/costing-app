@@ -3,21 +3,27 @@ import { loadCastingInputs, loadCastingInputsSuccess, loadCastingInputsFailure
 , updateCastingInputSuccess, loadMouldingInputs, loadMouldingInputsSuccess, 
 loadMouldingInputsFailure, updateMouldingInput, updateMouldingInputSuccess, 
 updateMouldingInputFailure, loadCoreInputs, loadCoreInputsSuccess, loadCoreInputsFailure
-, updateCoreInput, updateCoreInputSuccess, updateCoreInputFailure
+, updateCoreInput, updateCoreInputSuccess, updateCoreInputFailure, updatePowerCost, updatePowerCostSuccess, error
 } from './casting.actions';
 import { CastingInput, MouldingInput, CoreInput } from '../../../models/casting-input.model';
+import { PowerCost } from '../../../models/over-head.model';
+
+
 
 export interface CastingState {
   data: CastingInput[];
   mouldingData: MouldingInput[];
+  powerCosts: PowerCost[];
   coreData: CoreInput[];
   error: string | null;
+
 }
 
 const initialState: CastingState = {
   data: [],
   mouldingData: [],
   coreData: [],
+  powerCosts: [],
   error: null
 };
 
@@ -82,5 +88,21 @@ export const castingReducer = createReducer(
   on(updateCoreInputFailure, (state, { error }) => ({
     ...state,
     error
+  })),
+
+  on(updatePowerCost, (state, { powerCost }) => ({
+    ...state,
+    powerCosts: state.powerCosts.map(item => item._id === powerCost._id ? { ...item, ...powerCost } : item)
+  })),
+  on(updatePowerCostSuccess, (state, { updated }) => ({
+    ...state,
+    powerCosts: state.powerCosts.map(item => item._id === updated._id ? updated : item)
+  })),
+  on(error, (state, { error }) => ({
+    ...state,
+    error
   }))
+
+
+
 );

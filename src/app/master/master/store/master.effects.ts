@@ -8,12 +8,11 @@ import * as UserActions from './master.action';
 import * as RoleActions from './master.action';
 
 import { UserService } from '../../../services/user.service';
-import { RoleService } from '../../../services/role.service';  // Assuming you have RoleService
+import { RoleService } from '../../../services/role.service'; 
+import { PowerService} from '../../../services/power.service';
 
 import { ToastrService } from 'ngx-toastr';
-import { OverHead } from '../../../models/over-head.model';
 import { GradeService } from '../../../services/grade.service';
-import {loadbaseRoles, loadbaseRolesSuccess, loadRolesFailure} from './master.action';
 
 @Injectable()
 export class UserEffects {
@@ -22,7 +21,8 @@ export class UserEffects {
     private userService: UserService,
     private roleService: RoleService,
     private toastr: ToastrService,
-    private gradeService: GradeService
+    private gradeService: GradeService,
+    private powerService: PowerService
   ) {}
 
   // User effects
@@ -431,6 +431,23 @@ deleteAccountTypeEffect = createEffect(() =>
           console.error('Delete Account Type Error:', error);
           return of(RoleActions.deleteAccountTypeFailure({ error }));
         })
+      )
+    )
+  )
+);
+
+
+getPowerCosts$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(RoleActions.loadPowerCosts),
+    mergeMap(() =>
+      this.powerService.getPowerCosts().pipe(
+        map(powerCosts =>
+          RoleActions.loadPowerCostsSuccess({ powerCosts })
+        ),
+        catchError(error =>
+          of(RoleActions.error({ error }))
+        )
       )
     )
   )

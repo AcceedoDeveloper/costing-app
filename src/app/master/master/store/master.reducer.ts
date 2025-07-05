@@ -43,7 +43,10 @@ import {
   updateAccountTypeFailure,
   deleteAccountType,
   deleteAccountTypeSuccess,
-  deleteAccountTypeFailure
+ 
+
+  loadPowerCostsSuccess,
+  error
 } from '../store/master.action';
 import * as RoleActions from '../store/master.action';  // Adjust path accordingly
 import { User } from '../../../models/users.model';
@@ -52,6 +55,7 @@ import { Roles} from '../../../models/MaterialMap.model';
 import { Department } from '../../../models/users.model';
 import { DepartmentUser } from '../../../models/users.model';
 import { OverHead } from '../../../models/over-head.model';
+import { PowerCost } from '../../../models/over-head.model';
 
 // --- User State ---
 export interface UserState {
@@ -62,8 +66,10 @@ export interface UserState {
   departments: Department[];
   accountTypes: OverHead[];
   departmentUsers: DepartmentUser[];
+  powerCosts: PowerCost[];
   count: number;
   error?: string | null;
+  
 
 }
 
@@ -76,6 +82,7 @@ const initialUserState: UserState = {
   departments: [],
   departmentUsers: [],
   accountTypes: [],
+  powerCosts: [],
 };
 
 // User Reducer
@@ -258,7 +265,17 @@ on(loadDepartmentUsersFailure, (state, { error }) => ({
   on(deleteAccountTypeSuccess, (state, { id }) => ({
     ...state,
     accountTypes: state.accountTypes.filter(a => a._id !== id)
-  }))
+  })),
+
+  on(loadPowerCostsSuccess, (state, { powerCosts }) => ({
+    ...state,
+    powerCosts: powerCosts,
+    error: null
+  })),
+  on(error, (state, { error }) => ({
+    ...state,
+    error
+  })),
 
 
 

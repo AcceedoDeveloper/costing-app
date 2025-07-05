@@ -5,6 +5,7 @@ import { Roles } from 'src/app/models/MaterialMap.model';
 import { Customer } from '../../../models/role.model';
 import { Department } from '../../../models/users.model';
 import {OverHead } from '../../../models/over-head.model';
+import { PowerCost } from '../../../models/over-head.model';
 
 export const CREATE_USER = '[user page] create user';
 export const CREATE_USER_SUCCESS = '[user page] create user success';
@@ -246,4 +247,15 @@ export const deleteAccountTypeSuccess = createAction(
 export const deleteAccountTypeFailure = createAction(
   '[AccountType] Delete Failure',
   props<{ error: any }>()
+);
+
+
+export const loadPowerCosts = createAction('[PowerCost] Load Power Costs');
+export const loadPowerCostsSuccess = createAction(
+  '[PowerCost] Load Power Costs Success',
+  props<{ powerCosts: PowerCost[] }>()
+);
+export const error = createAction(
+  '[PowerCost] Load Power Costs Failure',
+  props<{ error: string }>()
 );

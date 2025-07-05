@@ -16,11 +16,12 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { castingReducer } from './store/casting.reducer';
 import { CastingEffects } from './store/casting.effects';
-
+import { MasterModule} from '../../master/master/master.module';
 
 @NgModule({
   declarations: [CastingInputComponent, MouldingInputComponent, CoreInputComponent],
   imports: [
+    MasterModule,
     MatButtonModule,
     MatIconModule,
     FormsModule,

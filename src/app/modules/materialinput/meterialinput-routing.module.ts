@@ -6,7 +6,7 @@ import { CoreInputComponent } from './core-input/core-input.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'casting',
     component: CastingInputComponent
   },
   {

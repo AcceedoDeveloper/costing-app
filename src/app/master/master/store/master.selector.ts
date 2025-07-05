@@ -48,3 +48,10 @@ export const getAccountTypes = createSelector(
   getUserState,
   (state) => state.accountTypes
 );
+
+
+export const getPowerCosts = createSelector(
+  getUserState,
+  (state) => state.powerCosts
+);
+

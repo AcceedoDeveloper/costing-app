@@ -8,15 +8,19 @@ import { loadCastingInputs, loadCastingInputsSuccess, loadCastingInputsFailure
 , updateMouldingInput, updateMouldingInputSuccess, updateMouldingInputFailure
 , loadCoreInputs, loadCoreInputsSuccess, loadCoreInputsFailure
 , updateCoreInput, updateCoreInputSuccess, updateCoreInputFailure
+, updatePowerCost, updatePowerCostSuccess
  } from './casting.actions';
 import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import {PowerService } from '../../../services/power.service';
 import { of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 
 @Injectable()
 export class CastingEffects {
-  constructor(private actions$: Actions, private castingService: CastingInputService, private toastr: ToastrService) {}
+  constructor(private actions$: Actions, private castingService: CastingInputService, private toastr: ToastrService
+, private powerService: PowerService
+  ) {}
 
   loadCastingInputs$ = createEffect(() =>
     this.actions$.pipe(
@@ -102,6 +106,23 @@ export class CastingEffects {
             }
           ),
           catchError((error) => of(updateCoreInputFailure({ error: error.message })))
+        )
+      )
+    )
+  );
+
+
+
+  updatePowerCost$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updatePowerCost),
+      mergeMap(action =>
+        this.powerService.updatePowerCost(action.powerCost).pipe(
+          map(updated => {
+            this.toastr.success('Power cost updated successfully');
+            return updatePowerCostSuccess({ updated });
+          }),
+          catchError(error => of(error({ error: error.message })))
         )
       )
     )
