@@ -1,170 +1,267 @@
-.casting-box, .moulding-box, .core-box {
+/* ====== COMMON BOX STYLES ====== */
+.casting-box,
+.moulding-box,
+.core-box,
+.salary-box,
+.power-card {
   margin: 16px 0;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #f9f9f9;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
-.casting-row, .moulding-row, .core-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.label {
-  font-weight: 600;
-  color: #333;
-}
-
-.value {
-  color: #444;
-}
-
-
+/* ====== GRID CONTAINER ====== */
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
   padding: 20px;
   align-items: stretch;
 }
 
-.grid-section {
- 
-  border-radius: 8px;
-  padding: 16px;
- 
-}
-
-.casting-card, .core-card, .moulding-card {
-  margin: 16px 0;
-  padding: 16px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.casting-row, .core-row, .moulding-row {
+/* ====== ROW STYLES (LABEL - VALUE) ====== */
+.casting-row,
+.moulding-row,
+.core-row,
+.power-row,
+.salary-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
   align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  gap: 8px;
 }
 
 .label {
-  font-weight: bold;
-  width: 150px;
-  flex-shrink: 0;
+  font-weight: 600;
+  color: #333;
+  min-width: 140px;
 }
 
 .value {
+  color: #444;
   display: flex;
   align-items: center;
-  flex-grow: 1;
-  justify-content: flex-end;
+  gap: 6px;
 }
 
-input {
-  margin-right: 8px;
+/* ====== INPUT STYLING ====== */
+input[type="number"],
+input[type="text"] {
   width: 100px;
-  border: 1px solid #ddd;
-  padding: 4px 8px;
+  padding: 4px 6px;
+  border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 13px;
 }
 
-button[mat-icon-button] {
-  margin-left: 8px;
-}
-
-h2 {
-  margin-top: 0;
+/* ====== HEADER TITLES (h3) ====== */
+mat-card h3 {
+  font-size: 16px;
+  margin: 0 0 12px 0;
   color: #3f51b5;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
 }
 
-/* Responsive adjustments */
+/* ====== POWER CARD WIDTH FIX ====== */
+.power-card {
+  width: calc(100% + 32px); /* Break out of grid padding */
+  margin: 16px -16px;
+  background: #fff;
+}
+
+/* Responsive fallback */
 @media (max-width: 768px) {
-  .grid-container {
-    grid-template-columns: 1fr;
+  .power-card {
+    width: 100%;
+    margin: 16px 0;
   }
-  
-  .casting-row, .core-row, .moulding-row {
+
+  .casting-row,
+  .moulding-row,
+  .core-row,
+  .power-row,
+  .salary-row {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .value {
     width: 100%;
-    margin-top: 4px;
     justify-content: flex-start;
+  }
+
+  input {
+    width: 100%;
   }
 }
 
+/* ====== INLINE POPUP ====== */
+.inline-popup {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  width: 250px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
 
-mat-card {
-  min-height: 300px; /* set to your preferred value */
+.inline-popup h4 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+  color: #3f51b5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inline-popup p {
+  font-size: 13px;
+  margin: 4px 0;
+}
+
+.close-icon {
+  font-size: 18px;
+  color: #f44336;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+}
+
+/* ====== BUTTON STYLING ====== */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.action-buttons button {
+  padding: 6px 12px;
+  background-color: #3f51b5;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.action-buttons button:last-child {
+  background-color: #ccc;
+  color: black;
+}
+
+/* Icon button size fix */
+button[mat-icon-button] {
+  margin-left: 4px;
+  transform: scale(0.9);
+}
+
+/* Keep your existing styles for other components */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 16px;
 }
 
 
-
-
+/* Make the card stand out and break out from tight grid */
 .power-card {
-  margin: 16px 0;
+  width: calc(100% + 32px); /* Breaks out of grid padding if grid has gap/padding */
+  margin: 16px -16px;       /* Pull it outside its parent padding if needed */
   padding: 16px;
-  width: 100%;
   box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+
+  /* Optional shadow for better separation */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive fix if inside a grid-item */
+@media screen and (max-width: 768px) {
+  .power-card {
+    width: 100%;
+    margin: 16px 0;
+  }
 }
 
 .power-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
   align-items: center;
+  margin-bottom: 12px;
 }
 
+.power-row .label {
+  font-weight: 600;
+  color: #444;
+}
 
+.power-row .value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Popup for previous cost */
 .inline-popup {
   position: absolute;
   top: 30px;
   right: 0;
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
   width: 250px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
 }
 
 .inline-popup h4 {
-  margin-top: 0;
-  font-size: 16px;
-  margin-bottom: 8px;
+  margin: 0 0 8px 0;
+  font-size: 15px;
   color: #3f51b5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .inline-popup p {
+  font-size: 13px;
   margin: 4px 0;
-  font-size: 14px;
 }
 
-.inline-popup button {
-  margin-top: 10px;
-  padding: 4px 12px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
+.close-icon {
+  font-size: 18px;
+  color: #f44336;
   cursor: pointer;
 }
 
-.inline-popup button:hover {
-  background-color: #d32f2f;
+input[type="number"] {
+  width: 80px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.close-icon{
+.close-icon {
   position: absolute;
   top: 15px;
   right: 8px;
@@ -172,7 +269,6 @@ mat-card {
   color: #f44336;
   font-size: 20px;
 }
-
 
 .action-buttons {
   display: flex;

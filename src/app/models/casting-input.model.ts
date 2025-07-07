@@ -56,7 +56,23 @@ export interface CostSummary {
   _id: string;
   SalaryAndWages: SalaryAndWages;
   OverHeads: OverHeads;
+  CommercialTerms: CommercialTerms;         // ✅ Newly added
+  Margin: Margin;                           // ✅ Newly added
+  AnticipatedRejection: AnticipatedRejection; // ✅ Newly added
   __v: number;
+}
+
+export interface CommercialTerms {
+  paymentCreditPeriod: number;
+  bankInterest: number;
+}
+
+export interface Margin {
+  profit: number;
+}
+
+export interface AnticipatedRejection {
+  rejection: number;
 }
 
 

@@ -11,7 +11,6 @@ import { getCostSummary } from '../store/casting.actions';
 import {selectProductionCost } from '../store/casting.selectors';
 import { CostSummary } from '../../../models/casting-input.model';
 import {updateProductionCost } from '../store/casting.actions';
-import {updateCastingData } from '../store/casting.actions';
 import {FlatCastingData } from '../../../models/casting-input.model';
 import { updateCastingFlatSummary } from '../store/casting.actions'; // Import the new action
 
@@ -140,29 +139,48 @@ cancelEditMode(section: string) {
 
 saveChanges(section: string) {
   const original = this.costsummary?.find(i => i._id === this.editableItem._id);
+  if (!original) return;
 
-  if (original) {
-    const updatedData: any = {
-      _id: original._id,
-    };
+  const updatedData: any = {
+    _id: original._id,
+  };
 
-    if (section === 'overhead') {
-      Object.assign(updatedData, this.editableItem.OverHeads);
-    }
-
-    if (section === 'salary') {
-      Object.assign(updatedData, this.editableItem.SalaryAndWages);
-    }
-
-    // If both should be sent together:
-    Object.assign(updatedData, this.editableItem.OverHeads, this.editableItem.SalaryAndWages);
-
-    console.log('Dispatching full updated payload:', updatedData);
-    this.store.dispatch(updateProductionCost({ id: original._id, costSummary: updatedData }));
+  if (section === 'salary') {
+    Object.assign(updatedData, this.editableItem.SalaryAndWages);
   }
+
+  if (section === 'overhead') {
+    Object.assign(updatedData, this.editableItem.OverHeads);
+  }
+
+  if (section === 'terms') {
+    Object.assign(updatedData, this.editableItem.CommercialTerms);
+  }
+
+  if (section === 'margin') {
+    Object.assign(updatedData, this.editableItem.Margin);
+  }
+
+  if (section === 'rejection') {
+    Object.assign(updatedData, this.editableItem.AnticipatedRejection);
+  }
+
+  // OR all together:
+  Object.assign(
+    updatedData,
+    this.editableItem.SalaryAndWages,
+    this.editableItem.OverHeads,
+    this.editableItem.CommercialTerms,
+    this.editableItem.Margin,
+    this.editableItem.AnticipatedRejection
+  );
+
+  console.log('Dispatching full updated payload:', updatedData);
+  this.store.dispatch(updateProductionCost({ id: original._id, costSummary: updatedData }));
 
   this.cancelEditMode(section);
 }
+
 
 
 

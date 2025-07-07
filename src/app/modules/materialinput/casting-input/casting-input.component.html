@@ -1,6 +1,49 @@
 <!-- Unified Grid Container -->
 <div class="grid-container">
 
+  
+  <!-- POWER COST INPUT -->
+  <div class="grid-item" *ngFor="let item of powerCosts">
+    <mat-card class="power-card">
+      <h3>Power Cost</h3>
+      <div class="power-row">
+        <div class="label">Cost Per Unit</div>
+        <div class="value">
+          <ng-container *ngIf="!editCostPerUnit; else editTemplate">
+            {{ item.costPerUnit }}
+            <mat-icon (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
+          </ng-container>
+          <ng-template #editTemplate>
+            <input [(ngModel)]="editableCostPerUnit" type="number" />
+            <button mat-icon-button (click)="saveCostPerUnit(item)">
+              <mat-icon>save</mat-icon>
+            </button>
+            <button mat-icon-button (click)="cancelEditCostPerUnit()">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </ng-template>
+        </div>
+      </div>
+      <div class="power-row">
+        <div class="label">Effective Date</div>
+        <div class="value">{{ item.effectiveDate }}</div>
+      </div>
+      <div class="power-row" style="position: relative;">
+        <div class="label">Previous Cost</div>
+        <div class="value">
+          {{ item.previousCostDetails[0]?.cost }}
+          <mat-icon (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
+          <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
+            <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
+            <div *ngFor="let detail of item.previousCostDetails">
+              <p>Cost: {{ detail.cost }} | Date: {{ detail.date }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
   <!-- CASTING INPUT -->
  <div class="grid-item" *ngFor="let item of castingData">
   <mat-card class="casting-box">
@@ -97,47 +140,6 @@
 </div>
 
 
-  <!-- POWER COST INPUT -->
-  <div class="grid-item" *ngFor="let item of powerCosts">
-    <mat-card class="power-card">
-      <h3>Power Cost</h3>
-      <div class="power-row">
-        <div class="label">Cost Per Unit</div>
-        <div class="value">
-          <ng-container *ngIf="!editCostPerUnit; else editTemplate">
-            {{ item.costPerUnit }}
-            <mat-icon (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
-          </ng-container>
-          <ng-template #editTemplate>
-            <input [(ngModel)]="editableCostPerUnit" type="number" />
-            <button mat-icon-button (click)="saveCostPerUnit(item)">
-              <mat-icon>save</mat-icon>
-            </button>
-            <button mat-icon-button (click)="cancelEditCostPerUnit()">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </ng-template>
-        </div>
-      </div>
-      <div class="power-row">
-        <div class="label">Effective Date</div>
-        <div class="value">{{ item.effectiveDate }}</div>
-      </div>
-      <div class="power-row" style="position: relative;">
-        <div class="label">Previous Cost</div>
-        <div class="value">
-          {{ item.previousCostDetails[0]?.cost }}
-          <mat-icon (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
-          <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
-            <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
-            <div *ngFor="let detail of item.previousCostDetails">
-              <p>Cost: {{ detail.cost }} | Date: {{ detail.date }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
 
 
   <!-- SALARY AND WAGES -->
@@ -258,6 +260,108 @@
         <div class="label">Total with Finance</div>
         <div class="value">{{ item.OverHeads.totalOverHeadsWithFinanceCost }}</div>
       </div>
+    </ng-template>
+  </mat-card>
+</div>
+
+
+<!-- COMMERCIAL TERMS -->
+<div class="grid-item" *ngFor="let item of costsummary">
+  <mat-card class="terms-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>Commercial Terms</h3>
+      <mat-icon style="cursor: pointer;" (click)="enableEditMode('terms', item)">edit</mat-icon>
+    </div>
+
+    <!-- Edit Mode -->
+    <ng-container *ngIf="editMode['terms'] && editableItem?._id === item._id; else viewTerms">
+      <div class="terms-row">
+        <div class="label">Payment Credit Period</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editableItem.CommercialTerms.paymentCreditPeriod" />
+        </div>
+      </div>
+      <div class="terms-row">
+        <div class="label">Bank Interest</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editableItem.CommercialTerms.bankInterest" />
+        </div>
+      </div>
+
+      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button mat-raised-button color="primary" (click)="saveChanges('terms')">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelEditMode('terms')">Cancel</button>
+      </div>
+    </ng-container>
+
+    <!-- View Mode -->
+    <ng-template #viewTerms>
+      <div class="terms-row"><div class="label">Payment Credit Period</div><div class="value">{{ item.CommercialTerms?.paymentCreditPeriod }}</div></div>
+      <div class="terms-row"><div class="label">Bank Interest</div><div class="value">{{ item.CommercialTerms?.bankInterest }}</div></div>
+    </ng-template>
+  </mat-card>
+</div>
+
+
+
+<!-- PROFIT MARGIN -->
+<div class="grid-item" *ngFor="let item of costsummary">
+  <mat-card class="margin-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>Profit Margin</h3>
+      <mat-icon style="cursor: pointer;" (click)="enableEditMode('margin', item)">edit</mat-icon>
+    </div>
+
+    <!-- Edit Mode -->
+    <ng-container *ngIf="editMode['margin'] && editableItem?._id === item._id; else viewMargin">
+      <div class="margin-row">
+        <div class="label">Profit %</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editableItem.Margin.profit" />
+        </div>
+      </div>
+
+      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button mat-raised-button color="primary" (click)="saveChanges('margin')">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelEditMode('margin')">Cancel</button>
+      </div>
+    </ng-container>
+
+    <!-- View Mode -->
+    <ng-template #viewMargin>
+      <div class="margin-row"><div class="label">Profit %</div><div class="value">{{ item.Margin?.profit }}</div></div>
+    </ng-template>
+  </mat-card>
+</div>
+
+
+
+<!-- ANTICIPATED REJECTION -->
+<div class="grid-item" *ngFor="let item of costsummary">
+  <mat-card class="rejection-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>Anticipated Rejection</h3>
+      <mat-icon style="cursor: pointer;" (click)="enableEditMode('rejection', item)">edit</mat-icon>
+    </div>
+
+    <!-- Edit Mode -->
+    <ng-container *ngIf="editMode['rejection'] && editableItem?._id === item._id; else viewRejection">
+      <div class="rejection-row">
+        <div class="label">Rejection %</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editableItem.AnticipatedRejection.rejection" />
+        </div>
+      </div>
+
+      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button mat-raised-button color="primary" (click)="saveChanges('rejection')">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelEditMode('rejection')">Cancel</button>
+      </div>
+    </ng-container>
+
+    <!-- View Mode -->
+    <ng-template #viewRejection>
+      <div class="rejection-row"><div class="label">Rejection %</div><div class="value">{{ item.AnticipatedRejection?.rejection }}</div></div>
     </ng-template>
   </mat-card>
 </div>
