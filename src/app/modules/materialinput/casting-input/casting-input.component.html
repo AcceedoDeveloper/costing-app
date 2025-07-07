@@ -1,7 +1,11 @@
-<!-- Unified Grid Container -->
-<div class="grid-container">
+<div>
+  <header>
+    <h1>Production Cost Settings</h1>
+  </header>
+</div>
 
-  
+
+<div class="grid-container">
   <!-- POWER COST INPUT -->
   <div class="grid-item" *ngFor="let item of powerCosts">
     <mat-card class="power-card">
@@ -11,7 +15,7 @@
         <div class="value">
           <ng-container *ngIf="!editCostPerUnit; else editTemplate">
             {{ item.costPerUnit }}
-            <mat-icon (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
+            <mat-icon style="cursor: pointer;" (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
           </ng-container>
           <ng-template #editTemplate>
             <input [(ngModel)]="editableCostPerUnit" type="number" />
@@ -32,7 +36,7 @@
         <div class="label">Previous Cost</div>
         <div class="value">
           {{ item.previousCostDetails[0]?.cost }}
-          <mat-icon (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
+          <mat-icon  style="cursor: pointer;" (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
           <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
             <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
             <div *ngFor="let detail of item.previousCostDetails">

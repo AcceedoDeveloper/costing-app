@@ -178,7 +178,6 @@ button[mat-icon-button] {
 }
 
 
-/* Make the card stand out and break out from tight grid */
 .power-card {
   width: calc(100% + 32px); /* Breaks out of grid padding if grid has gap/padding */
   margin: 16px -16px;       /* Pull it outside its parent padding if needed */
@@ -289,4 +288,34 @@ input[type="number"] {
 .action-buttons button:last-child {
   background-color: #ccc;
   color: black;
+}
+
+.terms-row,
+.margin-row,
+.rejection-row,
+.overhead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.terms-row .label,
+.margin-row .label,
+.rejection-row .label,
+.overhead-row .label {
+  min-width: 160px;
+  font-weight: 600;
+  color: #333;
+}
+
+.terms-row .value,
+.margin-row .value,
+.rejection-row .value,
+.overhead-row .value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
