@@ -58,3 +58,16 @@ export interface CostSummary {
   OverHeads: OverHeads;
   __v: number;
 }
+
+
+export interface FlatCastingData {
+  CastingWeight: number;
+  Cavities: number;
+  PouringWeight: number;
+  MouldingWeight: number;
+  CoreWeight: number;
+  CoresPerMould: number;
+  CoreCavities: number;
+  ShootingPerShift: number;
+  CoreSand: number;
+}

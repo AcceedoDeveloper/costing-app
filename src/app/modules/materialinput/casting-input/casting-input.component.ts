@@ -11,6 +11,9 @@ import { getCostSummary } from '../store/casting.actions';
 import {selectProductionCost } from '../store/casting.selectors';
 import { CostSummary } from '../../../models/casting-input.model';
 import {updateProductionCost } from '../store/casting.actions';
+import {updateCastingData } from '../store/casting.actions';
+import {FlatCastingData } from '../../../models/casting-input.model';
+import { updateCastingFlatSummary } from '../store/casting.actions'; // Import the new action
 
 @Component({
   selector: 'app-casting-input',
@@ -160,6 +163,75 @@ saveChanges(section: string) {
 
   this.cancelEditMode(section);
 }
+
+
+
+
+
+saveAllCastingChanges() {
+  if (!this.editableItem) return;
+
+  const id = this.editableItem._id;
+
+  // ✅ Full nested model for backend
+  const updatedCastingData: CastingData = {
+    _id: id,
+    __v: this.editableItem.__v || 0,
+
+    CastingInput: {
+      _id: this.editableItem.CastingInput._id,
+      CastingWeight: this.editableItem.CastingInput.CastingWeight,
+      Cavities: this.editableItem.CastingInput.Cavities,
+      PouringWeight: this.editableItem.CastingInput.PouringWeight,
+      CastingWeightKgPerHeat: this.editableItem.CastingInput.CastingWeightKgPerHeat,
+      Yeild: this.editableItem.CastingInput.Yeild,
+      MaterialReturned: this.editableItem.CastingInput.MaterialReturned,
+      YeildPercent: this.editableItem.CastingInput.YeildPercent
+    },
+
+    MouldingInput: {
+      _id: this.editableItem.MouldingInput._id,
+      MouldingWeight: this.editableItem.MouldingInput.MouldingWeight,
+      MouldsPerHeat: this.editableItem.MouldingInput.MouldsPerHeat,
+      BakeMoulding: this.editableItem.MouldingInput.BakeMoulding
+    },
+
+    CoreInput: {
+      _id: this.editableItem.CoreInput._id,
+      CoreWeight: this.editableItem.CoreInput.CoreWeight,
+      CoresPerMould: this.editableItem.CoreInput.CoresPerMould,
+      CoreCavities: this.editableItem.CoreInput.CoreCavities,
+      ShootingPerShift: this.editableItem.CoreInput.ShootingPerShift,
+      CoreSand: this.editableItem.CoreInput.CoreSand
+    }
+  };
+
+  // ✅ Flat version for summary or analytics
+  const flatData: FlatCastingData = {
+    CastingWeight: this.editableItem.CastingInput.CastingWeight,
+    Cavities: this.editableItem.CastingInput.Cavities,
+    PouringWeight: this.editableItem.CastingInput.PouringWeight,
+    MouldingWeight: this.editableItem.MouldingInput.MouldingWeight,
+    CoreWeight: this.editableItem.CoreInput.CoreWeight,
+    CoresPerMould: this.editableItem.CoreInput.CoresPerMould,
+    CoreCavities: this.editableItem.CoreInput.CoreCavities,
+    ShootingPerShift: this.editableItem.CoreInput.ShootingPerShift,
+    CoreSand: this.editableItem.CoreInput.CoreSand
+  };
+
+  console.log('✅ Dispatching full update payload:', updatedCastingData);
+  console.log('📦 Dispatching flat summary data:', flatData);
+
+  // Dispatch both updates
+  this.store.dispatch(updateCastingFlatSummary({ id, data: flatData }));
+  this.store.dispatch(getCastingDetails());
+
+
+  // Reset state
+  this.editMode = {};
+  this.editableItem = null;
+}
+
 
 
 

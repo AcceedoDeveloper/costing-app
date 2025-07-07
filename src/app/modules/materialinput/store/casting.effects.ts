@@ -11,7 +11,8 @@ import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import {PowerService } from '../../../services/power.service';
 import { of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-
+import { updateCastingFlatSummary } from './casting.actions'; // Import the new action
+import {updateCastingFlatSummarySuccess } from './casting.actions';
 
 @Injectable()
 export class CastingEffects {
@@ -91,7 +92,7 @@ updateProductionCost$ = createEffect(() =>
 updateCastingData$ = createEffect(() =>
   this.actions$.pipe(
     ofType(updateCastingData),
-    mergeMap((action: ReturnType<typeof updateCastingData>) =>
+    mergeMap((action) =>
       this.castingService.updateProductionInputs(action.castingData).pipe(
         map(updatedCastingData =>
           updateCastingDataSuccess({ id: action.id, updatedCastingData })
@@ -101,6 +102,25 @@ updateCastingData$ = createEffect(() =>
     )
   )
 );
+
+
+updateCastingFlatSummary$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updateCastingFlatSummary),
+    mergeMap(({ id, data }) =>
+      this.castingService.updateFlatSummary(id, data).pipe(
+        tap(() => this.toastr.success('Flat summary updated')),
+        map(() => updateCastingFlatSummarySuccess({ id, updated: data })),
+// 🔁 trigger re-fetch
+        catchError(err => of(error({ error: err.message })))
+      )
+    )
+  )
+);
+
+
+
+
 
 
 

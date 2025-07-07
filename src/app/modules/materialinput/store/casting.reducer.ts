@@ -7,6 +7,7 @@ import {  updatePowerCost, updatePowerCostSuccess, error,
 import { PowerCost } from '../../../models/over-head.model';
 import { CastingData } from '../../../models/casting-input.model';
 import { CostSummary } from '../../../models/casting-input.model';
+import { updateCastingFlatSummarySuccess } from './casting.actions';
 
 
 
@@ -74,7 +75,25 @@ export const castingReducer = createReducer(
   on(updateCastingDataSuccess, (state, { updatedCastingData }) => ({
     ...state,
     castingData: state.castingData?.map(item => item._id === updatedCastingData._id ? updatedCastingData : item) || []
-  }))
+  })),
+
+  on(updateCastingFlatSummarySuccess, (state, { id, updated }) => ({
+  ...state,
+  // Update costSummary if it contains that id
+  costSummary: state.costSummary?.map(item =>
+    item._id === id
+      ? {
+          ...item,
+          // Assuming you update inside SalaryAndWages or OverHeads
+          SalaryAndWages: {
+            ...item.SalaryAndWages,
+            ...updated
+          }
+        }
+      : item
+  ) || []
+}))
+
 
 
 

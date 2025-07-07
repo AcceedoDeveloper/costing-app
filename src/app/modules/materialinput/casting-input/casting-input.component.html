@@ -2,9 +2,29 @@
 <div class="grid-container">
 
   <!-- CASTING INPUT -->
-  <div class="grid-item" *ngFor="let item of castingData">
-    <mat-card class="casting-box">
+ <div class="grid-item" *ngFor="let item of castingData">
+  <mat-card class="casting-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
       <h3>Casting Input</h3>
+      <mat-icon style="cursor: pointer;" (click)="enableEditMode('casting', item)">edit</mat-icon>
+    </div>
+
+    <ng-container *ngIf="editMode['casting'] && editableItem?._id === item._id; else viewCasting">
+      <div class="casting-row"><div class="label">Casting Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.CastingWeight" /></div></div>
+      <div class="casting-row"><div class="label">Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.Cavities" /></div></div>
+      <div class="casting-row"><div class="label">Pouring Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.PouringWeight" /></div></div>
+      <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ editableItem.CastingInput.CastingWeightKgPerHeat }}</div></div>
+      <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ editableItem.CastingInput.MaterialReturned }}</div></div>
+      <div class="casting-row"><div class="label">Yield</div><div class="value">{{ editableItem.CastingInput.Yeild }}</div></div>
+      <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ editableItem.CastingInput.YeildPercent }}</div></div>
+
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelEditMode('casting')">Cancel</button>
+      </div>
+    </ng-container>
+
+    <ng-template #viewCasting>
       <div class="casting-row"><div class="label">Casting Weight</div><div class="value">{{ item.CastingInput.CastingWeight }}</div></div>
       <div class="casting-row"><div class="label">Cavities</div><div class="value">{{ item.CastingInput.Cavities }}</div></div>
       <div class="casting-row"><div class="label">Pouring Weight</div><div class="value">{{ item.CastingInput.PouringWeight }}</div></div>
@@ -12,30 +32,70 @@
       <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ item.CastingInput.MaterialReturned }}</div></div>
       <div class="casting-row"><div class="label">Yield</div><div class="value">{{ item.CastingInput.Yeild }}</div></div>
       <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ item.CastingInput.YeildPercent }}</div></div>
-    </mat-card>
-  </div>
+    </ng-template>
+  </mat-card>
+</div>
+
 
   <!-- MOULDING INPUT -->
-  <div class="grid-item" *ngFor="let item of castingData">
-    <mat-card class="moulding-box">
+<div class="grid-item" *ngFor="let item of castingData">
+  <mat-card class="moulding-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
       <h3>Moulding Input</h3>
+      <mat-icon style="cursor: pointer;" (click)="enableEditMode('moulding', item)">edit</mat-icon>
+    </div>
+
+    <ng-container *ngIf="editMode['moulding'] && editableItem?._id === item._id; else viewMoulding">
+      <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.MouldingInput.MouldingWeight" /></div></div>
+      <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ editableItem.MouldingInput.MouldsPerHeat}}</div></div>
+      <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{editableItem.MouldingInput.BakeMoulding}}</div></div>
+
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelEditMode('moulding')">Cancel</button>
+      </div>
+    </ng-container>
+
+    <ng-template #viewMoulding>
       <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value">{{ item.MouldingInput.MouldingWeight }}</div></div>
       <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ item.MouldingInput.MouldsPerHeat }}</div></div>
       <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{ item.MouldingInput.BakeMoulding }}</div></div>
-    </mat-card>
-  </div>
+    </ng-template>
+  </mat-card>
+</div>
+
 
   <!-- CORE INPUT -->
-  <div class="grid-item" *ngFor="let item of castingData">
-    <mat-card class="core-box">
+<div class="grid-item" *ngFor="let item of castingData">
+  <mat-card class="core-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
       <h3>Core Input</h3>
+      <mat-icon style="cursor: pointer;" (click)="enableEditMode('core', item)">edit</mat-icon>
+    </div>
+
+    <ng-container *ngIf="editMode['core'] && editableItem?._id === item._id; else viewCore">
+      <div class="core-row"><div class="label">Core Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreWeight" /></div></div>
+      <div class="core-row"><div class="label">Cores Per Mould</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoresPerMould" /></div></div>
+      <div class="core-row"><div class="label">Core Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreCavities" /></div></div>
+      <div class="core-row"><div class="label">Shooting/Shift</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.ShootingPerShift" /></div></div>
+      <div class="core-row"><div class="label">Core Sand</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreSand" /></div></div>
+
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelEditMode('core')">Cancel</button>
+      </div>
+    </ng-container>
+
+    <ng-template #viewCore>
       <div class="core-row"><div class="label">Core Weight</div><div class="value">{{ item.CoreInput.CoreWeight }}</div></div>
       <div class="core-row"><div class="label">Cores Per Mould</div><div class="value">{{ item.CoreInput.CoresPerMould }}</div></div>
       <div class="core-row"><div class="label">Core Cavities</div><div class="value">{{ item.CoreInput.CoreCavities }}</div></div>
       <div class="core-row"><div class="label">Shooting/Shift</div><div class="value">{{ item.CoreInput.ShootingPerShift }}</div></div>
       <div class="core-row"><div class="label">Core Sand</div><div class="value">{{ item.CoreInput.CoreSand }}</div></div>
-    </mat-card>
-  </div>
+    </ng-template>
+  </mat-card>
+</div>
+
 
   <!-- POWER COST INPUT -->
   <div class="grid-item" *ngFor="let item of powerCosts">

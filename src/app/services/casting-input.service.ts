@@ -5,6 +5,7 @@ import {CastingData } from '../models/casting-input.model';
 import {CostSummary } from '../models/casting-input.model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { FlatCastingData } from '../models/casting-input.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +47,15 @@ export class CastingInputService {
       })
     );
   }
+
+
+  updateFlatSummary(id: string, data: FlatCastingData): Observable<any> {
+  return this.http.put(`${this.config.getCostingUrl('updateProductionInputs')}/${id}`, data).pipe(
+    tap(() => {
+      console.log('✅ Flat summary data sent:', data);
+    })
+  );
+}
 
 
 
