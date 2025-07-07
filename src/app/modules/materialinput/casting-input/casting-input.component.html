@@ -126,7 +126,7 @@
       <div class="power-row" style="position: relative;">
         <div class="label">Previous Cost</div>
         <div class="value">
-          {{ item.latestPreviousCost }}
+          {{ item.previousCostDetails[0]?.cost }}
           <mat-icon (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
           <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
             <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
