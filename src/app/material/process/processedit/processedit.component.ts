@@ -49,6 +49,7 @@ ngOnInit(): void {
   // Initialize the form structure once
   this.form = this.fb.group({
     materialFormArray: this.fb.array([]),
+    totalUnitPerProcess: [this.data.totalUnitPerProcess || '', [Validators.required, Validators.min(1)]],
     grade: this.fb.group({
       _id: [this.data.grade?.[0]?._id || '']
     })
@@ -106,7 +107,8 @@ save(): void {
       const updatedProcess = {
         processName: this.data.processName,
         rawMaterial: reconstructedRawMaterial,
-        grade: gradeName
+        grade: gradeName,
+        totalUnitPerProcess: this.form.get('totalUnitPerProcess')?.value
       };
 
       console.log('data', updatedProcess);
