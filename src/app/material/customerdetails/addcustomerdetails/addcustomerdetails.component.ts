@@ -21,7 +21,6 @@ import {CastingData } from '../../../models/casting-input.model';
 import { getCostSummary } from '../../../modules/materialinput/store/casting.actions';
 import {selectProductionCost } from '../../../modules/materialinput/store/casting.selectors';
 import { CostSummary } from '../../../models/casting-input.model';
-import { CustomerProcesss} from '../../../models/Customer-details.model';
 import { addCustomerDetails } from '../../store/material.actions';
 
 
@@ -66,6 +65,36 @@ export class AddcustomerdetailsComponent implements OnInit {
   constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog,  private dialogRef: MatDialogRef<AddcustomerdetailsComponent>) {} 
 
  ngOnInit(): void {
+
+   this.costForm = this.fb.group({
+    // Salary fields
+    salaryforProcess: [0],
+    salaryExcludingCoreMaking: [0],
+    salaryForCoreProduction: [0],
+    outSourcingCost: [0],
+    splOutSourcingCost: [0],
+
+    // Overhead fields
+    repairAndMaintenance: [0],
+    sellingDistributionAndMiscOverHeads: [0],
+    financeCost: [0],
+
+    // Commercial terms
+    paymentCreditPeriod: [0],
+    bankInterest: [0],
+
+    // Margin & Rejection
+    profit: [0],
+    rejection: [0],
+
+
+
+    heatTreatment: [0],
+  postProcess: [0],
+  packingAndTransport: [0],
+  NozzleShotBlasting: [0],
+  highPressureCleaning: [0],
+  });
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
     this.store.dispatch(getCastingDetails());
@@ -144,35 +173,7 @@ this.secondFormGroup = this.fb.group({
   CoreSand: [0, Validators.required],
 });
 
- this.costForm = this.fb.group({
-    // Salary fields
-    salaryforProcess: [0],
-    salaryExcludingCoreMaking: [0],
-    salaryForCoreProduction: [0],
-    outSourcingCost: [0],
-    splOutSourcingCost: [0],
 
-    // Overhead fields
-    repairAndMaintenance: [0],
-    sellingDistributionAndMiscOverHeads: [0],
-    financeCost: [0],
-
-    // Commercial terms
-    paymentCreditPeriod: [0],
-    bankInterest: [0],
-
-    // Margin & Rejection
-    profit: [0],
-    rejection: [0],
-
-
-
-    heatTreatment: [0],
-  postProcess: [0],
-  packingAndTransport: [0],
-  NozzleShotBlasting: [0],
-  highPressureCleaning: [0],
-  });
 
 
 
@@ -683,6 +684,7 @@ finalSubmit() {
 
   console.log('📦 Final Submission JSON:', finalData);
   this.store.dispatch(addCustomerDetails({ customer: finalData }));
+   this.store.dispatch(loadCustomerDetails());
 }
 
 
