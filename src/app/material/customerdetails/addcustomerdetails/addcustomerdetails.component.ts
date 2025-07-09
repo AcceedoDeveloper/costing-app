@@ -7,7 +7,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { addCustomerDetails} from '../../store/material.actions';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {Process } from '../../../models/process.model';
@@ -16,6 +15,15 @@ import { updateCustomerDetails } from '../../store/material.actions';
 import { take } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
 import { loadCustomerDetails } from '../../store/material.actions';
+import { getCastingDetails} from '../../../modules/materialinput/store/casting.actions';
+import { selectCastingData  } from '../../../modules/materialinput/store/casting.selectors';
+import {CastingData } from '../../../models/casting-input.model';
+import { getCostSummary } from '../../../modules/materialinput/store/casting.actions';
+import {selectProductionCost } from '../../../modules/materialinput/store/casting.selectors';
+import { CostSummary } from '../../../models/casting-input.model';
+import { CustomerProcesss} from '../../../models/Customer-details.model';
+import { addCustomerDetails } from '../../store/material.actions';
+
 
 
 @Component({
@@ -27,6 +35,8 @@ export class AddcustomerdetailsComponent implements OnInit {
   customer$ : Observable<any>;
   customer: any[] = [];
   processes: Process[] =[];
+  castingData: CastingData[] | null = null;
+  costsummary: CostSummary[] | null = null;
   
   expandedProcessIndex: number | null = null;
   selectedProcessForEdit: any = null;
@@ -47,7 +57,10 @@ export class AddcustomerdetailsComponent implements OnInit {
   isLinear = false;
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
+  costForm: FormGroup;
   forthFormGroup!: FormGroup;
+  costSummaryFormGroup!: FormGroup;
+
 
 
   constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog,  private dialogRef: MatDialogRef<AddcustomerdetailsComponent>) {} 
@@ -55,8 +68,42 @@ export class AddcustomerdetailsComponent implements OnInit {
  ngOnInit(): void {
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
+    this.store.dispatch(getCastingDetails());
+    this.store.dispatch(getCostSummary());
    
 
+     this.store.pipe(select(selectCastingData)).subscribe((castingData: CastingData[] | null) => {
+          
+            this.castingData = castingData;
+            console.log('Casting Data:', this.castingData);
+          
+        });
+
+      this.store.pipe(select(selectProductionCost)).subscribe((costSummary: any[] | null) => {
+    if (costSummary && costSummary.length > 0) {
+      const data = costSummary[0];
+
+      this.costForm.patchValue({
+        salaryforProcess: data.SalaryAndWages?.salaryforProcess || 0,
+        salaryExcludingCoreMaking: data.SalaryAndWages?.salaryExcludingCoreMaking || 0,
+        salaryForCoreProduction: data.SalaryAndWages?.salaryForCoreProduction || 0,
+        outSourcingCost: data.SalaryAndWages?.outSourcingCost || 0,
+        splOutSourcingCost: data.SalaryAndWages?.splOutSourcingCost || 0,
+
+        repairAndMaintenance: data.OverHeads?.repairAndMaintenance || 0,
+        sellingDistributionAndMiscOverHeads: data.OverHeads?.sellingDistributionAndMiscOverHeads || 0,
+        financeCost: data.OverHeads?.financeCost || 0,
+
+        paymentCreditPeriod: data.CommercialTerms?.paymentCreditPeriod || 0,
+        bankInterest: data.CommercialTerms?.bankInterest || 0,
+
+        profit: data.Margin?.profit || 0,
+        rejection: data.AnticipatedRejection?.rejection || 0,
+      });
+
+      console.log('Cost Summary:', data);
+    }
+  });
 
 
     this.customer$ = this.store.select(selectCustomers);
@@ -64,6 +111,8 @@ export class AddcustomerdetailsComponent implements OnInit {
       this.customer = customer;
       console.log(customer);
     });
+
+
 
     this.store.select(getAllProcesses).subscribe((data: Process[]) => {
 
@@ -77,40 +126,55 @@ export class AddcustomerdetailsComponent implements OnInit {
 });
 
 
-
-
 this.secondFormGroup = this.fb.group({
-  castingWeight: ['', Validators.required],
-  cavities: ['', Validators.required],
-  pouringWeight: ['', Validators.required],
-  goodCastingWeight: ['', Validators.required],
-  yield: ['', Validators.required],
-  materialReturned: ['', Validators.required],
-  yieldPercentage: ['', Validators.required]
+  // Casting fields
+  CastingWeight: [0, Validators.required],
+  Cavities: [0, Validators.required],
+  PouringWeight: [0, Validators.required],
+
+  // Moulding fields
+  MouldingWeight: [0, Validators.required],
+  BakeMoulding: [0, Validators.required],
+
+  // Core fields
+  CoreWeight: [0, Validators.required],
+  CoresPerMould: [0, Validators.required],
+  CoreCavities: [0, Validators.required],
+  ShootingPerShift: [0, Validators.required],
+  CoreSand: [0, Validators.required],
 });
 
+ this.costForm = this.fb.group({
+    // Salary fields
+    salaryforProcess: [0],
+    salaryExcludingCoreMaking: [0],
+    salaryForCoreProduction: [0],
+    outSourcingCost: [0],
+    splOutSourcingCost: [0],
 
-this.secondFormGroup.valueChanges.subscribe(values => {
-  const castingWeight = parseFloat(values.castingWeight) || 0;
-  const cavities = parseFloat(values.cavities) || 0;
-  const pouringWeight = parseFloat(values.pouringWeight) || 0;
+    // Overhead fields
+    repairAndMaintenance: [0],
+    sellingDistributionAndMiscOverHeads: [0],
+    financeCost: [0],
 
-  if (castingWeight && cavities && pouringWeight) {
-    // Perform calculations
-    const yieldPercentage = (castingWeight * cavities) / pouringWeight;
-    const goodCastingWeight = Math.round(yieldPercentage * 1050);
-    const yieldVal = (goodCastingWeight / 1050) * 100;
-    const materialReturned = 1050 - goodCastingWeight;
+    // Commercial terms
+    paymentCreditPeriod: [0],
+    bankInterest: [0],
 
-    // Update the form
-    this.secondFormGroup.patchValue({
-      goodCastingWeight: goodCastingWeight,
-      yield: yieldVal.toFixed(2),
-      materialReturned: materialReturned.toFixed(2),
-      yieldPercentage: yieldPercentage.toFixed(2)
-    }, { emitEvent: false }); // Avoid infinite loop
-  }
-});
+    // Margin & Rejection
+    profit: [0],
+    rejection: [0],
+
+
+
+    heatTreatment: [0],
+  postProcess: [0],
+  packingAndTransport: [0],
+  NozzleShotBlasting: [0],
+  highPressureCleaning: [0],
+  });
+
+
 
 
 
@@ -129,10 +193,13 @@ this.store.select(getCustomerWithId).subscribe((state) => {
 
     
 
-  this.firstFormGroup = this.fb.group({
+this.firstFormGroup = this.fb.group({
   customerName: ['', Validators.required],
   partNo: ['', Validators.required],
-  drawing: ['', Validators.required]
+  drawing: ['', Validators.required],
+  CastingInput: [false],
+  MouldingInput: [false],
+  CoreInput: [false]
 });
 
 this.forthFormGroup = this.fb.group({
@@ -152,36 +219,7 @@ this.thirdFormGroup = this.fb.group({
 
   }
 
-submit() {
-  if (this.firstFormGroup.valid && this.secondFormGroup.valid && this.thirdFormGroup.valid) {
-    const customerDetails = this.firstFormGroup.value;
-    const engineeringDetails = this.secondFormGroup.value;
-    const selectedProcesses = this.thirdFormGroup.get('selectedProcesses')?.value || [];
 
-   const finalPayload = {
-  CustomerName: customerDetails.customerName,
-  drawingNo: customerDetails.drawing,
-  partName: customerDetails.partNo,
-  processName: selectedProcesses.map((p: any) => p.processName),  // <-- fix here
-  castingInputs: true,
-  CastingWeight: engineeringDetails.castingWeight,
-  Cavities: engineeringDetails.cavities,
-  PouringWeight: engineeringDetails.pouringWeight,
-  mouldingInputs: false,
-  coreInputs: false
-};
-
-
-    console.log('Final Payload:', finalPayload);
-    this.store.dispatch(addCustomerDetails({ customer: finalPayload }));
-     
-
-  } else {
-    console.log('One or more steps are invalid');
-  }
-
- 
-}
 
 compareProcesses(a: any, b: any): boolean {
   return a?.processName === b?.processName;
@@ -488,6 +526,164 @@ saveAllProcesses(): void {
   }
 }
 
+
+fristfrom() {
+  const selectedInputs = this.firstFormGroup.value;
+
+  if (selectedInputs.CastingInput) {
+    const cast = this.castingData?.[0]?.CastingInput;
+    if (cast) {
+      this.secondFormGroup.patchValue({
+        CastingWeight: cast.CastingWeight,
+        Cavities: cast.Cavities,
+        PouringWeight: cast.PouringWeight
+      });
+    }
+  }
+
+  if (selectedInputs.MouldingInput) {
+    const mould = this.castingData?.[0]?.MouldingInput;
+    if (mould) {
+      this.secondFormGroup.patchValue({
+        MouldingWeight: mould.MouldingWeight,
+        BakeMoulding: mould.BakeMoulding
+      });
+    }
+  }
+
+  if (selectedInputs.CoreInput) {
+    const core = this.castingData?.[0]?.CoreInput;
+    if (core) {
+      this.secondFormGroup.patchValue({
+        CoreWeight: core.CoreWeight,
+        CoresPerMould: core.CoresPerMould,
+        CoreCavities: core.CoreCavities,
+        ShootingPerShift: core.ShootingPerShift,
+        CoreSand: core.CoreSand
+      });
+    }
+  }
+}
+
+
+
+
+
+submitStep2() {
+  const selectedFields: any = {};
+  const selectedInputs = this.firstFormGroup.value;
+
+  if (selectedInputs.CastingInput) {
+    selectedFields['CastingInput'] = {
+      CastingWeight: this.secondFormGroup.value.CastingWeight,
+      Cavities: this.secondFormGroup.value.Cavities,
+      PouringWeight: this.secondFormGroup.value.PouringWeight
+    };
+  }
+
+  if (selectedInputs.MouldingInput) {
+    selectedFields['MouldingInput'] = {
+      MouldingWeight: this.secondFormGroup.value.MouldingWeight,
+      BakeMoulding: this.secondFormGroup.value.BakeMoulding
+    };
+  }
+
+  if (selectedInputs.CoreInput) {
+    selectedFields['CoreInput'] = {
+      CoreWeight: this.secondFormGroup.value.CoreWeight,
+      CoresPerMould: this.secondFormGroup.value.CoresPerMould,
+      CoreCavities: this.secondFormGroup.value.CoreCavities,
+      ShootingPerShift: this.secondFormGroup.value.ShootingPerShift,
+      CoreSand: this.secondFormGroup.value.CoreSand
+    };
+  }
+
+  console.log('📝 Updated Input Data:', selectedFields);
+}
+
+
+
+
+submitCostForm(): void {
+  console.log('Submitted Cost Form:', this.costForm.value);
+}
+
+processdata(){
+  const selectedProcessObjects = this.thirdFormGroup.value.selectedProcesses;
+
+  // Extract only the process names
+  const processType = selectedProcessObjects.map((p: any) => p.processName);
+
+  console.log('processType:', processType);
+
+}
+
+
+finalSubmit() {
+  const first = this.firstFormGroup.value;
+  const second = this.secondFormGroup.value;
+  const cost = this.costForm.value;
+  const processList = this.thirdFormGroup.value.selectedProcesses || [];
+
+  // Extract process names
+  const processName = processList.map((p: any) => p.processName);
+
+  // Build final JSON object
+  const finalData = {
+    CustomerName: first.customerName,
+    drawingNo: first.drawing,
+    partName: first.partNo,
+    processName,
+
+    castingInputs: first.CastingInput || false,
+    ...(first.CastingInput && {
+      CastingWeight: second.CastingWeight,
+      Cavities: second.Cavities,
+      PouringWeight: second.PouringWeight
+    }),
+
+    mouldingInputs: first.MouldingInput || false,
+    ...(first.MouldingInput && {
+      MouldingWeight: second.MouldingWeight,
+      BakeMoulding: second.BakeMoulding
+    }),
+
+    coreInputs: first.CoreInput || false,
+    ...(first.CoreInput && {
+      CoreWeight: second.CoreWeight,
+      CoresPerMould: second.CoresPerMould,
+      CoreCavities: second.CoreCavities,
+      ShootingPerShift: second.ShootingPerShift,
+      CoreSand: second.CoreSand
+    }),
+
+    // Cost Form
+    salaryforProcess: cost.salaryforProcess,
+    salaryExcludingCoreMaking: cost.salaryExcludingCoreMaking,
+    salaryForCoreProduction: cost.salaryForCoreProduction,
+    outSourcingCost: cost.outSourcingCost,
+    splOutSourcingCost: cost.splOutSourcingCost,
+
+    repairAndMaintenance: cost.repairAndMaintenance,
+    sellingDistributionAndMiscOverHeads: cost.sellingDistributionAndMiscOverHeads,
+    financeCost: cost.financeCost,
+
+    paymentCreditPeriod: cost.paymentCreditPeriod,
+    bankInterest: cost.bankInterest,
+
+    profit: cost.profit,
+    rejection: cost.rejection,
+
+    heatTreatment: cost.heatTreatment,
+    postProcess: cost.postProcess,
+    packingAndTransport: cost.packingAndTransport,
+    NozzleShotBlasting: cost.NozzleShotBlasting,
+    highPressureCleaning: cost.highPressureCleaning
+  };
+
+  console.log('📦 Final Submission JSON:', finalData);
+  this.store.dispatch(addCustomerDetails({ customer: finalData }));
+}
 
 
 }

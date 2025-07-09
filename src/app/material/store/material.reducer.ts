@@ -24,6 +24,7 @@ import {Customerdetails} from '../../models/Customer-details.model';
 import { Process } from '../../models/process.model';
 import { MaterialType} from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
+import { CustomerProcesss } from '../../models/Customer-details.model';
 
 
 
@@ -38,6 +39,7 @@ import { CustomerProcess } from '../../models/Customer-details.model';
    materialTypes: MaterialType[];
    customersProcess: CustomerProcess[];
    id:string | null;
+   customersP: CustomerProcesss[];
 }
 
 
@@ -51,6 +53,7 @@ const initialState: MaterialState = {
   processes: [],
   materialTypes: [],
   customersProcess: [],
+  customersP:[],
   id: null
 };
 
@@ -250,18 +253,21 @@ on(updateProcessFailure, (state, { error }) => ({
 })),
 
 
-on(addCustomerDetailsSuccess, (state, { customer }) => ({
-  ...state,
-  customersProcess: [...state.customersProcess, customer],
-  id: customer._id ?? null,
-  error: null
-})),
-
-
-on(addCustomerDetailsFailure, (state, { error }) => ({
-  ...state,
-  error
-})),
+on(addCustomerDetails, state => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
+  on(addCustomerDetailsSuccess, (state, { customer }) => ({
+    ...state,
+    customer,
+    loading: false
+  })),
+  on(addCustomerDetailsFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  })),
 
 
 on(updateCustomerDetailsSuccess, (state, { customer }) => ({

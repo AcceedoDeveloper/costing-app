@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MaterialType } from '../models/material-type.model';
-import { Customerdetails, CustomerdetailsIn, CustomerProcess } from '../models/Customer-details.model';
+import { Customerdetails, CustomerdetailsIn, CustomerProcess, CustomerProcesss } from '../models/Customer-details.model';
 import { ConfigService } from '../shared/components/config.service'; // ✅
 
 @Injectable({ providedIn: 'root' })
@@ -29,8 +29,8 @@ export class MaterialTypeService {
     return this.http.get<Customerdetails[]>(this.config.getCostingUrl('getCustomers'));
   }
 
-  addCustomerDetails(customer: CustomerProcess): Observable<CustomerProcess> {
-    return this.http.post<CustomerProcess>(this.config.getCostingUrl('addCustomers'), customer);
+  addCustomerDetails(customer: CustomerProcesss): Observable<CustomerProcesss> {
+    return this.http.post<CustomerProcesss>(this.config.getCostingUrl('addCustomers'), customer);
   }
 
   updateCustomerDetails(id: string, customer: CustomerProcess): Observable<CustomerProcess> {

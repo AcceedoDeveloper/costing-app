@@ -360,24 +360,19 @@ updateProcess$ = createEffect(() =>
   );
 
 
+// effects.ts
 addCustomerDetails$ = createEffect(() =>
   this.actions$.pipe(
     ofType(addCustomerDetails),
     mergeMap(action =>
       this.materialTypeService.addCustomerDetails(action.customer).pipe(
-        map((response: CustomerProcess) => {
-          const id = response._id; // ✅ Extract ID here
-          this.toastr.success('Customer added successfully', 'Success');
-          return addCustomerDetailsSuccess({ customer: response, id }); // ✅ Dispatch with ID
-        }),
-        catchError(error => {
-          this.toastr.error('Failed to add customer', 'Error');
-          return of(addCustomerDetailsFailure({ error: error.message }));
-        })
+        map(customer => addCustomerDetailsSuccess({ customer })),
+        catchError(error => of(addCustomerDetailsFailure({ error })))
       )
     )
   )
 );
+
 
 
 updateCustomerDetails$ = createEffect(() =>

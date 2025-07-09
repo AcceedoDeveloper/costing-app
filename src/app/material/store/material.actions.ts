@@ -7,6 +7,7 @@ import { Process } from '../../models/process.model';
 import {MaterialType } from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
 import { CustomerdetailsIn } from '../../models/Customer-details.model';
+import { CustomerProcesss } from '../../models/Customer-details.model';
 
 
 export const LOAD_MATERIALS = '[Material page] load materials';
@@ -178,20 +179,6 @@ export const updateProcessFailure = createAction(
   props<{ error: any }>()
 );
 
-export const addCustomerDetails = createAction(
-  '[Customer] Add Customer Details',
-  props<{ customer: CustomerProcess }>()
-);
-
-export const addCustomerDetailsSuccess = createAction(
-  '[Customer] Add Customer Details Success',
-  props<{ customer: CustomerProcess , id: string}>()
-);
-
-export const addCustomerDetailsFailure = createAction(
-  '[Customer] Add Customer Details Failure',
-  props<{ error: string }>()
-);
 
 
 export const updateCustomerDetails = createAction(
@@ -236,5 +223,22 @@ export const deleteCustomerSuccess = createAction(
 
 export const deleteCustomerFailure = createAction(
   '[Customer] Delete Customer Failure',
+  props<{ error: any }>()
+);
+
+
+
+export const addCustomerDetails = createAction(
+  '[Customer] Add Customer Details',
+  props<{ customer: CustomerProcesss }>()
+);
+
+export const addCustomerDetailsSuccess = createAction(
+  '[Customer] Add Customer Details Success',
+  props<{ customer: CustomerProcesss }>()
+);
+
+export const addCustomerDetailsFailure = createAction(
+  '[Customer] Add Customer Details Failure',
   props<{ error: any }>()
 );

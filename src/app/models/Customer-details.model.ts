@@ -121,3 +121,50 @@ export interface CustomerdetailsIn {
     mouldingInputs: string[];
   };
 }
+
+
+
+export interface CustomerProcesss {
+  CustomerName: string;
+  drawingNo: string;
+  partName: string;
+  processName: string[];
+
+  castingInputs?: boolean;
+  CastingWeight?: number;
+  Cavities?: number;
+  PouringWeight?: number;
+
+  mouldingInputs?: boolean;
+  MouldingWeight?: number;
+  BakeMoulding?: number;
+
+  coreInputs?: boolean;
+  CoreWeight?: number;
+  CoresPerMould?: number;
+  CoreCavities?: number;
+  ShootingPerShift?: number;
+  CoreSand?: number;
+
+  salaryforProcess?: number;
+  salaryExcludingCoreMaking?: number;
+  salaryForCoreProduction?: number;
+  outSourcingCost?: number;
+  splOutSourcingCost?: number;
+
+  repairAndMaintenance?: number;
+  sellingDistributionAndMiscOverHeads?: number;
+  financeCost?: number;
+
+  paymentCreditPeriod?: number;
+  bankInterest?: number;
+
+  profit?: number;
+  rejection?: number;
+
+  heatTreatment?: number;
+  postProcess?: number;
+  packingAndTransport?: number;
+  NozzleShotBlasting?: number;
+  highPressureCleaning?: number;
+}
