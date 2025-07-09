@@ -30,6 +30,7 @@ export class MaterialTypeService {
   }
 
   addCustomerDetails(customer: CustomerProcesss): Observable<CustomerProcesss> {
+    console.log('data', customer);
     return this.http.post<CustomerProcesss>(this.config.getCostingUrl('addCustomers'), customer);
   }
 
@@ -42,6 +43,6 @@ export class MaterialTypeService {
   }
 
   delectCustomerDetails(id: string): Observable<any> {
-    return this.http.delete(`${this.config.getCostingUrl('deleteCustomer')}/${id}`);
+    return this.http.delete(`${this.config.getCostingUrl('delete-Customer')}/${id}`);
   }
 }

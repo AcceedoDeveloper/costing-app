@@ -54,6 +54,7 @@ getFirstProcessCost(customer: any): number {
 
 
 delete(id: string) {
+  console.log('ID', id);
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
     data: {
