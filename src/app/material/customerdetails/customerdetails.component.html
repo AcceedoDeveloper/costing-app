@@ -25,6 +25,9 @@
       <td>{{ getFirstProcessCost(customer) }}</td>
       <td>
         <button mat-icon-button>
+          <mat-icon (click)="edit(customer._id)" >edit</mat-icon>
+        </button>
+        <button mat-icon-button>
           <mat-icon (click)="delete(customer._id)" >delete</mat-icon>
         </button>
       </td>

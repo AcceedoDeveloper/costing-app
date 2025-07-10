@@ -45,7 +45,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   editedProcessFlags: { [index: number]: boolean } = {};
   editedProcesses: { [index: number]: any } = {};
   expandedRowIndex: number | null = null;
-editMode: { [index: number]: boolean } = {};
+  editMode: { [index: number]: boolean } = {};
   customerId: string | null = null;
 
   

@@ -44,10 +44,11 @@ import { ProcesseditComponent } from './process/processedit/processedit.componen
 import { AddcustomerdetailsComponent } from './customerdetails/addcustomerdetails/addcustomerdetails.component'; 
 
 import { MatOptionModule } from '@angular/material/core';
+import { UpdateaddcustomerdDetailsComponent } from './customerdetails/updateaddcustomerd-details/updateaddcustomerd-details.component';
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent, UpdateaddcustomerdDetailsComponent],
   imports: [
    MatOptionModule,
     MatTooltipModule,
