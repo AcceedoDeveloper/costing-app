@@ -56,7 +56,7 @@
 
     { "name": "getCustomers", "url": "get-customers" },
     { "name": "addCustomers", "url": "add-Customers" },
-    { "name": "updateCustomer", "url": "update-Customer" },
+    { "name": "updateCustomerD", "url": "update-Customer" },
     { "name": "delete-Customer", "url": "delete-Customer" },
 
 

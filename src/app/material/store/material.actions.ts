@@ -242,3 +242,8 @@ export const addCustomerDetailsFailure = createAction(
   '[Customer] Add Customer Details Failure',
   props<{ error: any }>()
 );
+
+export const getCustomerWithId = createAction(
+  '[Material] Get Customer With ID',
+  props<{ id: string }>()
+);

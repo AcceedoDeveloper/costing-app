@@ -35,7 +35,7 @@ export class MaterialTypeService {
   }
 
   updateCustomerDetails(id: string, customer: CustomerProcess): Observable<CustomerProcess> {
-    return this.http.put<CustomerProcess>(`${this.config.getCostingUrl('updateCustomer')}/${id}`, customer);
+    return this.http.patch<CustomerProcess>(`${this.config.getCostingUrl('updateCustomerD')}/${id}`, customer);
   }
 
   getCustomerDetailsPeocess(): Observable<CustomerdetailsIn[]> {
