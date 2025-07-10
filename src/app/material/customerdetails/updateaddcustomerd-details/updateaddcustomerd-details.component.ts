@@ -4,7 +4,7 @@ import { MaterialState } from '../../store/material.reducer';
 import { getCustomerDetails } from '../../store/material.selector';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { updateCustomerDetails } from '../../store/material.actions';
-
+import { loadCustomerDetails} from '../../store/material.actions';
 
 @Component({
   selector: 'app-updateaddcustomerd-details',
@@ -99,7 +99,7 @@ export class UpdateaddcustomerdDetailsComponent implements OnInit {
   }
 
 
-  getFullUpdatedProcessData(): any[] {
+ getFullUpdatedProcessData(): any[] {
   return this.selectedProcesses.map(process => {
     const newProcess = { ...process };
 
@@ -108,22 +108,22 @@ export class UpdateaddcustomerdDetailsComponent implements OnInit {
         inner.map(g => ({
           ...g,
           rawMaterial: g.rawMaterial.map(rm => ({
-            ...rm,
+            type: rm.type,
             materialsUsed: rm.materialsUsed.map(mat => ({
-              ...mat,
-              quantity: mat.updatedQuantity ?? mat.quantity,
-              unitCost: mat.updatedUnitCost ?? mat.unitCost
+              name: mat.name,
+              updateQuantity: mat.updatedQuantity ?? mat.quantity,
+              updateCost: mat.updatedUnitCost ?? mat.unitCost
             }))
           }))
         }))
       );
-    } else {
+    } else if (newProcess.rawMaterial?.length > 0) {
       newProcess.rawMaterial = newProcess.rawMaterial.map(rm => ({
-        ...rm,
+        type: rm.type,
         materialsUsed: rm.materialsUsed.map(mat => ({
-          ...mat,
-          quantity: mat.updatedQuantity ?? mat.quantity,
-          unitCost: mat.updatedUnitCost ?? mat.unitCost
+          name: mat.name,
+          updateQuantity: mat.updatedQuantity ?? mat.quantity,
+          updateCost: mat.updatedUnitCost ?? mat.unitCost
         }))
       }));
     }
@@ -131,6 +131,7 @@ export class UpdateaddcustomerdDetailsComponent implements OnInit {
     return newProcess;
   });
 }
+
 
 generateFinalJsonFromLoadedData(): void {
   if (!this.customerData) {
@@ -203,6 +204,7 @@ generateFinalJsonFromLoadedData(): void {
 
   if (this.customerId) {
     this.store.dispatch(updateCustomerDetails({ id: this.customerId, customer: finalData }));
+    this.store.dispatch(loadCustomerDetails());
   } else {
     console.error('❌ No customer ID to update');
   }

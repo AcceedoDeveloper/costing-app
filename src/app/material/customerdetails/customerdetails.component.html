@@ -22,7 +22,7 @@
       <td>{{ customer.drawingNo }}</td>
       <td>{{ customer.partName }}</td>
       <td>{{ customer.processName?.length }} Process</td>
-      <td>{{ getFirstProcessCost(customer) }}</td>
+      <td>{{ customer.totalProcessCost }}</td>
       <td>
         <button mat-icon-button>
           <mat-icon (click)="edit(customer._id)" >edit</mat-icon>

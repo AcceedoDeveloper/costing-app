@@ -513,6 +513,7 @@ generateFinalJson(): void {
    if (this.customerId) {
     console.log('✅ Final Payload:', finalData);
     this.store.dispatch(updateCustomerDetails({ id: this.customerId, customer: finalData }));
+    this.store.dispatch(loadCustomerDetails());
   } else {
     console.error('❌ No customer ID found to update');
   }
