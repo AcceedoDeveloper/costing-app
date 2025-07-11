@@ -1,6 +1,4 @@
 
-
-
 <h5>
   <span class="material-icons">add_circle</span>
   Add Customer Details
@@ -14,7 +12,7 @@
     <ng-template matStepLabel>Customer Details</ng-template>
 
     <!-- Customer Name -->
-   <mat-form-field appearance="outline" class="full-width">
+   <mat-form-field appearance="standard" class="full-width">
   <mat-label>Customer Name</mat-label>
   <mat-select formControlName="customerName" required>
     <mat-option *ngFor="let cust of customer" [value]="cust.name">
@@ -24,13 +22,13 @@
 </mat-form-field>
 
     <!-- Part No -->
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="standard" class="full-width">
       <mat-label>Part No</mat-label>
       <input matInput placeholder="Enter part number" formControlName="partNo" required />
     </mat-form-field>
 
     <!-- Drawing -->
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="standard" class="full-width">
       <mat-label>Drawing</mat-label>
       <input matInput placeholder="Enter drawing details" formControlName="drawing" required />
     </mat-form-field>
@@ -55,17 +53,17 @@
     <!-- CASTING FIELDS -->
     <div *ngIf="firstFormGroup.get('CastingInput')?.value">
       <h3>Casting Input</h3>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Casting Weight</mat-label>
         <input matInput type="number" formControlName="CastingWeight" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Cavities</mat-label>
         <input matInput type="number" formControlName="Cavities" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Pouring Weight</mat-label>
         <input matInput type="number" formControlName="PouringWeight" />
       </mat-form-field>
@@ -74,12 +72,12 @@
     <!-- MOULDING FIELDS -->
     <div *ngIf="firstFormGroup.get('MouldingInput')?.value">
       <h3>Moulding Input</h3>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Moulding Weight</mat-label>
         <input matInput type="number" formControlName="MouldingWeight" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Bake Moulding</mat-label>
         <input matInput type="number" formControlName="BakeMoulding" />
       </mat-form-field>
@@ -88,27 +86,27 @@
     <!-- CORE FIELDS -->
     <div *ngIf="firstFormGroup.get('CoreInput')?.value">
       <h3>Core Input</h3>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Core Weight</mat-label>
         <input matInput type="number" formControlName="CoreWeight" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Cores Per Mould</mat-label>
         <input matInput type="number" formControlName="CoresPerMould" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Core Cavities</mat-label>
         <input matInput type="number" formControlName="CoreCavities" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Shooting Per Shift</mat-label>
         <input matInput type="number" formControlName="ShootingPerShift" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="standard">
         <mat-label>Core Sand</mat-label>
         <input matInput type="number" formControlName="CoreSand" />
       </mat-form-field>
@@ -305,9 +303,12 @@
         <td>{{ process.grade?.length > 0 ? process.grade[0][0]?.gradeNo : 'Material' }}</td>
         <td>{{ process.processCost }}</td>
         <td>
-          <button (click)="toggleRow(i)">
-            {{ expandedRowIndex === i ? 'Hide' : 'Show' }}
-          </button>
+         <button mat-icon-button (click)="toggleRow(i)" [matTooltip]="expandedRowIndex === i ? 'Hide Details' : 'Show Details'">
+  <mat-icon>
+    {{ expandedRowIndex === i ? 'expand_less' : 'expand_more' }}
+  </mat-icon>
+</button>
+
         </td>
       </tr>
 
@@ -394,13 +395,12 @@
   </tbody>
 </table>
 
-<button  (click)="generateFinalJson()" >sumit</button>
+
 
 
     <div class="mt-3">
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button color="primary" >Save All</button>
-      <button mat-button matStepperNext color="primary" >Next</button>
+      
+      <button mat-button matStepperNext color="primary" (click)="generateFinalJson()" >Next</button>
     </div>
   </form>
 </mat-step>
