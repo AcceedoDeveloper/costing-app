@@ -1,4 +1,3 @@
-
 <h5>
   <span class="material-icons">add_circle</span>
   Add Customer Details
@@ -8,220 +7,118 @@
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
   <!-- Step 1: Name -->
   <mat-step [stepControl]="firstFormGroup">
-  <form [formGroup]="firstFormGroup">
-    <ng-template matStepLabel>Customer Details</ng-template>
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Customer Details</ng-template>
 
-    <!-- Customer Name -->
-   <mat-form-field appearance="standard" class="full-width">
-  <mat-label>Customer Name</mat-label>
-  <mat-select formControlName="customerName" required>
-    <mat-option *ngFor="let cust of customer" [value]="cust.name">
-      {{ cust.name }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+      <!-- Step layout wrapper -->
+      <div class="step-form-grid">
+        <!-- Left column: Text fields -->
+        <div class="step-left">
+          <!-- Customer Name -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Customer Name</mat-label>
+            <mat-select formControlName="customerName" required>
+              <mat-option *ngFor="let cust of customer" [value]="cust.name">
+                {{ cust.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-    <!-- Part No -->
-    <mat-form-field appearance="standard" class="full-width">
-      <mat-label>Part No</mat-label>
-      <input matInput placeholder="Enter part number" formControlName="partNo" required />
-    </mat-form-field>
+          <!-- Part No -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Part No</mat-label>
+            <input matInput placeholder="Enter part number" formControlName="partNo" required />
+          </mat-form-field>
 
-    <!-- Drawing -->
-    <mat-form-field appearance="standard" class="full-width">
-      <mat-label>Drawing</mat-label>
-      <input matInput placeholder="Enter drawing details" formControlName="drawing" required />
-    </mat-form-field>
- <div class="checkbox-group">
- <mat-checkbox formControlName="CastingInput">Casting Input</mat-checkbox>
-    <mat-checkbox formControlName="MouldingInput">Moulding Input</mat-checkbox>
-    <mat-checkbox formControlName="CoreInput">Core Input</mat-checkbox>
+          <!-- Drawing -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Drawing</mat-label>
+            <input matInput placeholder="Enter drawing details" formControlName="drawing" required />
+          </mat-form-field>
+        </div>
 
- </div>
-   
+        <!-- Right column: Checkboxes -->
+        <div class="step-right checkbox-column">
+          <mat-checkbox formControlName="CastingInput">Casting Input</mat-checkbox>
+          <mat-checkbox formControlName="MouldingInput">Moulding Input</mat-checkbox>
+          <mat-checkbox formControlName="CoreInput">Core Input</mat-checkbox>
+        </div>
+      </div>
 
-    <div>
-      <button mat-button matStepperNext color="primary" (click)="fristfrom()" >Next</button>
-    </div>
-  </form>
+      <!-- Stepper Button -->
+      <div class="stepper-button-wrapper">
+        <button mat-raised-button color="primary" matStepperNext (click)="fristfrom()">Next</button>
+      </div>
+    </form>
+
+
 </mat-step>
-
 <mat-step [stepControl]="secondFormGroup">
   <form [formGroup]="secondFormGroup">
     <ng-template matStepLabel>Input Data</ng-template>
 
-    <!-- CASTING FIELDS -->
-    <div *ngIf="firstFormGroup.get('CastingInput')?.value">
-      <h3>Casting Input</h3>
-      <mat-form-field appearance="standard">
-        <mat-label>Casting Weight</mat-label>
-        <input matInput type="number" formControlName="CastingWeight" />
-      </mat-form-field>
+    <div class="three-column-grid">
+      <!-- Casting Input -->
+      <div *ngIf="firstFormGroup.get('CastingInput')?.value" class="step2-box">
+        <h3>Casting Input</h3>
+        <div class="row">
+          <label>Casting Weight</label>
+          <input matInput type="number" formControlName="CastingWeight" />
+        </div>
+        <div class="row">
+          <label>Cavities</label>
+          <input matInput type="number" formControlName="Cavities" />
+        </div>
+        <div class="row">
+          <label>Pouring Weight</label>
+          <input matInput type="number" formControlName="PouringWeight" />
+        </div>
+      </div>
 
-      <mat-form-field appearance="standard">
-        <mat-label>Cavities</mat-label>
-        <input matInput type="number" formControlName="Cavities" />
-      </mat-form-field>
+      <!-- Moulding Input -->
+      <div *ngIf="firstFormGroup.get('MouldingInput')?.value" class="step2-box">
+        <h3>Moulding Input</h3>
+        <div class="row">
+          <label>Moulding Weight</label>
+          <input matInput type="number" formControlName="MouldingWeight" />
+        </div>
+        <div class="row">
+          <label>Bake Moulding</label>
+          <input matInput type="number" formControlName="BakeMoulding" />
+        </div>
+      </div>
 
-      <mat-form-field appearance="standard">
-        <mat-label>Pouring Weight</mat-label>
-        <input matInput type="number" formControlName="PouringWeight" />
-      </mat-form-field>
+      <!-- Core Input -->
+      <div *ngIf="firstFormGroup.get('CoreInput')?.value" class="step2-box">
+        <h3>Core Input</h3>
+        <div class="row">
+          <label>Core Weight</label>
+          <input matInput type="number" formControlName="CoreWeight" />
+        </div>
+        <div class="row">
+          <label>Cores Per Mould</label>
+          <input matInput type="number" formControlName="CoresPerMould" />
+        </div>
+        <div class="row">
+          <label>Core Cavities</label>
+          <input matInput type="number" formControlName="CoreCavities" />
+        </div>
+        <div class="row">
+          <label>Shooting Per Shift</label>
+          <input matInput type="number" formControlName="ShootingPerShift" />
+        </div>
+        <div class="row">
+          <label>Core Sand</label>
+          <input matInput type="number" formControlName="CoreSand" />
+        </div>
+      </div>
     </div>
 
-    <!-- MOULDING FIELDS -->
-    <div *ngIf="firstFormGroup.get('MouldingInput')?.value">
-      <h3>Moulding Input</h3>
-      <mat-form-field appearance="standard">
-        <mat-label>Moulding Weight</mat-label>
-        <input matInput type="number" formControlName="MouldingWeight" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Bake Moulding</mat-label>
-        <input matInput type="number" formControlName="BakeMoulding" />
-      </mat-form-field>
+    <div class="stepper-button-wrapper">
+      <button mat-button matStepperNext color="primary" (click)="submitStep2()">Next</button>
     </div>
-
-    <!-- CORE FIELDS -->
-    <div *ngIf="firstFormGroup.get('CoreInput')?.value">
-      <h3>Core Input</h3>
-      <mat-form-field appearance="standard">
-        <mat-label>Core Weight</mat-label>
-        <input matInput type="number" formControlName="CoreWeight" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Cores Per Mould</mat-label>
-        <input matInput type="number" formControlName="CoresPerMould" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Core Cavities</mat-label>
-        <input matInput type="number" formControlName="CoreCavities" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Shooting Per Shift</mat-label>
-        <input matInput type="number" formControlName="ShootingPerShift" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Core Sand</mat-label>
-        <input matInput type="number" formControlName="CoreSand" />
-      </mat-form-field>
-    </div>
-
-    <button mat-button matStepperNext (click)="submitStep2()">Next</button>
   </form>
 </mat-step>
-
-<mat-step [stepControl]="costSummaryFormGroup">
-   <ng-template matStepLabel>Cost Summary</ng-template>
-<form [formGroup]="costForm">
-  <h3>Salary and Wages</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Salary for Process</mat-label>
-    <input matInput type="number" formControlName="salaryforProcess" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Salary Excluding Core Making</mat-label>
-    <input matInput type="number" formControlName="salaryExcludingCoreMaking" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Salary for Core Production</mat-label>
-    <input matInput type="number" formControlName="salaryForCoreProduction" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Outsourcing Cost</mat-label>
-    <input matInput type="number" formControlName="outSourcingCost" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Special Outsourcing Cost</mat-label>
-    <input matInput type="number" formControlName="splOutSourcingCost" />
-  </mat-form-field>
-
-  <h3>Overheads</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Repair and Maintenance</mat-label>
-    <input matInput type="number" formControlName="repairAndMaintenance" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Selling & Distribution Overheads</mat-label>
-    <input matInput type="number" formControlName="sellingDistributionAndMiscOverHeads" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Finance Cost</mat-label>
-    <input matInput type="number" formControlName="financeCost" />
-  </mat-form-field>
-
-  <h3>Commercial Terms</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Payment Credit Period</mat-label>
-    <input matInput type="number" formControlName="paymentCreditPeriod" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Bank Interest</mat-label>
-    <input matInput type="number" formControlName="bankInterest" />
-  </mat-form-field>
-
-  <h3>Margin and Rejection</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Profit %</mat-label>
-    <input matInput type="number" formControlName="profit" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Rejection %</mat-label>
-    <input matInput type="number" formControlName="rejection" />
-  </mat-form-field>
-
-  <!-- New Fields -->
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Heat Treatment</mat-label>
-  <input matInput type="number" formControlName="heatTreatment" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Post Process</mat-label>
-  <input matInput type="number" formControlName="postProcess" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Packing & Transport</mat-label>
-  <input matInput type="number" formControlName="packingAndTransport" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Nozzle Shot Blasting</mat-label>
-  <input matInput type="number" formControlName="NozzleShotBlasting" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>High Pressure Cleaning</mat-label>
-  <input matInput type="number" formControlName="highPressureCleaning" />
-</mat-form-field>
-
-
-  <button mat-button matStepperNext (click)="submitCostForm()">Next</button>
-</form>
-
-
-</mat-step>
-
-
-
-
-
-
-
 
   <!-- Step 3: Done -->
   <mat-step [stepControl]="thirdFormGroup">
@@ -400,12 +297,114 @@
 
     <div class="mt-3">
       
-      <button mat-button matStepperNext color="primary" (click)="generateFinalJson()" >Next</button>
+      <button mat-button matStepperNext color="primary" >Next</button>
     </div>
   </form>
 </mat-step>
 
+<mat-step [stepControl]="costSummaryFormGroup">
+  <ng-template matStepLabel>Cost Summary</ng-template>
+  <form [formGroup]="costForm">
+    <div class="three-column-grid">
+      <!-- Salary and Wages -->
+      <div class="step2-box">
+        <h3>Salary and Wages</h3>
+        <div class="row">
+          <label>Salary for Process</label>
+          <input matInput type="number" formControlName="salaryforProcess" />
+        </div>
+        <div class="row">
+          <label>Salary Excluding Core Making</label>
+          <input matInput type="number" formControlName="salaryExcludingCoreMaking" />
+        </div>
+        <div class="row">
+          <label>Salary for Core Production</label>
+          <input matInput type="number" formControlName="salaryForCoreProduction" />
+        </div>
+        <div class="row">
+          <label>Outsourcing Cost</label>
+          <input matInput type="number" formControlName="outSourcingCost" />
+        </div>
+        <div class="row">
+          <label>Special Outsourcing Cost</label>
+          <input matInput type="number" formControlName="splOutSourcingCost" />
+        </div>
+      </div>
 
+      <!-- Overheads -->
+      <div class="step2-box">
+        <h3>Overheads</h3>
+        <div class="row">
+          <label>Repair and Maintenance</label>
+          <input matInput type="number" formControlName="repairAndMaintenance" />
+        </div>
+        <div class="row">
+          <label>Selling & Distribution Overheads</label>
+          <input matInput type="number" formControlName="sellingDistributionAndMiscOverHeads" />
+        </div>
+        <div class="row">
+          <label>Finance Cost</label>
+          <input matInput type="number" formControlName="financeCost" />
+        </div>
+      </div>
+
+      <!-- Commercial Terms -->
+      <div class="step2-box">
+        <h3>Commercial Terms</h3>
+        <div class="row">
+          <label>Payment Credit Period</label>
+          <input matInput type="number" formControlName="paymentCreditPeriod" />
+        </div>
+        <div class="row">
+          <label>Bank Interest</label>
+          <input matInput type="number" formControlName="bankInterest" />
+        </div>
+      </div>
+
+      <!-- Margin and Rejection -->
+      <div class="step2-box">
+        <h3>Margin and Rejection</h3>
+        <div class="row">
+          <label>Profit %</label>
+          <input matInput type="number" formControlName="profit" />
+        </div>
+        <div class="row">
+          <label>Rejection %</label>
+          <input matInput type="number" formControlName="rejection" />
+        </div>
+      </div>
+
+      <!-- Additional Costs -->
+      <div class="step2-box">
+        <h3>Additional Costs</h3>
+        <div class="row">
+          <label>Heat Treatment</label>
+          <input matInput type="number" formControlName="heatTreatment" />
+        </div>
+        <div class="row">
+          <label>Post Process</label>
+          <input matInput type="number" formControlName="postProcess" />
+        </div>
+        <div class="row">
+          <label>Packing & Transport</label>
+          <input matInput type="number" formControlName="packingAndTransport" />
+        </div>
+        <div class="row">
+          <label>Nozzle Shot Blasting</label>
+          <input matInput type="number" formControlName="NozzleShotBlasting" />
+        </div>
+        <div class="row">
+          <label>High Pressure Cleaning</label>
+          <input matInput type="number" formControlName="highPressureCleaning" />
+        </div>
+      </div>
+    </div>
+
+    <div class="stepper-button-wrapper">
+      <button mat-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()">Next</button>
+    </div>
+  </form>
+</mat-step>
 
 
 
