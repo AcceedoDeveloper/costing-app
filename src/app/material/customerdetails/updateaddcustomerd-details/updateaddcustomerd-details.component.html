@@ -1,123 +1,127 @@
-<table style="width: 100%; border-collapse: collapse;" border="1">
-  <thead>
-    <tr>
-      <th>Process Name</th>
-      <th>Grade / Material</th>
-      <th>Total Cost</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let process of selectedProcesses; let i = index">
-      <!-- Main Row -->
+<div class="table-container">
+  <table>
+    <thead>
       <tr>
-        <td>{{ process.processName }}</td>
-        <td>{{ process.grade?.length > 0 ? process.grade[0][0]?.gradeNo : 'Material' }}</td>
-        <td>
-          ₹ {{
-            calculateProcessTotalCost(process) | number: '1.2-2'
-          }}
-        </td>
-        <td>
-          <button (click)="toggleRow(i)">
-            {{ expandedRowIndex === i ? 'Hide' : 'Show' }}
-          </button>
-        </td>
+        <th>Process Name</th>
+        <th>Grade / Material</th>
+        <th>Total Cost</th>
+        <th>Action</th>
       </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let process of selectedProcesses; let i = index">
+        <!-- Main Row -->
+        <tr>
+          <td>{{ process.processName }}</td>
+          <td>{{ process.grade?.length > 0 ? process.grade[0][0]?.gradeNo : 'Material' }}</td>
+          <td>
+            ₹ {{ calculateProcessTotalCost(process) | number: '1.2-2' }}
+          </td>
+          <td>
+            <button (click)="toggleRow(i)">
+              {{ expandedRowIndex === i ? 'Hide' : 'Show' }}
+            </button>
+          </td>
+        </tr>
 
-      <!-- Expanded Row -->
-      <tr *ngIf="expandedRowIndex === i">
-        <td colspan="4">
-          <table style="width: 100%; border-collapse: collapse;" border="1">
-            <thead>
-              <tr>
-                <th>Material Name</th>
-                <th>Quantity</th>
-                <th>Updated Quantity</th>
-                <th>Unit Cost</th>
-                <th>Updated Unit Cost</th>
-                <th>Total Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Grade-based Materials -->
-              <ng-container *ngIf="process.grade?.length > 0">
-                <ng-container *ngFor="let rm of process.grade[0][0]?.rawMaterial">
-                  <ng-container *ngFor="let mat of rm.materialsUsed">
-                    <tr>
-                      <td>{{ mat.name }}</td>
-                      <td>{{ mat.quantity }}</td>
-                      <td>
-                        <input
-                          type="number"
-                          [(ngModel)]="mat.updatedQuantity"
-                          (change)="logUpdatedData()"
-                          [ngModelOptions]="{ standalone: true }"
-                        />
-                      </td>
-                      <td>{{ mat.unitCost }}</td>
-                      <td>
-                        <input
-                          type="number"
-                          [(ngModel)]="mat.updatedUnitCost"
-                          (change)="logUpdatedData()"
-                          [ngModelOptions]="{ standalone: true }"
-                        />
-                      </td>
-                      <td>
-                        ₹ {{
-                          (mat.updatedQuantity || mat.quantity) *
-                          (mat.updatedUnitCost || mat.unitCost)
-                            | number: '1.2-2'
-                        }}
-                      </td>
-                    </tr>
+        <!-- Expanded Row -->
+        <tr *ngIf="expandedRowIndex === i">
+          <td colspan="4">
+            <table>
+              <thead>
+                <tr>
+                  <th>Material Name</th>
+                  <th>Quantity</th>
+                  <th>Updated Quantity</th>
+                  <th>Unit Cost</th>
+                  <th>Updated Unit Cost</th>
+                  <th>Total Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Grade-based Materials -->
+                <ng-container *ngIf="process.grade?.length > 0">
+                  <ng-container *ngFor="let rm of process.grade[0][0]?.rawMaterial">
+                    <ng-container *ngFor="let mat of rm.materialsUsed">
+                      <tr>
+                        <td>{{ mat.name }}</td>
+                        <td>{{ mat.quantity }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedQuantity"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>{{ mat.unitCost }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedUnitCost"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>
+                          ₹ {{
+                            (mat.updatedQuantity || mat.quantity) *
+                            (mat.updatedUnitCost || mat.unitCost)
+                              | number: '1.2-2'
+                          }}
+                        </td>
+                      </tr>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
-              </ng-container>
 
-              <!-- Raw Material Only -->
-              <ng-container *ngIf="!process.grade?.length">
-                <ng-container *ngFor="let rm of process.rawMaterial">
-                  <ng-container *ngFor="let mat of rm.materialsUsed">
-                    <tr>
-                      <td>{{ mat.name }}</td>
-                      <td>{{ mat.quantity }}</td>
-                      <td>
-                        <input
-                          type="number"
-                          [(ngModel)]="mat.updatedQuantity"
-                          (change)="logUpdatedData()"
-                          [ngModelOptions]="{ standalone: true }"
-                        />
-                      </td>
-                      <td>{{ mat.unitCost }}</td>
-                      <td>
-                        <input
-                          type="number"
-                          [(ngModel)]="mat.updatedUnitCost"
-                          (change)="logUpdatedData()"
-                          [ngModelOptions]="{ standalone: true }"
-                        />
-                      </td>
-                      <td>
-                        ₹ {{
-                          (mat.updatedQuantity || mat.quantity) *
-                          (mat.updatedUnitCost || mat.unitCost)
-                            | number: '1.2-2'
-                        }}
-                      </td>
-                    </tr>
+                <!-- Raw Material Only -->
+                <ng-container *ngIf="!process.grade?.length">
+                  <ng-container *ngFor="let rm of process.rawMaterial">
+                    <ng-container *ngFor="let mat of rm.materialsUsed">
+                      <tr>
+                        <td>{{ mat.name }}</td>
+                        <td>{{ mat.quantity }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedQuantity"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>{{ mat.unitCost }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedUnitCost"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>
+                          ₹ {{
+                            (mat.updatedQuantity || mat.quantity) *
+                            (mat.updatedUnitCost || mat.unitCost)
+                              | number: '1.2-2'
+                          }}
+                        </td>
+                      </tr>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
-              </ng-container>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </ng-container>
-  </tbody>
-</table>
-<button mat-raised-button color="primary" (click)="generateFinalJsonFromLoadedData()">
-  Save Final Updated Data
-</button>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+
+</div>
+<div class="button-submit" >
+  <button mat-raised-button color="primary" (click)="generateFinalJsonFromLoadedData()">
+    Save Final Updated Data
+  </button>
+</div>

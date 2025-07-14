@@ -43,10 +43,11 @@ export const getCustomerDetails = createSelector(
 );
 
 
-export const getAllProcesses = createSelector (
-  getMaterialState, 
-   (state) => state.processes
+export const getAllProcesses = createSelector(
+  getMaterialState,
+  (state) => state?.processes ?? []
 );
+
 
 export const selectAllMaterialTypes = createSelector(
   getMaterialState,

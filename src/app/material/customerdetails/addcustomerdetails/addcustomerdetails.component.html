@@ -1,4 +1,3 @@
-
 <h5>
   <span class="material-icons">add_circle</span>
   Add Customer Details
@@ -8,220 +7,118 @@
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
   <!-- Step 1: Name -->
   <mat-step [stepControl]="firstFormGroup">
-  <form [formGroup]="firstFormGroup">
-    <ng-template matStepLabel>Customer Details</ng-template>
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Customer Details</ng-template>
 
-    <!-- Customer Name -->
-   <mat-form-field appearance="standard" class="full-width">
-  <mat-label>Customer Name</mat-label>
-  <mat-select formControlName="customerName" required>
-    <mat-option *ngFor="let cust of customer" [value]="cust.name">
-      {{ cust.name }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+      <!-- Step layout wrapper -->
+      <div class="step-form-grid">
+        <!-- Left column: Text fields -->
+        <div class="step-left">
+          <!-- Customer Name -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Customer Name</mat-label>
+            <mat-select formControlName="customerName" required>
+              <mat-option *ngFor="let cust of customer" [value]="cust.name">
+                {{ cust.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-    <!-- Part No -->
-    <mat-form-field appearance="standard" class="full-width">
-      <mat-label>Part No</mat-label>
-      <input matInput placeholder="Enter part number" formControlName="partNo" required />
-    </mat-form-field>
+          <!-- Part No -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Part No</mat-label>
+            <input matInput placeholder="Enter part number" formControlName="partNo" required />
+          </mat-form-field>
 
-    <!-- Drawing -->
-    <mat-form-field appearance="standard" class="full-width">
-      <mat-label>Drawing</mat-label>
-      <input matInput placeholder="Enter drawing details" formControlName="drawing" required />
-    </mat-form-field>
- <div class="checkbox-group">
- <mat-checkbox formControlName="CastingInput">Casting Input</mat-checkbox>
-    <mat-checkbox formControlName="MouldingInput">Moulding Input</mat-checkbox>
-    <mat-checkbox formControlName="CoreInput">Core Input</mat-checkbox>
+          <!-- Drawing -->
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-label>Drawing</mat-label>
+            <input matInput placeholder="Enter drawing details" formControlName="drawing" required />
+          </mat-form-field>
+        </div>
 
- </div>
-   
+        <!-- Right column: Checkboxes -->
+        <div class="step-right checkbox-column">
+          <mat-checkbox formControlName="CastingInput">Casting Input</mat-checkbox>
+          <mat-checkbox formControlName="MouldingInput">Moulding Input</mat-checkbox>
+          <mat-checkbox formControlName="CoreInput">Core Input</mat-checkbox>
+        </div>
+      </div>
 
-    <div>
-      <button mat-button matStepperNext color="primary" (click)="fristfrom()" >Next</button>
-    </div>
-  </form>
+      <!-- Stepper Button -->
+      <div class="stepper-button-wrapper">
+        <button mat-raised-button color="primary" matStepperNext (click)="fristfrom()">Next</button>
+      </div>
+    </form>
+
+
 </mat-step>
-
 <mat-step [stepControl]="secondFormGroup">
   <form [formGroup]="secondFormGroup">
     <ng-template matStepLabel>Input Data</ng-template>
 
-    <!-- CASTING FIELDS -->
-    <div *ngIf="firstFormGroup.get('CastingInput')?.value">
-      <h3>Casting Input</h3>
-      <mat-form-field appearance="standard">
-        <mat-label>Casting Weight</mat-label>
-        <input matInput type="number" formControlName="CastingWeight" />
-      </mat-form-field>
+    <div class="three-column-grid">
+      <!-- Casting Input -->
+      <div *ngIf="firstFormGroup.get('CastingInput')?.value" class="step2-box">
+        <h3>Casting Input</h3>
+        <div class="row">
+          <label>Casting Weight</label>
+          <input matInput type="number" formControlName="CastingWeight" />
+        </div>
+        <div class="row">
+          <label>Cavities</label>
+          <input matInput type="number" formControlName="Cavities" />
+        </div>
+        <div class="row">
+          <label>Pouring Weight</label>
+          <input matInput type="number" formControlName="PouringWeight" />
+        </div>
+      </div>
 
-      <mat-form-field appearance="standard">
-        <mat-label>Cavities</mat-label>
-        <input matInput type="number" formControlName="Cavities" />
-      </mat-form-field>
+      <!-- Moulding Input -->
+      <div *ngIf="firstFormGroup.get('MouldingInput')?.value" class="step2-box">
+        <h3>Moulding Input</h3>
+        <div class="row">
+          <label>Moulding Weight</label>
+          <input matInput type="number" formControlName="MouldingWeight" />
+        </div>
+        <div class="row">
+          <label>Bake Moulding</label>
+          <input matInput type="number" formControlName="BakeMoulding" />
+        </div>
+      </div>
 
-      <mat-form-field appearance="standard">
-        <mat-label>Pouring Weight</mat-label>
-        <input matInput type="number" formControlName="PouringWeight" />
-      </mat-form-field>
+      <!-- Core Input -->
+      <div *ngIf="firstFormGroup.get('CoreInput')?.value" class="step2-box">
+        <h3>Core Input</h3>
+        <div class="row">
+          <label>Core Weight</label>
+          <input matInput type="number" formControlName="CoreWeight" />
+        </div>
+        <div class="row">
+          <label>Cores Per Mould</label>
+          <input matInput type="number" formControlName="CoresPerMould" />
+        </div>
+        <div class="row">
+          <label>Core Cavities</label>
+          <input matInput type="number" formControlName="CoreCavities" />
+        </div>
+        <div class="row">
+          <label>Shooting Per Shift</label>
+          <input matInput type="number" formControlName="ShootingPerShift" />
+        </div>
+        <div class="row">
+          <label>Core Sand</label>
+          <input matInput type="number" formControlName="CoreSand" />
+        </div>
+      </div>
     </div>
 
-    <!-- MOULDING FIELDS -->
-    <div *ngIf="firstFormGroup.get('MouldingInput')?.value">
-      <h3>Moulding Input</h3>
-      <mat-form-field appearance="standard">
-        <mat-label>Moulding Weight</mat-label>
-        <input matInput type="number" formControlName="MouldingWeight" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Bake Moulding</mat-label>
-        <input matInput type="number" formControlName="BakeMoulding" />
-      </mat-form-field>
+    <div class="stepper-button-wrapper">
+      <button mat-button matStepperNext color="primary" (click)="submitStep2()">Next</button>
     </div>
-
-    <!-- CORE FIELDS -->
-    <div *ngIf="firstFormGroup.get('CoreInput')?.value">
-      <h3>Core Input</h3>
-      <mat-form-field appearance="standard">
-        <mat-label>Core Weight</mat-label>
-        <input matInput type="number" formControlName="CoreWeight" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Cores Per Mould</mat-label>
-        <input matInput type="number" formControlName="CoresPerMould" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Core Cavities</mat-label>
-        <input matInput type="number" formControlName="CoreCavities" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Shooting Per Shift</mat-label>
-        <input matInput type="number" formControlName="ShootingPerShift" />
-      </mat-form-field>
-
-      <mat-form-field appearance="standard">
-        <mat-label>Core Sand</mat-label>
-        <input matInput type="number" formControlName="CoreSand" />
-      </mat-form-field>
-    </div>
-
-    <button mat-button matStepperNext (click)="submitStep2()">Next</button>
   </form>
 </mat-step>
-
-<mat-step [stepControl]="costSummaryFormGroup">
-   <ng-template matStepLabel>Cost Summary</ng-template>
-<form [formGroup]="costForm">
-  <h3>Salary and Wages</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Salary for Process</mat-label>
-    <input matInput type="number" formControlName="salaryforProcess" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Salary Excluding Core Making</mat-label>
-    <input matInput type="number" formControlName="salaryExcludingCoreMaking" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Salary for Core Production</mat-label>
-    <input matInput type="number" formControlName="salaryForCoreProduction" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Outsourcing Cost</mat-label>
-    <input matInput type="number" formControlName="outSourcingCost" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Special Outsourcing Cost</mat-label>
-    <input matInput type="number" formControlName="splOutSourcingCost" />
-  </mat-form-field>
-
-  <h3>Overheads</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Repair and Maintenance</mat-label>
-    <input matInput type="number" formControlName="repairAndMaintenance" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Selling & Distribution Overheads</mat-label>
-    <input matInput type="number" formControlName="sellingDistributionAndMiscOverHeads" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Finance Cost</mat-label>
-    <input matInput type="number" formControlName="financeCost" />
-  </mat-form-field>
-
-  <h3>Commercial Terms</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Payment Credit Period</mat-label>
-    <input matInput type="number" formControlName="paymentCreditPeriod" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Bank Interest</mat-label>
-    <input matInput type="number" formControlName="bankInterest" />
-  </mat-form-field>
-
-  <h3>Margin and Rejection</h3>
-  <mat-form-field appearance="fill">
-    <mat-label>Profit %</mat-label>
-    <input matInput type="number" formControlName="profit" />
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Rejection %</mat-label>
-    <input matInput type="number" formControlName="rejection" />
-  </mat-form-field>
-
-  <!-- New Fields -->
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Heat Treatment</mat-label>
-  <input matInput type="number" formControlName="heatTreatment" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Post Process</mat-label>
-  <input matInput type="number" formControlName="postProcess" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Packing & Transport</mat-label>
-  <input matInput type="number" formControlName="packingAndTransport" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Nozzle Shot Blasting</mat-label>
-  <input matInput type="number" formControlName="NozzleShotBlasting" />
-</mat-form-field>
-
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>High Pressure Cleaning</mat-label>
-  <input matInput type="number" formControlName="highPressureCleaning" />
-</mat-form-field>
-
-
-  <button mat-button matStepperNext (click)="submitCostForm()">Next</button>
-</form>
-
-
-</mat-step>
-
-
-
-
-
-
-
 
   <!-- Step 3: Done -->
   <mat-step [stepControl]="thirdFormGroup">
@@ -400,18 +297,544 @@
 
     <div class="mt-3">
       
-      <button mat-button matStepperNext color="primary" (click)="generateFinalJson()" >Next</button>
+      <button mat-button matStepperNext color="primary" >Next</button>
+    </div>
+  </form>
+</mat-step>
+
+<mat-step [stepControl]="costSummaryFormGroup">
+  <ng-template matStepLabel>Cost Summary</ng-template>
+  <form [formGroup]="costForm">
+    <div class="three-column-grid">
+      <!-- Salary and Wages -->
+      <div class="step2-box">
+        <h3>Salary and Wages</h3>
+        <div class="row">
+          <label>Salary for Process</label>
+          <input matInput type="number" formControlName="salaryforProcess" />
+        </div>
+        <div class="row">
+          <label>Salary Excluding Core Making</label>
+          <input matInput type="number" formControlName="salaryExcludingCoreMaking" />
+        </div>
+        <div class="row">
+          <label>Salary for Core Production</label>
+          <input matInput type="number" formControlName="salaryForCoreProduction" />
+        </div>
+        <div class="row">
+          <label>Outsourcing Cost</label>
+          <input matInput type="number" formControlName="outSourcingCost" />
+        </div>
+        <div class="row">
+          <label>Special Outsourcing Cost</label>
+          <input matInput type="number" formControlName="splOutSourcingCost" />
+        </div>
+      </div>
+
+      <!-- Overheads -->
+      <div class="step2-box">
+        <h3>Overheads</h3>
+        <div class="row">
+          <label>Repair and Maintenance</label>
+          <input matInput type="number" formControlName="repairAndMaintenance" />
+        </div>
+        <div class="row">
+          <label>Selling & Distribution Overheads</label>
+          <input matInput type="number" formControlName="sellingDistributionAndMiscOverHeads" />
+        </div>
+        <div class="row">
+          <label>Finance Cost</label>
+          <input matInput type="number" formControlName="financeCost" />
+        </div>
+      </div>
+
+      <!-- Commercial Terms -->
+      <div class="step2-box">
+        <h3>Commercial Terms</h3>
+        <div class="row">
+          <label>Payment Credit Period</label>
+          <input matInput type="number" formControlName="paymentCreditPeriod" />
+        </div>
+        <div class="row">
+          <label>Bank Interest</label>
+          <input matInput type="number" formControlName="bankInterest" />
+        </div>
+      </div>
+
+      <!-- Margin and Rejection -->
+      <div class="step2-box">
+        <h3>Margin and Rejection</h3>
+        <div class="row">
+          <label>Profit %</label>
+          <input matInput type="number" formControlName="profit" />
+        </div>
+        <div class="row">
+          <label>Rejection %</label>
+          <input matInput type="number" formControlName="rejection" />
+        </div>
+      </div>
+
+      <!-- Additional Costs -->
+      <div class="step2-box">
+        <h3>Additional Costs</h3>
+        <div class="row">
+          <label>Heat Treatment</label>
+          <input matInput type="number" formControlName="heatTreatment" />
+        </div>
+        <div class="row">
+          <label>Post Process</label>
+          <input matInput type="number" formControlName="postProcess" />
+        </div>
+        <div class="row">
+          <label>Packing & Transport</label>
+          <input matInput type="number" formControlName="packingAndTransport" />
+        </div>
+        <div class="row">
+          <label>Nozzle Shot Blasting</label>
+          <input matInput type="number" formControlName="NozzleShotBlasting" />
+        </div>
+        <div class="row">
+          <label>High Pressure Cleaning</label>
+          <input matInput type="number" formControlName="highPressureCleaning" />
+        </div>
+      </div>
+    </div>
+
+    <div class="stepper-button-wrapper">
+      <button mat-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()">Next</button>
     </div>
   </form>
 </mat-step>
 
 
 
-
-
    <mat-step>
     <ng-template matStepLabel>Genarate Code</ng-template>
-    <p>You are now done.</p>
+     <table>
+        <tr class="header-row">
+            <td colspan="9">INDO SHELL CAST PRIVATE LIMITED</td>
+        </tr>
+        <tr class="header-row">
+            <td colspan="9">MARKETING DEPARTMENT</td>
+        </tr>
+        <tr class="header-row">
+            <td colspan="9">ISC-TS-MKTG-CES-R03</td>
+        </tr>
+        <tr class="company-info">
+            <td colspan="5">A14, SIDCO INDUSTRIAL ESTATE, COIMBATORE - 641 021</td>
+            <td colspan="4">SHEET NO :</td>
+        </tr>
+        <tr class="header-row">
+            <td colspan="9">COST ESTIMATION SHEET</td>
+        </tr>
+        <tr class="company-info">
+            <td colspan="9">DATE : 05.12.2025</td>
+        </tr>
+        <tr class="company-info">
+            <td>Customer</td>
+            <td colspan="2">SFL</td>
+            <td>Material Grade</td>
+            <td colspan="5">GREY IRON</td>
+        </tr>
+        <tr class="company-info">
+            <td>Part Name</td>
+            <td colspan="2">HOUSING TUR BEARING</td>
+            <td>Annual Volume</td>
+            <td colspan="5"></td>
+        </tr>
+        <tr class="company-info">
+            <td>Drawing Number, Revision</td>
+            <td colspan="2">6580933</td>
+            <td>Process</td>
+            <td colspan="5">SHELL MOULDING</td>
+        </tr>
+         <tr class="section-header">
+            
+            <td colspan="2">Casting Inputs</td>
+            <td class="numeric">Material Cost</td>
+            <td class="numeric">Cost</td>
+            <td class="numeric">Cost  Per 1050Kgs of Molten Metal</td>
+            <td class="numeric">Per Kg of Good Casting</td>
+            <td class="numeric">% of Total Cost</td>
+        </tr>
+        <tr>
+            <td>Casting weight in Kgs</td>
+            <td class="numeric">3.45</td>
+            <td>Melting Scrap cost</td>
+            <td class="numeric">20574.14</td>
+            <td>
+           
+            <td class="numeric">43.59</td>
+            <td class="numeric"></td>
+                     
+        </tr>
+        <tr>
+            <td>No of cavities</td>
+            <td class="numeric">2.00</td>
+            <td>Melting Alloying cost</td>
+            <td class="numeric">2924.18</td>
+            <td>
+            <td class="numeric">6.20</td>
+            <td class="numeric"></td>
+          >
+        </tr>
+        <tr>
+            <td>Pouring weight in Kgs</td>
+            <td class="numeric">15.35</td>
+            <td>Shell mould cost</td>
+            <td class="numeric">7111.98</td>
+            <td></td>
+          
+            <td class="numeric">15.07</td>
+            <td class="numeric"></td>
+         
+        </tr>
+        <tr>
+            <td>Good casting weight Kg / heat</td>
+            <td class="numeric">472.00</td>
+            <td>Foundry Consumables</td>
+             <td class="numeric">4457.48</td>
+            <td></td>
+            <td class="numeric">9.44</td>
+            <td class="numeric"></td>
+            
+        </tr>
+        <tr>
+            <td>Yield</td>
+            <td class="numeric">44.95</td>
+            <td>Core sand cost</td>
+            <td class="numeric">707.47</td>
+            <td></td>
+            <td class="numeric">1.50</td>
+            <td class="numeric"></td>
+           
+        </tr>
+        <tr>
+            <td>Material Returned</td>
+            <td class="numeric">578.00</td>
+            <td>Material Credited for Rejection</td>
+            <td class="numeric">-1691.88</td>
+            <td></td>
+           
+            <td class="numeric">-3.58</td>
+            <td class="numeric"></td>
+            
+        </tr>
+        <tr>
+            <td>Yield %</td>
+            <td class="numeric">44.95%</td>
+            <td>Melting Losses</td>
+             <td class="numeric">915.40</td>
+            <td></td>
+            <td class="numeric">1.94</td>
+            <td class="numeric"></td>
+            
+        </tr>
+        <tr>
+            <td>Yield %</td>
+            <td class="numeric">44.95%</td>
+            <td>Melting Losses</td>
+            <td class="numeric">915.40</td>
+            <td></td>
+            <td class="numeric">1.94</td>
+            <td class="numeric"></td>
+          
+        </tr>
+        <tr class="highlight">
+            <td colspan="2">Moulding Inputs</td>
+            <td class="numeric">Subtotal Metal</td>
+            <td></td>
+            <td class="numeric">34998.77</td>
+            <td class="numeric">74.15</td>
+            <td class="numeric">42.00</td>
+            
+        </tr>
+        <tr>
+            <td>SHELL Moulding Weight</td>
+            <td class="numeric">8.70</td>
+            <td>Power Cost</td>
+            <td></td>
+            <td></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>No of moulds/ heat</td>
+            <td class="numeric">68.00</td>
+            <td>Melting &others</td>
+            <td class="numeric">8453.40</td>
+            <td class="numeric"></td>
+           <td class="numeric">17.91</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>No bake moulding</td>
+            <td class="numeric"></td>
+            <td>Shellmoulding</td>
+        
+            <td class="numeric">963.60</td>
+            <td class="numeric"></td>
+            <td class="numeric">2.04</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Core Inputs</td>
+            <td></td>
+            <td>Core making</td>
+           
+            <td class="numeric">895.90</td>
+            <td class="numeric"></td>
+            <td class="numeric">1.90</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Core weight in Kgs</td>
+            <td class="numeric">0.425</td>
+            <td></td>
+            <td></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>No of cores /mould</td>
+            <td class="numeric">2</td>
+            <td>Subtotal Power</td>
+            <td class="numeric"></td>
+            <td class="numeric">10312.90</td>
+            <td class="numeric">21.85</td>
+            <td class="numeric">12.38</td>
+        </tr>
+        <tr>
+            <td>No of cavities in the core box</td>
+            <td class="numeric">1</td>
+            <td>Labour</td>
+            <td></td>
+            <td></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>No os shootings per shift</td>
+            <td class="numeric">125</td>
+            <td>Salary and Wages</td>
+        
+            <td class="numeric">14000.00</td>
+            <td class="numeric"></td>
+            <td class="numeric">29.66</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Core sand cost</td>
+            <td class="numeric">12</td>
+            <td>Core making</td>
+     
+            <td class="numeric">735.00</td>
+            <td class="numeric"></td>
+            <td class="numeric">1.56</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Commercial Terms</td>
+            <td></td>
+            <td>Other/Outside Processing labour charges</td>
+            <td class="numeric">2851.00</td>
+            <td class="numeric"></td>
+            <td class="numeric">6.04</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Payment credit period</td>
+            <td class="numeric">60</td>
+            <td>Sub Total Labour</td>
+            <td class="numeric"></td>
+            <td class="numeric">17586.45</td>
+            <td class="numeric">37.26</td>
+            <td class="numeric">21.11</td>
+        </tr>
+        <tr>
+            <td>Bank interest</td>
+            <td class="numeric">11%</td>
+            <td>Over heads</td>
+            <td></td>
+            <td></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Margin</td>
+            <td class="numeric">8.00</td>
+            <td>Admin and selling over heads</td>
+            <td class="numeric">4490.62</td>
+            <td class="numeric">9990.00</td>
+            <td class="numeric">9.50</td>
+            <td class="numeric">5.39</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Profit</td>
+            <td class="numeric"></td>
+            <td>Rejection cost</td>
+            <td></td>
+            <td class="numeric">5453.22</td>
+            <td class="numeric">11.55</td>
+            <td class="numeric">6.54</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Anticipated Rejection%</td>
+            <td class="numeric"></td>
+            <td>Invertory carrying cost</td>
+            <td></td>
+            <td class="numeric">1317.14</td>
+            <td class="numeric">2.79</td>
+            <td class="numeric">1.58</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td>Rejection %</td>
+            <td class="numeric">8.00</td>
+            <td>Sub total Over Heads</td>
+            <td class="numeric"></td>
+            <td class="numeric">11260.98</td>
+            <td class="numeric">23.90</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Total cost per Kg</td>
+            <td class="numeric"></td>
+            <td class="numeric">74159.10</td>
+            <td class="numeric">157.12</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Special Process (Per Heat)</td>
+            <td></td>
+            <td class="numeric">0.00</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>High Pressure Cleaning</td>
+            <td class="numeric">1.00</td>
+            <td class="numeric">434.24</td>
+            <td class="numeric">0.93</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Ultra sonic washing</td>
+            <td></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>HEAT TREATMENT</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Cutting / Grinding</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric">0.00</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Powder Coating/ Painting/ Surface Treatment</td>
+            <td></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Packing+TRANSPORT</td>
+            <td class="numeric">4.50</td>
+            <td class="numeric">2124.00</td>
+            <td class="numeric">4.53</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Nozzle shot blasting</td>
+            <td class="numeric">1.00</td>
+            <td class="numeric">434.24</td>
+            <td class="numeric">0.93</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Profit</td>
+            <td></td>
+            <td class="numeric">6172.13</td>
+            <td class="numeric">13.08</td>
+            <td class="numeric">7.41</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr class="highlight">
+            <td></td>
+            <td></td>
+            <td>Total cost</td>
+            <td class="numeric"></td>
+            <td class="numeric">83323.70</td>
+            <td class="numeric">176.57</td>
+            <td class="numeric"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Cost per Part</td>
+            <td class="numeric"></td>
+            <td class="numeric">609.04</td>
+            <td class="numeric">609.18</td>
+            <td class="numeric">35.07</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Cost Per Kg</td>
+            <td class="numeric"></td>
+            <td class="numeric">176.53</td>
+            <td class="numeric">65.07</td>
+            <td class="numeric">30.00</td>
+        </tr>
+       
+    </table>
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button color="accent" (click)="stepper.reset()">Reset</button>

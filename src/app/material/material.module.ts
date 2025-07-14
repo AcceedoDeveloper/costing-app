@@ -45,10 +45,12 @@ import { AddcustomerdetailsComponent } from './customerdetails/addcustomerdetail
 
 import { MatOptionModule } from '@angular/material/core';
 import { UpdateaddcustomerdDetailsComponent } from './customerdetails/updateaddcustomerd-details/updateaddcustomerd-details.component';
+import { ProcessPowerComponent } from './process-power/process-power.component';
+import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent, UpdateaddcustomerdDetailsComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent, UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent],
   imports: [
    MatOptionModule,
     MatTooltipModule,

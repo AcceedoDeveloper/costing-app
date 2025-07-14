@@ -26,12 +26,11 @@ import { CustomerComponent } from './customer/customer.component';
 import { DepertmentComponent } from './depertment/depertment.component';
 import { AddcustomerComponent } from './customer/addcustomer/addcustomer.component';
 import { OverHeadsComponent } from './over-heads/over-heads.component';
-import { PowerCostComponent } from './power-cost/power-cost.component';
-import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
-import { AddpowerCostComponent } from './power-cost/addpower-cost/addpower-cost.component';
 
 @NgModule({
-  declarations: [MasterComponent, AdduserComponent, RoleComponent, CustomerComponent, DepertmentComponent, AddcustomerComponent, OverHeadsComponent, PowerCostComponent, SalaryWagesComponent, AddpowerCostComponent, ],
+  declarations: [MasterComponent, AdduserComponent, RoleComponent, 
+    CustomerComponent, DepertmentComponent, AddcustomerComponent,
+     OverHeadsComponent,   ],
   imports: [
     MatSelectModule,
      FormsModule,
