@@ -67,3 +67,11 @@ export const getCustomerWithId = createSelector(
     id: state.id
   })
 );
+
+export const getPowerCostHistory = createSelector(
+  getMaterialState,
+  (state) => {
+    return state.powerCostHistory ?? [];
+  }
+);
+

@@ -6,6 +6,7 @@ import { map, tap } from 'rxjs/operators';
 
 import { ConfigService } from '../shared/components/config.service'; 
 import { PowerCost} from '../models/over-head.model';
+import { PowerCostData } from '../models/PowerCostData.model';
 
 
 
@@ -31,6 +32,36 @@ updatePowerCost(id: string, powerCost: PowerCost): Observable<PowerCost> {
     powerCost
   );
 }
+
+
+getPowerCostMap(): Observable<PowerCostData[]> {
+  const today = new Date(); // e.g., 2025-07-15
+
+  // ✅ End date: last day of current month (2025-07-31)
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const endDate = endOfMonth.toISOString().split('T')[0];
+
+  // ✅ Start date: 6 months before, first day of that month (2025-01-01)
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  sixMonthsAgo.setDate(1); // round to 1st of that month
+  const startDate = sixMonthsAgo.toISOString().split('T')[0];
+
+  const yearNo = today.getFullYear();
+
+  const url = `http://localhost:3005/getPowercostMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  console.log('🌐 API URL:', url); // Confirm the full date range
+
+  return this.http.get<{ data: PowerCostData[] }>(url).pipe(
+    tap(res => console.log('✅ Full API Response:', res)),
+    map(res => res.data),
+    tap(data => console.log('📊 Power cost map history:', data))
+  );
+}
+
+
+
+
 
 
 

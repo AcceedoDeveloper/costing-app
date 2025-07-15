@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Process } from '../../models/process.model';
-import { loadProcesses } from '../store/material.actions';
-import { getAllProcesses } from '../store/material.selector';
+import { Observable } from 'rxjs';
+import { PowerCostData } from '../../models/PowerCostData.model';
+import { loadPowerCosts } from '../store/material.actions';
+import {getPowerCostHistory } from '../store/material.selector';
 
 @Component({
   selector: 'app-process-power',
@@ -10,16 +11,20 @@ import { getAllProcesses } from '../store/material.selector';
   styleUrls: ['./process-power.component.css']
 })
 export class ProcessPowerComponent implements OnInit {
-  processes: Process[] = [];
-  constructor( private store: Store) { }
+ powerCosts$: Observable<PowerCostData[]>;
+  constructor(private store: Store, ) {
+    this.powerCosts$ = this.store.select(getPowerCostHistory);
+  }
+ngOnInit(): void {
+    // Dispatch the action to load power cost data
+    this.store.dispatch(loadPowerCosts());
 
-  ngOnInit(): void {
-     this.store.dispatch(loadProcesses());
-
-    this.store.select(getAllProcesses).subscribe((data: Process[]) => {
-      console.log('Original Data:', data);
+    // Subscribe to data and log it
+    this.powerCosts$.subscribe((data) => {
+      console.log('Power Cost History:', data); // ✅ Console log here
     });
 
+    
   }
 
 }

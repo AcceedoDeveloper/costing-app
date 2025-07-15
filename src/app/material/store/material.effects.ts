@@ -24,6 +24,7 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
   , deleteCustomer, deleteCustomerFailure, deleteCustomerSuccess
+  , loadPowerCosts, loadPowerCostsSuccess, loadPowerCostsFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -32,11 +33,19 @@ import { ProcessService } from '../../services/process.service';
 import { loadMaterialMap, loadMaterialMapSuccess, loadMaterialMapFailure } from './material.actions';
 import { CustomerProcess } from '../../models/Customer-details.model';
 import { ToastrService } from 'ngx-toastr';
+import { PowerService} from '../../services/power.service';
+
 
 @Injectable()
 
 export class MaterialEffects {
-    constructor(private actions$: Actions, private materialService: MaterialService, private toastr: ToastrService, private gradeService: GradeService, private materialTypeService: MaterialTypeService, private processservices : ProcessService) {}
+    constructor(private actions$: Actions, 
+      private materialService: MaterialService, 
+      private toastr: ToastrService, 
+      private gradeService: GradeService, 
+      private materialTypeService: MaterialTypeService, 
+      private processservices : ProcessService,
+      private powerservices : PowerService) {}
 
 
  loadMaterials$ = createEffect(() =>
@@ -415,6 +424,25 @@ deleteCustomer$ = createEffect(() =>
       this.materialTypeService.delectCustomerDetails(action.id).pipe(
         map(() => deleteCustomerSuccess({ id: action.id })),
         catchError((error) => of(deleteCustomerFailure({ error })))
+      )
+    )
+  )
+);
+
+
+loadPowerCosts$ = createEffect(() =>
+  this.actions$.pipe(
+    tap(), // Log everything
+    ofType(loadPowerCosts),
+    tap(),
+    mergeMap(() =>
+      this.powerservices.getPowerCostMap().pipe(
+        tap(data =>console.log(data)
+        ),
+        map(data => loadPowerCostsSuccess({ data })),
+        catchError(error =>
+          of(loadPowerCostsFailure({ error: error.message }))
+        )
       )
     )
   )

@@ -8,6 +8,7 @@ import {MaterialType } from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
 import { CustomerdetailsIn } from '../../models/Customer-details.model';
 import { CustomerProcesss } from '../../models/Customer-details.model';
+import {PowerCostData } from '../../models/PowerCostData.model';
 
 
 export const LOAD_MATERIALS = '[Material page] load materials';
@@ -246,4 +247,18 @@ export const addCustomerDetailsFailure = createAction(
 export const getCustomerWithId = createAction(
   '[Material] Get Customer With ID',
   props<{ id: string }>()
+);
+
+
+
+export const loadPowerCosts = createAction('[PowerCost] Load Power Costs');
+
+export const loadPowerCostsSuccess = createAction(
+  '[PowerCost] Load Power Costs Success',
+  props<{ data: PowerCostData[] }>()
+);
+
+export const loadPowerCostsFailure = createAction(
+  '[PowerCost] Load Power Costs Failure',
+  props<{ error: string }>()
 );

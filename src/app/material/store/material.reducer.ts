@@ -15,7 +15,7 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , updateProcess, updateProcessFailure, updateProcessSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
-  , deleteCustomerSuccess
+  , deleteCustomerSuccess, loadPowerCosts,loadPowerCostsSuccess, loadPowerCostsFailure
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
@@ -25,6 +25,7 @@ import { Process } from '../../models/process.model';
 import { MaterialType} from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
 import { CustomerProcesss } from '../../models/Customer-details.model';
+import { PowerCostData} from '../../models/PowerCostData.model';
 
 
 
@@ -40,6 +41,7 @@ import { CustomerProcesss } from '../../models/Customer-details.model';
    customersProcess: CustomerProcess[];
    id:string | null;
    customersP: CustomerProcesss[];
+    powerCosts: PowerCostData[];
 }
 
 
@@ -54,7 +56,8 @@ const initialState: MaterialState = {
   materialTypes: [],
   customersProcess: [],
   customersP:[],
-  id: null
+  id: null,
+   powerCosts: [],
 };
 
 const _materialReducer = createReducer(
@@ -287,8 +290,26 @@ on(updateCustomerDetailsFailure, (state, { error }) => ({
 on(deleteCustomerSuccess, (state, { id }) => ({
   ...state,
   customers: state.customers.filter(c => c._id !== id),
-}))
+})),
 
+
+on(loadPowerCosts, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
+on(loadPowerCostsSuccess, (state, { data }) => {
+  return {
+    ...state,
+    powerCostHistory: data
+  };
+}),
+
+  on(loadPowerCostsFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  }))
 
 
 
