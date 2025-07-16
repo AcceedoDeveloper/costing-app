@@ -7,6 +7,7 @@ import { map, tap } from 'rxjs/operators';
 import { ConfigService } from '../shared/components/config.service'; 
 import { PowerCost} from '../models/over-head.model';
 import { PowerCostData } from '../models/PowerCostData.model';
+import { SalaryMapResponse} from '../models/salary-map.model'
 
 
 
@@ -62,6 +63,24 @@ getPowerCostMap(): Observable<PowerCostData[]> {
 
 
 
+getSalaryMap(): Observable<SalaryMapResponse> {
+  const today = new Date();
+  const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0]; // end of month
+  const startDateObj = new Date(today);
+  startDateObj.setMonth(startDateObj.getMonth() - 1);
+  startDateObj.setDate(1); // first of previous month
+  const startDate = startDateObj.toISOString().split('T')[0];
+
+  const yearNo = today.getFullYear();
+
+  const url = `http://localhost:3005/getSalaryMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  console.log('📡 Salary API URL:', url);
+
+  return this.http.get<{ data: SalaryMapResponse }>(url).pipe(
+    map(res => res.data),
+    tap(data => console.log('✅ Salary map response:', data))
+  );
+}
 
 
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {PowerService} from '../../services/power.service';
 
 @Component({
   selector: 'app-salary-wages',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SalaryWagesComponent implements OnInit {
 
-  constructor() { }
+  constructor(private powerservices: PowerService) { }
 
   ngOnInit(): void {
+     this.powerservices.getSalaryMap().subscribe(data => {
+      console.log(' Salary data from service:', data);
+    });
   }
 
 }

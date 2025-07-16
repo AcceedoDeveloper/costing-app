@@ -1,0 +1,51 @@
+
+<!-- Header with Search -->
+<div class="header">
+  <h2>Process Power Cost</h2>
+  <mat-form-field appearance="standard" class="search-box">
+    <mat-label>Search by Process</mat-label>
+    <input matInput [(ngModel)]="searchText" (input)="applyFilters()" placeholder="e.g., Casting">
+  </mat-form-field>
+</div>
+
+<!-- Table -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Process Name</th>
+        <th *ngFor="let m of displayMonths">{{ getMonthName(m) }}</th>
+        <th>Current ({{ getMonthName(currentDate.getMonth() + 1) }})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cost of paginatedPowerCosts">
+        <td>{{ cost.processName }}</td>
+
+        <td *ngFor="let m of displayMonths">
+          <ng-container *ngIf="getMonthData(cost.previousUnitCostDetails, m) as detail; else noData">
+            <div>Units: {{ detail.totalUnitPerProcess }}</div>
+            <div>Cost: ₹{{ detail.totalUnitCost }}</div>
+            <div>{{ formatDate(detail.date) }}</div>
+          </ng-container>
+          <ng-template #noData>-</ng-template>
+        </td>
+
+        <td>
+          <div>Units: {{ cost.totalUnitPerProcess }}</div>
+          <div>Cost: ₹{{ cost.totalUnitCost }}</div>
+          <div>{{ formatDate(cost.updatedAt) }}</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Paginator directly under table -->
+  <mat-paginator
+    [length]="filteredPowerCosts.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 15]"
+    (page)="onPageChange($event)"
+    aria-label="Select page of processes"
+  ></mat-paginator>
+</div>
