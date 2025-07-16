@@ -1,5 +1,3 @@
-
-<!-- Header with Search -->
 <div class="header">
   <h2>Process Power Cost</h2>
   <mat-form-field appearance="standard" class="search-box">
@@ -22,25 +20,23 @@
       <tr *ngFor="let cost of paginatedPowerCosts">
         <td>{{ cost.processName }}</td>
 
+        <!-- Monthly columns -->
         <td *ngFor="let m of displayMonths">
           <ng-container *ngIf="getMonthData(cost.previousUnitCostDetails, m) as detail; else noData">
-            <div>Units: {{ detail.totalUnitPerProcess }}</div>
-            <div>Cost: ₹{{ detail.totalUnitCost }}</div>
-            <div>{{ formatDate(detail.date) }}</div>
+            <div>Units: {{ detail.totalUnitPerProcess }} / Cost: ₹{{ detail.totalUnitCost }}</div>
           </ng-container>
           <ng-template #noData>-</ng-template>
         </td>
 
+        <!-- Current Month -->
         <td>
-          <div>Units: {{ cost.totalUnitPerProcess }}</div>
-          <div>Cost: ₹{{ cost.totalUnitCost }}</div>
-          <div>{{ formatDate(cost.updatedAt) }}</div>
+          <div>Units: {{ cost.totalUnitPerProcess }} / Cost: ₹{{ cost.totalUnitCost }}</div>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <!-- Paginator directly under table -->
+  <!-- Paginator -->
   <mat-paginator
     [length]="filteredPowerCosts.length"
     [pageSize]="pageSize"

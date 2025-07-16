@@ -1,5 +1,8 @@
 
 
+
+
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -19,7 +22,7 @@ export class ProcessPowerComponent implements OnInit {
   filteredPowerCosts: PowerCostData[] = [];
   paginatedPowerCosts: PowerCostData[] = [];
 
-  displayMonths: number[] = [];
+  displayMonths: number[] = []; // Previous 5 months only
   currentDate = new Date();
 
   searchText: string = '';
@@ -33,7 +36,7 @@ export class ProcessPowerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.generateMonthRange();
+    this.generateLastFiveMonths(); // ✅ Always 5 months before current
     this.store.dispatch(loadPowerCosts());
 
     this.powerCosts$.subscribe((data) => {
@@ -42,12 +45,31 @@ export class ProcessPowerComponent implements OnInit {
     });
   }
 
-  generateMonthRange(): void {
-    const currentMonth = this.currentDate.getMonth() + 1;
+  /**
+   * ✅ Generates exactly 5 months before the current one
+   * If current is October → [5, 6, 7, 8, 9] (May to Sep)
+   */
+  generateLastFiveMonths(): void {
+    const currentMonthIndex = this.currentDate.getMonth(); // 0-based
     this.displayMonths = [];
-    for (let m = 3; m < currentMonth; m++) {  // Start from March (3)
-      this.displayMonths.push(m);
+
+    for (let i = 5; i >= 1; i--) {
+      let monthIndex = currentMonthIndex - i;
+      if (monthIndex < 0) {
+        monthIndex += 12; // wrap to previous year
+      }
+      this.displayMonths.push(monthIndex + 1); // 1-based
     }
+
+    console.log('🗓 Showing 5 previous months:', this.displayMonths.map(m => this.getMonthName(m)));
+  }
+
+  getMonthName(month: number): string {
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return months[(month - 1 + 12) % 12];
   }
 
   applyFilters(): void {
@@ -69,14 +91,6 @@ export class ProcessPowerComponent implements OnInit {
     const start = this.currentPage * this.pageSize;
     const end = start + this.pageSize;
     this.paginatedPowerCosts = this.filteredPowerCosts.slice(start, end);
-  }
-
-  getMonthName(month: number): string {
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return months[month - 1];
   }
 
   getMonthData(details: any[], month: number): any | null {
