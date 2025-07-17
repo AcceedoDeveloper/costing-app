@@ -1,8 +1,3 @@
-
-
-
-
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -10,6 +5,10 @@ import { PowerCostData } from '../../models/PowerCostData.model';
 import { loadPowerCosts } from '../store/material.actions';
 import { getPowerCostHistory } from '../store/material.selector';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { loadProcesses } from '../store/material.actions';
+import { getAllProcesses } from '../store/material.selector';
+import { Process } from '../../models/process.model';
 
 @Component({
   selector: 'app-process-power',
@@ -21,8 +20,13 @@ export class ProcessPowerComponent implements OnInit {
   allPowerCosts: PowerCostData[] = [];
   filteredPowerCosts: PowerCostData[] = [];
   paginatedPowerCosts: PowerCostData[] = [];
+  showPopup: boolean = false;
+  processForm!: FormGroup;
+   processes: Process[] = [];
+   processNames: string[] = [];
 
-  displayMonths: number[] = []; // Previous 5 months only
+
+  displayMonths: number[] = []; 
   currentDate = new Date();
 
   searchText: string = '';
@@ -31,26 +35,41 @@ export class ProcessPowerComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private fb: FormBuilder) {
     this.powerCosts$ = this.store.select(getPowerCostHistory);
+
   }
 
   ngOnInit(): void {
-    this.generateLastFiveMonths(); // ✅ Always 5 months before current
+    this.generateLastFiveMonths();
     this.store.dispatch(loadPowerCosts());
 
     this.powerCosts$.subscribe((data) => {
+      console.log('data', data)
       this.allPowerCosts = data;
       this.applyFilters();
     });
+
+     this.processForm = this.fb.group({
+      processName: ['', Validators.required],
+      totalUnitPerProcess: ['', [Validators.required, Validators.pattern('^[0-9]+$')]]
+    });
+
+    this.store.dispatch(loadProcesses());
+    
+     this.store.select(getAllProcesses).subscribe((data: Process[]) => {
+  console.log('Original Data:', data);
+  this.processes = (data || []).filter(Boolean); 
+    this.processNames = this.processes.filter(p => p.processName).map(p => p.processName);
+});
+
+    
+
   }
 
-  /**
-   * ✅ Generates exactly 5 months before the current one
-   * If current is October → [5, 6, 7, 8, 9] (May to Sep)
-   */
+  
   generateLastFiveMonths(): void {
-    const currentMonthIndex = this.currentDate.getMonth(); // 0-based
+    const currentMonthIndex = this.currentDate.getMonth(); 
     this.displayMonths = [];
 
     for (let i = 5; i >= 1; i--) {
@@ -107,4 +126,27 @@ export class ProcessPowerComponent implements OnInit {
     const y = date.getFullYear();
     return `${d}-${m}-${y}`;
   }
+
+  openPopup(): void {
+    this.processForm.reset();
+  this.showPopup = true;
+}
+
+closePopup(): void {
+  this.showPopup = false;
+}
+
+onSave(): void {
+  if (this.processForm.valid) {
+    const processData = this.processForm.value; // 👈 get form values
+
+    console.log('Form Data:', processData);
+
+
+    this.closePopup();
+  } else {
+    console.warn('Form Invalid');
+  }
+}
+
 }

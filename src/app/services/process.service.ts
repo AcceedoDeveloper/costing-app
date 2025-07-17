@@ -23,4 +23,7 @@ export class ProcessService {
   deleteProcess(id: string): Observable<any> {
     return this.http.delete(`${this.config.getCostingUrl('deleteProcessType')}/${id}`);
   }
+
+
+
 }

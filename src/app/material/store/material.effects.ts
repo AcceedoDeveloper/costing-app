@@ -25,6 +25,7 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
   , deleteCustomer, deleteCustomerFailure, deleteCustomerSuccess
   , loadPowerCosts, loadPowerCostsSuccess, loadPowerCostsFailure
+  , addPowerCost, addPowerCostFailure, addPowerCostSuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -447,6 +448,21 @@ loadPowerCosts$ = createEffect(() =>
     )
   )
 );
+
+
+addPowerCost$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addPowerCost),
+      mergeMap(action =>
+        this.powerservices.addPowerCost(action.processData).pipe(
+          map(() => addPowerCostSuccess({ message: 'Power cost added successfully' })),
+          catchError(error => of(addPowerCostFailure({ error })))
+        )
+      )
+    )
+  );
+
+
 
 
 

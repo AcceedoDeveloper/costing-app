@@ -42,7 +42,7 @@ import { MasterModule } from '../master/master/master.module';
 import { MaterialtypeComponent } from './materialtype/materialtype.component';
 import { ProcesseditComponent } from './process/processedit/processedit.component';
 import { AddcustomerdetailsComponent } from './customerdetails/addcustomerdetails/addcustomerdetails.component'; 
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
 import { UpdateaddcustomerdDetailsComponent } from './customerdetails/updateaddcustomerd-details/updateaddcustomerd-details.component';
 import { ProcessPowerComponent } from './process-power/process-power.component';
@@ -50,8 +50,13 @@ import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
 
 
 @NgModule({
-  declarations: [MaterialComponent, AddMaterialComponent, SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, ProcessComponent, AddprocessComponent, MaterialtypeComponent, ProcesseditComponent, AddcustomerdetailsComponent, UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent],
+  declarations: [MaterialComponent, AddMaterialComponent, 
+    SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, 
+    ProcessComponent, AddprocessComponent, MaterialtypeComponent, 
+    ProcesseditComponent, AddcustomerdetailsComponent, 
+    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent],
   imports: [
+    MatAutocompleteModule,
    MatOptionModule,
     MatTooltipModule,
      MatStepperModule ,

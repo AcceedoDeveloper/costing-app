@@ -35,7 +35,7 @@ export class AddprocessComponent implements OnInit {
   ngOnInit(): void {
     this.processForm = this.fb.group({
       processName: ['', Validators.required],
-      totalUnitPerProcess: ['', Validators.required],
+     
       type: this.fb.array([], Validators.required),
       grade: [''],
       materials: this.fb.array([])
@@ -123,7 +123,7 @@ export class AddprocessComponent implements OnInit {
       const formValue = this.processForm.value;
 
       const payload = {
-        totalUnitPerProcess: formValue.totalUnitPerProcess,
+      
         processName: formValue.processName,
         grade: formValue.grade,
         rawMaterial: formValue.materials.map((material: any) => ({

@@ -16,6 +16,7 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
   , deleteCustomerSuccess, loadPowerCosts,loadPowerCostsSuccess, loadPowerCostsFailure
+
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
@@ -26,7 +27,6 @@ import { MaterialType} from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
 import { CustomerProcesss } from '../../models/Customer-details.model';
 import { PowerCostData} from '../../models/PowerCostData.model';
-
 
 
  export  interface MaterialState {
@@ -42,6 +42,7 @@ import { PowerCostData} from '../../models/PowerCostData.model';
    id:string | null;
    customersP: CustomerProcesss[];
     powerCosts: PowerCostData[];
+    
 }
 
 
@@ -58,6 +59,7 @@ const initialState: MaterialState = {
   customersP:[],
   id: null,
    powerCosts: [],
+  
 };
 
 const _materialReducer = createReducer(
@@ -309,7 +311,9 @@ on(loadPowerCostsSuccess, (state, { data }) => {
     ...state,
     loading: false,
     error
-  }))
+  })),
+
+
 
 
 

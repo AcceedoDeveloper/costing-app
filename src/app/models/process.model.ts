@@ -11,7 +11,10 @@ export interface RawMaterial {
 export interface Process {
   _id?: string;
   processName: string;
-  totalUnitPerProcess: number;
+ 
   grade: string | string[];
   rawMaterial: RawMaterial[];
 }
+
+
+

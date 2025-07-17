@@ -262,3 +262,22 @@ export const loadPowerCostsFailure = createAction(
   '[PowerCost] Load Power Costs Failure',
   props<{ error: string }>()
 );
+
+
+export const addPowerCost = createAction(
+  '[Process Power] Add Power Cost',
+  props<{ processData: { processName: string; totalUnitPerProcess: number } }>()
+);
+
+export const addPowerCostSuccess = createAction(
+  '[Process Power] Add Power Cost Success',
+  props<{ message: string }>()
+);
+
+export const addPowerCostFailure = createAction(
+  '[Process Power] Add Power Cost Failure',
+  props<{ error: any }>()
+);
+
+
+

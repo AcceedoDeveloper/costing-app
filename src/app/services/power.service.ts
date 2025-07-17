@@ -10,7 +10,6 @@ import { PowerCostData } from '../models/PowerCostData.model';
 import { SalaryMapResponse} from '../models/salary-map.model'
 
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -83,7 +82,8 @@ getSalaryMap(): Observable<SalaryMapResponse> {
 }
 
 
-
-
+addPowerCost(data: { processName: string; totalUnitPerProcess: number }) {
+    return this.http.post('http://localhost:3005/addProcess-Powercost', data);
+  }
 
 }

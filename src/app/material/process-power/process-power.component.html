@@ -1,12 +1,15 @@
+<!-- Header Section -->
 <div class="header">
   <h2>Process Power Cost</h2>
+  <button mat-raised-button color="primary" (click)="openPopup()">Add Power Cost</button>
+
   <mat-form-field appearance="standard" class="search-box">
     <mat-label>Search by Process</mat-label>
     <input matInput [(ngModel)]="searchText" (input)="applyFilters()" placeholder="e.g., Casting">
   </mat-form-field>
 </div>
 
-<!-- Table -->
+<!-- Table Section -->
 <div class="table-container">
   <table>
     <thead>
@@ -14,13 +17,14 @@
         <th>Process Name</th>
         <th *ngFor="let m of displayMonths">{{ getMonthName(m) }}</th>
         <th>Current ({{ getMonthName(currentDate.getMonth() + 1) }})</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let cost of paginatedPowerCosts">
+      <tr *ngFor="let cost of paginatedPowerCosts; let i = index">
         <td>{{ cost.processName }}</td>
 
-        <!-- Monthly columns -->
+        <!-- Previous Month Data -->
         <td *ngFor="let m of displayMonths">
           <ng-container *ngIf="getMonthData(cost.previousUnitCostDetails, m) as detail; else noData">
             <div>Units: {{ detail.totalUnitPerProcess }} / Cost: ₹{{ detail.totalUnitCost }}</div>
@@ -28,9 +32,16 @@
           <ng-template #noData>-</ng-template>
         </td>
 
-        <!-- Current Month -->
+        <!-- Current Month Data -->
         <td>
           <div>Units: {{ cost.totalUnitPerProcess }} / Cost: ₹{{ cost.totalUnitCost }}</div>
+        </td>
+
+        <!-- Only Edit Button -->
+        <td>
+          <button mat-icon-button color="primary" (click)="onEdit(cost)">
+            <mat-icon>edit</mat-icon>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -42,6 +53,46 @@
     [pageSize]="pageSize"
     [pageSizeOptions]="[5, 10, 15]"
     (page)="onPageChange($event)"
-    aria-label="Select page of processes"
   ></mat-paginator>
+</div>
+
+<!-- Popup Overlay -->
+<div class="popup-overlay" *ngIf="showPopup" (click)="closePopup()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <h3>{{ editIndex !== null ? 'Edit' : 'Add' }} Process Power Cost</h3>
+    <form [formGroup]="processForm" (ngSubmit)="onSave()">
+      <!-- Process Name -->
+      <mat-form-field appearance="fill" class="popup-input">
+        <mat-label>Process Name</mat-label>
+        <input matInput [matAutocomplete]="auto" formControlName="processName">
+        <mat-icon matSuffix>arrow_drop_down</mat-icon>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let name of processNames" [value]="name">
+            {{ name }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="processForm.get('processName')?.hasError('required')">
+          Process Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Total Units -->
+      <mat-form-field appearance="fill" class="popup-input">
+        <mat-label>Total Unit Per Process</mat-label>
+        <input matInput formControlName="totalUnitPerProcess" type="number">
+        <mat-error *ngIf="processForm.get('totalUnitPerProcess')?.hasError('required')">
+          Units are required
+        </mat-error>
+        <mat-error *ngIf="processForm.get('totalUnitPerProcess')?.hasError('pattern')">
+          Only numbers allowed
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Action Buttons -->
+      <div class="button-row">
+        <button mat-raised-button color="primary" type="submit">Save</button>
+        <button mat-raised-button color="warn" type="button" (click)="closePopup()">Cancel</button>
+      </div>
+    </form>
+  </div>
 </div>
