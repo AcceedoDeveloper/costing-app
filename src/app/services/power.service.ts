@@ -87,3 +87,4 @@ addPowerCost(data: { processName: string; totalUnitPerProcess: number }) {
   }
 
 }
+                    

@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { loadProcesses } from '../store/material.actions';
 import { getAllProcesses } from '../store/material.selector';
 import { Process } from '../../models/process.model';
+import { addPowerCost } from '../store/material.actions';
 
 @Component({
   selector: 'app-process-power',
@@ -136,17 +137,21 @@ closePopup(): void {
   this.showPopup = false;
 }
 
+
 onSave(): void {
   if (this.processForm.valid) {
-    const processData = this.processForm.value; // 👈 get form values
+    const processData = this.processForm.value;
 
     console.log('Form Data:', processData);
 
+    this.store.dispatch(addPowerCost({ processData })); // ✅ Correct dispatch
+    this.store.dispatch(loadPowerCosts());
 
     this.closePopup();
   } else {
     console.warn('Form Invalid');
   }
 }
+
 
 }
