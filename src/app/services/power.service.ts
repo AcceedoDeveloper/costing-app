@@ -8,6 +8,7 @@ import { ConfigService } from '../shared/components/config.service';
 import { PowerCost} from '../models/over-head.model';
 import { PowerCostData } from '../models/PowerCostData.model';
 import { SalaryMapResponse} from '../models/salary-map.model'
+import { SalaryMapResponseData } from '../models/SalaryMapResponse.model';
 
 
 @Injectable({
@@ -37,11 +38,11 @@ updatePowerCost(id: string, powerCost: PowerCost): Observable<PowerCost> {
 getPowerCostMap(): Observable<PowerCostData[]> {
   const today = new Date(); // e.g., 2025-07-15
 
-  // ✅ End date: last day of current month (2025-07-31)
+ 
   const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
   const endDate = endOfMonth.toISOString().split('T')[0];
 
-  // ✅ Start date: 6 months before, first day of that month (2025-01-01)
+  
   const sixMonthsAgo = new Date(today);
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
   sixMonthsAgo.setDate(1); // round to 1st of that month
@@ -62,7 +63,7 @@ getPowerCostMap(): Observable<PowerCostData[]> {
 
 
 
-getSalaryMap(): Observable<SalaryMapResponse> {
+getSalaryMap(): Observable<SalaryMapResponseData> {
   const today = new Date();
   const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0]; // end of month
   const startDateObj = new Date(today);
@@ -75,7 +76,7 @@ getSalaryMap(): Observable<SalaryMapResponse> {
   const url = `http://localhost:3005/getSalaryMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
   console.log('📡 Salary API URL:', url);
 
-  return this.http.get<{ data: SalaryMapResponse }>(url).pipe(
+  return this.http.get<{ data: SalaryMapResponseData }>(url).pipe(
     map(res => res.data),
     tap(data => console.log('✅ Salary map response:', data))
   );
@@ -85,6 +86,13 @@ getSalaryMap(): Observable<SalaryMapResponse> {
 addPowerCost(data: { processName: string; totalUnitPerProcess: number }) {
     return this.http.post('http://localhost:3005/addProcess-Powercost', data);
   }
+
+
+uupdatePowerCost(id: string, data: PowerCostData): Observable<PowerCostData> {
+   return this.http.put<PowerCostData>(` http://localhost:3005/updatePowerCost/${id}`, data);
+}
+
+
 
 }
                     

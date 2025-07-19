@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, State } from '@ngrx/store';
 
  
 
@@ -75,3 +75,9 @@ export const getPowerCostHistory = createSelector(
   }
 );
 
+
+export const getsalaryMap = createSelector (
+  getMaterialState,
+  (State) =>  State.salaryMap
+  
+);

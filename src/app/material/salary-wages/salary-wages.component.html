@@ -1,0 +1,14 @@
+<table border="1" style="width: 100%; text-align: center;">
+  <thead>
+    <tr>
+      <th>Process Name</th>
+      <th *ngFor="let month of tableHeaders">{{ month }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of salaryTable">
+      <td>{{ row.processName }}</td>
+      <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -26,6 +26,8 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , deleteCustomer, deleteCustomerFailure, deleteCustomerSuccess
   , loadPowerCosts, loadPowerCostsSuccess, loadPowerCostsFailure
   , addPowerCost, addPowerCostFailure, addPowerCostSuccess
+  , updatePowerCost, updatePowerCostSuccess
+  , loadSalaryMap, loadSalaryMapSuccess, loadSalaryMapFailure
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -462,7 +464,41 @@ addPowerCost$ = createEffect(() =>
     )
   );
 
+updatePowerCost$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(updatePowerCost),
+    mergeMap(({ id, updatedData }) =>
+      this.powerservices.uupdatePowerCost(id, updatedData).pipe(
+        map((res: any) => {
+          this.toastr.success('Power cost updated successfully', 'Success');
+          return updatePowerCostSuccess({ updatedData: res });
+        }),
+        catchError(error => {
+          this.toastr.error('Failed to update power cost', 'Error');
+          return of({ type: '[Power Cost] Update Failed', error });
+        })
+      )
+    )
+  )
+);
 
+
+
+loadSalaryMap$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadSalaryMap),
+      mergeMap(() =>
+        this.powerservices.getSalaryMap().pipe(
+          map((salaryMap) =>
+            loadSalaryMapSuccess({ salaryMap })
+          ),
+          catchError((error) =>
+            of(loadSalaryMapFailure({ error }))
+          )
+        )
+      )
+    )
+  );
 
 
 

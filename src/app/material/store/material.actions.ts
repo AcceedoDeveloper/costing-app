@@ -9,6 +9,7 @@ import { CustomerProcess } from '../../models/Customer-details.model';
 import { CustomerdetailsIn } from '../../models/Customer-details.model';
 import { CustomerProcesss } from '../../models/Customer-details.model';
 import {PowerCostData } from '../../models/PowerCostData.model';
+import { SalaryMapResponseData} from '../../models/SalaryMapResponse.model';
 
 
 export const LOAD_MATERIALS = '[Material page] load materials';
@@ -278,6 +279,49 @@ export const addPowerCostFailure = createAction(
   '[Process Power] Add Power Cost Failure',
   props<{ error: any }>()
 );
+
+
+
+
+export const updatePowerCost = createAction(
+  '[Power Cost] Update Power Cost',
+  props<{ id: string; updatedData: PowerCostData }>()
+);
+
+export const updatePowerCostSuccess = createAction(
+  '[Power Cost] Update Power Cost Success',
+  props<{ updatedData: PowerCostData }>()
+);
+
+
+export const loadSalaryMap = createAction('[Salary] Load Salary Map');
+
+export const loadSalaryMapSuccess = createAction(
+  '[Salary] Load Salary Map Success',
+  props<{ salaryMap: SalaryMapResponseData }>()
+);
+
+export const loadSalaryMapFailure = createAction(
+  '[Salary] Load Salary Map Failure',
+  props<{ error: any }>()
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

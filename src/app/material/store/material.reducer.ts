@@ -16,7 +16,7 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
   , addCustomerDetails, addCustomerDetailsFailure, addCustomerDetailsSuccess
   ,updateCustomerDetails, updateCustomerDetailsFailure, updateCustomerDetailsSuccess
   , deleteCustomerSuccess, loadPowerCosts,loadPowerCostsSuccess, loadPowerCostsFailure
-
+  , updatePowerCostSuccess, loadSalaryMap, loadSalaryMapSuccess, loadSalaryMapFailure
 } from './material.actions';
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
@@ -27,6 +27,7 @@ import { MaterialType} from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
 import { CustomerProcesss } from '../../models/Customer-details.model';
 import { PowerCostData} from '../../models/PowerCostData.model';
+import { SalaryMapResponseData } from '../../models/SalaryMapResponse.model';
 
 
  export  interface MaterialState {
@@ -42,6 +43,7 @@ import { PowerCostData} from '../../models/PowerCostData.model';
    id:string | null;
    customersP: CustomerProcesss[];
     powerCosts: PowerCostData[];
+     salaryMap: SalaryMapResponseData | null;
     
 }
 
@@ -59,6 +61,7 @@ const initialState: MaterialState = {
   customersP:[],
   id: null,
    powerCosts: [],
+   salaryMap: null
   
 };
 
@@ -312,6 +315,38 @@ on(loadPowerCostsSuccess, (state, { data }) => {
     loading: false,
     error
   })),
+
+
+on(updatePowerCostSuccess, (state, { updatedData }) => {
+  const updatedList = state.powerCosts.map(item =>
+    item._id === updatedData._id ? updatedData : item
+  );
+  return {
+    ...state,
+    powerCosts: updatedList,
+    error: null // clear any error
+  };
+}),
+
+
+
+ on(loadSalaryMap, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(loadSalaryMapSuccess, (state, { salaryMap }) => ({
+    ...state,
+    salaryMap,
+    loading: false,
+  })),
+  on(loadSalaryMapFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  }))
+
+
 
 
 
