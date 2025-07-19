@@ -309,7 +309,20 @@ export const loadSalaryMapFailure = createAction(
 
 
 
+export const addSalaryEntry = createAction(
+  '[Salary] Add Entry',
+  props<{ payload: any }>()
+);
 
+export const addSalaryEntrySuccess = createAction(
+  '[Salary] Add Entry Success',
+  props<{ response: any }>()
+);
+
+export const addSalaryEntryFailure = createAction(
+  '[Salary] Add Entry Failure',
+  props<{ error: any }>()
+);
 
 
 

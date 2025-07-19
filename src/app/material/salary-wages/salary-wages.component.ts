@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { SalaryMapResponseData, SalaryEntry } from '../../models/SalaryMapResponse.model';
 import { loadSalaryMap } from '../store/material.actions';
 import { getsalaryMap } from '../store/material.selector';
+import {AddSalaryWagesComponent } from './add-salary-wages/add-salary-wages.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-salary-wages',
@@ -15,7 +17,7 @@ export class SalaryWagesComponent implements OnInit {
   tableHeaders: string[] = []; // Dynamic months like ['Jul 2025', 'Jun 2025']
   salaryTable: { processName: string; [month: string]: any }[] = [];
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private dialog: MatDialog) {
     this.store.dispatch(loadSalaryMap());
   }
 
@@ -81,6 +83,16 @@ ngOnInit() {
 formatMonthYear(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   return d.toLocaleString('default', { month: 'short', year: 'numeric' }); // e.g., 'Jul 2025'
+}
+
+
+addSalarywages(){
+ this.dialog.open(
+  AddSalaryWagesComponent,
+  {
+    width: '500px'
+  }
+ );
 }
 
 

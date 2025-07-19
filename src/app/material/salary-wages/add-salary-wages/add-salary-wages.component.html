@@ -1,0 +1,27 @@
+<form [formGroup]="salaryForm" (ngSubmit)="onSubmit()">
+  <label>Process Name:
+    <input formControlName="processName" type="text" />
+  </label><br>
+
+  <label>Salary for Process:
+    <input formControlName="salaryforProcess" type="number" />
+  </label><br>
+
+  <label>Salary Excluding Core Making:
+    <input formControlName="salaryExcludingCoreMaking" type="number" />
+  </label><br>
+
+  <label>Salary For Core Production:
+    <input formControlName="salaryForCoreProduction" type="number" />
+  </label><br>
+
+  <label>Outsourcing Cost:
+    <input formControlName="outSourcingCost" type="number" />
+  </label><br>
+
+  <label>Special Outsourcing Cost:
+    <input formControlName="splOutSourcingCost" type="number" />
+  </label><br>
+
+  <button type="submit">Submit</button>
+</form>

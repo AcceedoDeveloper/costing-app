@@ -92,7 +92,9 @@ uupdatePowerCost(id: string, data: PowerCostData): Observable<PowerCostData> {
    return this.http.put<PowerCostData>(` http://localhost:3005/updatePowerCost/${id}`, data);
 }
 
-
+adddSlaryProcess(data: any): Observable<any>{
+  return this.http.post(this.configService.getCostingUrl('addProcess-SalaryWages'), data);
+}
 
 }
                     

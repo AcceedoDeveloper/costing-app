@@ -28,6 +28,7 @@ import { loadMaterials, loadMaterialsFailure, loadMaterialsSuccess
   , addPowerCost, addPowerCostFailure, addPowerCostSuccess
   , updatePowerCost, updatePowerCostSuccess
   , loadSalaryMap, loadSalaryMapSuccess, loadSalaryMapFailure
+  , addSalaryEntry, addSalaryEntryFailure, addSalaryEntrySuccess
 } from './material.actions';
 import {MaterialService} from '../../services/material.service';
 import {MaterialTypeService} from '../../services/material-type.service';
@@ -500,6 +501,17 @@ loadSalaryMap$ = createEffect(() =>
     )
   );
 
+  addSalaryEntry$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(addSalaryEntry),
+      mergeMap(action =>
+        this.powerservices.adddSlaryProcess(action.payload).pipe(
+          map(response => addSalaryEntrySuccess({ response })),
+          catchError(error => of(addSalaryEntryFailure({ error })))
+        )
+      )
+    )
+  );
 
 
 }
