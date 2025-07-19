@@ -1,9 +1,177 @@
-<h1>Dashboard</h1>
-<p>Welcome to the dashboard!</p>
+<div class="dashboard-grid">
+  <div class="box">
+    <div class="container">
 
-<mat-icon>arrow_upward</mat-icon>
+    <div class="top-bar">
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search" class="search-input" />
+  </div>
+  <div class="dropdown">
+    <button class="dropdown-button">All Assets ▾</button>
+  </div>
+</div>
 
-<google-chart
+  
+
+  <div class="table">
+    <div class="table-head">
+      <div>Asset</div>
+      <div>Price</div>
+      <div>Price</div>
+      <div>Balance</div>
+      <div>Proportion</div>
+    </div>
+
+    <div class="table-row active">
+      <div class="asset">
+        <div>
+          <div class="asset-name">BNB</div>
+          <div class="asset-full">BNB</div>
+        </div>
+      </div>
+      <div class="price">
+        $214.08 <span class="up">+0.23%</span>
+      </div>
+      <div class="price">
+        $214.08 <span class="up">+0.23%</span>
+      </div>
+      <div class="balance">
+        122,356 <br><small>$76,275.17</small>
+      </div>
+      <div class="">
+        <span style="color: red;">📉 Loss</span>
+      </div>
+    </div>
+
+    <div class="table-row ">
+      <div class="asset">
+        <div>
+          <div class="asset-name">BTC</div>
+          <div class="asset-full">Bitcoin</div>
+        </div>
+      </div>
+      <div class="price">
+        $0.25,663.20 <span class="up">+0.29%</span>
+      </div>
+      <div class="price">
+        $0.25,663.20 <span class="up">+0.29%</span>
+      </div>
+      <div class="balance">
+        12.00 <br><small>$307,958.4</small>
+      </div>
+      <div >
+        <span style="color: red;">📉 Loss</span>
+      </div>
+    </div>
+
+    <div class="table-row">
+      <div class="asset">
+        <div>
+          <div class="asset-name">USDT</div>
+          <div class="asset-full">Tether</div>
+        </div>
+      </div>
+      <div class="price">
+        $1.00 <span class="down">-0.02%</span>
+      </div>
+      <div class="price">
+        $0.25,663.20 <span class="up">+0.29%</span>
+      </div>
+      <div class="balance">
+        122,356 <br><small>$122,257</small>
+      </div>
+      <div >
+       <span style="color: red;">📉 Loss</span>
+      </div>
+    </div>
+
+    <div class="table-row">
+      <div class="asset">
+        <div>
+          <div class="asset-name">XRP</div>
+          <div class="asset-full">XRP</div>
+        </div>
+      </div>
+      <div class="price">
+        $0.50 <span class="up green">+0.14%</span>
+      </div>
+      <div class="price">
+        $0.25,663.20 <span class="up">+0.29%</span>
+      </div>
+      <div class="balance">
+        61,178.00 <br><small>$122,258</small>
+      </div>
+      <div >
+        <span style="color: green;">📈 Gain</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  </div>
+
+
+
+<div class="box quotation-box">
+  <mat-tab-group animationDuration="500ms">
+
+    <!-- New Quotation -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        New Quotation <span class="tab-badge">5</span>
+      </ng-template>
+      <div class="tab-display">
+        <div class="quotation-card">
+          <div class="info-row">
+            <p><strong>Customer Name:</strong> ABC Industries</p>
+            <p><strong>Part Name:</strong> Gear Shaft</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Pending Quotation -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Pending Quotation <span class="tab-badge warning">2</span>
+      </ng-template>
+      <div class="tab-display">
+        <div class="quotation-card">
+          <div class="info-row">
+            <p><strong>Customer Name:</strong> XYZ Motors</p>
+            <p><strong>Part Name:</strong> Engine Mount</p>
+            <p><strong>Stopped Process:</strong> <span class="status warning">CNC Machining</span></p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Last Month Quotation -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        Last Month Quotation <span class="tab-badge success">3</span>
+      </ng-template>
+      <div class="tab-display">
+        <div class="quotation-card">
+          <div class="info-row">
+            <p><strong>Customer Name:</strong> Delta Corp</p>
+            <p><strong>Part Name:</strong> Brake Disc</p>
+            <p><strong>Status:</strong> <span class="status success">Accepted</span></p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>
+
+
+
+  <div class="box">
+  <google-chart
   [type]="chart.type"
   [data]="chart.data"
   [options]="chart.options"
@@ -11,3 +179,36 @@
   [height]="chart.height">
 </google-chart>
 
+  </div>
+  <div class="box">
+
+<google-chart
+  [type]="materilachart.type"
+  [data]="materilachart.data"
+  [columnNames]="materilachart.columnNames"
+  [options]="materilachart.options"
+  [width]="materilachart.width"
+  [height]="materilachart.height">
+</google-chart>
+
+
+
+
+  </div>
+
+
+
+
+  <div class="box">
+    <google-chart
+  [type]="barChart.type"
+  [data]="barChart.data"
+  [columnNames]="barChart.columnNames"
+  [options]="barChart.options"
+  [width]="barChart.width"
+  [height]="barChart.height">
+</google-chart>
+
+  </div>
+  <div class="box">Box 6</div>
+</div>

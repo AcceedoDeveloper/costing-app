@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ReportComponent } from './report/report.component';
 import { DashComponent } from './dash/dash.component';
 import { CompanyComponent } from './company/company.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CompanyComponent } from './company/company.component';
     MatIconModule,
     GoogleChartsModule,
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    MatTabsModule
   ]
 })
 export class DashboardModule { }
