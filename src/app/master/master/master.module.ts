@@ -26,11 +26,13 @@ import { CustomerComponent } from './customer/customer.component';
 import { DepertmentComponent } from './depertment/depertment.component';
 import { AddcustomerComponent } from './customer/addcustomer/addcustomer.component';
 import { OverHeadsComponent } from './over-heads/over-heads.component';
+import { AddOverheadsComponent } from './over-heads/add-overheads/add-overheads.component';
 
 @NgModule({
   declarations: [MasterComponent, AdduserComponent, RoleComponent, 
     CustomerComponent, DepertmentComponent, AddcustomerComponent,
-     OverHeadsComponent,   ],
+     OverHeadsComponent,
+     AddOverheadsComponent,   ],
   imports: [
     MatSelectModule,
      FormsModule,

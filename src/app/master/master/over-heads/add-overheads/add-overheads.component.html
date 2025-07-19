@@ -1,0 +1,15 @@
+<form [formGroup]="overheadForm" (ngSubmit)="onSubmit()">
+  <label>Process Name:</label>
+  <input type="text" formControlName="processName" />
+
+  <label>Repair and Maintenance:</label>
+  <input type="number" formControlName="repairAndMaintenance" />
+
+  <label>Selling, Distribution and Misc Overheads:</label>
+  <input type="number" formControlName="sellingDistributionAndMiscOverHeads" />
+
+  <label>Finance Cost:</label>
+  <input type="number" formControlName="financeCost" />
+
+  <button type="submit">Submit</button>
+</form>

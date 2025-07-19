@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { Overheads } from '../../../models/over-head.model';
 import { loadOverheads } from '../store/master.action';
 import { getoverheads } from '../store/master.selector';
+import { AddOverheadsComponent} from './add-overheads/add-overheads.component';
+
 
 @Component({
   selector: 'app-over-heads',
@@ -77,5 +79,14 @@ export class OverHeadsComponent implements OnInit {
   formatMonthYear(date: Date | string): string {
     const d = typeof date === 'string' ? new Date(date) : date;
     return d.toLocaleString('default', { month: 'short', year: 'numeric' }); // e.g., "Jul 2025"
+  }
+
+
+  openAddOverheads(){
+    this.dialog.open(
+      AddOverheadsComponent,{
+        width:'500'
+      }
+    )
   }
 }
