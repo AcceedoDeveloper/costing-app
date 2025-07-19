@@ -9,7 +9,7 @@ import { PowerCost} from '../models/over-head.model';
 import { PowerCostData } from '../models/PowerCostData.model';
 import { SalaryMapResponse} from '../models/salary-map.model'
 import { SalaryMapResponseData } from '../models/SalaryMapResponse.model';
-
+import { Overheads } from '../models/over-head.model';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +94,33 @@ uupdatePowerCost(id: string, data: PowerCostData): Observable<PowerCostData> {
 
 adddSlaryProcess(data: any): Observable<any>{
   return this.http.post(this.configService.getCostingUrl('addProcess-SalaryWages'), data);
+}
+
+
+
+getOverHesdsMap(): Observable<Overheads[]> {
+  const today = new Date(); // e.g., 2025-07-15
+
+ 
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const endDate = endOfMonth.toISOString().split('T')[0];
+
+  
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  sixMonthsAgo.setDate(1); // round to 1st of that month
+  const startDate = sixMonthsAgo.toISOString().split('T')[0];
+
+  const yearNo = today.getFullYear();
+
+  const url = `http://localhost:3005/getOverheadsMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  console.log('🌐 API URL:', url); // Confirm the full date range
+
+  return this.http.get<{ data: Overheads[] }>(url).pipe(
+    tap(res => console.log('✅ Full API Response:', res)),
+    map(res => res.data),
+    tap(data => console.log('📊 Power cost map history:', data))
+  );
 }
 
 }

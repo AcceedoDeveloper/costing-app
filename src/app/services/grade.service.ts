@@ -5,7 +5,6 @@ import { Grade } from '../models/garde.model';
 import { MaterialItem, MaterialMapResponse, Roles } from '../models/MaterialMap.model';
 import { map, catchError } from 'rxjs/operators';
 import { ConfigService } from '../shared/components/config.service'; 
-import { OverHead} from '../models/over-head.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,30 +41,7 @@ export class GradeService {
   }
 
 
-  getAccountTypes(): Observable<OverHead[]> {
-  return this.http.get<OverHead[]>(this.config.getCostingUrl('getAccountTypes')).pipe(
-    catchError(error => throwError(() => error))
-  );
-  }
-
-  addAccountType(account: OverHead): Observable<OverHead> {
-  return this.http.post<OverHead>(this.config.getCostingUrl('addAccountType'), account).pipe(
-    catchError(error => throwError(() => error))
-  );
-}
-
-
-updateAccountType(id: string, account: OverHead): Observable<OverHead> {
-  return this.http.put<OverHead>(`${this.config.getCostingUrl('updateAccountType')}/${id}`, account).pipe(
-    catchError(error => throwError(() => error))
-  );
-}
-
-deleteAccountType(id: string): Observable<{ message: string }> {
-  return this.http.delete<{ message: string }>(`${this.config.getCostingUrl('deleteAccountType')}/${id}`).pipe(
-    catchError(error => throwError(() => error))
-  );
-}
+ 
 
 
 

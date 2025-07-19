@@ -358,83 +358,10 @@ deleteCustomer$ = createEffect(() =>
 
 
 
-loadAccountTypesEffect = createEffect(() =>
-  this.actions$.pipe(
-    ofType(RoleActions.loadAccountTypes),
-    mergeMap(() =>
-      this.gradeService.getAccountTypes().pipe(
-        
-        map(accountTypes =>
-          RoleActions.loadAccountTypesSuccess({ accountTypes })
-        ),
-        catchError(error =>
-          of(RoleActions.loadAccountTypesFailure({ error }))
-        )
-      )
-    )
-  )
-);
 
 
-  
-createAccountTypeEffect = createEffect(() =>
-  this.actions$.pipe(
-    ofType(RoleActions.addAccountType),
-    mergeMap(action =>
-      this.gradeService.addAccountType(action.account).pipe(
-        map(account => {
-          this.toastr.success('Account type added successfully!', 'Success');
-          return RoleActions.addAccountTypeSuccess({ account });
-        }),
-        catchError(error => {
-          this.toastr.error('Failed to add account type.', 'Error');
-          console.error('Add Account Type Error:', error);
-          return of(RoleActions.addAccountTypeFailure({ error }));
-        })
-      )
-    )
-  )
-);
 
 
-updateAccountTypeEffect = createEffect(() =>
-  this.actions$.pipe(
-    ofType(RoleActions.updateAccountType),
-    mergeMap(action =>
-      this.gradeService.updateAccountType(action.id, action.account).pipe(
-        map(account => {
-          this.toastr.success('Account type updated successfully!', 'Success');
-          return RoleActions.updateAccountTypeSuccess({ account });
-        }),
-        catchError(error => {
-          this.toastr.error('Failed to update account type.', 'Error');
-          console.error('Update Account Type Error:', error);
-          return of(RoleActions.updateAccountTypeFailure({ error }));
-        })
-      )
-    )
-  )
-);
-
-
-deleteAccountTypeEffect = createEffect(() =>
-  this.actions$.pipe(
-    ofType(RoleActions.deleteAccountType),
-    mergeMap(action =>
-      this.gradeService.deleteAccountType(action.id).pipe(
-        map(() => {
-          this.toastr.success('Account type deleted successfully!', 'Success');
-          return RoleActions.deleteAccountTypeSuccess({ id: action.id });
-        }),
-        catchError(error => {
-          this.toastr.error('Failed to delete account type.', 'Error');
-          console.error('Delete Account Type Error:', error);
-          return of(RoleActions.deleteAccountTypeFailure({ error }));
-        })
-      )
-    )
-  )
-);
 
 
 getPowerCosts$ = createEffect(() =>
@@ -461,5 +388,16 @@ getPowerCosts$ = createEffect(() =>
   );
 
 
+  loadOverheads$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.loadOverheads),
+      mergeMap(() =>
+        this.powerService.getOverHesdsMap().pipe(
+          map(data => UserActions.loadOverheadsSuccess({ data })),
+          catchError(error => of(UserActions.loadOverheadsFailure({ error })))
+        )
+      )
+    )
+  );
 
 }

@@ -32,18 +32,8 @@ import {
   loadDepartmentUsers,
   loadDepartmentUsersSuccess,
   loadDepartmentUsersFailure,
-  loadAccountTypes,
-  loadAccountTypesSuccess,
-  loadAccountTypesFailure,
-  addAccountType,
-  addAccountTypeSuccess,
-  addAccountTypeFailure,
-  updateAccountType,
-  updateAccountTypeSuccess,
-  updateAccountTypeFailure,
-  deleteAccountType,
-  deleteAccountTypeSuccess,
  
+  loadOverheads, loadOverheadsSuccess, loadOverheadsFailure, 
 
   loadPowerCostsSuccess,
   error
@@ -54,8 +44,8 @@ import { Role, Customer } from '../../../models/role.model';  // Adjust path acc
 import { Roles} from '../../../models/MaterialMap.model';
 import { Department } from '../../../models/users.model';
 import { DepartmentUser } from '../../../models/users.model';
-import { OverHead } from '../../../models/over-head.model';
 import { PowerCost } from '../../../models/over-head.model';
+import { Overheads } from '../../../models/over-head.model';
 
 // --- User State ---
 export interface UserState {
@@ -64,11 +54,12 @@ export interface UserState {
   users: User[];
   customers: Customer[];
   departments: Department[];
-  accountTypes: OverHead[];
+ 
   departmentUsers: DepartmentUser[];
   powerCosts: PowerCost[];
   count: number;
   error?: string | null;
+  data:   Overheads[];
   
 
 }
@@ -81,7 +72,7 @@ const initialUserState: UserState = {
   customers: [],
   departments: [],
   departmentUsers: [],
-  accountTypes: [],
+  data: [],
   powerCosts: [],
 };
 
@@ -238,34 +229,8 @@ on(loadDepartmentUsersFailure, (state, { error }) => ({
 
 
 
- on(loadAccountTypes, state => ({ ...state, loading: true })),
-  on(loadAccountTypesSuccess, (state, { accountTypes }) => ({
-    ...state,
-    accountTypes,
-    loading: false
-  })),
-  on(loadAccountTypesFailure, (state, { error }) => ({
-    ...state,
-    error,
-    loading: false
-  })),
 
-  on(addAccountTypeSuccess, (state, { account }) => ({
-    ...state,
-    accountTypes: [...state.accountTypes, account]
-  })),
-
-  on(updateAccountTypeSuccess, (state, { account }) => ({
-    ...state,
-    accountTypes: state.accountTypes.map(a =>
-      a._id === account._id ? account : a
-    )
-  })),
-
-  on(deleteAccountTypeSuccess, (state, { id }) => ({
-    ...state,
-    accountTypes: state.accountTypes.filter(a => a._id !== id)
-  })),
+  
 
   on(loadPowerCostsSuccess, (state, { powerCosts }) => ({
     ...state,
@@ -276,6 +241,20 @@ on(loadDepartmentUsersFailure, (state, { error }) => ({
     ...state,
     error
   })),
+
+
+
+  on(loadOverheads, state => ({ ...state, loading: true })),
+  on(loadOverheadsSuccess, (state, { data }) => ({
+    ...state,
+    data,
+    loading: false,
+  })),
+  on(loadOverheadsFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  }))
 
 
 

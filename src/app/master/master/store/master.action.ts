@@ -4,8 +4,8 @@ import {Role} from '../../../models/role.model';
 import { Roles } from 'src/app/models/MaterialMap.model';
 import { Customer } from '../../../models/role.model';
 import { Department } from '../../../models/users.model';
-import {OverHead } from '../../../models/over-head.model';
 import { PowerCost } from '../../../models/over-head.model';
+import { Overheads} from '../../../models/over-head.model';
 
 export const CREATE_USER = '[user page] create user';
 export const CREATE_USER_SUCCESS = '[user page] create user success';
@@ -200,37 +200,7 @@ export const loadDepartmentUsersFailure = createAction(
 
 
 
-export const loadAccountTypes = createAction('[AccountType] Load All');
-export const loadAccountTypesSuccess = createAction(
-  '[AccountType] Load Success',
-  props<{ accountTypes: OverHead[] }>()
-);
-export const loadAccountTypesFailure = createAction(
-  '[AccountType] Load Failure',
-  props<{ error: any }>()
-);
 
-export const addAccountType = createAction(
-  '[AccountType] Add',
-  props<{ account: OverHead }>()
-);
-export const addAccountTypeSuccess = createAction(
-  '[AccountType] Add Success',
-  props<{ account: OverHead }>()
-);
-export const addAccountTypeFailure = createAction(
-  '[AccountType] Add Failure',
-  props<{ error: any }>()
-);
-
-export const updateAccountType = createAction(
-  '[AccountType] Update',
-  props<{ id: string, account: OverHead }>()
-);
-export const updateAccountTypeSuccess = createAction(
-  '[AccountType] Update Success',
-  props<{ account: OverHead }>()
-);
 export const updateAccountTypeFailure = createAction(
   '[AccountType] Update Failure',
   props<{ error: any }>()
@@ -258,4 +228,19 @@ export const loadPowerCostsSuccess = createAction(
 export const error = createAction(
   '[PowerCost] Load Power Costs Failure',
   props<{ error: string }>()
+);
+
+
+
+export const loadOverheads = createAction('[Overheads] Load Overheads');
+
+export const loadOverheadsSuccess = createAction(
+  '[Overheads] Load Overheads Success',
+  props<{ data: Overheads[] }>()  // use correct model
+);
+
+
+export const loadOverheadsFailure = createAction(
+  '[Overheads] Load Overheads Failure',
+  props<{ error: any }>()
 );
