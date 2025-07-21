@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -127,5 +127,40 @@ getOverHesdsMap(): Observable<Overheads[]> {
  addOverhead(overhead: any): Observable<any> {
     return this.http.post(this.configService.getCostingUrl('addProcess-Overheads'), overhead);
   }
+
+
+  downloadQuotation(params: {
+    CustomerName: string;
+    drawingNo: string;
+    partNo: string;
+    yearNo: string;
+    start: string;
+    end: string;
+  }) {
+    const httpParams = new HttpParams()
+      .set('CustomerName', params.CustomerName)
+      .set('drawingNo', params.drawingNo)
+      .set('partNo', params.partNo)
+      .set('yearNo', params.yearNo)
+      .set('start', params.start)
+      .set('end', params.end);
+
+    return this.http.get(this.configService.getCostingUrl('customer/quotation'), {
+      params: httpParams,
+      responseType: 'blob' // Important for downloading files
+    });
+  }
+
+
+updateSalaryProcess(id: string, payload: any): Observable<any> {
+  const url = this.configService.getCostingUrl('updateSalaryWages');
+  return this.http.put(`http://localhost:3005/updateSalaryWages/${id}`, payload);
+}
+
+ updateOverhead(id: string, data: any) {
+    return this.http.put(`http://localhost:3005/updateOverheads/${id}`, data);
+  }
+
+
 }
                     

@@ -44,6 +44,12 @@
           <mat-checkbox formControlName="CoreInput">Core Input</mat-checkbox>
         </div>
       </div>
+      <div class="file-upload-wrapper">
+  <button mat-raised-button color="accent" (click)="fileInput.click()">Upload File</button>
+  <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
+  <input type="file" #fileInput hidden (change)="onFileSelected($event)" />
+</div>
+
 
       <!-- Stepper Button -->
       <div class="stepper-button-wrapper">

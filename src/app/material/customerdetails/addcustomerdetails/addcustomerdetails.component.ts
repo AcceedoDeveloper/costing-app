@@ -48,6 +48,10 @@ export class AddcustomerdetailsComponent implements OnInit {
   editMode: { [index: number]: boolean } = {};
   customerId: string | null = null;
 
+
+  selectedFileName: string = '';
+selectedFile: File | null = null;
+
   
 
 
@@ -520,7 +524,16 @@ generateFinalJson(): void {
 
 }
 
+onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    this.selectedFile = input.files[0];
+    this.selectedFileName = this.selectedFile.name;
 
+    // Optional: Show it in console
+    console.log("Selected file:", this.selectedFile);
+  }
+}
 
 }
 

@@ -326,6 +326,20 @@ export const addSalaryEntryFailure = createAction(
 
 
 
+export const updateSalaryEntry = createAction(
+  '[Salary] Update Entry',
+  props<{ id: string, payload: any }>()
+);
+
+export const updateSalaryEntrySuccess = createAction(
+  '[Salary] Update Entry Success',
+  props<{ response: any }>()
+);
+
+export const updateSalaryEntryFailure = createAction(
+  '[Salary] Update Entry Failure',
+  props<{ error: any }>()
+);
 
 
 

@@ -1,27 +1,42 @@
-<form [formGroup]="salaryForm" (ngSubmit)="onSubmit()">
-  <label>Process Name:
-    <input formControlName="processName" type="text" />
-  </label><br>
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Salary Wages' : 'Add Salary Wages' }}</h2>
 
-  <label>Salary for Process:
-    <input formControlName="salaryforProcess" type="number" />
-  </label><br>
+<form [formGroup]="salaryForm" (ngSubmit)="onSubmit()" mat-dialog-content>
+  <div class="form-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Process Name</mat-label>
+      <input matInput formControlName="processName" />
+    </mat-form-field>
 
-  <label>Salary Excluding Core Making:
-    <input formControlName="salaryExcludingCoreMaking" type="number" />
-  </label><br>
+    <mat-form-field appearance="outline">
+      <mat-label>Salary for Process</mat-label>
+      <input matInput type="number" formControlName="salaryforProcess" />
+    </mat-form-field>
 
-  <label>Salary For Core Production:
-    <input formControlName="salaryForCoreProduction" type="number" />
-  </label><br>
+    <mat-form-field appearance="outline">
+      <mat-label>Salary Excluding Core Making</mat-label>
+      <input matInput type="number" formControlName="salaryExcludingCoreMaking" />
+    </mat-form-field>
 
-  <label>Outsourcing Cost:
-    <input formControlName="outSourcingCost" type="number" />
-  </label><br>
+    <mat-form-field appearance="outline">
+      <mat-label>Salary For Core Production</mat-label>
+      <input matInput type="number" formControlName="salaryForCoreProduction" />
+    </mat-form-field>
 
-  <label>Special Outsourcing Cost:
-    <input formControlName="splOutSourcingCost" type="number" />
-  </label><br>
+    <mat-form-field appearance="outline">
+      <mat-label>Outsourcing Cost</mat-label>
+      <input matInput type="number" formControlName="outSourcingCost" />
+    </mat-form-field>
 
-  <button type="submit">Submit</button>
+    <mat-form-field appearance="outline">
+      <mat-label>Special Outsourcing Cost</mat-label>
+      <input matInput type="number" formControlName="splOutSourcingCost" />
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    
+    <button mat-flat-button color="primary" type="submit">
+      Submit
+    </button>
+  </div>
 </form>

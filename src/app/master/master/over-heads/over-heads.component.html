@@ -1,17 +1,27 @@
-<button (click)="openAddOverheads()">Add Over Heads</button>
+<div class="header">
+  <h2>Overheads</h2>
+  <button mat-raised-button color="primary" (click)="openAddOverheads()">Add Over Heads</button>
+</div>
 
-
-<table border="1" style="width: 100%; text-align: center;">
-  <thead>
-    <tr>
-      <th>Process Name</th>
-      <th *ngFor="let month of tableHeaders">{{ month }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let row of overheadTable">
-      <td>{{ row.processName }}</td>
-      <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Process Name</th>
+        <th *ngFor="let month of tableHeaders">{{ month }}</th>
+        <th>Edit</th> <!-- New column -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of overheadTable">
+        <td>{{ row.processName }}</td>
+        <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
+        <td>
+          <button mat-icon-button color="accent" (click)="editOverheads(row.processName)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

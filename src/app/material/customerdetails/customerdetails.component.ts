@@ -10,6 +10,9 @@ import { CustomerdetailsIn } from '../../models/Customer-details.model';
 import { deleteCustomer } from '../store/material.actions';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { UpdateaddcustomerdDetailsComponent} from './updateaddcustomerd-details/updateaddcustomerd-details.component';
+import { PowerService } from '../../services/power.service';
+
+
 
 @Component({
   selector: 'app-customerdetails',
@@ -20,7 +23,9 @@ export class CustomerdetailsComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   customerDetails : CustomerdetailsIn[] = [];
 
-  constructor(private store: Store<{ materials: MaterialState }>, private dialog : MatDialog, ) {}
+  constructor(private store: Store<{ materials: MaterialState }>, 
+    private dialog : MatDialog,
+    private power: PowerService ) {}
 
   ngOnInit(): void {
   this.store.dispatch(loadCustomerDetails());
@@ -82,6 +87,23 @@ edit(id: string) {
 
 
 
-
+ downloadFile() {
+    this.power.downloadQuotation({
+      CustomerName: 'BMW',
+      drawingNo: 'dfsh',
+      partNo: 'xfdh',
+      yearNo: '2025',
+      start: '2025-07-01',
+      end: '2025-07-19'
+    }).subscribe(blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = 'quotation.pdf'; // Or .xlsx / .csv depending on backend
+      link.click();
+    }, error => {
+      console.error('Download error:', error);
+    });
+  }
 
 }

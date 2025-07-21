@@ -16,6 +16,8 @@ export class SalaryWagesComponent implements OnInit {
   salaryMap$: Observable<SalaryMapResponseData[]>;
   tableHeaders: string[] = []; // Dynamic months like ['Jul 2025', 'Jun 2025']
   salaryTable: { processName: string; [month: string]: any }[] = [];
+  salaryMapRawData: SalaryEntry[] = []; // Save full entries
+
 
   constructor(private store: Store, private dialog: MatDialog) {
     this.store.dispatch(loadSalaryMap());
@@ -26,6 +28,8 @@ ngOnInit() {
 
   this.salaryMap$.subscribe((data: any[] | null | undefined) => {
     if (!data) return;
+
+     this.salaryMapRawData = data; 
 
     const monthMap = new Map<string, Date>(); // to store unique month labels with real Date
     const rows: { processName: string; [month: string]: any }[] = [];
@@ -93,6 +97,20 @@ addSalarywages(){
     width: '500px'
   }
  );
+}
+
+editSalaryWagesFull(processName: string) {
+  const fullEntry = this.salaryMapRawData.find(entry => entry.processName === processName);
+  
+  if (fullEntry) {
+    console.log('data', fullEntry);
+    this.dialog.open(AddSalaryWagesComponent, {
+      width: '500px',
+      data: fullEntry
+    });
+  } else {
+    console.warn('No matching entry found for:', processName);
+  }
 }
 
 

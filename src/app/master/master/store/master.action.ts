@@ -261,3 +261,20 @@ export const addOverheadFailure = createAction(
   '[Overhead] Add Overhead Failure',
   props<{ error: any }>()
 );
+
+
+
+export const updateOverhead = createAction(
+  '[Overheads] Update Overhead',
+  props<{ id: string, overhead: Partial<Overheads> }>()
+);
+
+export const updateOverheadSuccess = createAction(
+  '[Overhead] Update Success',
+  props<{ response: any }>()
+);
+
+export const updateOverheadFailure = createAction(
+  '[Overhead] Update Failure',
+  props<{ error: any }>()
+);

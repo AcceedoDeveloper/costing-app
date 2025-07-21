@@ -17,6 +17,7 @@ export class OverHeadsComponent implements OnInit {
   powerCostData$: Observable<Overheads[]>;
   tableHeaders: string[] = [];
   overheadTable: { processName: string; [month: string]: any }[] = [];
+  overheadRawData: Overheads[] = [];
 
   constructor(private store: Store, private dialog: MatDialog) {}
 
@@ -26,6 +27,8 @@ export class OverHeadsComponent implements OnInit {
 
     this.powerCostData$.subscribe((data: Overheads[] | null | undefined) => {
       if (!data) return;
+
+       this.overheadRawData = data;
 
       const monthMap = new Map<string, Date>();
       const rows: { processName: string; [month: string]: any }[] = [];
@@ -88,5 +91,16 @@ export class OverHeadsComponent implements OnInit {
         width:'500'
       }
     )
+  }
+
+
+   editOverheads(processName: string) {
+    const match = this.overheadRawData.find(entry => entry.processName === processName);
+    if (match) {
+      this.dialog.open(AddOverheadsComponent, {
+        width: '500px',
+        data: match // Pass the data for editing
+      });
+    }
   }
 }

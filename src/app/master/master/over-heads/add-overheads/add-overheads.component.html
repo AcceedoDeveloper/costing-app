@@ -1,15 +1,26 @@
+
+
 <form [formGroup]="overheadForm" (ngSubmit)="onSubmit()">
-  <label>Process Name:</label>
-  <input type="text" formControlName="processName" />
+  <mat-label>Process Name:</mat-label>
+  <mat-form-field appearance="fill">
+    <input matInput type="text" formControlName="processName" />
+  </mat-form-field>
 
-  <label>Repair and Maintenance:</label>
-  <input type="number" formControlName="repairAndMaintenance" />
+  <mat-label>Repair and Maintenance:</mat-label>
+  <mat-form-field appearance="fill">
+    <input matInput type="number" formControlName="repairAndMaintenance" />
+  </mat-form-field>
 
-  <label>Selling, Distribution and Misc Overheads:</label>
-  <input type="number" formControlName="sellingDistributionAndMiscOverHeads" />
+  <mat-label>Selling, Distribution and Misc Overheads:</mat-label>
+  <mat-form-field appearance="fill">
+    <input matInput type="number" formControlName="sellingDistributionAndMiscOverHeads" />
+  </mat-form-field>
 
-  <label>Finance Cost:</label>
-  <input type="number" formControlName="financeCost" />
+  <mat-label>Finance Cost:</mat-label>
+  <mat-form-field appearance="fill">
+    <input matInput type="number" formControlName="financeCost" />
+  </mat-form-field>
 
-  <button type="submit">Submit</button>
+  <button mat-flat-button color="primary" type="submit">Submit</button>
 </form>
+

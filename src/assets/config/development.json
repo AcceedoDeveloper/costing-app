@@ -87,7 +87,10 @@
 {"name": "updateProductionInputs", "url": "updateProductionInputs"},
 { "name": "addProcess-Powercost", "url": "addProcess-Powercost"},
 {"name": "addProcess-SalaryWages", "url": "addProcess-SalaryWages"},
-{"name": "addProcess-Overheads", "url": "addProcess-Overheads"}
+{"name": "addProcess-Overheads", "url": "addProcess-Overheads"},
+{"name": "customer/quotation", "url": "customer/quotation"},
+{"name": "updateSalaryWages", "url": "updateSalaryWages"}
+
 
 
   ]

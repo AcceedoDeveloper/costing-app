@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {addOverhead } from '../../store/master.action';
-import { Store } from '@ngrx/store'; 
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { addOverhead, updateOverhead } from '../../store/master.action';
 
 @Component({
   selector: 'app-add-overheads',
@@ -9,10 +10,16 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./add-overheads.component.css']
 })
 export class AddOverheadsComponent implements OnInit {
-
   overheadForm!: FormGroup;
+  isEditMode = false;
+  recordId: string | null = null;
 
-  constructor(private fb: FormBuilder, private store : Store) {}
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private dialogRef: MatDialogRef<AddOverheadsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
     this.overheadForm = this.fb.group({
@@ -21,15 +28,25 @@ export class AddOverheadsComponent implements OnInit {
       sellingDistributionAndMiscOverHeads: [0, Validators.required],
       financeCost: [0, Validators.required]
     });
+
+    if (this.data) {
+      this.isEditMode = true;
+      this.overheadForm.patchValue(this.data);
+      this.recordId = this.data._id;
+    }
   }
 
   onSubmit() {
     if (this.overheadForm.valid) {
-      console.log(this.overheadForm.value); // ✅ Console log the form data
-     const overheadData = this.overheadForm.value;
-    this.store.dispatch(addOverhead({ overhead: overheadData }))
-    } else {
-      console.log('Form is invalid');
+      const formData = this.overheadForm.value;
+
+      if (this.isEditMode && this.recordId) {
+        this.store.dispatch(updateOverhead({ id: this.recordId, overhead: formData }));
+      } else {
+        this.store.dispatch(addOverhead({ overhead: formData }));
+      }
+
+      this.dialogRef.close();
     }
   }
 }

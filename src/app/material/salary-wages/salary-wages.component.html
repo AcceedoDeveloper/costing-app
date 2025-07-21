@@ -1,16 +1,28 @@
-<button (click)="addSalarywages()"   >Add Process Salary</button>
+<div class="header">
+  <h2>Process Salary Wages</h2>
+  <button (click)="addSalarywages()" mat-raised-button color="primary">Add Process Salary</button>
+</div>
 
-<table border="1" style="width: 100%; text-align: center;">
-  <thead>
-    <tr>
-      <th>Process Name</th>
-      <th *ngFor="let month of tableHeaders">{{ month }}</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let row of salaryTable">
-      <td>{{ row.processName }}</td>
-      <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
-    </tr>
-  </tbody>
-</table>
+<!-- Table Container -->
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Process Name</th>
+        <th *ngFor="let month of tableHeaders">{{ month }}</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of salaryTable">
+        <td>{{ row.processName }}</td>
+        <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
+        <td>
+              <button mat-icon-button color="primary" (click)="editSalaryWagesFull(row.processName)">
+                <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
