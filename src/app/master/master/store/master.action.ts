@@ -244,3 +244,20 @@ export const loadOverheadsFailure = createAction(
   '[Overheads] Load Overheads Failure',
   props<{ error: any }>()
 );
+
+
+
+export const addOverhead = createAction(
+  '[Overhead] Add Overhead',
+  props<{ overhead: any }>()
+);
+
+export const addOverheadSuccess = createAction(
+  '[Overhead] Add Overhead Success',
+  props<{ overhead: any }>()
+);
+
+export const addOverheadFailure = createAction(
+  '[Overhead] Add Overhead Failure',
+  props<{ error: any }>()
+);

@@ -123,5 +123,9 @@ getOverHesdsMap(): Observable<Overheads[]> {
   );
 }
 
+
+ addOverhead(overhead: any): Observable<any> {
+    return this.http.post(this.configService.getCostingUrl('addProcess-Overheads'), overhead);
+  }
 }
                     

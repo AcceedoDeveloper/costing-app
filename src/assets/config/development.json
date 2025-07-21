@@ -86,7 +86,9 @@
 {"name": "updateProductionCosts", "url": "updateProductionCost"},
 {"name": "updateProductionInputs", "url": "updateProductionInputs"},
 { "name": "addProcess-Powercost", "url": "addProcess-Powercost"},
-{"name": "addProcess-SalaryWages", "url": "addProcess-SalaryWages"}
+{"name": "addProcess-SalaryWages", "url": "addProcess-SalaryWages"},
+{"name": "addProcess-Overheads", "url": "addProcess-Overheads"}
+
 
   ]
 }

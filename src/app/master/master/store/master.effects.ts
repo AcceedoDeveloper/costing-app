@@ -400,4 +400,16 @@ getPowerCosts$ = createEffect(() =>
     )
   );
 
+  addOverhead$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.addOverhead),
+      mergeMap((action) =>
+        this.powerService.addOverhead(action.overhead).pipe(
+          map((response) => UserActions.addOverheadSuccess({ overhead: response })),
+          catchError((error) => of(UserActions.addOverheadFailure({ error })))
+        )
+      )
+    )
+  );
+
 }

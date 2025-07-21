@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {addOverhead } from '../../store/master.action';
+import { Store } from '@ngrx/store'; 
 
 @Component({
   selector: 'app-add-overheads',
@@ -10,7 +12,7 @@ export class AddOverheadsComponent implements OnInit {
 
   overheadForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private store : Store) {}
 
   ngOnInit(): void {
     this.overheadForm = this.fb.group({
@@ -24,6 +26,8 @@ export class AddOverheadsComponent implements OnInit {
   onSubmit() {
     if (this.overheadForm.valid) {
       console.log(this.overheadForm.value); // ✅ Console log the form data
+     const overheadData = this.overheadForm.value;
+    this.store.dispatch(addOverhead({ overhead: overheadData }))
     } else {
       console.log('Form is invalid');
     }
