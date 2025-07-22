@@ -15,7 +15,17 @@
     <tbody>
       <tr *ngFor="let row of overheadTable">
         <td>{{ row.processName }}</td>
-        <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
+        <td *ngFor="let month of tableHeaders">
+  <ng-container *ngIf="row[month]; else noData">
+    <div>Repair: {{ row[month].repairAndMaintenance }}</div>
+    <div>Sell/Misc: {{ row[month].sellingDistributionAndMiscOverHeads }}</div>
+    <div>Finance: {{ row[month].financeCost }}</div>
+    <div>Total: {{ row[month].totalOverHeads }}</div>
+    <div><strong>Total+FC: {{ row[month].totalOverHeadsWithFinanceCost }}</strong></div>
+  </ng-container>
+  <ng-template #noData>-</ng-template>
+</td>
+
         <td>
           <button mat-icon-button color="accent" (click)="editOverheads(row.processName)">
             <mat-icon>edit</mat-icon>

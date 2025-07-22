@@ -16,7 +16,17 @@
     <tbody>
       <tr *ngFor="let row of salaryTable">
         <td>{{ row.processName }}</td>
-        <td *ngFor="let month of tableHeaders">{{ row[month] || '-' }}</td>
+<td *ngFor="let month of tableHeaders">
+  <ng-container *ngIf="row[month]; else noData">
+    <div>Salary for Process: {{ row[month].salaryforProcess }}</div>
+    <div>Excl. Core Making: {{ row[month].salaryExcludingCoreMaking }}</div>
+    <div>Core Production: {{ row[month].salaryForCoreProduction }}</div>
+    <div>Outsourcing Cost: {{ row[month].outSourcingCost }}</div>
+    <div>Spl Outsourcing Cost: {{ row[month].splOutSourcingCost }}</div>
+    <div><strong>Total (With Outsourcing): {{ row[month].TotalOutSourcingCost }}</strong></div>
+  </ng-container>
+  <ng-template #noData>-</ng-template>
+</td>
         <td>
               <button mat-icon-button color="primary" (click)="editSalaryWagesFull(row.processName)">
                 <mat-icon>edit</mat-icon>

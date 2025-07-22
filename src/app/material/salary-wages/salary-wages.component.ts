@@ -47,7 +47,14 @@ ngOnInit() {
       const currentMonth = new Date(entry.date);
       currentMonthLabel = this.formatMonthYear(currentMonth);
       monthMap.set(currentMonthLabel, currentMonth);
-      row[currentMonthLabel] = entry.TotalOutSourcingCost;
+row[currentMonthLabel] = {
+  salaryforProcess: entry.salaryforProcess,
+  salaryExcludingCoreMaking: entry.salaryExcludingCoreMaking,
+  salaryForCoreProduction: entry.salaryForCoreProduction,
+  outSourcingCost: entry.outSourcingCost,
+  splOutSourcingCost: entry.splOutSourcingCost,
+  TotalOutSourcingCost: entry.TotalOutSourcingCost
+};
 
       // Previous months
       if (entry.previousSalaryWagesDetails && Array.isArray(entry.previousSalaryWagesDetails)) {
@@ -56,7 +63,14 @@ ngOnInit() {
             const prevDate = new Date(prev.date);
             const prevLabel = this.formatMonthYear(prevDate);
             monthMap.set(prevLabel, prevDate);
-            row[prevLabel] = prev.TotalOutSourcingCost;
+row[prevLabel] = {
+  salaryforProcess: prev.salaryforProcess,
+  salaryExcludingCoreMaking: prev.salaryExcludingCoreMaking,
+  salaryForCoreProduction: prev.salaryForCoreProduction,
+  outSourcingCost: prev.outSourcingCost,
+  splOutSourcingCost: prev.splOutSourcingCost,
+  TotalOutSourcingCost: prev.TotalOutSourcingCost
+};
           }
         });
       }

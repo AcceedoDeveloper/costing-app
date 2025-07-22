@@ -44,7 +44,13 @@ export class OverHeadsComponent implements OnInit {
         const currentMonth = new Date(entry.date);
         currentMonthLabel = this.formatMonthYear(currentMonth);
         monthMap.set(currentMonthLabel, currentMonth);
-        row[currentMonthLabel] = entry.totalOverHeadsWithFinanceCost;
+row[currentMonthLabel] = {
+  repairAndMaintenance: entry.repairAndMaintenance,
+  sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
+  financeCost: entry.financeCost,
+  totalOverHeads: entry.totalOverHeads,
+  totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost,
+};
 
         // Previous months
         if (entry.previousOverheadsDetails && Array.isArray(entry.previousOverheadsDetails)) {
@@ -52,7 +58,13 @@ export class OverHeadsComponent implements OnInit {
             const prevDate = new Date(prev.date);
             const label = this.formatMonthYear(prevDate);
             monthMap.set(label, prevDate);
-            row[label] = prev.totalOverHeadsWithFinanceCost;
+row[label] = {
+  repairAndMaintenance: prev.repairAndMaintenance,
+  sellingDistributionAndMiscOverHeads: prev.sellingDistributionAndMiscOverHeads,
+  financeCost: prev.financeCost,
+  totalOverHeads: prev.totalOverHeads,
+  totalOverHeadsWithFinanceCost: prev.totalOverHeadsWithFinanceCost,
+};
           });
         }
 

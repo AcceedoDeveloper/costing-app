@@ -175,6 +175,10 @@ mat-paginator {
   margin-top: 10px;
 }
 
+td div {
+  font-size: 12px;
+  line-height: 1.2;
+}
 
 
 

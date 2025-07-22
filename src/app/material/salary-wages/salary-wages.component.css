@@ -116,3 +116,10 @@ td:first-child {
     margin-top: 10px;
   }
 }
+
+
+
+td div {
+  font-size: 12px;
+  line-height: 1.3;
+}
