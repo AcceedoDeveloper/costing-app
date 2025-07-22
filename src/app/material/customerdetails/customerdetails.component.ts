@@ -87,23 +87,25 @@ edit(id: string) {
 
 
 
- downloadFile() {
-    this.power.downloadQuotation({
-      CustomerName: 'BMW',
-      drawingNo: 'dfsh',
-      partNo: 'xfdh',
-      yearNo: '2025',
-      start: '2025-07-01',
-      end: '2025-07-19'
-    }).subscribe(blob => {
-      const downloadURL = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadURL;
-      link.download = 'quotation.pdf'; // Or .xlsx / .csv depending on backend
-      link.click();
-    }, error => {
-      console.error('Download error:', error);
-    });
-  }
+downloadFile() {
+  this.power.downloadQuotation({
+    CustomerName: 'BMW',
+    drawingNo: 'dfsh',
+    partNo: 'xfdh',
+    yearNo: '2025',
+    start: '2025-07-01',
+    end: '2025-07-19'
+  }).subscribe(blob => {
+    const downloadURL = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadURL;
+    link.download = 'quotation.xlsx'; // ✅ Excel extension
+    link.click();
+    window.URL.revokeObjectURL(downloadURL); // clean up
+  }, error => {
+    console.error('Download error:', error);
+  });
+}
+
 
 }

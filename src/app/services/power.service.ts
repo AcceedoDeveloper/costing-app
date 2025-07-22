@@ -129,27 +129,28 @@ getOverHesdsMap(): Observable<Overheads[]> {
   }
 
 
-  downloadQuotation(params: {
-    CustomerName: string;
-    drawingNo: string;
-    partNo: string;
-    yearNo: string;
-    start: string;
-    end: string;
-  }) {
-    const httpParams = new HttpParams()
-      .set('CustomerName', params.CustomerName)
-      .set('drawingNo', params.drawingNo)
-      .set('partNo', params.partNo)
-      .set('yearNo', params.yearNo)
-      .set('start', params.start)
-      .set('end', params.end);
+downloadQuotation(params: {
+  CustomerName: string;
+  drawingNo: string;
+  partNo: string;
+  yearNo: string;
+  start: string;
+  end: string;
+}) {
+  const httpParams = new HttpParams()
+    .set('CustomerName', params.CustomerName)
+    .set('drawingNo', params.drawingNo)
+    .set('partNo', params.partNo)
+    .set('yearNo', params.yearNo)
+    .set('start', params.start)
+    .set('end', params.end);
 
-    return this.http.get(this.configService.getCostingUrl('customer/quotation'), {
-      params: httpParams,
-      responseType: 'blob' // Important for downloading files
-    });
-  }
+  return this.http.get(this.configService.getCostingUrl('customer/quotation'), {
+    params: httpParams,
+    responseType: 'blob' // ✅ Required to receive Excel as binary
+  });
+}
+
 
 
 updateSalaryProcess(id: string, payload: any): Observable<any> {
