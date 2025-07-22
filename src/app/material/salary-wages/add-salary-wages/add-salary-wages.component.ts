@@ -2,7 +2,10 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { addSalaryEntry, updateSalaryEntry} from '../../store/material.actions'; // <-- Add update action
+import { addSalaryEntry, updateSalaryEntry, loadProcesses, loadSalaryMap} from '../../store/material.actions'; // <-- Add update action
+import { getAllProcesses} from '../../store/material.selector';
+import {Process } from '../../../models/process.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-salary-wages',
@@ -14,6 +17,12 @@ export class AddSalaryWagesComponent implements OnInit {
   isEditMode = false;
   recordId: string | null = null;
 
+   processes: Process[] = [];
+  processNames: string[] = [];
+
+    private subscriptions: Subscription = new Subscription();
+  
+
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddSalaryWagesComponent>,
@@ -22,6 +31,7 @@ export class AddSalaryWagesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.store.dispatch(loadProcesses());
     this.salaryForm = this.fb.group({
       processName: ['', Validators.required],
       salaryforProcess: [0, Validators.required],
@@ -30,6 +40,15 @@ export class AddSalaryWagesComponent implements OnInit {
       outSourcingCost: [0, Validators.required],
       splOutSourcingCost: [0, Validators.required]
     });
+
+
+    
+    this.subscriptions.add(
+      this.store.select(getAllProcesses).subscribe((data: Process[]) => {
+        this.processes = (data || []).filter(Boolean);
+        this.processNames = this.processes.map(p => p.processName);
+      })
+    );
 
     // If data is passed, populate the form for editing
     if (this.data) {
@@ -46,8 +65,10 @@ export class AddSalaryWagesComponent implements OnInit {
 
     if (this.isEditMode) {
       this.store.dispatch(updateSalaryEntry({ id: _id, payload: formData }));
+      this.store.dispatch(loadSalaryMap());
     } else {
       this.store.dispatch(addSalaryEntry({ payload: formData }));
+      this.store.dispatch(loadSalaryMap());
     }
 
     this.dialogRef.close();

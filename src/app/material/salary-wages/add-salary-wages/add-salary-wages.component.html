@@ -3,9 +3,13 @@
 <form [formGroup]="salaryForm" (ngSubmit)="onSubmit()" mat-dialog-content>
   <div class="form-container">
     <mat-form-field appearance="outline">
-      <mat-label>Process Name</mat-label>
-      <input matInput formControlName="processName" />
-    </mat-form-field>
+  <mat-label>Process Name</mat-label>
+  <mat-select formControlName="processName">
+    <mat-option *ngFor="let name of processNames" [value]="name">
+      {{ name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Salary for Process</mat-label>

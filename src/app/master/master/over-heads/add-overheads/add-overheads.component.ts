@@ -3,6 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { addOverhead, updateOverhead } from '../../store/master.action';
+import { loadProcesses} from '../../../../material/store/material.actions';
+import { getAllProcesses } from '../../../../material/store/material.selector';
+import { Process } from '../../../../models/process.model';
+import { Observable, Subscription } from 'rxjs';
+import { loadOverheads } from '../../store/master.action';
 
 @Component({
   selector: 'app-add-overheads',
@@ -14,6 +19,12 @@ export class AddOverheadsComponent implements OnInit {
   isEditMode = false;
   recordId: string | null = null;
 
+
+
+   processes: Process[] = [];
+    processNames: string[] = [];
+  
+private subscriptions: Subscription = new Subscription();
   constructor(
     private fb: FormBuilder,
     private store: Store,
@@ -22,6 +33,11 @@ export class AddOverheadsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+
+     this.store.dispatch(loadProcesses());
+
+
     this.overheadForm = this.fb.group({
       processName: ['', Validators.required],
       repairAndMaintenance: [0, Validators.required],
@@ -34,6 +50,13 @@ export class AddOverheadsComponent implements OnInit {
       this.overheadForm.patchValue(this.data);
       this.recordId = this.data._id;
     }
+
+        this.subscriptions.add(
+      this.store.select(getAllProcesses).subscribe((data: Process[]) => {
+        this.processes = (data || []).filter(Boolean);
+        this.processNames = this.processes.map(p => p.processName);
+      })
+    );
   }
 
   onSubmit() {
@@ -42,8 +65,11 @@ export class AddOverheadsComponent implements OnInit {
 
       if (this.isEditMode && this.recordId) {
         this.store.dispatch(updateOverhead({ id: this.recordId, overhead: formData }));
+        this.store.dispatch(loadOverheads());
+
       } else {
         this.store.dispatch(addOverhead({ overhead: formData }));
+        this.store.dispatch(loadOverheads());
       }
 
       this.dialogRef.close();

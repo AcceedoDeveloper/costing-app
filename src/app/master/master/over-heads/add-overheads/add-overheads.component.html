@@ -2,9 +2,14 @@
 
 <form [formGroup]="overheadForm" (ngSubmit)="onSubmit()">
   <mat-label>Process Name:</mat-label>
-  <mat-form-field appearance="fill">
-    <input matInput type="text" formControlName="processName" />
-  </mat-form-field>
+ <mat-form-field appearance="fill">
+  <mat-label>Process Name</mat-label>
+  <mat-select formControlName="processName">
+    <mat-option *ngFor="let name of processNames" [value]="name">
+      {{ name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
   <mat-label>Repair and Maintenance:</mat-label>
   <mat-form-field appearance="fill">
