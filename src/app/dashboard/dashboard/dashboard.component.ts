@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DashboardService } from '../../services/dashboard.service'; 
 
 @Component({
   selector: 'app-dashboard',
@@ -9,9 +10,17 @@ export class DashboardComponent implements OnInit {
     chart : any;
     barChart:any;
     materilachart:any;
-  constructor() { }
+    customersList: any[] = [];
+  constructor(private dashboardServices: DashboardService) { }
 
   ngOnInit(): void {
+
+    this.dashboardServices.getdata().subscribe((res) => {
+    console.log(res);
+    this.customersList = res.customersMap;
+  });
+
+    
 
 
    this.chart = {
@@ -126,6 +135,8 @@ this.materilachart = {
 
 
   }
+
+
 
  
 }

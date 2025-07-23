@@ -4,11 +4,11 @@
 
     <div class="top-bar">
   <div class="search-container">
-    <span class="search-icon">🔍</span>
-    <input type="text" placeholder="Search" class="search-input" />
+    <span>Customer List</span> 
   </div>
   <div class="dropdown">
-    <button class="dropdown-button">All Assets ▾</button>
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Search" class="search-input" />
   </div>
 </div>
 
@@ -18,52 +18,25 @@
     <div class="table-head">
       <div>Customer</div>
       <div>Part No.</div>
-      <div>Last Quotation Cost	</div>
-      <div>Current Cost</div>
-      <div>Proportion</div>
+      <div>Total Process Cost	</div>
     </div>
 
-    <div class="table-row active">
-      <div class="asset">
+    <div class="table-row active" *ngFor="let customer of customersList">
         <div>
-          <div class="asset-name">BNB</div>
-          <div class="asset-full">BNB</div>
-        </div>
+          
+          {{ customer.CustomerName?.name }}
+        
       </div>
       <div class="price">
-        256
+        {{ customer.partName }}
       </div>
       <div class="price">
-       15236
+       {{ customer.totalProcessCost }}
       </div>
-      <div class="balance">
-        12356 
-      </div>
-      <div class="price">
-         <span class="up">+0.29%</span>
-      </div>
+     
     </div>
 
-     <div class="table-row active">
-      <div class="asset">
-        <div>
-          <div class="asset-name">BNB</div>
-          <div class="asset-full">BNB</div>
-        </div>
-      </div>
-      <div class="price">
-        256
-      </div>
-      <div class="price">
-       15236
-      </div>
-      <div class="balance">
-        12356 
-      </div>
-      <div class="price">
-         <span class="up">+0.29%</span>
-      </div>
-    </div>
+     
   
  
 
@@ -84,21 +57,7 @@
 <div class="box quotation-box">
   <mat-tab-group animationDuration="500ms">
 
-    <!-- New Quotation -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        New Quotation <span class="tab-badge">5</span>
-      </ng-template>
-      <div class="tab-display">
-        <div class="quotation-card">
-          <div class="info-row">
-            <p><strong>Customer Name:</strong> ABC Industries</p>
-            <p><strong>Part Name:</strong> Gear Shaft</p>
-          </div>
-        </div>
-      </div>
-    </mat-tab>
-
+   
     <!-- Pending Quotation -->
     <mat-tab>
       <ng-template mat-tab-label>

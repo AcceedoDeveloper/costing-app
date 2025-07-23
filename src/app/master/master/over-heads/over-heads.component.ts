@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 import { Overheads } from '../../../models/over-head.model';
 import { loadOverheads } from '../store/master.action';
 import { getoverheads } from '../store/master.selector';
-import { AddOverheadsComponent} from './add-overheads/add-overheads.component';
-
+import { AddOverheadsComponent } from './add-overheads/add-overheads.component';
 
 @Component({
   selector: 'app-over-heads',
@@ -15,113 +16,133 @@ import { AddOverheadsComponent} from './add-overheads/add-overheads.component';
 })
 export class OverHeadsComponent implements OnInit {
   powerCostData$: Observable<Overheads[]>;
-  tableHeaders: string[] = [];
-  overheadTable: { processName: string; [month: string]: any }[] = [];
   overheadRawData: Overheads[] = [];
+  filteredData: any[] = [];
+  pagedOverheadTable: any[] = [];
+  searchTerm: string = '';
   startDate!: Date;
   endDate!: Date;
 
 
 
+  tableHeaders: string[] = ['May 2025', 'June 2025', 'July 2025'];
+  reversedTableHeaders: string[] = ['July 2025', 'June 2025', 'May 2025'];
+  overheadTable: { processName: string; [month: string]: any }[] = [];
+
+  pageSize = 3;
+  pageIndex = 0;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.powerCostData$ = this.store.select(getoverheads);
     this.autoLoadOverheads();
+    this.powerCostData$ = this.store.select(getoverheads);
 
     this.powerCostData$.subscribe((data: Overheads[] | null | undefined) => {
       if (!data) return;
+      this.overheadRawData = data;
 
-       this.overheadRawData = data;
-
-      const monthMap = new Map<string, Date>();
-      const rows: { processName: string; [month: string]: any }[] = [];
-
-      let currentMonthLabel = '';
+      const processMap = new Map<string, { processName: string; [month: string]: any }>();
 
       data.forEach(entry => {
-        const row: { processName: string; [month: string]: any } = {
-          processName: entry.processName
-        };
+        const processName = entry.processName;
+        const currentMonth = this.formatMonthYear(entry.date);
 
-        // Current month
-        const currentMonth = new Date(entry.date);
-        currentMonthLabel = this.formatMonthYear(currentMonth);
-        monthMap.set(currentMonthLabel, currentMonth);
-row[currentMonthLabel] = {
-  repairAndMaintenance: entry.repairAndMaintenance,
-  sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
-  financeCost: entry.financeCost,
-  totalOverHeads: entry.totalOverHeads,
-  totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost,
-};
-
-        // Previous months
-        if (entry.previousOverheadsDetails && Array.isArray(entry.previousOverheadsDetails)) {
-          entry.previousOverheadsDetails.forEach(prev => {
-            const prevDate = new Date(prev.date);
-            const label = this.formatMonthYear(prevDate);
-            monthMap.set(label, prevDate);
-row[label] = {
-  repairAndMaintenance: prev.repairAndMaintenance,
-  sellingDistributionAndMiscOverHeads: prev.sellingDistributionAndMiscOverHeads,
-  financeCost: prev.financeCost,
-  totalOverHeads: prev.totalOverHeads,
-  totalOverHeadsWithFinanceCost: prev.totalOverHeadsWithFinanceCost,
-};
-          });
+        if (!processMap.has(processName)) {
+          const emptyRow: any = { processName };
+          this.tableHeaders.forEach(month => emptyRow[month] = null);
+          processMap.set(processName, emptyRow);
         }
 
-        rows.push(row);
+        const row = processMap.get(processName)!;
+
+        if (this.tableHeaders.includes(currentMonth)) {
+          row[currentMonth] = this.extractOverheadData(entry);
+        }
+
+        if (entry.previousOverheadsDetails && Array.isArray(entry.previousOverheadsDetails)) {
+          entry.previousOverheadsDetails.forEach(prev => {
+            const prevMonth = this.formatMonthYear(prev.date);
+            if (this.tableHeaders.includes(prevMonth)) {
+              row[prevMonth] = this.extractOverheadData(prev);
+            }
+          });
+        }
       });
 
-      // Step 1: Sort months by date DESC
-      let sortedMonthLabels = Array.from(monthMap.entries())
-        .sort((a, b) => b[1].getTime() - a[1].getTime())
-        .map(([label]) => label);
+      this.overheadTable = Array.from(processMap.values()).map(row => {
+        this.tableHeaders.forEach(month => {
+          if (!(month in row)) row[month] = null;
+        });
+        return row;
+      });
 
-      // Step 2: Take only last 3 months
-      sortedMonthLabels = sortedMonthLabels.slice(0, 3);
-
-      // Step 3: Move current month to the end
-      const index = sortedMonthLabels.indexOf(currentMonthLabel);
-      if (index !== -1) {
-        sortedMonthLabels.splice(index, 1); // remove current month
-        sortedMonthLabels.push(currentMonthLabel); // add at end
-      }
-
-      this.tableHeaders = sortedMonthLabels;
-      this.overheadTable = rows;
+      this.applyFilter();
     });
   }
 
   formatMonthYear(date: Date | string): string {
     const d = typeof date === 'string' ? new Date(date) : date;
-    return d.toLocaleString('default', { month: 'short', year: 'numeric' }); // e.g., "Jul 2025"
+    return d.toLocaleString('default', { month: 'long', year: 'numeric' });
   }
 
-
-  openAddOverheads(){
-    this.dialog.open(
-      AddOverheadsComponent,{
-        width:'500'
-      }
-    )
+  extractOverheadData(entry: any) {
+    return {
+      repairAndMaintenance: entry.repairAndMaintenance,
+      sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
+      financeCost: entry.financeCost,
+      totalOverHeads: entry.totalOverHeads,
+      totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost,
+    };
   }
 
+  openAddOverheads() {
+    this.dialog.open(AddOverheadsComponent, {
+      width: '500px'
+    });
+  }
 
-   editOverheads(processName: string) {
+  editOverheads(processName: string) {
     const match = this.overheadRawData.find(entry => entry.processName === processName);
     if (match) {
       this.dialog.open(AddOverheadsComponent, {
         width: '500px',
-        data: match // Pass the data for editing
+        data: match
       });
     }
   }
 
+  applyFilter(): void {
+    const search = this.searchTerm.toLowerCase().trim();
 
-autoLoadOverheads() {
+    if (!search) {
+      this.filteredData = [...this.overheadTable];
+    } else {
+      this.filteredData = this.overheadTable.filter(row =>
+        row.processName.toLowerCase().includes(search)
+      );
+    }
+
+    this.pageIndex = 0;
+    this.paginate();
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.paginate();
+  }
+
+  paginate() {
+    const start = this.pageIndex * this.pageSize;
+    const end = start + this.pageSize;
+    this.pagedOverheadTable = this.filteredData.slice(start, end);
+  }
+
+
+  autoLoadOverheads() {
   const currentDate = new Date();
 
   // First day of current month
@@ -165,8 +186,5 @@ onDateRangeChange() {
 }
 
 
-
-
-
-
 }
+

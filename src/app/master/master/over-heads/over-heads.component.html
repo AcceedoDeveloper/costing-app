@@ -1,6 +1,11 @@
+
 <div class="header">
   <h2>Overheads</h2>
-  <button mat-raised-button color="primary" (click)="openAddOverheads()">Add Over Heads</button>
+  <mat-form-field appearance="standard" class="search-box">
+    <mat-label>Search by Process</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="e.g., Casting" [(ngModel)]="searchTerm" (input)="applyFilter()">
+  </mat-form-field>
 
 
   
@@ -21,39 +26,46 @@
     <mat-datepicker #picker2></mat-datepicker>
   </mat-form-field>
 </div>
-
-
+  <button mat-raised-button color="primary" (click)="openAddOverheads()">Add Over Heads</button>
 </div>
 
 <div class="table-container">
   <table>
     <thead>
       <tr>
-        <th>Process Name</th>
-        <th *ngFor="let month of tableHeaders">{{ month }}</th>
-        <th>Edit</th> <!-- New column -->
+        <th class="process-name-header">Process Name</th>
+        <th>Month</th>
+        <th>Repair</th>
+        <th>Sell/Misc</th>
+        <th>Finance</th>
+        <th>Total + FC</th>
+        <th class="action-header">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of overheadTable">
-        <td>{{ row.processName }}</td>
-        <td *ngFor="let month of tableHeaders">
-  <ng-container *ngIf="row[month]; else noData">
-    <div>Repair: {{ row[month].repairAndMaintenance }}</div>
-    <div>Sell/Misc: {{ row[month].sellingDistributionAndMiscOverHeads }}</div>
-    <div>Finance: {{ row[month].financeCost }}</div>
-    <div>Total: {{ row[month].totalOverHeads }}</div>
-    <div><strong>Total+FC: {{ row[month].totalOverHeadsWithFinanceCost }}</strong></div>
-  </ng-container>
-  <ng-template #noData>-</ng-template>
-</td>
-
-        <td>
-          <button mat-icon-button color="accent" (click)="editOverheads(row.processName)">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </td>
-      </tr>
+      <ng-container *ngFor="let row of pagedOverheadTable">
+        <tr *ngFor="let month of reversedTableHeaders; let first = first">
+          <td *ngIf="first" class="process-name-cell" [attr.rowspan]="reversedTableHeaders.length">
+            <div class="process-name-content">{{ row.processName }}</div>
+          </td>
+          <td class="month-cell">{{ month }}</td>
+          <td>{{ row[month]?.repairAndMaintenance || '-' }}</td>
+          <td>{{ row[month]?.sellingDistributionAndMiscOverHeads || '-' }}</td>
+          <td>{{ row[month]?.financeCost || '-' }}</td>
+          <td>{{ row[month]?.totalOverHeadsWithFinanceCost || '-' }}</td>
+          <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
+            <div class="action-content">
+              <button mat-icon-button color="accent" (click)="editOverheads(row.processName)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
+  
+  <mat-paginator [length]="filteredData.length" [pageSize]="pageSize" [pageSizeOptions]="[3, 6, 9]" showFirstLastButtons (page)="onPageChange($event)"></mat-paginator>
 </div>
+
+

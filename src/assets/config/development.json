@@ -89,7 +89,8 @@
 {"name": "addProcess-SalaryWages", "url": "addProcess-SalaryWages"},
 {"name": "addProcess-Overheads", "url": "addProcess-Overheads"},
 {"name": "customer/quotation", "url": "customer/quotation"},
-{"name": "updateSalaryWages", "url": "updateSalaryWages"}
+{"name": "updateSalaryWages", "url": "updateSalaryWages"},
+{ "name": "dashboard-data", "url": "data"}
 
 
 
