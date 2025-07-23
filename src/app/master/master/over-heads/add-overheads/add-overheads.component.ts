@@ -65,11 +65,9 @@ private subscriptions: Subscription = new Subscription();
 
       if (this.isEditMode && this.recordId) {
         this.store.dispatch(updateOverhead({ id: this.recordId, overhead: formData }));
-        this.store.dispatch(loadOverheads());
 
       } else {
         this.store.dispatch(addOverhead({ overhead: formData }));
-        this.store.dispatch(loadOverheads());
       }
 
       this.dialogRef.close();

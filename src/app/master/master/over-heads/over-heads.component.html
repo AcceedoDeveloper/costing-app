@@ -1,6 +1,28 @@
 <div class="header">
   <h2>Overheads</h2>
   <button mat-raised-button color="primary" (click)="openAddOverheads()">Add Over Heads</button>
+
+
+  
+ <div style="display: flex; gap: 16px; align-items: center;">
+  <!-- Start Date -->
+  <mat-form-field appearance="fill">
+    <mat-label>Start Date</mat-label>
+    <input matInput [matDatepicker]="picker1" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker #picker1></mat-datepicker>
+  </mat-form-field>
+
+  <!-- End Date -->
+  <mat-form-field appearance="fill">
+    <mat-label>End Date</mat-label>
+    <input matInput [matDatepicker]="picker2" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field>
+</div>
+
+
 </div>
 
 <div class="table-container">

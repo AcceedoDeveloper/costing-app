@@ -389,16 +389,18 @@ getPowerCosts$ = createEffect(() =>
 
 
   loadOverheads$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(UserActions.loadOverheads),
-      mergeMap(() =>
-        this.powerService.getOverHesdsMap().pipe(
-          map(data => UserActions.loadOverheadsSuccess({ data })),
-          catchError(error => of(UserActions.loadOverheadsFailure({ error })))
-        )
+  this.actions$.pipe(
+    ofType(UserActions.loadOverheads),
+    mergeMap(({ startDate, endDate, yearNo }) =>
+      this.powerService.getOverHesdsMap(startDate, endDate, yearNo).pipe(
+        map(data => UserActions.loadOverheadsSuccess({ data })),
+        catchError(error => of(UserActions.loadOverheadsFailure({ error })))
       )
     )
-  );
+  )
+);
+
+
 
   addOverhead$ = createEffect(() =>
     this.actions$.pipe(

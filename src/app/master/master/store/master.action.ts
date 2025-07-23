@@ -232,7 +232,11 @@ export const error = createAction(
 
 
 
-export const loadOverheads = createAction('[Overheads] Load Overheads');
+export const loadOverheads = createAction(
+  '[Overheads] Load Overheads',
+  props<{ startDate: string, endDate: string, yearNo: number }>()
+);
+
 
 export const loadOverheadsSuccess = createAction(
   '[Overheads] Load Overheads Success',

@@ -18,12 +18,16 @@ export class OverHeadsComponent implements OnInit {
   tableHeaders: string[] = [];
   overheadTable: { processName: string; [month: string]: any }[] = [];
   overheadRawData: Overheads[] = [];
+  startDate!: Date;
+  endDate!: Date;
+
+
 
   constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.store.dispatch(loadOverheads());
     this.powerCostData$ = this.store.select(getoverheads);
+    this.autoLoadOverheads();
 
     this.powerCostData$.subscribe((data: Overheads[] | null | undefined) => {
       if (!data) return;
@@ -115,4 +119,54 @@ row[label] = {
       });
     }
   }
+
+
+autoLoadOverheads() {
+  const currentDate = new Date();
+
+  // First day of current month
+  const endDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+  // Last day of current month
+  const endDate = new Date(endDateObj.getFullYear(), endDateObj.getMonth() + 1, 0); // last day of current month
+
+  // First day of two months ago
+  const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 2, 1);
+
+  // Format dates to YYYY-MM-DD
+  const startDateStr = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}-01`;
+  const endDateStr = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}-${String(endDate.getDate()).padStart(2, '0')}`;
+  const yearNo = startDate.getFullYear();
+
+  console.log("✅ API: ", `http://localhost:3005/getOverheadsMap?yearNo=${yearNo}&startDate=${startDateStr}&endDate=${endDateStr}`);
+
+  // Dispatch the API call
+  this.store.dispatch(loadOverheads({ startDate: startDateStr, endDate: endDateStr, yearNo }));
+}
+
+
+
+onDateRangeChange() {
+  if (!this.startDate || !this.endDate) return;
+
+  const start = new Date(this.startDate);
+  const end = new Date(this.endDate);
+
+  const startDateStr = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-01`;
+
+  // Last day of end month
+  const endDateStr = `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${new Date(end.getFullYear(), end.getMonth() + 1, 0).getDate().toString().padStart(2, '0')}`;
+
+  const yearNo = start.getFullYear();
+
+  console.log("📦 Dispatching with:", { startDateStr, endDateStr, yearNo });
+
+  this.store.dispatch(loadOverheads({ startDate: startDateStr, endDate: endDateStr, yearNo }));
+}
+
+
+
+
+
+
 }

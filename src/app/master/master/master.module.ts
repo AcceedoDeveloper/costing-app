@@ -27,6 +27,9 @@ import { DepertmentComponent } from './depertment/depertment.component';
 import { AddcustomerComponent } from './customer/addcustomer/addcustomer.component';
 import { OverHeadsComponent } from './over-heads/over-heads.component';
 import { AddOverheadsComponent } from './over-heads/add-overheads/add-overheads.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'
+
 
 @NgModule({
   declarations: [MasterComponent, AdduserComponent, RoleComponent, 
@@ -35,6 +38,8 @@ import { AddOverheadsComponent } from './over-heads/add-overheads/add-overheads.
      AddOverheadsComponent,   ],
   imports: [
     MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
      FormsModule,
     CommonModule,
     ReactiveFormsModule,
