@@ -132,24 +132,25 @@ getOverHesdsMap(): Observable<Overheads[]> {
 downloadQuotation(params: {
   CustomerName: string;
   drawingNo: string;
-  partNo: string;
-  yearNo: string;
+  partName: string;
+  yearNo: number;
   start: string;
   end: string;
 }) {
-  const httpParams = new HttpParams()
-    .set('CustomerName', params.CustomerName)
-    .set('drawingNo', params.drawingNo)
-    .set('partNo', params.partNo)
-    .set('yearNo', params.yearNo)
-    .set('start', params.start)
-    .set('end', params.end);
-
-  return this.http.get(this.configService.getCostingUrl('customer/quotation'), {
-    params: httpParams,
-    responseType: 'blob' // ✅ Required to receive Excel as binary
+  const queryParams = new URLSearchParams({
+    CustomerName: params.CustomerName,
+    drawingNo: params.drawingNo,
+    partName: params.partName,
+    yearNo: params.yearNo.toString(),
+    start: params.start,
+    end: params.end,
   });
+
+  const url = `http://localhost:3005/customer/quotation?${queryParams.toString()}`;
+  console.log('Download URL:', url); 
+  return this.http.get(url, { responseType: 'blob' });
 }
+
 
 
 

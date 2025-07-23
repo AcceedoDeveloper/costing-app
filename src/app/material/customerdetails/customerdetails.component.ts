@@ -43,8 +43,8 @@ export class CustomerdetailsComponent implements OnInit {
 
 addCustomerDetails() {
    this.dialog.open(AddcustomerdetailsComponent, {
-    width: '850px',
-    height: '550px',
+    width: '100%',
+    height: '650px',
     autoFocus: false,
   });
 
@@ -77,7 +77,7 @@ delete(id: string) {
 
 edit(id: string) {  
   this.dialog.open(UpdateaddcustomerdDetailsComponent, {
-    width: '850px',
+    width: '950px',
     height: '550px',
     data: { id: id },
     autoFocus: false  // 👈 passing the ID to the dialog
@@ -87,25 +87,33 @@ edit(id: string) {
 
 
 
-downloadFile() {
+downloadQuotation(customer: any) {
+  const customerName = customer?.CustomerName?.name || '';
+  const drawingNo = customer?.drawingNo || '';
+  const partName = customer?.partName || '';
+
+  // 📅 Get current year, start of month, and end of month
+  const now = new Date();
+  const yearNo = now.getFullYear();
+  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]; // 1st of month
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]; // last day
+
   this.power.downloadQuotation({
-    CustomerName: 'BMW',
-    drawingNo: 'dfsh',
-    partNo: 'xfdh',
-    yearNo: '2025',
-    start: '2025-07-01',
-    end: '2025-07-19'
+    CustomerName: customerName,
+    drawingNo: drawingNo,
+    partName: partName,
+    yearNo: yearNo,
+    start: start,
+    end: end
   }).subscribe(blob => {
     const downloadURL = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = downloadURL;
-    link.download = 'quotation.xlsx'; // ✅ Excel extension
+    link.download = `${customerName}_quotation.xlsx`;
     link.click();
-    window.URL.revokeObjectURL(downloadURL); // clean up
-  }, error => {
-    console.error('Download error:', error);
   });
 }
+
 
 
 }
