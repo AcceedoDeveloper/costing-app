@@ -1,38 +1,140 @@
 <div class="header">
   <h2>Process Salary Wages</h2>
-  <button (click)="addSalarywages()" mat-raised-button color="primary">Add Process Salary</button>
+  <mat-form-field appearance="standard" class="search-box">
+    <mat-label>Search by Process</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput placeholder="e.g., Casting" [(ngModel)]="searchTerm" (input)="applyFilter()">
+  </mat-form-field>
+
+  <div style="display: flex; gap: 16px; align-items: center; margin-top: 12px;">
+  <!-- Start Date -->
+  <mat-form-field appearance="fill">
+    <mat-label>Start Date</mat-label>
+    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
+    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+    <mat-datepicker #startPicker></mat-datepicker>
+  </mat-form-field>
+
+  <!-- End Date -->
+  <mat-form-field appearance="fill">
+    <mat-label>End Date</mat-label>
+    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
+    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+    <mat-datepicker #endPicker></mat-datepicker>
+  </mat-form-field>
 </div>
 
-<!-- Table Container -->
+  <button mat-raised-button color="primary" (click)="addSalarywages()">Add Process Salary</button>
+</div>
+
 <div class="table-container">
   <table>
     <thead>
       <tr>
-        <th>Process Name</th>
-        <th *ngFor="let month of tableHeaders">{{ month }}</th>
-        <th>Actions</th>
+        <th class="process-name-header">Process Name</th>
+        <th>Month</th>
+        <th>Salary for Process</th>
+        <th>Excl. Core Making</th>
+        <th>Core Production</th>
+        <th>Outsourcing Cost</th>
+        <th>Spl Outsourcing Cost</th>
+        <th>Total With Outsourcing</th>
+        <th class="action-header">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let row of salaryTable">
-        <td>{{ row.processName }}</td>
-<td *ngFor="let month of tableHeaders">
-  <ng-container *ngIf="row[month]; else noData">
-    <div>Salary for Process: {{ row[month].salaryforProcess }}</div>
-    <div>Excl. Core Making: {{ row[month].salaryExcludingCoreMaking }}</div>
-    <div>Core Production: {{ row[month].salaryForCoreProduction }}</div>
-    <div>Outsourcing Cost: {{ row[month].outSourcingCost }}</div>
-    <div>Spl Outsourcing Cost: {{ row[month].splOutSourcingCost }}</div>
-    <div><strong>Total (With Outsourcing): {{ row[month].TotalOutSourcingCost }}</strong></div>
-  </ng-container>
-  <ng-template #noData>-</ng-template>
-</td>
-        <td>
-              <button mat-icon-button color="primary" (click)="editSalaryWagesFull(row.processName)">
-                <mat-icon>edit</mat-icon>
-          </button>
-        </td>
-      </tr>
+      <ng-container *ngFor="let row of pagedSalaryTable">
+        <tr *ngFor="let month of reversedTableHeaders; let first = first">
+          <td *ngIf="first" class="process-name-cell" [attr.rowspan]="reversedTableHeaders.length">
+            <div class="process-name-content">{{ row.processName }}</div>
+          </td>
+          <td class="month-cell">{{ month }}</td>
+
+          <!-- Salary for Process -->
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySalary1">
+                <input type="number" [(ngModel)]="row[month].salaryforProcess" />
+              </ng-container>
+              <ng-template #readOnlySalary1>{{ row[month].salaryforProcess || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+
+          <!-- Salary Excl. Core Making -->
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySalary2">
+                <input type="number" [(ngModel)]="row[month].salaryExcludingCoreMaking" />
+              </ng-container>
+              <ng-template #readOnlySalary2>{{ row[month].salaryExcludingCoreMaking || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+
+          <!-- Core Production -->
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySalary3">
+                <input type="number" [(ngModel)]="row[month].salaryForCoreProduction" />
+              </ng-container>
+              <ng-template #readOnlySalary3>{{ row[month].salaryForCoreProduction || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+
+          <!-- Outsourcing Cost -->
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySalary4">
+                <input type="number" [(ngModel)]="row[month].outSourcingCost" />
+              </ng-container>
+              <ng-template #readOnlySalary4>{{ row[month].outSourcingCost || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+
+          <!-- Special Outsourcing Cost -->
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySalary5">
+                <input type="number" [(ngModel)]="row[month].splOutSourcingCost" />
+              </ng-container>
+              <ng-template #readOnlySalary5>{{ row[month].splOutSourcingCost || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+
+          <!-- Total with Outsourcing -->
+          <td>
+            {{ row[month]?.TotalOutSourcingCost || '-' }}
+          </td>
+
+          <!-- Action Buttons -->
+          <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
+            <div class="action-content">
+              <ng-container *ngIf="editingRow === row.processName; else editButton">
+                <button mat-raised-button color="primary" (click)="saveSalaryWages()">Save</button>
+                <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
+              </ng-container>
+              <ng-template #editButton>
+                <button mat-icon-button color="accent" (click)="editSalaryWagesFull(row.processName)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </ng-template>
+            </div>
+          </td>
+
+        </tr>
+      </ng-container>
     </tbody>
   </table>
+
+  <mat-paginator
+    [length]="filteredData.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[3, 6, 9]"
+    showFirstLastButtons
+    (page)="onPageChange($event)">
+  </mat-paginator>
 </div>

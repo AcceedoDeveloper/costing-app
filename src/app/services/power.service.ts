@@ -61,16 +61,7 @@ getPowerCostMap(): Observable<PowerCostData[]> {
 
 
 
-getSalaryMap(): Observable<SalaryMapResponseData> {
-  const today = new Date();
-  const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0]; // end of month
-  const startDateObj = new Date(today);
-  startDateObj.setMonth(startDateObj.getMonth() - 1);
-  startDateObj.setDate(1); // first of previous month
-  const startDate = startDateObj.toISOString().split('T')[0];
-
-  const yearNo = today.getFullYear();
-
+getSalaryMap(startDate: string, endDate: string, yearNo: number): Observable<SalaryMapResponseData> {
   const url = `http://localhost:3005/getSalaryMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
   console.log('📡 Salary API URL:', url);
 
@@ -79,6 +70,7 @@ getSalaryMap(): Observable<SalaryMapResponseData> {
     tap(data => console.log('✅ Salary map response:', data))
   );
 }
+
 
 
 addPowerCost(data: { processName: string; totalUnitPerProcess: number }) {

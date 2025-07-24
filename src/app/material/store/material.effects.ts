@@ -487,20 +487,17 @@ updatePowerCost$ = createEffect(() =>
 
 
 loadSalaryMap$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loadSalaryMap),
-      mergeMap(() =>
-        this.powerservices.getSalaryMap().pipe(
-          map((salaryMap) =>
-            loadSalaryMapSuccess({ salaryMap })
-          ),
-          catchError((error) =>
-            of(loadSalaryMapFailure({ error }))
-          )
-        )
+  this.actions$.pipe(
+    ofType(loadSalaryMap),
+    mergeMap(({ startDate, endDate, yearNo }) =>
+      this.powerservices.getSalaryMap(startDate, endDate, yearNo).pipe(
+        map((salaryMap) => loadSalaryMapSuccess({ salaryMap })),
+        catchError((error) => of(loadSalaryMapFailure({ error })))
       )
     )
-  );
+  )
+);
+
 
   addSalaryEntry$ = createEffect(() =>
     this.actions$.pipe(

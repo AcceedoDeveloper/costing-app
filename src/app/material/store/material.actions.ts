@@ -294,7 +294,10 @@ export const updatePowerCostSuccess = createAction(
 );
 
 
-export const loadSalaryMap = createAction('[Salary] Load Salary Map');
+export const loadSalaryMap = createAction(
+  '[Salary] Load Salary Map',
+  props<{ startDate: string, endDate: string, yearNo: number }>()
+);
 
 export const loadSalaryMapSuccess = createAction(
   '[Salary] Load Salary Map Success',

@@ -209,21 +209,20 @@ saveOverheads() {
   console.log("✔️ ID of edited process:", editedRow._id);
   console.log("📝 Updated Overhead Row:", updatedRow);
 
-  // Extract July 2025 data
-  const julyData = updatedRow["July 2025"];
+  const currentMonth = this.currentMonth; // Assume this holds "July 2025" or dynamic month
+const monthData = updatedRow[currentMonth];
 
-  if (!julyData) {
-    console.warn("⚠️ No July 2025 data found");
-    return;
-  }
+if (!monthData) {
+  console.warn(`⚠️ No ${currentMonth} data found`);
+  return;
+}
 
-  const payload = {
-    processName: updatedRow.processName,
-    repairAndMaintenance: julyData.repairAndMaintenance,
-    sellingDistributionAndMiscOverHeads: julyData.sellingDistributionAndMiscOverHeads,
-    financeCost: julyData.financeCost
-    // You can add totalOverHeads or totalOverHeadsWithFinanceCost if needed
-  };
+const payload = {
+  processName: updatedRow.processName,
+  repairAndMaintenance: monthData.repairAndMaintenance,
+  sellingDistributionAndMiscOverHeads: monthData.sellingDistributionAndMiscOverHeads,
+  financeCost: monthData.financeCost
+};
 
   console.log("📦 Payload to dispatch:", payload);
 
