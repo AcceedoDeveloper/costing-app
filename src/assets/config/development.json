@@ -80,7 +80,7 @@
 { "name": "updateAccountType", "url": "updateAccountType" },
 { "name": "deleteAccountType", "url": "deleteAccountType" },
 { "name": "getPowerCosts", "url": "getPowerCost"},
-{ "name": "updatedPowerCost", "url": "updatePowerCost"},
+{ "name": "updatedPowerCost", "url": "updateUnitCost"},
 { "name": "getProduction", "url": "getProductionInputs"},
 {"name": "getProductionCosts", "url": "getProductionCost"},
 {"name": "updateProductionCosts", "url": "updateProductionCost"},
@@ -90,7 +90,9 @@
 {"name": "addProcess-Overheads", "url": "addProcess-Overheads"},
 {"name": "customer/quotation", "url": "customer/quotation"},
 {"name": "updateSalaryWages", "url": "updateSalaryWages"},
-{ "name": "dashboard-data", "url": "data"}
+{ "name": "dashboard-data", "url": "data"},
+{ "name": "getQuotationData", "url": "getQuotationData"}
+
 
 
 

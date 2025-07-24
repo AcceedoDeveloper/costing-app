@@ -22,6 +22,7 @@ import { getCostSummary } from '../../../modules/materialinput/store/casting.act
 import {selectProductionCost } from '../../../modules/materialinput/store/casting.selectors';
 import { CostSummary } from '../../../models/casting-input.model';
 import { addCustomerDetails } from '../../store/material.actions';
+import { DashboardService } from '../../../services/dashboard.service';
 
 
 
@@ -49,6 +50,11 @@ export class AddcustomerdetailsComponent implements OnInit {
   customerId: string | null = null;
 
 
+
+  quotationData: any = null;
+  quotationCalc: any = null;
+
+
   selectedFileName: string = '';
 selectedFile: File | null = null;
 
@@ -67,7 +73,10 @@ selectedFile: File | null = null;
 
 
 
-  constructor(private store: Store, private fb: FormBuilder, private dialog: MatDialog,  private dialogRef: MatDialogRef<AddcustomerdetailsComponent>) {} 
+  constructor(private store: Store, private fb: FormBuilder, 
+    private dialog: MatDialog,  
+    private dialogRef: MatDialogRef<AddcustomerdetailsComponent>,
+    private dhashboardServices: DashboardService  ) {} 
 
  ngOnInit(): void {
 
@@ -513,6 +522,19 @@ generateFinalJson(): void {
   };
 
   console.log('✅ Final Full JSON Format:', finalData);
+
+  // ✅ Call the API here using form values
+  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo).subscribe(
+    response => {
+      console.log('🚀 API Success:', response);
+
+      this.quotationData = response;
+      this.quotationCalc = response.calculations?.[0] || {};
+    },
+    error => {
+      console.error('❌ API Error:', error);
+    }
+  );
 
    if (this.customerId) {
     console.log('✅ Final Payload:', finalData);

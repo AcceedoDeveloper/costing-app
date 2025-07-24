@@ -64,10 +64,8 @@ export class AddSalaryWagesComponent implements OnInit {
     const _id = this.recordId; // from earlier
 
     if (this.isEditMode) {
-      this.store.dispatch(loadSalaryMap());
     } else {
       this.store.dispatch(addSalaryEntry({ payload: formData }));
-      this.store.dispatch(loadSalaryMap());
     }
 
     this.dialogRef.close();

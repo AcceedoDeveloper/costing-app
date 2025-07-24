@@ -16,4 +16,12 @@ export class DashboardService {
   }
 
 
+// costing.service.ts or your API service
+getQuoteData(customer: string, drawing: string, part: string): Observable<any> {
+  const url = `http://localhost:3005/getQuotationData/${customer}/${drawing}/${part}`;
+  return this.http.get<any>(url);
+}
+
+
+
 }

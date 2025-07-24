@@ -13,43 +13,69 @@ export class DashboardComponent implements OnInit {
     customersList: any[] = [];
   constructor(private dashboardServices: DashboardService) { }
 
-  ngOnInit(): void {
-
-    this.dashboardServices.getdata().subscribe((res) => {
+ngOnInit(): void {
+  this.dashboardServices.getdata().subscribe((res) => {
     console.log(res);
     this.customersList = res.customersMap;
-  });
 
+    const powerCostData = res.powerCostMap?.[0]?.previousCostDetails || [];
+
+
+     const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+   // Create a map of month -> cost from server data
+    const costMap = new Map<string, number>();
     
+    powerCostData.forEach((entry: any) => {
+  // Parse date in "DD-MM-YYYY" or ISO format
+  let date: Date;
 
+  if (entry.date.includes('-') && entry.date.split('-')[0].length === 2) {
+    // Format: "24-07-2025"
+    const [day, month, year] = entry.date.split('-');
+    date = new Date(+year, +month - 1, +day);
+  } else {
+    // ISO format
+    date = new Date(entry.date);
+  }
 
-   this.chart = {
-  type: 'LineChart',  // ✅ change from 'ColumnChart' to 'LineChart'
-  columns: ['Month', 'Power Cost (₹)'],
-  data: [
-    ['January', 12000],
-    ['February', 15000],
-    ['March', 13000],
-    ['April', 14000],
-    ['May', 12500],
-    ['June', 16000]
-  ],
-  options: {
-    title: 'Monthly Power Cost',
-    hAxis: {
-      title: 'Month'
-    },
-    vAxis: {
-      title: 'Cost (₹)',
-      minValue: 0
-    },
-    legend: 'none',
-    curveType: 'function', 
-    colors: ['#007bff']   
-  },
-   width: '500',  // <-- Set this in HTML instead
-  height: '400'
-};
+  if (!isNaN(date.getTime())) {
+    const monthName = date.toLocaleString('default', { month: 'long' });
+    const currentCost = costMap.get(monthName) || 0;
+    costMap.set(monthName, currentCost + entry.cost);
+  }
+});
+
+    // Build chart data for all 12 months
+    const chartData = monthNames.map((month) => {
+      const cost = costMap.get(month) ?? 0;
+      return [month, cost];
+    });
+
+    this.chart = {
+      type: 'LineChart',
+      columns: ['Month', 'Power Cost (₹)'],
+      data: chartData,
+      options: {
+        title: 'Monthly Power Cost',
+        hAxis: {
+          title: 'Month'
+        },
+        vAxis: {
+          title: 'Cost (₹)',
+          minValue: 0
+        },
+        legend: 'none',
+        curveType: 'function',
+        colors: ['#007bff']
+      },
+      width: '500',
+      height: '400'
+    };
+  });
 
 
 
@@ -130,11 +156,16 @@ this.materilachart = {
 
 
 
+}
 
 
 
 
-  }
+
+
+
+
+
 
 
 
