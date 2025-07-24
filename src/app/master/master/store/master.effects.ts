@@ -416,16 +416,24 @@ getPowerCosts$ = createEffect(() =>
 
 
 
-  updateOverhead$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(UserActions.updateOverhead),
-      mergeMap(action =>
-        this.powerService.updateOverhead(action.id, action.overhead).pipe(
-          map(response => UserActions.updateOverheadSuccess({ response })),
-          catchError(error => of(UserActions.updateOverheadFailure({ error })))
-        )
+updateOverhead$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(UserActions.updateOverhead),
+    mergeMap(action =>
+      this.powerService.updateOverhead(action.id, action.overhead).pipe(
+        map(response => {
+          this.toastr.success('Overhead updated successfully!', 'Success');
+          return UserActions.updateOverheadSuccess({ response });
+        }),
+        catchError(error => {
+          this.toastr.error('Failed to update overhead.', 'Error');
+          console.error('Error updating overhead:', error);
+          return of(UserActions.updateOverheadFailure({ error: error.message }));
+        })
       )
     )
-  );
+  )
+);
+
 
 }

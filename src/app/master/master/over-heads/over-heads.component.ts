@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Observable } from 'rxjs';
 import { Overheads } from '../../../models/over-head.model';
-import { loadOverheads } from '../store/master.action';
+import { loadOverheads, updateOverhead  } from '../store/master.action';
 import { getoverheads } from '../store/master.selector';
 import { AddOverheadsComponent } from './add-overheads/add-overheads.component';
 
@@ -22,6 +22,11 @@ export class OverHeadsComponent implements OnInit {
   searchTerm: string = '';
   startDate!: Date;
   endDate!: Date;
+  editingRow: string | null = null;
+  currentMonth: string = '';
+  backupRow: any = null;
+
+
 
 
 
@@ -38,39 +43,41 @@ export class OverHeadsComponent implements OnInit {
 
   ngOnInit(): void {
     this.autoLoadOverheads();
+    this.currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
     this.powerCostData$ = this.store.select(getoverheads);
 
     this.powerCostData$.subscribe((data: Overheads[] | null | undefined) => {
       if (!data) return;
       this.overheadRawData = data;
+      console.log("📦 Fetched overhead data from store:", data);
 
       const processMap = new Map<string, { processName: string; [month: string]: any }>();
 
       data.forEach(entry => {
-        const processName = entry.processName;
-        const currentMonth = this.formatMonthYear(entry.date);
+  const processName = entry.processName;
+  const currentMonth = this.formatMonthYear(entry.date);
 
-        if (!processMap.has(processName)) {
-          const emptyRow: any = { processName };
-          this.tableHeaders.forEach(month => emptyRow[month] = null);
-          processMap.set(processName, emptyRow);
-        }
+  if (!processMap.has(processName)) {
+    const emptyRow: any = { processName };
+    this.tableHeaders.forEach(month => emptyRow[month] = null);
+    processMap.set(processName, emptyRow);
+  }
 
-        const row = processMap.get(processName)!;
+  const row = processMap.get(processName)!;
 
-        if (this.tableHeaders.includes(currentMonth)) {
-          row[currentMonth] = this.extractOverheadData(entry);
-        }
+  if (this.tableHeaders.includes(currentMonth)) {
+    row[currentMonth] = {
+      repairAndMaintenance: entry.repairAndMaintenance,
+      sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
+      financeCost: entry.financeCost,
+      totalOverHeads: entry.totalOverHeads,
+      totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost
+    };
+  }
 
-        if (entry.previousOverheadsDetails && Array.isArray(entry.previousOverheadsDetails)) {
-          entry.previousOverheadsDetails.forEach(prev => {
-            const prevMonth = this.formatMonthYear(prev.date);
-            if (this.tableHeaders.includes(prevMonth)) {
-              row[prevMonth] = this.extractOverheadData(prev);
-            }
-          });
-        }
-      });
+  // ❌ Skip previousOverheadsDetails if you don't want it
+});
+
 
       this.overheadTable = Array.from(processMap.values()).map(row => {
         this.tableHeaders.forEach(month => {
@@ -184,6 +191,67 @@ onDateRangeChange() {
 
   this.store.dispatch(loadOverheads({ startDate: startDateStr, endDate: endDateStr, yearNo }));
 }
+
+startEditing(processName: string) {
+  this.editingRow = processName;
+}
+
+
+saveOverheads() {
+  const editedRow = this.overheadRawData.find(entry => entry.processName === this.editingRow);
+  const updatedRow = this.overheadTable.find(row => row.processName === this.editingRow);
+
+  if (!editedRow || !updatedRow) {
+    console.warn("⚠️ Could not find entry for editing:", this.editingRow);
+    return;
+  }
+
+  console.log("✔️ ID of edited process:", editedRow._id);
+  console.log("📝 Updated Overhead Row:", updatedRow);
+
+  // Extract July 2025 data
+  const julyData = updatedRow["July 2025"];
+
+  if (!julyData) {
+    console.warn("⚠️ No July 2025 data found");
+    return;
+  }
+
+  const payload = {
+    processName: updatedRow.processName,
+    repairAndMaintenance: julyData.repairAndMaintenance,
+    sellingDistributionAndMiscOverHeads: julyData.sellingDistributionAndMiscOverHeads,
+    financeCost: julyData.financeCost
+    // You can add totalOverHeads or totalOverHeadsWithFinanceCost if needed
+  };
+
+  console.log("📦 Payload to dispatch:", payload);
+
+  this.store.dispatch(updateOverhead({ id: editedRow._id, overhead: payload }));
+
+  this.editingRow = null;
+  this.backupRow = null;
+}
+
+
+
+
+
+
+
+cancelEdit() {
+  if (this.backupRow) {
+    const index = this.overheadTable.findIndex(row => row.processName === this.backupRow.processName);
+    if (index !== -1) {
+      this.overheadTable[index] = JSON.parse(JSON.stringify(this.backupRow));
+    }
+  }
+
+  this.editingRow = null;
+  this.backupRow = null;
+}
+
+
 
 
 }

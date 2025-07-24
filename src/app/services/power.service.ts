@@ -144,8 +144,15 @@ updateSalaryProcess(id: string, payload: any): Observable<any> {
 }
 
  updateOverhead(id: string, data: any) {
-    return this.http.put(`http://localhost:3005/updateOverheads/${id}`, data);
-  }
+  console.log("🔧 Updating overhead with ID:", id);
+  console.log("📋 Data to update:", data);
+
+  return this.http.put(`http://localhost:3005/updateOverheads/${id}`, data).pipe(
+    tap(response => {
+      console.log("✅ Server response after update:", response);
+    })
+  );
+}
 
 
 }
