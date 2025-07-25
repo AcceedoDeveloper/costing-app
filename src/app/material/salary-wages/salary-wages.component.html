@@ -1,31 +1,48 @@
-<div class="header">
-  <h2>Process Salary Wages</h2>
-  <mat-form-field appearance="standard" class="search-box">
-    <mat-label>Search by Process</mat-label>
-    <mat-icon matPrefix>search</mat-icon>
-    <input matInput placeholder="e.g., Casting" [(ngModel)]="searchTerm" (input)="applyFilter()">
-  </mat-form-field>
 
-  <div style="display: flex; gap: 16px; align-items: center; margin-top: 12px;">
-  <!-- Start Date -->
-  <mat-form-field appearance="fill">
-    <mat-label>Start Date</mat-label>
-    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
-    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-    <mat-datepicker #startPicker></mat-datepicker>
-  </mat-form-field>
+<!-- Full Header Row: Title + Search + Calendar + Add -->
+<div class="table-header-bar">
+  <h2 class="table-title">Process Salary Wages</h2>
 
-  <!-- End Date -->
-  <mat-form-field appearance="fill">
-    <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
-    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-    <mat-datepicker #endPicker></mat-datepicker>
-  </mat-form-field>
+  <div class="header-controls">
+    <!-- Search -->
+    <mat-form-field appearance="standard" class="search-box">
+      <mat-label>Search by Process</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="e.g., Casting" [(ngModel)]="searchTerm" (input)="applyFilter()">
+    </mat-form-field>
+
+   <!-- Month-Year Picker -->
+<mat-form-field appearance="standard" class="month-picker">
+  <mat-label>Month and Year</mat-label>
+  <input
+    matInput
+    [matDatepicker]="monthPicker"
+    [formControl]="monthYearControl"
+    readonly
+  />
+  <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+  <mat-datepicker
+    #monthPicker
+    startView="year"
+    (monthSelected)="setMonthAndYear($event, monthPicker)"
+    (yearSelected)="chosenYearHandler($event)"
+    panelClass="month-picker"
+    [startAt]="defaultMonth"
+    [startView]="'year'"
+  >
+  </mat-datepicker>
+</mat-form-field>
+
+    <!-- Add Process Salary -->
+    <div class="add-section">
+      <label class="input-label">Add Process Salary</label>
+      <button mat-icon-button color="primary" (click)="addSalarywages()" class="add-icon-button" aria-label="Add Salary">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
 
-  <button mat-raised-button color="primary" (click)="addSalarywages()">Add Process Salary</button>
-</div>
 
 <div class="table-container">
   <table>

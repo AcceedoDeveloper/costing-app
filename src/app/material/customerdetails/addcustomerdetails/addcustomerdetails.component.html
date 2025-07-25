@@ -465,84 +465,84 @@
         </tr>
         <tr>
             <td>Casting weight in Kgs</td>
-            <td class="numeric">{{quotationCalc.CastingWeight}}</td>
+            <td class="numeric">{{quotationCalc.CastingWeight | number:'1.2-2'}}</td>
             <td>Melting Scrap cost</td>
-            <td class="numeric">20574.14</td>
+            <td class="numeric">{{quotationCalc.ScrapCost  | number:'1.2-2'}}</td>
             <td>
            
-            <td class="numeric">43.59</td>
+            <td class="numeric">{{quotationCalc.ScrapCostPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
                      
         </tr>
         <tr>
             <td>No of cavities</td>
-            <td class="numeric">{{quotationCalc.Cavities}}</td>
+            <td class="numeric">{{quotationCalc.Cavities | number:'1.2-2'}}</td>
             <td>Melting Alloying cost</td>
-            <td class="numeric">2924.18</td>
+            <td class="numeric">{{quotationCalc.totalProcessAlloyCostPerKg | number:'1.2-2'}}</td>
             <td>
-            <td class="numeric">6.20</td>
+            <td class="numeric">{{quotationCalc.totalProcessAlloyCostPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
           >
         </tr>
         <tr>
             <td>Pouring weight in Kgs</td>
-            <td class="numeric">{{quotationCalc.PouringWeight}}</td>
+            <td class="numeric">{{quotationCalc.PouringWeight | number:'1.2-2'}}</td>
             <td>Shell mould cost</td>
-            <td class="numeric">7111.98</td>
+            <td class="numeric">{{quotationCalc.MouldCost | number:'1.2-2'}}</td>
             <td></td>
           
-            <td class="numeric">15.07</td>
+            <td class="numeric">{{quotationCalc.mouldCostPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
          
         </tr>
         <tr>
             <td>Good casting weight Kg / heat</td>
-            <td class="numeric">{{quotationCalc.CastingWeightKgPerHeat}}</td>
+            <td class="numeric">{{quotationCalc.CastingWeightKgPerHeat | number:'1.2-2'}}</td>
             <td>Foundry Consumables</td>
-             <td class="numeric">4457.48</td>
+             <td class="numeric">{{quotationCalc.FoundaryConsumables | number:'1.2-2'}}</td>
             <td></td>
-            <td class="numeric">9.44</td>
+            <td class="numeric">{{quotationCalc.FoundaryConsumablesPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             
         </tr>
         <tr>
             <td>Yield</td>
-            <td class="numeric">{{quotationCalc.yield}}</td>
+            <td class="numeric">{{quotationCalc.yield | number:'1.2-2'}}</td>
             <td>Core sand cost</td>
-            <td class="numeric">707.47</td>
+            <td class="numeric">{{quotationCalc.CoreSand   | number:'1.2-2'}}</td>
             <td></td>
-            <td class="numeric">1.50</td>
+            <td class="numeric">{{quotationCalc.CoreSandPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
            
         </tr>
         <tr>
             <td>Material Returned</td>
-            <td class="numeric">{{quotationCalc.MaterialReturned}}</td>
+            <td class="numeric">{{quotationCalc.MaterialReturned | number:'1.2-2'}}</td>
             <td>Material Credited for Rejection</td>
-            <td class="numeric">-1691.88</td>
+            <td class="numeric">{{quotationCalc.Mat_Rejection | number:'1.2-2'}}</td>
             <td></td>
            
-            <td class="numeric">-3.58</td>
+            <td class="numeric">{{quotationCalc.Mat_RejectionPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             
         </tr>
         <tr>
             <td>Yield %</td>
-            <td class="numeric">{{quotationCalc.yieldPercent}}</td>
+            <td class="numeric">{{quotationCalc.yieldPercent | number:'1.2-2'}}</td>
             <td>Melting Losses</td>
-             <td class="numeric">915.40</td>
+             <td class="numeric">{{quotationCalc.metalCostPercent | number:'1.2-2'}}</td>
             <td></td>
-            <td class="numeric">1.94</td>
+            <td class="numeric">{{quotationCalc.MeltLossPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             
         </tr>
         <tr>
             <td>Yield %</td>
             <td class="numeric"></td>
-            <td>Melting Losses</td>
-            <td class="numeric">915.40</td>
             <td></td>
-            <td class="numeric">1.94</td>
+            <td class="numeric"></td>
+            <td></td>
+            <td class="numeric"></td>
             <td class="numeric"></td>
           
         </tr>
@@ -550,14 +550,14 @@
             <td colspan="2">Moulding Inputs</td>
             <td class="numeric">Subtotal Metal</td>
             <td></td>
-            <td class="numeric">34998.77</td>
-            <td class="numeric">74.15</td>
-            <td class="numeric">42.00</td>
+            <td class="numeric">{{quotationCalc.CostPer1050kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.subtotalMetalperkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.subtotalMetalTotalCost | number:'1.2-2'}}</td>
             
         </tr>
         <tr>
             <td>SHELL Moulding Weight</td>
-            <td class="numeric">{{quotationCalc.shellMouldWeight}}</td>
+            <td class="numeric">{{quotationCalc.shellMouldWeight | number:'1.2-2'}}</td>
             <td>Power Cost</td>
             <td></td>
             <td></td>
@@ -568,11 +568,11 @@
         </tr>
         <tr>
             <td>No of moulds/ heat</td>
-            <td class="numeric">{{quotationCalc.NoOfMouldperHeat}}</td>
+            <td class="numeric">{{quotationCalc.NoOfMouldperHeat | number:'1.2-2'}}</td>
             <td>Melting &others</td>
-            <td class="numeric">8453.40</td>
+            <td class="numeric">{{quotationCalc.totalUnitCostforOthers | number:'1.2-2'}}</td>
             <td class="numeric"></td>
-           <td class="numeric">17.91</td>
+           <td class="numeric">{{quotationCalc.ShellMouldingPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -580,9 +580,9 @@
             <td class="numeric"></td>
             <td>Shellmoulding</td>
         
-            <td class="numeric">963.60</td>
+            <td class="numeric">{{quotationCalc.MouldPowerCost | number:'1.2-2'}}</td>
             <td class="numeric"></td>
-            <td class="numeric">2.04</td>
+            <td class="numeric">{{quotationCalc.ShellMouldingPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -590,14 +590,14 @@
             <td></td>
             <td>Core making</td>
            
-            <td class="numeric">{{quotationCalc.CoreMakingPowerCost}}</td>
+            <td class="numeric">{{quotationCalc.CoreMakingPowerCost | number:'1.2-2'}}</td>
             <td class="numeric"></td>
-            <td class="numeric">1.90</td>
+            <td class="numeric">{{quotationCalc.CastingPerKg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Core weight in Kgs</td>
-            <td class="numeric">{{quotationCalc.CoreWeight}}</td>
+            <td class="numeric">{{quotationCalc.CoreWeight | number:'1.2-2'}}</td>
             <td></td>
             <td></td>
             <td class="numeric"></td>
@@ -607,12 +607,12 @@
         </tr>
         <tr>
             <td>No of cores /mould</td>
-            <td class="numeric">{{quotationCalc.CoresPerMould}}</td>
+            <td class="numeric">{{quotationCalc.CoresPerMould | number:'1.2-2'}}</td>
             <td>Subtotal Power</td>
             <td class="numeric"></td>
-            <td class="numeric">10312.90</td>
-            <td class="numeric">21.85</td>
-            <td class="numeric">12.38</td>
+            <td class="numeric">{{quotationCalc.CostPer1050_kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.roundCostPer_kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.subtotalPowerTotalCost | number:'1.2-2'}}</td>
         </tr>
         <tr>
             <td>No of cavities in the core box</td>
@@ -630,42 +630,42 @@
             <td class="numeric">125</td>
             <td>Salary and Wages</td>
         
-            <td class="numeric">14000.00</td>
+            <td class="numeric">{{quotationCalc.SalaryForProcess | number:'1.2-2'}}</td>
             <td class="numeric"></td>
-            <td class="numeric">29.66</td>
+            <td class="numeric">{{quotationCalc.roundSalaryPerkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Core and cost</td>
-            <td class="numeric">{{quotationCalc.CoreSandCost}}</td>
+            <td class="numeric">{{quotationCalc.CoreSandCost | number:'1.2-2'}}</td>
             <td>Core making</td>
      
-            <td class="numeric">735.00</td>
+            <td class="numeric">{{quotationCalc.coremakingTotalcost | number:'1.2-2'}}</td>
             <td class="numeric"></td>
-            <td class="numeric">1.56</td>
+            <td class="numeric">{{quotationCalc.roundCoreMakingPerkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Commercial Terms</td>
             <td></td>
             <td>Other/Outside Processing labour charges</td>
-            <td class="numeric">2851.00</td>
+            <td class="numeric">{{quotationCalc.otherLabourCost | number:'1.2-2'}}</td>
             <td class="numeric"></td>
-            <td class="numeric">6.04</td>
+            <td class="numeric">{{quotationCalc.roundOtherChargePerkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Payment credit period</td>
-            <td class="numeric">{{quotationCalc.PayMentCreditPeriod}}</td>
+            <td class="numeric">{{quotationCalc.PayMentCreditPeriod | number:'1.2-2'}}</td>
             <td>Sub Total Labour</td>
             <td class="numeric"></td>
-            <td class="numeric">17586.45</td>
-            <td class="numeric">37.26</td>
-            <td class="numeric">21.11</td>
+            <td class="numeric">{{quotationCalc.round_LabourCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.labourCostperkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.subtotalLabourTotalCost | number:'1.2-2'}}</td>
         </tr>
         <tr>
             <td>Bank interest</td>
-            <td class="numeric">{{quotationCalc.BankInterest}}</td>
+            <td class="numeric">{{quotationCalc.BankInterest | number:'1.2-2'}}</td>
             <td>Over heads</td>
             <td></td>
             <td></td>
@@ -678,20 +678,20 @@
             <td>Margin</td>
             <td class="numeric"></td>
             <td>Admin and selling over heads</td>
-            <td class="numeric">4490.62</td>
-            <td class="numeric">9990.00</td>
-            <td class="numeric">9.50</td>
-            <td class="numeric">5.39</td>
+            <td class="numeric">{{quotationCalc.TotalOH | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalOHper1050kg  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalOHperkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalOHCost | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Profit</td>
-            <td class="numeric">{{quotationCalc.Profit}}</td>
+            <td class="numeric">{{quotationCalc.Profit | number:'1.2-2'}}</td>
             <td>Rejection cost</td>
             <td></td>
-            <td class="numeric">5453.22</td>
-            <td class="numeric">11.55</td>
-            <td class="numeric">6.54</td>
+            <td class="numeric">{{quotationCalc.round_TotalOH  | number:'1.2-2' }}</td>
+            <td class="numeric">{{quotationCalc.round_rejectionCost  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalRejCost  | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -699,18 +699,18 @@
             <td class="numeric"></td>
             <td>Invertory carrying cost</td>
             <td></td>
-            <td class="numeric">1317.14</td>
-            <td class="numeric">2.79</td>
-            <td class="numeric">1.58</td>
+            <td class="numeric">{{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.InventoryTotalCost  | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Rejection %</td>
-            <td class="numeric">{{quotationCalc.Rejection}}</td>
+            <td class="numeric">{{quotationCalc.Rejection  | number:'1.2-2'}}</td>
             <td>Sub total Over Heads</td>
             <td class="numeric"></td>
-            <td class="numeric">11260.98</td>
-            <td class="numeric">23.90</td>
+            <td class="numeric">{{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -718,8 +718,8 @@
             <td></td>
             <td>Total cost per Kg</td>
             <td class="numeric"></td>
-            <td class="numeric">74159.10</td>
-            <td class="numeric">157.12</td>
+            <td class="numeric">{{quotationCalc.totalCostper1050kg  | number:'1.2-2' }}</td>
+            <td class="numeric">{{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -727,8 +727,8 @@
             <td></td>
             <td>Special Process (Per Heat)</td>
             <td></td>
-            <td class="numeric">0.00</td>
-            <td class="numeric">0.00</td>
+            <td class="numeric">{{quotationCalc.splProcessper1050kg  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.splProcessperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
@@ -736,9 +736,9 @@
             <td></td>
             <td></td>
             <td>High Pressure Cleaning</td>
-            <td class="numeric">1.00</td>
-            <td class="numeric">434.24</td>
-            <td class="numeric">0.93</td>
+            <td class="numeric">{{quotationCalc.SplProcess | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.heatTreatmentper1050kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.heatTreatmentperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
@@ -756,9 +756,9 @@
             <td></td>
             <td></td>
             <td>HEAT TREATMENT</td>
-            <td class="numeric">{{quotationCalc.heatTreatment}}</td>
-            <td class="numeric">0.00</td>
-            <td class="numeric">0.00</td>
+            <td class="numeric">{{quotationCalc.heatTreatment | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.postProcessper1050kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.postProcessperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
@@ -766,9 +766,9 @@
             <td></td>
             <td></td>
             <td>Cutting / Grinding</td>
-            <td class="numeric">0.00</td>
-            <td class="numeric">0.00</td>
-            <td class="numeric">0.00</td>
+            <td class="numeric">{{quotationCalc.postProcess | number:'1.2-2'}}</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
             <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
@@ -786,9 +786,9 @@
             <td></td>
             <td></td>
             <td>Packing+TRANSPORT</td>
-            <td class="numeric">{{quotationCalc.packingAndTransport}}</td>
-            <td class="numeric">2124.00</td>
-            <td class="numeric">4.53</td>
+            <td class="numeric">{{quotationCalc.packingAndTransport | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.packingAndTransportper1050kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.packingAndTransportperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
@@ -796,9 +796,9 @@
             <td></td>
             <td></td>
             <td>Nozzle shot blasting</td>
-            <td class="numeric">{{ quotationCalc.NozzleShotBlasting }}</td>
-            <td class="numeric">434.24</td>
-            <td class="numeric">0.93</td>
+            <td class="numeric">{{ quotationCalc.NozzleShotBlasting  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.NozzleShotBlastingper1050kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.NozzleShotBlastingperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
@@ -807,9 +807,9 @@
             <td></td>
             <td>Profit</td>
             <td></td>
-            <td class="numeric">6172.13</td>
-            <td class="numeric">13.08</td>
-            <td class="numeric">7.41</td>
+            <td class="numeric">{{quotationCalc.TotalProfitPer1050kg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.TotalProfitPerkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.TotalCostNozzle | number:'1.2-2'}}</td>
             <td class="numeric"></td>
         </tr>
         <tr class="highlight">
@@ -817,8 +817,8 @@
             <td></td>
             <td>Total cost</td>
             <td class="numeric"></td>
-            <td class="numeric">83323.70</td>
-            <td class="numeric">176.57</td>
+            <td class="numeric">{{quotationCalc.OverallTotalCost | number:'1.2-2'}}</td>
+            <td class="numeric"></td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -826,18 +826,18 @@
             <td></td>
             <td>Cost per Part</td>
             <td class="numeric"></td>
-            <td class="numeric">609.04</td>
-            <td class="numeric">609.18</td>
-            <td class="numeric">35.07</td>
+            <td class="numeric">{{quotationCalc.CostPerPart | number:'1.2-2'}}</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
             <td>Cost Per Kg</td>
             <td class="numeric"></td>
-            <td class="numeric">176.53</td>
-            <td class="numeric">65.07</td>
-            <td class="numeric">30.00</td>
+            <td class="numeric">{{quotationCalc.CostPerkg | number:'1.2-2'}}</td>
+            <td class="numeric"></td>
+            <td class="numeric"></td>
         </tr>
         <tr class="totals">
             <td colspan="4">PREPARED BY</td>

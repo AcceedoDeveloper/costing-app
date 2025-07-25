@@ -1,34 +1,87 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f3f3f3;
-  margin: 0;
-  padding: 0;
-}
-
-/* Header */
-.header {
+.table-header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
-  margin: 30px auto 16px auto;
+  margin: 0 auto 16px auto; /* centers like table-container */
+  padding: 16px 24px; /* same horizontal padding as table */
+  box-sizing: border-box;
 }
 
-.header h2 {
+.table-title {
+  font-size: 22px;
+  font-weight: 500;
   margin: 0;
-  font-size: 24px;
-  color: #010101;
+  color: #222;
 }
 
-.search-box {
-  width: 300px;
-}
-
-.controls {
+/* Right controls (search + calendar + button) */
+.header-controls {
   display: flex;
-  gap: 15px;
   align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Month Picker Container */
+.month-picker {
+  width: 200px;
+  position: relative;
+}
+
+.month-picker input {
+  font-size: 14px;
+  padding: 1px 8px;
+  line-height: 1.0;
+}
+
+/* Calendar icon alignment */
+.month-picker .mat-datepicker-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.month-picker .mat-datepicker-toggle .mat-icon {
+  font-size: 20px;
+  color: #3f51b5;
+}
+
+/* Add button */
+.add-custom-button {
+  width: 200px;
+}
+
+/* Search box */
+.search-box {
+  width: 200px;
+}
+
+/* ========= RESPONSIVE HEADER ========= */
+@media (max-width: 768px) {
+  .table-header-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .header-controls {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .search-box,
+  .month-picker,
+  .add-custom-button {
+    width: 100%;
+  }
 }
 
 /* Table Container */
@@ -46,6 +99,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 13px; /* Reduced font size */
 }
 
 thead {
@@ -54,7 +108,7 @@ thead {
 
 th {
   text-align: center;
-  padding: 12px 10px;
+  padding: 8px 6px; /* Reduced padding */
   color: #5b84ff;
   font-weight: 600;
   border-bottom: 2px solid #5b84ff;
@@ -68,19 +122,20 @@ th:not(:last-child)::after {
   position: absolute;
   right: 0;
   top: 25%;
-  height: 50%;
+  height: 20%;
   width: 1px;
   background-color: #e0e0e0;
 }
 
 td {
   text-align: center;
-  padding: 12px 10px;
+  padding: 8px 6px; /* Reduced padding */
   border-bottom: 1px solid #e0e0e0;
   font-weight: 500;
   vertical-align: middle;
   white-space: nowrap;
   position: relative;
+  font-size: 13px; /* Smaller text */
 }
 
 /* Add vertical lines between cells */
@@ -98,8 +153,8 @@ td:not(:last-child)::after {
 th:first-child,
 td:first-child {
   text-align: left;
-  padding-left: 16px;
-  font-size: 16px;
+  padding-left: 12px;
+  font-size: 14px; /* Slightly bigger for emphasis */
 }
 
 /* Remove right border for first and last columns */
@@ -129,7 +184,7 @@ tr:hover {
 mat-paginator {
   display: flex;
   justify-content: end;
-  padding: 12px;
+  padding: 10px;
   background: #fff;
   border-radius: 0 0 10px 10px;
   border-top: 1px solid #e0e0e0;
@@ -167,14 +222,14 @@ mat-paginator {
   }
 
   th, td {
-    padding: 10px 8px;
-    font-size: 14px;
+    padding: 6px 4px;
+    font-size: 12px;
   }
 
   th:first-child,
   td:first-child {
-    padding-left: 12px;
-    font-size: 15px;
+    padding-left: 10px;
+    font-size: 13px;
   }
 
   .search-box {
@@ -184,16 +239,16 @@ mat-paginator {
 
 /* Button styles */
 button.mat-icon-button {
-  width: 36px;
-  height: 36px;
-  line-height: 36px;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
 }
 
 button.mat-icon-button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
 }
 
 /* Empty cell styling */
@@ -211,3 +266,4 @@ tr:not(:last-child) {
 tr[ng-container]:not(:first-child) tr:first-child {
   border-top: 2px solid #d0d0d0;
 }
+

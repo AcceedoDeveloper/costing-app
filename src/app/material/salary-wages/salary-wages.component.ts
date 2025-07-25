@@ -8,6 +8,7 @@ import { SalaryEntry } from '../../models/SalaryMapResponse.model';
 import { loadSalaryMap, updateSalaryEntry } from '../store/material.actions';
 import { getsalaryMap } from '../store/material.selector';
 import { AddSalaryWagesComponent } from './add-salary-wages/add-salary-wages.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-salary-wages',
@@ -23,10 +24,6 @@ export class SalaryWagesComponent implements OnInit {
   editingRow: string | null = null;
   currentMonth: string = new Date().toLocaleString('default', { month: 'long' });
   backupRow: any = null;
-  startDate!: Date;
-  endDate!: Date;
-
-
 
   tableHeaders: string[] = ['May', 'June', 'July'];
   reversedTableHeaders: string[] = ['July', 'June', 'May'];
@@ -35,12 +32,17 @@ export class SalaryWagesComponent implements OnInit {
   pageSize = 3;
   pageIndex = 0;
 
+  // ✅ NEW: month-year picker control
+  monthYearControl = new FormControl();
+  defaultMonth = new Date();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private store: Store, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-      this.autoLoadSalaryMap();
+    this.autoLoadSalaryMap();
+
     this.salaryMapData$ = this.store.select(getsalaryMap);
 
     this.salaryMapData$.subscribe((data: SalaryEntry[] | null | undefined) => {
@@ -92,12 +94,46 @@ export class SalaryWagesComponent implements OnInit {
     };
   }
 
-  addSalarywages(): void {
-    const dialogRef = this.dialog.open(AddSalaryWagesComponent, { width: '500px' });
-    dialogRef.afterClosed().subscribe(() => {
-    });
+  // ✅ Month/Year Picker Integration
+  setMonthAndYear(date: Date, datepicker: any): void {
+    this.monthYearControl.setValue(date);
+    datepicker.close();
+
+    const selectedMonth = date.getMonth();
+    const selectedYear = date.getFullYear();
+
+    const startDate = new Date(selectedYear, selectedMonth, 1);
+    const endDate = new Date(selectedYear, selectedMonth + 1, 0);
+
+    const startDateStr = startDate.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
+
+    console.log('📆 Filter by month-year:', { startDateStr, endDateStr });
+
+    this.store.dispatch(loadSalaryMap({
+      startDate: startDateStr,
+      endDate: endDateStr,
+      yearNo: selectedYear
+    }));
   }
 
+  chosenYearHandler(normalizedYear: Date): void {
+    const ctrlValue = this.monthYearControl.value || new Date();
+    ctrlValue.setFullYear(normalizedYear.getFullYear());
+    this.monthYearControl.setValue(ctrlValue);
+  }
+
+  autoLoadSalaryMap(): void {
+    const today = new Date();
+    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+    const startDateStr = startDate.toISOString().split('T')[0];
+    const endDateStr = endDate.toISOString().split('T')[0];
+    const yearNo = today.getFullYear();
+
+    this.store.dispatch(loadSalaryMap({ startDate: startDateStr, endDate: endDateStr, yearNo }));
+  }
 
   applyFilter(): void {
     const search = this.searchTerm.toLowerCase().trim();
@@ -126,89 +162,55 @@ export class SalaryWagesComponent implements OnInit {
     this.pagedSalaryTable = this.filteredData.slice(start, end);
   }
 
+  addSalarywages(): void {
+    const dialogRef = this.dialog.open(AddSalaryWagesComponent, { width: '500px' });
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
   editSalaryWagesFull(processName: string): void {
-  this.editingRow = processName;
+    this.editingRow = processName;
 
-  const match = this.salaryTable.find(row => row.processName === processName);
-  if (match) {
-    // Store a deep copy for cancel
-    this.backupRow = JSON.parse(JSON.stringify(match));
-  }
-
-  // Set current month for editing (optional: default to latest header)
-  this.currentMonth = this.reversedTableHeaders[0]; // e.g., 'July'
-}
-
-
-saveSalaryWages(): void {
-  const updatedRow = this.salaryTable.find(row => row.processName === this.editingRow);
-  const originalRow = this.salaryMapRawData.find(row => row.processName === this.editingRow);
-
-  if (!updatedRow || !originalRow) return;
-
-  const monthData = updatedRow[this.currentMonth];
-  if (!monthData) {
-    console.warn(`⚠️ No data found for ${this.currentMonth}`);
-    return;
-  }
-
-  const payload = {
-    processName: updatedRow.processName,
-    salaryforProcess: monthData.salaryforProcess,
-    salaryExcludingCoreMaking: monthData.salaryExcludingCoreMaking,
-    salaryForCoreProduction: monthData.salaryForCoreProduction,
-    outSourcingCost: monthData.outSourcingCost,
-    splOutSourcingCost: monthData.splOutSourcingCost
-  };
-
-  console.log("📦 Updating with payload:", payload);
-  this.store.dispatch(updateSalaryEntry({ id: originalRow._id, payload }));
-  
-
-  this.editingRow = null;
-  this.backupRow = null;
-}
-
-cancelEdit(): void {
-  if (this.backupRow) {
-    const index = this.salaryTable.findIndex(row => row.processName === this.backupRow.processName);
-    if (index !== -1) {
-      this.salaryTable[index] = JSON.parse(JSON.stringify(this.backupRow));
+    const match = this.salaryTable.find(row => row.processName === processName);
+    if (match) {
+      this.backupRow = JSON.parse(JSON.stringify(match));
     }
+
+    this.currentMonth = this.reversedTableHeaders[0];
   }
 
-  this.editingRow = null;
-  this.backupRow = null;
+  saveSalaryWages(): void {
+    const updatedRow = this.salaryTable.find(row => row.processName === this.editingRow);
+    const originalRow = this.salaryMapRawData.find(row => row.processName === this.editingRow);
+
+    if (!updatedRow || !originalRow) return;
+
+    const monthData = updatedRow[this.currentMonth];
+    if (!monthData) return;
+
+    const payload = {
+      processName: updatedRow.processName,
+      salaryforProcess: monthData.salaryforProcess,
+      salaryExcludingCoreMaking: monthData.salaryExcludingCoreMaking,
+      salaryForCoreProduction: monthData.salaryForCoreProduction,
+      outSourcingCost: monthData.outSourcingCost,
+      splOutSourcingCost: monthData.splOutSourcingCost
+    };
+
+    this.store.dispatch(updateSalaryEntry({ id: originalRow._id, payload }));
+    this.editingRow = null;
+    this.backupRow = null;
+  }
+
+  cancelEdit(): void {
+    if (this.backupRow) {
+      const index = this.salaryTable.findIndex(row => row.processName === this.backupRow.processName);
+      if (index !== -1) {
+        this.salaryTable[index] = JSON.parse(JSON.stringify(this.backupRow));
+      }
+    }
+
+    this.editingRow = null;
+    this.backupRow = null;
+  }
 }
 
-onDateRangeChange(): void {
-  if (!this.startDate || !this.endDate) return;
-
-  const start = new Date(this.startDate);
-  const end = new Date(this.endDate);
-
-  const startDateStr = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, '0')}-01`;
-
-  // Get last day of end month
-  const endDateStr = `${end.getFullYear()}-${String(end.getMonth() + 1).padStart(2, '0')}-${new Date(end.getFullYear(), end.getMonth() + 1, 0).getDate().toString().padStart(2, '0')}`;
-
-  const yearNo = start.getFullYear();
-
-  console.log("📅 Filtering SalaryMap by range:", { startDateStr, endDateStr, yearNo });
-
-  this.store.dispatch(loadSalaryMap({ startDate: startDateStr, endDate: endDateStr, yearNo }));
-}
-
-autoLoadSalaryMap(): void {
-  const today = new Date();
-  const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  const startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-
-  const startDateStr = startDate.toISOString().split('T')[0];
-  const endDateStr = endDate.toISOString().split('T')[0];
-  const yearNo = today.getFullYear();
-
-  this.store.dispatch(loadSalaryMap({ startDate: startDateStr, endDate: endDateStr, yearNo }));
-}
-
-}

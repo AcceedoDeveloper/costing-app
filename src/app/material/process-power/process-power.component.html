@@ -1,13 +1,24 @@
-<div class="header">
-  <h2>Process Power Cost</h2>
-  <button mat-raised-button color="primary" (click)="openPopup()">Add Power Cost</button>
 
-  <mat-form-field appearance="standard" class="search-box">
-    <mat-label>Search by Process</mat-label>
-    <input matInput [(ngModel)]="searchText" (input)="applyFilters()" placeholder="e.g., Casting">
-  </mat-form-field>
-</div>
+<div class="table-wrapper">
+  <div class="header">
+    <h2 class="title">Process Power Cost</h2>
 
+    <div class="header-controls">
+      <!-- Search Field -->
+      <mat-form-field appearance="standard" class="search-box">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchText" (input)="applyFilters()" placeholder="e.g., Casting">
+      </mat-form-field>
+
+      <!-- Add Power Cost Button -->
+      <div class="add-section">
+        <label class="input-label">Add Power Cost</label>
+        <button mat-icon-button color="primary" (click)="openPopup()" class="add-icon-button" aria-label="Add Power Cost">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
 <!-- Table Section -->
 <div class="table-container">
   <table>
@@ -95,3 +106,5 @@
     </form>
   </div>
 </div>
+
+

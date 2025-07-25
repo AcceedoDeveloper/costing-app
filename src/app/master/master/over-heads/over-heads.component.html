@@ -1,33 +1,40 @@
 
 <div class="header">
-  <h2>Overheads</h2>
-  <mat-form-field appearance="standard" class="search-box">
-    <mat-label>Search by Process</mat-label>
-    <mat-icon matPrefix>search</mat-icon>
-    <input matInput placeholder="e.g., Casting" [(ngModel)]="searchTerm" (input)="applyFilter()">
-  </mat-form-field>
+  <!-- Heading aligned with table edge -->
+  <h2 class="heading-title">Overheads</h2>
 
+  <div class="header-controls">
+    <!-- Search -->
+    <mat-form-field appearance="standard" class="search-box">
+      <mat-label>Search by Process</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="e.g., Casting" [(ngModel)]="searchTerm" (input)="applyFilter()">
+    </mat-form-field>
 
-  
- <div style="display: flex; gap: 16px; align-items: center;">
-  <!-- Start Date -->
-  <mat-form-field appearance="fill">
-    <mat-label>Start Date</mat-label>
-    <input matInput [matDatepicker]="picker1" [(ngModel)]="startDate" (dateChange)="onDateRangeChange()">
-    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-    <mat-datepicker #picker1></mat-datepicker>
-  </mat-form-field>
+    <!-- Month Picker -->
+    <mat-form-field appearance="standard" class="month-picker">
+      <mat-label>Select Month</mat-label>
+      <input matInput [matDatepicker]="picker" [formControl]="selectedMonthYear">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker
+                      startView="year"
+                      (yearSelected)="chosenYearHandler($event)"
+                      (monthSelected)="chosenMonthHandler($event, picker)"
+                      panelClass="month-picker"
+                      [startAt]="selectedMonthYear.value">
+      </mat-datepicker>
+    </mat-form-field>
 
-  <!-- End Date -->
-  <mat-form-field appearance="fill">
-    <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="picker2" [(ngModel)]="endDate" (dateChange)="onDateRangeChange()">
-    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-    <mat-datepicker #picker2></mat-datepicker>
-  </mat-form-field>
+    <!-- Add Overheads -->
+    <div class="add-overhead-container">
+      <label class="input-label">Add Overheads</label>
+      <button mat-icon-button color="primary" (click)="openAddOverheads()" class="add-icon-button" aria-label="Add Overhead">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+  </div>
 </div>
-  <button mat-raised-button color="primary" (click)="openAddOverheads()">Add Over Heads</button>
-</div>
+
 
 <div class="table-container">
   <table>
@@ -50,60 +57,51 @@
           </td>
           <td class="month-cell">{{ month }}</td>
           <td>
-  <ng-container *ngIf="row[month]; else noData">
-    <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlyRepair">
-      <input type="number" [(ngModel)]="row[month].repairAndMaintenance" />
-    </ng-container>
-    <ng-template #readOnlyRepair>{{ row[month].repairAndMaintenance || '-' }}</ng-template>
-  </ng-container>
-  <ng-template #noData>-</ng-template>
-</td>
-
-<td>
-  <ng-container *ngIf="row[month]; else noData">
-    <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySell">
-      <input type="number" [(ngModel)]="row[month].sellingDistributionAndMiscOverHeads" />
-    </ng-container>
-    <ng-template #readOnlySell>{{ row[month].sellingDistributionAndMiscOverHeads || '-' }}</ng-template>
-  </ng-container>
-  <ng-template #noData>-</ng-template>
-</td>
-
-<td>
-  <ng-container *ngIf="row[month]; else noData">
-    <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlyFinance">
-      <input type="number" [(ngModel)]="row[month].financeCost" />
-    </ng-container>
-    <ng-template #readOnlyFinance>{{ row[month].financeCost || '-' }}</ng-template>
-  </ng-container>
-  <ng-template #noData>-</ng-template>
-</td>
-
-<td>{{ row[month]?.totalOverHeadsWithFinanceCost || '-' }}</td>
-
-
-
-
-        <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
-  <div class="action-content">
-    <ng-container *ngIf="editingRow === row.processName; else editButton">
-      <button mat-raised-button color="primary" (click)="saveOverheads()">Save</button>
-      <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
-    </ng-container>
-    <ng-template #editButton>
-      <button mat-icon-button color="accent" (click)="startEditing(row.processName)">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </ng-template>
-  </div>
-</td>
-
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlyRepair">
+                <input type="number" [(ngModel)]="row[month].repairAndMaintenance" />
+              </ng-container>
+              <ng-template #readOnlyRepair>{{ row[month].repairAndMaintenance || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySell">
+                <input type="number" [(ngModel)]="row[month].sellingDistributionAndMiscOverHeads" />
+              </ng-container>
+              <ng-template #readOnlySell>{{ row[month].sellingDistributionAndMiscOverHeads || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="row[month]; else noData">
+              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlyFinance">
+                <input type="number" [(ngModel)]="row[month].financeCost" />
+              </ng-container>
+              <ng-template #readOnlyFinance>{{ row[month].financeCost || '-' }}</ng-template>
+            </ng-container>
+            <ng-template #noData>-</ng-template>
+          </td>
+          <td>{{ row[month]?.totalOverHeadsWithFinanceCost || '-' }}</td>
+          <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
+            <div class="action-content">
+              <ng-container *ngIf="editingRow === row.processName; else editButton">
+                <button mat-raised-button color="primary" (click)="saveOverheads()">Save</button>
+                <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
+              </ng-container>
+              <ng-template #editButton>
+                <button mat-icon-button color="accent" (click)="startEditing(row.processName)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </ng-template>
+            </div>
+          </td>
         </tr>
       </ng-container>
     </tbody>
   </table>
-  
+
   <mat-paginator [length]="filteredData.length" [pageSize]="pageSize" [pageSizeOptions]="[3, 6, 9]" showFirstLastButtons (page)="onPageChange($event)"></mat-paginator>
 </div>
-
 
