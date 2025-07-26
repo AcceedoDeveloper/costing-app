@@ -5,7 +5,7 @@ import { ReportComponent } from './report/report.component';
 import { DashComponent} from './dash/dash.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
+  { path: 'dashh', component: DashboardComponent },
   { path: 'report', component: ReportComponent },
   { path: 'dash', component: DashComponent }
 ];

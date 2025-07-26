@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service'; 
-import { } from '../../material/store/material.actions';
-import { } from '../../material/store/material.selector';
+import {loadCustomerDetails } from '../../material/store/material.actions';
+import { getCustomerDetails} from '../../material/store/material.selector';
+import { CustomerdetailsIn } from '../../models/Customer-details.model';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,9 +16,24 @@ export class DashboardComponent implements OnInit {
     barChart:any;
     materilachart:any;
     customersList: any[] = [];
-  constructor(private dashboardServices: DashboardService) { }
+    customerDetails : CustomerdetailsIn[] = [];
+    pendingQuotations: CustomerdetailsIn[] = [];
+  completedQuotations: CustomerdetailsIn[] = [];
+  selectedCustomerDetails$: Observable<any>;
+  constructor(private dashboardServices: DashboardService, private store : Store) { }
 
 ngOnInit(): void {
+   this.store.dispatch(loadCustomerDetails());
+
+  this.selectedCustomerDetails$ = this.store.select(getCustomerDetails); 
+
+  this.selectedCustomerDetails$.subscribe(data => {
+     this.customerDetails = data;
+    console.log('Simplified Data:', data);
+
+    this.pendingQuotations = this.customerDetails.filter(item => item.Status?.toLowerCase() === 'pending');
+      this.completedQuotations = this.customerDetails.filter(item => item.Status?.toLowerCase() === 'completed');
+  });
   this.dashboardServices.getdata().subscribe((res) => {
     this.customersList = res.customersMap;
 

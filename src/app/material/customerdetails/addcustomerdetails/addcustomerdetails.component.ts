@@ -523,7 +523,7 @@ generateFinalJson(): void {
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumables: cost.otherConsumables,
-    status: 'Completed'
+    Status: 'Completed'
   };
 
   console.log('✅ Final Full JSON Format:', finalData);

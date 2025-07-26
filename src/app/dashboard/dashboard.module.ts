@@ -10,13 +10,14 @@ import { ReportComponent } from './report/report.component';
 import { DashComponent } from './dash/dash.component';
 import { CompanyComponent } from './company/company.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import { MaterialModule } from '../material/material.module';
 
 import { ChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent,],
   imports: [
     MatIconModule,
-  
+    MaterialModule,
     GoogleChartsModule,
     CommonModule,
     DashboardRoutingModule,

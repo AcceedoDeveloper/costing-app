@@ -57,34 +57,33 @@
 <div class="box quotation-box">
   <mat-tab-group animationDuration="500ms">
 
-   
     <!-- Pending Quotation -->
     <mat-tab>
       <ng-template mat-tab-label>
-        Pending Quotation <span class="tab-badge warning">2</span>
+        Pending Quotation <span class="tab-badge warning">{{ pendingQuotations.length }}</span>
       </ng-template>
       <div class="tab-display">
-        <div class="quotation-card">
+        <div class="quotation-card" *ngFor="let item of pendingQuotations">
           <div class="info-row">
-            <p><strong>Customer Name:</strong> XYZ Motors</p>
-            <p><strong>Part Name:</strong> Engine Mount</p>
-            <p><strong>Stopped Process:</strong> <span class="status warning">CNC Machining</span></p>
+            <p><strong>Customer Name:</strong> {{ item.CustomerName?.name }}</p>
+            <p><strong>Part Name:</strong> {{ item.partName }}</p>
+            <p><strong>Status:</strong> <span class="status warning">{{ item.Status }}</span></p>
           </div>
         </div>
       </div>
     </mat-tab>
 
-    <!-- Last Month Quotation -->
+    <!-- Completed Quotation -->
     <mat-tab>
       <ng-template mat-tab-label>
-        Last Month Quotation <span class="tab-badge success">3</span>
+        Last Month Quotation <span class="tab-badge success">{{ completedQuotations.length }}</span>
       </ng-template>
       <div class="tab-display">
-        <div class="quotation-card">
+        <div class="quotation-card" *ngFor="let item of completedQuotations">
           <div class="info-row">
-            <p><strong>Customer Name:</strong> Delta Corp</p>
-            <p><strong>Part Name:</strong> Brake Disc</p>
-            <p><strong>Status:</strong> <span class="status success">Accepted</span></p>
+            <p><strong>Customer Name:</strong> {{ item.CustomerName?.name }}</p>
+            <p><strong>Part Name:</strong> {{ item.partName }}</p>
+            <p><strong>Status:</strong> <span class="status success">{{ item.Status }}</span></p>
           </div>
         </div>
       </div>
@@ -92,6 +91,7 @@
 
   </mat-tab-group>
 </div>
+
 
 
 

@@ -98,7 +98,7 @@ export interface CustomerProcess {
   coreInputs: boolean;
   processType?: any; 
   grade?: any;      
-  status?: string; 
+  Status?: string; 
   Inputs?: any;     
   __v?: number;
 }
@@ -121,6 +121,7 @@ export interface CustomerdetailsIn {
     coreInputs: string[];
     mouldingInputs: string[];
   };
+  Status: string;
 }
 
 
