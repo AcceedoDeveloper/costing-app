@@ -1,58 +1,34 @@
 <div class="dashboard-grid">
   <div class="box">
-    <div class="container">
-
-    <div class="top-bar">
-  <div class="search-container">
-    <span>Customer List</span> 
-  </div>
-  <div class="dropdown">
-    <span class="search-icon">🔍</span>
-    <input type="text" placeholder="Search" class="search-input" />
-  </div>
-</div>
-
-  
-
-  <div class="table">
-    <div class="table-head">
-      <div>Customer</div>
-      <div>Part No.</div>
-      <div>Total Process Cost	</div>
+     <div class="container">
+        <div class="table-header">
+            <h2>Customer List</h2>
+            <input type="text" class="search-bar" placeholder="Search Customer">
+        </div>
+        <table>
+            <thead>
+                <tr >
+                    <th>Customer</th>
+                    <th>Part No.</th>
+                    <th>Total Process Cost</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let customer of customersList">
+                    <td> {{ customer.CustomerName?.name }}</td>
+                    <td>   {{ customer.partName }}</td>
+                    <td> {{ customer.totalProcessCost }}</td>
+                    
+                </tr>
+                
+            </tbody>
+        </table>
+   
     </div>
 
-    <div class="table-row active" *ngFor="let customer of customersList">
-        <div>
-          
-          {{ customer.CustomerName?.name }}
-        
-      </div>
-      <div class="price">
-        {{ customer.partName }}
-      </div>
-      <div class="price">
-       {{ customer.totalProcessCost }}
-      </div>
-     
-    </div>
-
-     
-  
- 
-
- 
-
-
-
 
   </div>
-</div>
-
-
-
-  </div>
-
-
 
 <div class="box quotation-box">
   <mat-tab-group animationDuration="500ms">
@@ -94,8 +70,8 @@
 
 
 
-
   <div class="box" *ngIf="chart">
+    
   <google-chart
   [type]="chart.type"
   [data]="chart.data"
@@ -105,35 +81,53 @@
 </google-chart>
 
   </div>
-  <div class="box" *ngIf="materilachart">
-
-<google-chart
-  [type]="materilachart.type"
-  [data]="materilachart.data"
-  [columnNames]="materilachart.columnNames"
-  [options]="materilachart.options"
-  [width]="materilachart.width"
-  [height]="materilachart.height">
-</google-chart>
-
-
-
-
-  </div>
-
-
-
-
-  <div class="box" *ngIf="barChart">
-    <google-chart
-  [type]="barChart.type"
-  [data]="barChart.data"
-  [columnNames]="barChart.columnNames"
-  [options]="barChart.options"
-  [width]="barChart.width"
-  [height]="barChart.height">
-</google-chart>
-
-  </div>
-  <div class="box">Box 6</div>
+ 
 </div>
+
+
+
+    <div class="dashboard">
+        <div class="card">
+            <h3>Accounts with High Spending</h3>
+            <div class="bar-chart">
+                <div class="bar" style="height: 60%"></div>
+                <div class="bar" style="height: 80%"></div>
+                <div class="bar" style="height: 50%"></div>
+                <div class="bar" style="height: 70%"></div>
+                <div class="bar" style="height: 90%"></div>
+                <div class="bar" style="height: 60%"></div>
+                <div class="bar" style="height: 70%"></div>
+                <div class="bar" style="height: 50%"></div>
+            </div>
+            <div class="legend">Sales, Development, CEN, Consulting, Consulting, Consulting, Consulting, Consulting</div>
+        </div>
+        <div class="card">
+            <h3>Transaction Type Cost</h3>
+            <div class="doughnut-chart">
+                <div class="doughnut"></div>
+            </div>
+            <div class="legend">Usage 30%, Tax 25%, Credit 25%, Recurring Charges 20%</div>
+        </div>
+        <div class="card">
+            <h3>Top Products with High Spending</h3>
+            <div class="bar-chart">
+                <div class="bar current" style="height: 60%"></div>
+                <div class="bar current" style="height: 80%"></div>
+                <div class="bar current" style="height: 50%"></div>
+                <div class="bar current" style="height: 70%"></div>
+                <div class="bar current" style="height: 40%"></div>
+            </div>
+            <div class="legend">Current Month: Pressure, Leave Man, Comp., Comp., Comp.</div>
+        </div>
+        <div class="card">
+            <h3>Top Department Exceeding Budget</h3>
+            <div class="bar-chart">
+                <div class="bar budget" style="height: 90%"></div>
+                <div class="bar budget" style="height: 70%"></div>
+                <div class="bar budget" style="height: 60%"></div>
+                <div class="bar budget" style="height: 50%"></div>
+                <div class="bar budget" style="height: 40%"></div>
+            </div>
+            <div class="legend">R&D, Sales & Marketing, Customer Support, Finance & Admin, Data & Analytics</div>
+        </div>
+    </div>
