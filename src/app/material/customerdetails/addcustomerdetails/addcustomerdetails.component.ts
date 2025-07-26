@@ -102,12 +102,14 @@ selectedFile: File | null = null;
     rejection: [0],
 
 
-
     heatTreatment: [0],
   postProcess: [0],
   packingAndTransport: [0],
   NozzleShotBlasting: [0],
   highPressureCleaning: [0],
+
+
+  otherConsumables: [0] // Add this line for other consumables
   });
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
@@ -409,7 +411,8 @@ finalSubmit() {
     postProcess: cost.postProcess,
     packingAndTransport: cost.packingAndTransport,
     NozzleShotBlasting: cost.NozzleShotBlasting,
-    highPressureCleaning: cost.highPressureCleaning
+    highPressureCleaning: cost.highPressureCleaning,
+    otherConsumables: cost.otherConsumables  
   };
 
   console.log('📦 Final Submission JSON:', finalData);
@@ -518,7 +521,9 @@ generateFinalJson(): void {
     postProcess: cost.postProcess,
     packingAndTransport: cost.packingAndTransport,
     NozzleShotBlasting: cost.NozzleShotBlasting,
-    highPressureCleaning: cost.highPressureCleaning
+    highPressureCleaning: cost.highPressureCleaning,
+    otherConsumables: cost.otherConsumables,
+    status: 'Completed'
   };
 
   console.log('✅ Final Full JSON Format:', finalData);

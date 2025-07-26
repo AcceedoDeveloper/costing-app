@@ -97,7 +97,8 @@ export interface CustomerProcess {
   mouldingInputs: boolean;
   coreInputs: boolean;
   processType?: any; 
-  grade?: any;       
+  grade?: any;      
+  status?: string; 
   Inputs?: any;     
   __v?: number;
 }
