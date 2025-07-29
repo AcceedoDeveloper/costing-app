@@ -12,7 +12,6 @@ import { MatStepper } from '@angular/material/stepper';
 import {Process } from '../../../models/process.model';
 import { getCustomerWithId } from '../../store/material.selector';
 import { updateCustomerDetails } from '../../store/material.actions';
-import { take } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
 import { loadCustomerDetails } from '../../store/material.actions';
 import { getCastingDetails} from '../../../modules/materialinput/store/casting.actions';

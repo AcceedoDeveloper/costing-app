@@ -33,11 +33,18 @@
 </div>
 
     </div>
+   
 
     <button mat-raised-button color="primary" (click)="openAddMeterialPopup()">
       Add Material
     </button>
   </div>
+<div class="upload-file" >
+ <input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls" />
+<button mat-raised-button color="primary" (click)="onUpload()" [disabled]="!selectedFile">
+  Upload Excel
+</button>
+</div>
 
 
 </div>

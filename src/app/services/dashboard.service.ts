@@ -23,5 +23,12 @@ getQuoteData(customer: string, drawing: string, part: string): Observable<any> {
 }
 
 
+uploadExcelFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<any>('http://localhost:3005/material/upload', formData);
+  }
+
 
 }

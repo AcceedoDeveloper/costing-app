@@ -9,6 +9,7 @@ import { AddMaterialComponent } from './add-material/add-material.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-material',
@@ -24,13 +25,15 @@ export class MaterialComponent implements OnInit, AfterViewInit {
   expandedHistoryIndex: number | null = null;
   materials: Material[] = [];
   paginatedMaterials: Material[] = [];
+   selectedFile: File | null = null;
+
 
   pageSize = 25;
   pageIndex = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private store: Store, private dialog: MatDialog) {}
+  constructor(private store: Store, private dialog: MatDialog, private dhasboard: DashboardService) {}
 
   ngOnInit(): void {
     console.log('Dispatching loadMaterials action');
@@ -159,7 +162,27 @@ applyFilterMaterialbyHouseType(): void {
   const endIndex = startIndex + this.pageSize;
   this.paginatedMaterials = filtered.slice(startIndex, endIndex);
 }
+onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    }
+  }
 
+  onUpload(): void {
+    if (!this.selectedFile) return;
+
+    this.dhasboard.uploadExcelFile(this.selectedFile).subscribe({
+      next: (res) => {
+        console.log('Upload successful', res);
+        alert('Excel uploaded successfully');
+      },
+      error: (err) => {
+        console.error('Upload failed', err);
+        alert('Upload failed');
+      }
+    });
+  }
 
 
 

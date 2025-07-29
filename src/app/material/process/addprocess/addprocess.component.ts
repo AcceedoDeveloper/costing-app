@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormArray,
-  FormControl
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl} from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
@@ -36,7 +30,8 @@ export class AddprocessComponent implements OnInit {
     this.processForm = this.fb.group({
       processName: ['', Validators.required],
      
-      type: this.fb.array([], Validators.required),
+      type: this.fb.array([]),
+
       grade: [''],
       materials: this.fb.array([])
     });
@@ -118,33 +113,40 @@ export class AddprocessComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    if (this.processForm.valid) {
-      const formValue = this.processForm.value;
+onSubmit(): void {
+  if (this.processForm.valid) {
+    const formValue = this.processForm.value;
 
-      const payload = {
-      
-        processName: formValue.processName,
-        grade: formValue.grade,
-        rawMaterial: formValue.materials.map((material: any) => ({
-          type: material.selectedType,
-          materialsUsed: [
-            {
-              name: material.selectedName,
-              quantity: material.quantity
-            }
-          ]
-        }))
-      };
+    const selectedType = formValue.type[0]; // can be undefined
+    let payload: any = {
+      processName: formValue.processName,
+      rawMaterial: [],
+      grade: ''
+    };
 
-      console.log('data', payload);
-
-      this.store.dispatch(addProcess({ process: payload }));
-      this.dialogRef.close();
-    } else {
-      this.processForm.markAllAsTouched();
+    if (selectedType === 'grade') {
+      payload.grade = formValue.grade;
+    } else if (selectedType === 'material') {
+      payload.rawMaterial = formValue.materials.map((material: any) => ({
+        type: material.selectedType,
+        materialsUsed: [
+          {
+            name: material.selectedName,
+            quantity: material.quantity
+          }
+        ]
+      }));
     }
+
+    console.log('data', payload);
+
+    this.store.dispatch(addProcess({ process: payload }));
+    this.dialogRef.close();
+  } else {
+    this.processForm.markAllAsTouched();
   }
+}
+
 
   onCancel(): void {
     this.dialogRef.close();
