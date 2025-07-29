@@ -395,7 +395,6 @@ updateCustomerDetails$ = createEffect(() =>
     mergeMap(action =>
       this.materialTypeService.updateCustomerDetails(action.id, action.customer).pipe(
         map((updatedCustomer: CustomerProcess) => {
-          this.toastr.success('Customer updated successfully', 'Success');
           return updateCustomerDetailsSuccess({ customer: updatedCustomer });
         }),
         catchError(error => {

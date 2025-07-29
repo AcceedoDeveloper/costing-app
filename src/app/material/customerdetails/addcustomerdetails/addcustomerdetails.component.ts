@@ -23,6 +23,8 @@ import {selectProductionCost } from '../../../modules/materialinput/store/castin
 import { CostSummary } from '../../../models/casting-input.model';
 import { addCustomerDetails } from '../../store/material.actions';
 import { DashboardService } from '../../../services/dashboard.service';
+import { ToastrService } from 'ngx-toastr';
+
 
 
 
@@ -64,7 +66,7 @@ selectedFile: File | null = null;
   @ViewChild('stepper') stepper!: MatStepper;
 
   thirdFormGroup!: FormGroup;
-  isLinear = false;
+  isLinear = true;
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   costForm: FormGroup;
@@ -76,7 +78,8 @@ selectedFile: File | null = null;
   constructor(private store: Store, private fb: FormBuilder, 
     private dialog: MatDialog,  
     private dialogRef: MatDialogRef<AddcustomerdetailsComponent>,
-    private dhashboardServices: DashboardService  ) {} 
+    private dhashboardServices: DashboardService ,
+    private tooster: ToastrService ) {} 
 
  ngOnInit(): void {
 
@@ -522,7 +525,7 @@ generateFinalJson(): void {
     packingAndTransport: cost.packingAndTransport,
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
-    otherConsumables: cost.otherConsumables,
+    otherConsumableCost: cost.otherConsumables,
     Status: 'Completed'
   };
 
@@ -557,10 +560,16 @@ onFileSelected(event: Event): void {
     this.selectedFile = input.files[0];
     this.selectedFileName = this.selectedFile.name;
 
-    // Optional: Show it in console
+   
     console.log("Selected file:", this.selectedFile);
   }
 }
+
+submitForm() {
+   this.tooster.success('Customer Details created successfully!', 'Success');
+  this.dialogRef.close(); 
+}
+
 
 }
 

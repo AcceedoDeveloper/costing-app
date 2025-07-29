@@ -46,6 +46,7 @@ addCustomerDetails() {
     width: '100%',
     height: '650px',
     autoFocus: false,
+    disableClose: true
   });
 
   
