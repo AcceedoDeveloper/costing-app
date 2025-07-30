@@ -31,8 +31,8 @@ uploadExcelFile(file: File): Observable<any> {
   }
 
 
-  materialData(): Observable<any> {
-    return this.http.get<any>('http://localhost:3005/material/getMaterialData');
+  materialGraphData(): Observable<any> {
+    return this.http.get<any>('http://localhost:3005/getMaterialMap?yearNo=2025&startDate=2025-05-01&endDate=2025-07-31');
   }
 
 

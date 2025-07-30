@@ -101,16 +101,42 @@ this.chart = {
 
 
   });
+
+
+this.dashboardServices.materialGraphData().subscribe((res) => {
+  console.log('Material Graph Data:', res);
+
+  const groupedMaterials: { [key: string]: { name: string; priceHistory: { date: string; unitCost: number }[] } } = {};
+
+  Object.keys(res.data).forEach(category => {
+    const materials = res.data[category];
+
+    materials.forEach((material: any) => {
+      const name = material.name;
+
+      if (!groupedMaterials[name]) {
+        groupedMaterials[name] = {
+          name: name,
+          priceHistory: []
+        };
+      }
+
+      material.priceHistory.forEach((entry: any) => {
+        groupedMaterials[name].priceHistory.push({
+          date: entry.date,
+          unitCost: entry.unitCost
+        });
+      });
+    });
+  });
+
+  const result = Object.values(groupedMaterials);
+  console.log('Grouped Material Data:', result);
+});
+
+
+
 }
-
-
-
-
-
-
-
-
-
 
 
 
