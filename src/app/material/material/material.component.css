@@ -15,8 +15,27 @@
   top: 20px;
 }
 
-.upload-file{
-margin-top: 20px;
+.upload-file {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0 0 20px;
+  padding: 10px 16px;
+
+  border-radius: 8px;
+  max-width: fit-content;
+  
+}
+
+.upload-file input[type="file"] {
+  font-size: 14px;
+  color: #333;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.upload-file button {
+  white-space: nowrap;
 }
 
 

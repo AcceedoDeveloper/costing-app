@@ -568,7 +568,9 @@ submitForm() {
    this.tooster.success('Customer Details created successfully!', 'Success');
   this.dialogRef.close(); 
 }
-
+close(){
+  this.dialogRef.close();
+}
 
 }
 

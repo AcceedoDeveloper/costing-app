@@ -31,4 +31,9 @@ uploadExcelFile(file: File): Observable<any> {
   }
 
 
+  materialData(): Observable<any> {
+    return this.http.get<any>('http://localhost:3005/material/getMaterialData');
+  }
+
+
 }

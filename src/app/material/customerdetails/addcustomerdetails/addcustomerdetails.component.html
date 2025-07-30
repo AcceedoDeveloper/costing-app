@@ -49,11 +49,12 @@
   <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
   <input type="file" #fileInput hidden (change)="onFileSelected($event)" />
 </div>
-
-
+     
       <!-- Stepper Button -->
       <div class="stepper-button-wrapper">
+        <button mat-raised-button class="btn btn-secondary" matStepperNext (click)="close()">close</button>
         <button mat-raised-button color="primary" matStepperNext (click)="fristfrom()">Next</button>
+
       </div>
     </form>
 

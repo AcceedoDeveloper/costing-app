@@ -10,6 +10,7 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { PageEvent } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
 import { DashboardService } from '../../services/dashboard.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-material',
@@ -33,7 +34,9 @@ export class MaterialComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private store: Store, private dialog: MatDialog, private dhasboard: DashboardService) {}
+  constructor(private store: Store, private dialog: MatDialog, 
+    private dhasboard: DashboardService
+    , private tooster : ToastrService) {}
 
   ngOnInit(): void {
     console.log('Dispatching loadMaterials action');
@@ -175,11 +178,11 @@ onFileSelected(event: Event): void {
     this.dhasboard.uploadExcelFile(this.selectedFile).subscribe({
       next: (res) => {
         console.log('Upload successful', res);
-        alert('Excel uploaded successfully');
+        this.tooster.success('File uploaded successfully');
       },
       error: (err) => {
         console.error('Upload failed', err);
-        alert('Upload failed');
+        this.tooster.error('File upload failed');
       }
     });
   }
