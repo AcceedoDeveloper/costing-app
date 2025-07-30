@@ -1,6 +1,6 @@
 <h5>
   <span class="material-icons">add_circle</span>
-  Add Customer Details
+  Update Customer Details
 </h5>
 
 <!-- Stepper -->
@@ -45,9 +45,8 @@
         </div>
       </div>
       <div class="file-upload-wrapper">
-  <button mat-raised-button color="accent" (click)="fileInput.click()">Upload File</button>
-  <span *ngIf="selectedFileName">{{ selectedFileName }}</span>
-  <input type="file" #fileInput hidden (change)="onFileSelected($event)" />
+  
+ 
 </div>
 
 
@@ -128,177 +127,140 @@
   </form>
 </mat-step>
 
-  <!-- Step 3: Done -->
-  <mat-step [stepControl]="thirdFormGroup">
-  <form [formGroup]="thirdFormGroup">
-    <ng-template matStepLabel>Process</ng-template>
-
-    <!-- Process Selection -->
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Select Processes</mat-label>
-      <mat-select formControlName="selectedProcesses" multiple>
-        <mat-option *ngFor="let process of processes" [value]="process">
-          {{ process.processName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div *ngIf="thirdFormGroup.get('selectedProcesses')?.value?.length > 0" class="process-table-scroll">
-      <table mat-table [dataSource]="thirdFormGroup.get('selectedProcesses')?.value" class="mat-elevation-z1 full-width">
 
 
-  <ng-container matColumnDef="index">
-    <th mat-header-cell *matHeaderCellDef>No.</th>
-    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
-  </ng-container>
-
-
-  <ng-container matColumnDef="processName">
-    <th mat-header-cell *matHeaderCellDef>Process Name</th>
-    <td mat-cell *matCellDef="let element">{{ element?.processName }}</td>
-  </ng-container>
-
-
-  <ng-container matColumnDef="processCost">
-    <th mat-header-cell *matHeaderCellDef>Process Cost</th>
-    <td mat-cell *matCellDef="let element">{{ element?.processCost
- || 'N/A' }}</td>
-  </ng-container>
-
-
-  <tr mat-header-row *matHeaderRowDef="['index', 'processName', 'processCost']"></tr>
-  <tr mat-row *matRowDef="let row; columns: ['index', 'processName', 'processCost']; let i = index"></tr>
-
-
-
-
-
-      </table>
-    </div>
-
-    <!-- Stepper Controls -->
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button matStepperNext color="primary"  (click)="processdata()" (click)="finalSubmit()" >Next</button>
-    </div>
-  </form>
-</mat-step>
-
-
-   
 <mat-step [stepControl]="forthFormGroup">
   <form [formGroup]="forthFormGroup">
     <ng-template matStepLabel>Review Cost</ng-template>
 
  
-    <table style="width: 100%; border-collapse: collapse;" border="1">
-  <thead>
-    <tr>
-      <th>Process Name</th>
-      <th>Grade / Material</th>
-      <th>Total Cost</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let process of selectedProcesses; let i = index">
-      <!-- Main Row -->
+ <div class="table-container">
+  <table>
+    <thead>
       <tr>
-        <td>{{ process.processName }}</td>
-        <td>{{ process.grade?.length > 0 ? process.grade[0][0]?.gradeNo : 'Material' }}</td>
-        <td>{{ process.processCost }}</td>
-        <td>
-         <button mat-icon-button (click)="toggleRow(i)" [matTooltip]="expandedRowIndex === i ? 'Hide Details' : 'Show Details'">
-  <mat-icon>
-    {{ expandedRowIndex === i ? 'expand_less' : 'expand_more' }}
-  </mat-icon>
-</button>
-
-        </td>
+        <th>Process Name</th>
+        <th>Grade / Material</th>
+        <th>Total Cost</th>
+        <th>Action</th>
       </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let process of selectedProcesses; let i = index">
+        <!-- Main Row -->
+        <tr>
+          <td>{{ process.processName }}</td>
+          <td>{{ process.grade?.length > 0 ? process.grade[0][0]?.gradeNo : 'Material' }}</td>
+          <td>
+            ₹ {{ calculateProcessTotalCost(process) | number: '1.2-2' }}
+          </td>
+          <td>
+            <button (click)="toggleRow(i)">
+              {{ expandedRowIndex === i ? 'Hide' : 'Show' }}
+            </button>
+          </td>
+        </tr>
 
-      <!-- Expanded Row -->
-      <tr *ngIf="expandedRowIndex === i">
-        <td colspan="4">
-          <table style="width: 100%; border-collapse: collapse;" border="1">
-            <thead>
-              <tr>
-                <th>Material Name</th>
-                <th>Quantity</th>
-                <th>Updated Quantity</th>
-                <th>Unit Cost</th>
-                <th>Updated Unit Cost</th>
-                <th>Total Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <!-- If grade exists -->
-              <ng-container *ngIf="process.grade?.length > 0">
-                <ng-container *ngFor="let rm of process.grade[0][0]?.rawMaterial">
-                  <ng-container *ngFor="let mat of rm.materialsUsed">
-                    <tr>
-                      <td>{{ mat.name }}</td>
-                      <td>{{ mat.quantity }}</td>
-                      <td>
-                        <input type="number"
-       [(ngModel)]="mat.updatedQuantity"
-       (change)="logUpdatedData()"
-       [ngModelOptions]="{ standalone: true }" />
-
-
-
-                      </td>
-                      <td>{{ mat.unitCost }}</td>
-                      <td>
-
-                        <input type="number"
-       [(ngModel)]="mat.updatedUnitCost"
-       (change)="logUpdatedData()"
-       [ngModelOptions]="{ standalone: true }" />
-
-                      </td>
-                      <td>{{ (mat.updatedQuantity || mat.quantity) * (mat.updatedUnitCost || mat.unitCost) | number:'1.2-2' }}</td>
-                    </tr>
+        <!-- Expanded Row -->
+        <tr *ngIf="expandedRowIndex === i">
+          <td colspan="4">
+            <table>
+              <thead>
+                <tr>
+                  <th>Material Name</th>
+                  <th>Quantity</th>
+                  <th>Updated Quantity</th>
+                  <th>Unit Cost</th>
+                  <th>Updated Unit Cost</th>
+                  <th>Total Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Grade-based Materials -->
+                <ng-container *ngIf="process.grade?.length > 0">
+                  <ng-container *ngFor="let rm of process.grade[0][0]?.rawMaterial">
+                    <ng-container *ngFor="let mat of rm.materialsUsed">
+                      <tr>
+                        <td>{{ mat.name }}</td>
+                        <td>{{ mat.quantity }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedQuantity"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>{{ mat.unitCost }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedUnitCost"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>
+                          ₹ {{
+                            (mat.updatedQuantity || mat.quantity) *
+                            (mat.updatedUnitCost || mat.unitCost)
+                              | number: '1.2-2'
+                          }}
+                        </td>
+                      </tr>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
-              </ng-container>
 
-              <!-- Else use rawMaterial -->
-              <ng-container *ngIf="process.grade?.length === 0">
-                <ng-container *ngFor="let rm of process.rawMaterial">
-                  <ng-container *ngFor="let mat of rm.materialsUsed">
-                    <tr>
-                      <td>{{ mat.name }}</td>
-                      <td>{{ mat.quantity }}</td>
-                      <td>
-                       <input type="number"
-       [(ngModel)]="mat.updatedQuantity"
-       (change)="logUpdatedData()"
-       [ngModelOptions]="{ standalone: true }" />
-                      </td>
-                      <td>{{ mat.unitCost }}</td>
-                      <td>
-
-                        <input type="number"
-       [(ngModel)]="mat.updatedUnitCost"
-       (change)="logUpdatedData()"
-       [ngModelOptions]="{ standalone: true }" />
-
-                      </td>
-                      <td>{{ (mat.updatedQuantity || mat.quantity) * (mat.updatedUnitCost || mat.unitCost) | number:'1.2-2' }}</td>
-                    </tr>
+                <!-- Raw Material Only -->
+                <ng-container *ngIf="!process.grade?.length">
+                  <ng-container *ngFor="let rm of process.rawMaterial">
+                    <ng-container *ngFor="let mat of rm.materialsUsed">
+                      <tr>
+                        <td>{{ mat.name }}</td>
+                        <td>{{ mat.quantity }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedQuantity"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>{{ mat.unitCost }}</td>
+                        <td>
+                          <input
+                            type="number"
+                            [(ngModel)]="mat.updatedUnitCost"
+                            (change)="logUpdatedData()"
+                            [ngModelOptions]="{ standalone: true }"
+                          />
+                        </td>
+                        <td>
+                          ₹ {{
+                            (mat.updatedQuantity || mat.quantity) *
+                            (mat.updatedUnitCost || mat.unitCost)
+                              | number: '1.2-2'
+                          }}
+                        </td>
+                      </tr>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
-              </ng-container>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
 
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </ng-container>
-  </tbody>
-</table>
+
+</div>
+<div class="button-submit" >
+  <button mat-raised-button color="primary" (click)="generateFinalJsonFromLoadedData()">
+    Save Final Updated Data
+  </button>
+</div>
 
 
 
@@ -309,6 +271,7 @@
     </div>
   </form>
 </mat-step>
+
 
 <mat-step [stepControl]="costSummaryFormGroup">
   <ng-template matStepLabel>Cost Summary</ng-template>
@@ -417,12 +380,10 @@
     </div>
 
     <div class="stepper-button-wrapper">
-      <button mat-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()">Next</button>
+      <button mat-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()" (click)="generateFinalJsonFromLoadedData()">Next</button>
     </div>
   </form>
 </mat-step>
-
-
 
    <mat-step>
     <ng-template matStepLabel>Genarate Code</ng-template>
@@ -859,4 +820,6 @@
        <button mat-button color="accent"  (click)="submitForm()" >Submit</button>
     </div>
   </mat-step>
+
+  
 </mat-horizontal-stepper>

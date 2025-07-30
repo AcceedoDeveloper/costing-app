@@ -27,15 +27,12 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 
 
-
-
-
 @Component({
-  selector: 'app-addcustomerdetails',
-  templateUrl: './addcustomerdetails.component.html',
-  styleUrls: ['./addcustomerdetails.component.css']
+  selector: 'app-update-customer-details',
+  templateUrl: './update-customer-details.component.html',
+  styleUrls: ['./update-customer-details.component.css']
 })
-export class AddcustomerdetailsComponent implements OnInit {
+export class UpdateCustomerDetailsComponent implements OnInit {
   customer$ : Observable<any>;
   customer: any[] = [];
   processes: Process[] =[];
@@ -52,20 +49,13 @@ export class AddcustomerdetailsComponent implements OnInit {
   editMode: { [index: number]: boolean } = {};
   customerId: string | null = null;
   editId: string | null = null;
+  quotationData: any;
+  quotationCalc: any;
+   
 
 
 
-  quotationData: any = null;
-  quotationCalc: any = null;
-
-
-  selectedFileName: string = '';
-selectedFile: File | null = null;
-
-  
-
-
-  @ViewChild('stepper') stepper!: MatStepper;
+   @ViewChild('stepper') stepper!: MatStepper;
 
   thirdFormGroup!: FormGroup;
   isLinear = true;
@@ -77,12 +67,13 @@ selectedFile: File | null = null;
 
 
 
-  constructor(private store: Store, private fb: FormBuilder, 
+  constructor( private store: Store, private fb: FormBuilder, 
     private dialog: MatDialog,  
      @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<AddcustomerdetailsComponent>,
+    private dialogRef: MatDialogRef<UpdateCustomerDetailsComponent>,
     private dhashboardServices: DashboardService ,
-    private tooster: ToastrService ) {} 
+    private tooster: ToastrService 
+   ) { }
 
  ngOnInit(): void {
 
@@ -275,8 +266,41 @@ this.forthFormGroup = this.fb.group({
 });
 
 if (this.data?.mode === 'edit' && this.data.customerData) {
-    const customer = this.data.customerData;
+    const customer = JSON.parse(JSON.stringify(this.data.customerData));
+
     this.editId = customer._id; 
+
+
+   this.selectedProcesses = customer.processName.map((p) => {
+  const process = { ...p };
+
+  if (process.grade?.length > 0) {
+    process.grade = process.grade.map((inner) =>
+      inner.map((g) => ({
+        ...g,
+        rawMaterial: g.rawMaterial.map((rm) => ({
+          ...rm,
+          materialsUsed: rm.materialsUsed.map((m) => ({
+            ...m,
+            updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
+            updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
+          })),
+        })),
+      }))
+    );
+  } else {
+    process.rawMaterial = process.rawMaterial.map((rm) => ({
+      ...rm,
+      materialsUsed: rm.materialsUsed.map((m) => ({
+        ...m,
+        updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
+        updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
+      })),
+    }));
+  }
+
+  return process;
+});
 
     console.log('Edit Mode - Customer ID:', this.data.customerData._id);
 
@@ -331,7 +355,6 @@ if (this.data?.mode === 'edit' && this.data.customerData) {
   }
   }
 
-
 expandedReviewIndex: number | null = null;
 
 
@@ -374,36 +397,38 @@ fristfrom() {
 }
 
 submitStep2() {
-  const selectedFields: any = {};
   const selectedInputs = this.firstFormGroup.value;
+  const flatFields: any = {};
+
 
   if (selectedInputs.CastingInput) {
-    selectedFields['CastingInput'] = {
-      CastingWeight: this.secondFormGroup.value.CastingWeight,
-      Cavities: this.secondFormGroup.value.Cavities,
-      PouringWeight: this.secondFormGroup.value.PouringWeight
-    };
+    flatFields['castingInputs'] = true;
+    flatFields['CastingWeight'] = this.secondFormGroup.value.CastingWeight;
+    flatFields['Cavities'] = this.secondFormGroup.value.Cavities;
+    flatFields['PouringWeight'] = this.secondFormGroup.value.PouringWeight;
   }
+
 
   if (selectedInputs.MouldingInput) {
-    selectedFields['MouldingInput'] = {
-      MouldingWeight: this.secondFormGroup.value.MouldingWeight,
-      BakeMoulding: this.secondFormGroup.value.BakeMoulding
-    };
+    flatFields['mouldingInputs'] = true;
+    flatFields['MouldingWeight'] = this.secondFormGroup.value.MouldingWeight;
+    flatFields['BakeMoulding'] = this.secondFormGroup.value.BakeMoulding;
   }
 
+  
   if (selectedInputs.CoreInput) {
-    selectedFields['CoreInput'] = {
-      CoreWeight: this.secondFormGroup.value.CoreWeight,
-      CoresPerMould: this.secondFormGroup.value.CoresPerMould,
-      CoreCavities: this.secondFormGroup.value.CoreCavities,
-      ShootingPerShift: this.secondFormGroup.value.ShootingPerShift,
-      CoreSand: this.secondFormGroup.value.CoreSand
-    };
+    flatFields['coreInputs'] = true;
+    flatFields['CoreWeight'] = this.secondFormGroup.value.CoreWeight;
+    flatFields['CoresPerMould'] = this.secondFormGroup.value.CoresPerMould;
+    flatFields['CoreCavities'] = this.secondFormGroup.value.CoreCavities;
+    flatFields['ShootingPerShift'] = this.secondFormGroup.value.ShootingPerShift;
+    flatFields['CoreSand'] = this.secondFormGroup.value.CoreSand;
   }
 
-  console.log('📝 Updated Input Data:', selectedFields);
+  console.log('📝 Flattened Input Data:', flatFields);
+
 }
+
 
 submitCostForm(): void {
   console.log('Submitted Cost Form:', this.costForm.value);
@@ -490,48 +515,12 @@ finalSubmit() {
    this.store.dispatch(loadCustomerDetails());
 }
 
-toggleRow(index: number): void {
-  this.expandedRowIndex = this.expandedRowIndex === index ? null : index;
-}
 
 
-logUpdatedData(): void {
-  console.log('📦 Updated Process Data:', this.selectedProcesses);
-}
 
 
-getFullUpdatedProcessData(): any[] {
-  return this.thirdFormGroup.value.selectedProcesses.map((process: any) => {
-    const updated = { ...process };
 
-    if (updated.grade?.length > 0) {
-      updated.grade = updated.grade.map((gradeArray: any[]) =>
-        gradeArray.map((grade: any) => ({
-          ...grade,
-          rawMaterial: grade.rawMaterial.map((rm: any) => ({
-            type: rm.type,
-            materialsUsed: rm.materialsUsed.map((mat: any) => ({
-              name: mat.name,
-              updateQuantity: mat.updatedQuantity ?? mat.updateQuantity ?? mat.quantity,
-              updateCost: mat.updatedUnitCost ?? mat.updateCost ?? mat.unitCost
-            }))
-          }))
-        }))
-      );
-    } else if (updated.rawMaterial?.length > 0) {
-      updated.rawMaterial = updated.rawMaterial.map((rm: any) => ({
-        type: rm.type,
-        materialsUsed: rm.materialsUsed.map((mat: any) => ({
-          name: mat.name,
-          updateQuantity: mat.updatedQuantity ?? mat.updateQuantity ?? mat.quantity,
-          updateCost: mat.updatedUnitCost ?? mat.updateCost ?? mat.unitCost
-        }))
-      }));
-    }
 
-    return updated;
-  });
-}
 
 
 
@@ -597,8 +586,11 @@ generateFinalJson(): void {
   };
 
   console.log('✅ Final Full JSON Format:', finalData);
+    this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
 
-  // ✅ Call the API here using form values
+
+ 
+
   this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo).subscribe(
     response => {
       console.log('🚀 API Success:', response);
@@ -610,33 +602,160 @@ generateFinalJson(): void {
       console.error('❌ API Error:', error);
     }
   );
-
-   if (this.customerId) {
-    console.log('✅ Final Payload:', finalData);
-    this.store.dispatch(updateCustomerDetails({ id: this.customerId, customer: finalData }));
-    this.store.dispatch(loadCustomerDetails());
-  } else {
-    console.error('❌ No customer ID found to update');
-  }
-
 }
 
-onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    this.selectedFile = input.files[0];
-    this.selectedFileName = this.selectedFile.name;
 
-   
-    console.log("Selected file:", this.selectedFile);
-  }
-}
 
 submitForm() {
    this.tooster.success('Customer Details created successfully!', 'Success');
   this.dialogRef.close(); 
 }
 
+  toggleRow(index: number): void {
+    this.expandedRowIndex = this.expandedRowIndex === index ? null : index;
+  }
 
+  logUpdatedData() {
+    console.log('Updated Processes:', this.selectedProcesses);
+  }
+
+  calculateProcessTotalCost(process: any): number {
+    let total = 0;
+
+    if (process.grade?.length > 0) {
+      for (let g of process.grade[0]) {
+        for (let rm of g.rawMaterial) {
+          for (let m of rm.materialsUsed) {
+            const qty = m.updatedQuantity || m.quantity;
+            const cost = m.updatedUnitCost || m.unitCost;
+            total += qty * cost;
+          }
+        }
+      }
+    } else if (process.rawMaterial?.length > 0) {
+      for (let rm of process.rawMaterial) {
+        for (let m of rm.materialsUsed) {
+          const qty = m.updatedQuantity || m.quantity;
+          const cost = m.updatedUnitCost || m.unitCost;
+          total += qty * cost;
+        }
+      }
+    }
+
+    return total;
+  }
+
+
+ getFullUpdatedProcessData(): any[] {
+  return this.selectedProcesses.map(process => {
+    const newProcess = { ...process };
+
+    if (newProcess.grade?.length > 0) {
+      newProcess.grade = newProcess.grade.map(inner =>
+        inner.map(g => ({
+          ...g,
+          rawMaterial: g.rawMaterial.map(rm => ({
+            type: rm.type,
+            materialsUsed: rm.materialsUsed.map(mat => ({
+              name: mat.name,
+              updateQuantity: mat.updatedQuantity ?? mat.quantity,
+              updateCost: mat.updatedUnitCost ?? mat.unitCost
+            }))
+          }))
+        }))
+      );
+    } else if (newProcess.rawMaterial?.length > 0) {
+      newProcess.rawMaterial = newProcess.rawMaterial.map(rm => ({
+        type: rm.type,
+        materialsUsed: rm.materialsUsed.map(mat => ({
+          name: mat.name,
+          updateQuantity: mat.updatedQuantity ?? mat.quantity,
+          updateCost: mat.updatedUnitCost ?? mat.unitCost
+        }))
+      }));
+    }
+
+    return newProcess;
+  });
 }
 
+
+generateFinalJsonFromLoadedData(): void {
+  if (!this.customer) {
+    console.error('❌ No customer data available');
+    return;
+  }
+
+  const d = this.customer[0];
+  const fullProcessData = this.getFullUpdatedProcessData();
+   const finalData: any = {
+    CustomerName: d.CustomerName?.name  ?? '',  // ✅ string only
+    drawingNo: d.drawingNo ?? '',
+    partName: d.partName ?? '',
+    processName: fullProcessData,
+
+    castingInputs: !!d.castingInputs,
+    ...(d.castingInputs && {
+      CastingWeight: d.castingInputs?.CastingWeight ?? 0,
+      Cavities: d.castingInputs?.Cavities ?? 0,
+      PouringWeight: d.castingInputs?.PouringWeight ?? 0
+    }),
+
+    mouldingInputs: !!d.mouldingInputs,
+    ...(d.mouldingInputs && {
+      MouldingWeight: d.mouldingInputs?.MouldingWeight ?? 0,
+      BakeMoulding: d.mouldingInputs?.BakeMoulding ?? 0
+    }),
+
+    coreInputs: !!d.coreInputs,
+    ...(d.coreInputs && {
+      CoreWeight: d.coreInputs?.CoreWeight ?? 0,
+      CoresPerMould: d.coreInputs?.CoresPerMould ?? 0,
+      CoreCavities: d.coreInputs?.CoreCavities ?? 0,
+      ShootingPerShift: d.coreInputs?.ShootingPerShift ?? 0,
+      CoreSand: d.coreInputs?.CoreSand ?? 0
+    }),
+
+    // Salary & Wages
+    salaryforProcess: d.SalaryAndWages?.salaryforProcess ?? 0,
+    salaryExcludingCoreMaking: d.SalaryAndWages?.salaryExcludingCoreMaking ?? 0,
+    salaryForCoreProduction: d.SalaryAndWages?.salaryForCoreProduction ?? 0,
+    outSourcingCost: d.SalaryAndWages?.outSourcingCost ?? 0,
+    splOutSourcingCost: d.SalaryAndWages?.splOutSourcingCost ?? 0,
+
+    // Overheads
+    repairAndMaintenance: d.OverHeads?.repairAndMaintenance ?? 0,
+    sellingDistributionAndMiscOverHeads: d.OverHeads?.sellingDistributionAndMiscOverHeads ?? 0,
+    financeCost: d.OverHeads?.financeCost ?? 0,
+
+    // Commercial Terms
+    paymentCreditPeriod: d.CommercialTerms?.paymentCreditPeriod ?? 0,
+    bankInterest: d.CommercialTerms?.bankInterest ?? 0,
+
+    // Margin & Rejection
+    profit: d.Margin?.profit ?? 0,
+    rejection: d.AnticipatedRejection?.rejection ?? 0,
+
+    // UltraSonicWashing
+    heatTreatment: d.UltraSonicWashing?.heatTreatment ?? 0,
+    postProcess: d.UltraSonicWashing?.postProcess ?? 0,
+    packingAndTransport: d.UltraSonicWashing?.packingAndTransport ?? 0,
+    NozzleShotBlasting: d.UltraSonicWashing?.NozzleShotBlasting ?? 0,
+
+    // Special Process
+    highPressureCleaning: d.specialProcess?.highPressureCleaning ?? 0
+  };
+  
+
+  console.log('📦 Final JSON from Loaded Data:', finalData);
+
+
+
+  
+}
+
+
+
+
+
+}

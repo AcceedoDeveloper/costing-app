@@ -48,6 +48,7 @@ import { UpdateaddcustomerdDetailsComponent } from './customerdetails/updateaddc
 import { ProcessPowerComponent } from './process-power/process-power.component';
 import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
 import { AddSalaryWagesComponent } from './salary-wages/add-salary-wages/add-salary-wages.component';
+import { UpdateCustomerDetailsComponent } from './customerdetails/update-customer-details/update-customer-details.component';
 
 
 @NgModule({
@@ -55,7 +56,7 @@ import { AddSalaryWagesComponent } from './salary-wages/add-salary-wages/add-sal
     SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, 
     ProcessComponent, AddprocessComponent, MaterialtypeComponent, 
     ProcesseditComponent, AddcustomerdetailsComponent, 
-    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent],
+    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent],
   imports: [
     MatAutocompleteModule,
    MatOptionModule,

@@ -11,7 +11,7 @@ import { deleteCustomer } from '../store/material.actions';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { UpdateaddcustomerdDetailsComponent} from './updateaddcustomerd-details/updateaddcustomerd-details.component';
 import { PowerService } from '../../services/power.service';
-
+import {UpdateCustomerDetailsComponent } from './update-customer-details/update-customer-details.component';
 
 
 @Component({
@@ -76,16 +76,36 @@ delete(id: string) {
   });
 }
 
-edit(id: string) {  
-  this.dialog.open(UpdateaddcustomerdDetailsComponent, {
-    width: '950px',
-    height: '550px',
-    data: { id: id },
-    autoFocus: false  // 👈 passing the ID to the dialog
-  });
-  console.log('Id', id);
-}
+// edit(id: string) {  
+//   this.dialog.open(UpdateaddcustomerdDetailsComponent, {
+//     width: '950px',
+//     height: '550px',
+//     data: { id: id },
+//     autoFocus: false  
+//   });
+//   console.log('Id', id);
+// }
 
+
+edit(id: string) {
+  const customer = this.customerDetails.find(c => c._id === id);
+
+  if (customer) {
+    this.dialog.open(UpdateCustomerDetailsComponent, {
+      width: '950px',
+      height: '550px',
+      data: {
+        mode: 'edit',
+        customerData: customer
+      },
+      autoFocus: false,
+      disableClose: true
+    });
+    console.log('Editing Customer:', customer);
+  } else {
+    console.warn('Customer not found for editing:', id);
+  }
+}
 
 
 downloadQuotation(customer: any) {
