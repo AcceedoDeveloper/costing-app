@@ -104,9 +104,12 @@ this.chart = {
 
 
 this.dashboardServices.materialGraphData().subscribe((res) => {
-  console.log('Material Graph Data:', res);
+  const groupedMaterials: {
+    name: string;
+    priceHistory: { date: string; unitCost: number }[];
+  }[] = [];
 
-  const groupedMaterials: { [key: string]: { name: string; priceHistory: { date: string; unitCost: number }[] } } = {};
+  const materialMap: { [key: string]: { name: string; priceHistory: { date: string; unitCost: number }[] } } = {};
 
   Object.keys(res.data).forEach(category => {
     const materials = res.data[category];
@@ -114,15 +117,15 @@ this.dashboardServices.materialGraphData().subscribe((res) => {
     materials.forEach((material: any) => {
       const name = material.name;
 
-      if (!groupedMaterials[name]) {
-        groupedMaterials[name] = {
+      if (!materialMap[name]) {
+        materialMap[name] = {
           name: name,
           priceHistory: []
         };
       }
 
       material.priceHistory.forEach((entry: any) => {
-        groupedMaterials[name].priceHistory.push({
+        materialMap[name].priceHistory.push({
           date: entry.date,
           unitCost: entry.unitCost
         });
@@ -130,9 +133,22 @@ this.dashboardServices.materialGraphData().subscribe((res) => {
     });
   });
 
-  const result = Object.values(groupedMaterials);
-  console.log('Grouped Material Data:', result);
+  // Convert map to array
+  const resultArray = Object.values(materialMap);
+
+  // Sort by latest price in descending order
+  const sorted = resultArray.sort((a, b) => {
+    const latestA = a.priceHistory[a.priceHistory.length - 1]?.unitCost || 0;
+    const latestB = b.priceHistory[b.priceHistory.length - 1]?.unitCost || 0;
+    return latestB - latestA;
+  });
+
+  // Take top 3
+  const top3 = sorted.slice(0, 3);
+
+  console.log('Top 3 Materials by Latest Unit Cost:', top3);
 });
+
 
 
 
