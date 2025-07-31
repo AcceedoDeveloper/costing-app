@@ -92,7 +92,8 @@
 {"name": "updateSalaryWages", "url": "updateSalaryWages"},
 { "name": "dashboard-data", "url": "data"},
 { "name": "getQuotationData", "url": "getQuotationData"},
-{ "name": "resentUpdate", "url": "getUserRecentUpdate"}
+{ "name": "resentUpdate", "url": "getUserRecentUpdate"},
+{ "name": "ActualEstimationCost", "url": "get-ActualEstimationCost"}
 
 
 

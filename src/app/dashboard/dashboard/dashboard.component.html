@@ -1,29 +1,43 @@
 <div class="dashboard-grid">
-  <div class="box">
+  <div class="box customer-box">
      <div class="container">
         <div class="table-header">
             <h2>Customer List</h2>
-            <input type="text" class="search-bar" placeholder="Search Customer">
+           <input
+        type="text"
+        class="search-bar"
+        placeholder="Search Customer"
+        (input)="onSearch($event)"
+      />
         </div>
-        <table>
-            <thead>
-                <tr >
-                    <th>Customer</th>
-                    <th>Part No.</th>
-                    <th>Total Process Cost</th>
-                   
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let customer of customersList">
-                    <td> {{ customer.CustomerName?.name }}</td>
-                    <td>   {{ customer.partName }}</td>
-                    <td> {{ customer.totalProcessCost }}</td>
-                    
-                </tr>
-                
-            </tbody>
-        </table>
+        <table >
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Part Name</th>
+      <th>Total Process Cost</th>
+      <th>Actual Cost</th>
+      <th>Difference</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of filteredEstimationCost">
+      <td>{{  item.CustomerName?.name }}</td>
+      <td>{{ item.partName }}</td>
+      <td>{{ item.TotalProcessCost }}</td>
+      <td>{{ item.actualCost }}</td>
+      <td [ngClass]="{
+      'negative': item.difference < 0,
+      'positive': item.difference >= 0
+    }">{{ item.difference }}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="pagination-controls">
+  <button (click)="prevPage()" [disabled]="currentPage === 1"><</button>
+  <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages">></button>
+</div>
    
     </div>
 
@@ -70,7 +84,7 @@
 
 
 
-  <div class="box" *ngIf="chart">
+  <div class="box full-width-box" *ngIf="chart">
     
   <google-chart
   [type]="chart.type"
@@ -83,13 +97,9 @@
   </div>
 
 
-  <div class="box">
-    
-
-  </div>
 
 
-  <div class="box" >
+  <div class="box fixed-height-box" >
     <!-- material-chart.component.html -->
 <google-chart
   [type]="chartType"
@@ -101,26 +111,26 @@
 
   </div>
 
-  <div class="box" >
-
-    <table>
-  <thead>
-    <tr>
-      <th>User Name</th>
-      <th>Message</th>
-      <th>Updated At</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of recentUpdates">
-      <td>{{ item.user.userName }}</td>
-      <td>{{ item.message }}</td>
-      <td>{{ item.updatedAt | date: 'short' }}</td>
-    </tr>
-  </tbody>
-</table>
-
-
+<div class="box fixed-height-box">
+    <h2>Recent Updates</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>User Name</th>
+            <th>Message</th>
+            <th>Updated At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of recentUpdates">
+            <td>{{ item.user.userName }}</td>
+            <td>{{ item.message }}</td>
+            <td>{{ item.updatedAt | date: 'short' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
  
 </div>

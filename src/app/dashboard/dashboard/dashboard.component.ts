@@ -17,12 +17,21 @@ export class DashboardComponent implements OnInit {
     materilachart:any;
     customersList: any[] = [];
     recentUpdates: any[] = [];
+    ActualEstimationCost: any[] = [];
     customerDetails : CustomerdetailsIn[] = [];
     pendingQuotations: CustomerdetailsIn[] = [];
   completedQuotations: CustomerdetailsIn[] = [];
   selectedCustomerDetails$: Observable<any>;
   chartType = 'ColumnChart';
   chartData: any[] = [];
+  filteredEstimationCost: any[] = [];
+
+  paginatedData: any[] = [];
+currentPage: number = 1;
+itemsPerPage: number = 5;
+totalPages: number = 1;
+
+
   constructor(private dashboardServices: DashboardService, private store : Store) { }
 
  chartColumns = ['Material', 'May', 'June', 'July']; 
@@ -111,7 +120,7 @@ this.chart = {
     pointSize: 6,
     lineWidth: 2
   },
-  width: '500',
+  width: '100%',
   height: '400'
 };
 
@@ -204,6 +213,17 @@ console.log('Chart Data:', this.chartData);
 
 });
 
+
+this.dashboardServices.ActualEstimationCost().subscribe((res)=>{
+  this.ActualEstimationCost = res.data;
+   this.filteredEstimationCost = res.data;
+   this.setPagination();
+  console.log('Actual Estimation Cost Data:', this.ActualEstimationCost);
+
+});
+
+ 
+
 }
 
 
@@ -236,7 +256,32 @@ fetchRecentUpdatedData(): void {
   });
 }
 
+onSearch(event: any): void {
+  const searchTerm = event.target.value.toLowerCase();
+  this.filteredEstimationCost = this.ActualEstimationCost.filter(item =>
+    item.CustomerName?.name.toLowerCase().includes(searchTerm)
+  );
+}
 
+setPagination(): void {
+  this.totalPages = Math.ceil(this.filteredEstimationCost.length / this.itemsPerPage);
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  this.paginatedData = this.filteredEstimationCost.slice(startIndex, endIndex);
+}
 
+nextPage(): void {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+    this.setPagination();
+  }
+}
+
+prevPage(): void {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.setPagination();
+  }
+}
  
 }

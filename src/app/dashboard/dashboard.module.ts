@@ -11,6 +11,8 @@ import { DashComponent } from './dash/dash.component';
 import { CompanyComponent } from './company/company.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import { MaterialModule } from '../material/material.module';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 import { ChartsModule } from 'ng2-charts';
 @NgModule({
@@ -22,7 +24,9 @@ import { ChartsModule } from 'ng2-charts';
     CommonModule,
     DashboardRoutingModule,
     MatTabsModule,
-    ChartsModule
+    ChartsModule,
+    MatPaginatorModule,
+    MatTableModule
   ]
 })
 export class DashboardModule { }
