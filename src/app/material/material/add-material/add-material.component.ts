@@ -171,6 +171,7 @@ export class AddMaterialComponent implements OnInit {
         name: selectedSupplier.materialName,
         materialType: selectedSupplier.materialType,
         unitCost: Number(selectedSupplier.ratePerKg),
+        effectiveTill: this.formatDateToLocal(new Date()), 
         houseType: 'supplier',
         _id: selectedSupplier._id,
       };
@@ -178,6 +179,7 @@ export class AddMaterialComponent implements OnInit {
       if (this.isEditMode && this.materialId) {
         this.store.dispatch(updateMaterial({ material }));
       } else {
+        console.log('data', material);
         this.store.dispatch(createMaterial({ material }));
         this.store.dispatch(loadMaterials());
       }
