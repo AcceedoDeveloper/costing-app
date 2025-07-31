@@ -16,13 +16,30 @@ export class DashboardComponent implements OnInit {
     barChart:any;
     materilachart:any;
     customersList: any[] = [];
+    recentUpdates: any[] = [];
     customerDetails : CustomerdetailsIn[] = [];
     pendingQuotations: CustomerdetailsIn[] = [];
   completedQuotations: CustomerdetailsIn[] = [];
   selectedCustomerDetails$: Observable<any>;
+  chartType = 'ColumnChart';
+  chartData: any[] = [];
   constructor(private dashboardServices: DashboardService, private store : Store) { }
 
+ chartColumns = ['Material', 'May', 'June', 'July']; 
+
+chartOptions = {
+  title: '3-Month Price Comparison by Material',
+  legend: { position: 'top' },
+  vAxis: { title: 'Price (₹)' },
+  hAxis: { title: 'Material' },
+  bar: { groupWidth: '75%' },
+};
+
+
+
+
 ngOnInit(): void {
+  this.fetchRecentUpdatedData();
    this.store.dispatch(loadCustomerDetails());
 
   this.selectedCustomerDetails$ = this.store.select(getCustomerDetails); 
@@ -102,6 +119,11 @@ this.chart = {
 
   });
 
+ this.chartData = [
+      ['TIN INGOTS', 45, 47, 50],
+      ['FERRO MOLY', 39, 41, 44],
+      ['FERRO NICKEL', 28, 30, 32],
+    ];
 
 this.dashboardServices.materialGraphData().subscribe((res) => {
   const groupedMaterials: {
@@ -147,14 +169,72 @@ this.dashboardServices.materialGraphData().subscribe((res) => {
   const top3 = sorted.slice(0, 3);
 
   console.log('Top 3 Materials by Latest Unit Cost:', top3);
+
+  // Step 1: Get last 3 months
+const today = new Date();
+const months = [...Array(3)].map((_, i) => {
+  const d = new Date(today.getFullYear(), today.getMonth() - (2 - i), 1);
+  return {
+    label: d.toLocaleString('default', { month: 'short' }), // e.g., Jul
+    key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`     // e.g., 2025-07
+  };
+});
+
+// Step 2: Set chart columns (e.g., ['Material', 'May', 'June', 'July'])
+this.chartColumns = ['Material', ...months.map(m => m.label)];
+
+this.chartData = top3.map(material => {
+  const row: (string | number)[] = [material.name]; // 👈 Fix the type here
+
+  months.forEach(month => {
+    const found = material.priceHistory.find(entry => {
+      const entryMonth = entry.date.substring(0, 7);
+      return entryMonth === month.key;
+    });
+
+    row.push(found ? found.unitCost : 0);
+  });
+
+  return row;
 });
 
 
+console.log('Chart Columns:', this.chartColumns);
+console.log('Chart Data:', this.chartData);
 
+});
 
 }
 
 
+fetchRecentUpdatedData(): void {
+  const today = new Date();
+
+  
+  const endDateObj = new Date(today);
+  endDateObj.setDate(endDateObj.getDate() + 1);
+  const endDate = endDateObj.toISOString().split('T')[0]; 
+
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(today.getMonth() - 6);
+  const startDate = sixMonthsAgo.toISOString().split('T')[0]; 
+
+  const yearNo = today.getFullYear();
+
+  console.log('Start Date:', startDate);
+  console.log('End Date (+1 day):', endDate);
+
+  this.dashboardServices.getResentUpdatedData(yearNo, startDate, endDate).subscribe({
+    next: (res) => {
+      this.recentUpdates = res.data;
+      console.log('Recent Updates:', this.recentUpdates);
+    },
+    error: (err) => {
+      console.error('Error fetching data:', err);
+    }
+  });
+}
 
 
 

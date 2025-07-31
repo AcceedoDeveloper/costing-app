@@ -91,7 +91,8 @@
 {"name": "customer/quotation", "url": "customer/quotation"},
 {"name": "updateSalaryWages", "url": "updateSalaryWages"},
 { "name": "dashboard-data", "url": "data"},
-{ "name": "getQuotationData", "url": "getQuotationData"}
+{ "name": "getQuotationData", "url": "getQuotationData"},
+{ "name": "resentUpdate", "url": "getUserRecentUpdate"}
 
 
 

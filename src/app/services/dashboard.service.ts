@@ -36,4 +36,15 @@ uploadExcelFile(file: File): Observable<any> {
   }
 
 
+
+getResentUpdatedData(yearNo: number, startDate: string, endDate: string): Observable<any> {
+  const baseUrl = this.config.getCostingUrl('resentUpdate'); // now: full URL
+  const url = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  console.log('Fetching resent updated data from:', url);
+  return this.http.get<any>(url);
+}
+
+
+
+
 }
