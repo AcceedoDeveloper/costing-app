@@ -30,6 +30,8 @@ export class DashboardComponent implements OnInit {
 currentPage: number = 1;
 itemsPerPage: number = 5;
 totalPages: number = 1;
+startDate!: Date;
+endDate!: Date;
 
 
   constructor(private dashboardServices: DashboardService, private store : Store) { }
@@ -48,6 +50,16 @@ chartOptions = {
 
 
 ngOnInit(): void {
+
+   const today = new Date();
+  const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+
+  this.startDate = sixMonthsAgo;
+  this.endDate = today;
+
+  this.fetchMaterialGraphData();
+
+  
   this.fetchRecentUpdatedData();
    this.store.dispatch(loadCustomerDetails());
 
@@ -60,81 +72,170 @@ ngOnInit(): void {
     this.pendingQuotations = this.customerDetails.filter(item => item.Status?.toLowerCase() === 'pending');
       this.completedQuotations = this.customerDetails.filter(item => item.Status?.toLowerCase() === 'completed');
   });
-  this.dashboardServices.getdata().subscribe((res) => {
-    this.customersList = res.customersMap;
 
-    const powerCostMap = res.powerCostMap?.[0];
-    const previousCosts = powerCostMap?.previousCostDetails || [];
 
-    
-    if (powerCostMap?.costPerUnit && powerCostMap?.effectiveDate) {
+let fullCostHistory: any[] = [];
+
+this.dashboardServices.getdata().subscribe((res) => {
+  console.log('power data', res);
+  const powerCostMap = res.powerCostMap?.[0];
+  const previousCosts = powerCostMap?.previousCostDetails || [];
+
+  if (powerCostMap?.costPerUnit && powerCostMap?.effectiveDate) {
+    const exists = previousCosts.some(
+      (entry: any) => entry.date === powerCostMap.effectiveDate
+    );
+    if (!exists) {
       previousCosts.push({
         cost: powerCostMap.costPerUnit,
         date: powerCostMap.effectiveDate
       });
     }
-
-    previousCosts.sort((a: any, b: any) => {
-      const dateA = a.date.includes('-') ? new Date(a.date.split('-').reverse().join('-')) : new Date(a.date);
-      const dateB = b.date.includes('-') ? new Date(b.date.split('-').reverse().join('-')) : new Date(b.date);
-      return dateA.getTime() - dateB.getTime();
-    });
-
-
-  const chartData = previousCosts.map((entry: any) => {
-  let date: Date;
-
-  if (entry.date.includes('-') && entry.date.split('-')[0].length === 2) {
-    const [day, month, year] = entry.date.split('-');
-    date = new Date(+year, +month - 1, +day);
-  } else {
-    date = new Date(entry.date);
   }
 
-  return [date, entry.cost]; 
+  const formattedData = previousCosts.map((entry: any) => {
+    let formattedDate = entry.date;
+    if (formattedDate.includes('T')) {
+      const d = new Date(formattedDate);
+      formattedDate = `${String(d.getDate()).padStart(2, '0')}-${String(
+        d.getMonth() + 1
+      ).padStart(2, '0')}-${d.getFullYear()}`;
+    }
+
+    const [day, month, year] = formattedDate.split('-');
+    return {
+      cost: entry.cost,
+      date: new Date(+year, +month - 1, +day)
+    };
+  });
+
+  formattedData.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const chartData = formattedData.map(m => [m.date, m.cost]);
+
+  this.chart = {
+    type: 'LineChart',
+    data: chartData,
+    columnNames: ['Date', 'Power Cost (₹)'],
+    options: {
+      title: 'Power Cost Over Time',
+      hAxis: {
+        title: 'Date',
+        format: 'MMM dd', // Example: Jul 24
+        gridlines: { count: 6 }, // Show fewer X-axis gridlines/labels
+        slantedText: true,
+        slantedTextAngle: 45,
+        showTextEvery: 2, // Show every 2nd label only
+      },
+      vAxis: {
+        title: 'Cost (₹)',
+        minValue: 0
+      },
+      explorer: {
+        actions: ['dragToZoom', 'rightClickToReset'],
+        axis: 'horizontal',
+        keepInBounds: true,
+        maxZoomIn: 4.0
+      },
+      legend: 'none',
+      colors: ['#4CAF50'],
+      pointSize: 6,
+      lineWidth: 2
+    },
+    width: '100%',
+    height: '400'
+  };
 });
 
 
 
-this.chart = {
-  type: 'AreaChart',
-  data: chartData,
-  columnNames: ['Date', 'Power Cost (₹)'],
-  options: {
-    title: 'Power Cost Over Time',
-    hAxis: {
-      title: 'Date',
-      format: 'd-MMM',
-      slantedText: true,
-      slantedTextAngle: 45
+
+
+
+
+
+
+
+this.dashboardServices.ActualEstimationCost().subscribe((res)=>{
+  this.ActualEstimationCost = res.data;
+   this.filteredEstimationCost = res.data;
+   this.setPagination();
+  console.log('Actual Estimation Cost Data:', this.ActualEstimationCost);
+
+});
+
+ 
+
+}
+
+
+fetchRecentUpdatedData(): void {
+  const today = new Date();
+
+  
+  const endDateObj = new Date(today);
+  endDateObj.setDate(endDateObj.getDate() + 1);
+  const endDate = endDateObj.toISOString().split('T')[0]; 
+
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(today.getMonth() - 6);
+  const startDate = sixMonthsAgo.toISOString().split('T')[0]; 
+
+  const yearNo = today.getFullYear();
+
+  console.log('Start Date:', startDate);
+  console.log('End Date (+1 day):', endDate);
+
+  this.dashboardServices.getResentUpdatedData(yearNo, startDate, endDate).subscribe({
+    next: (res) => {
+      this.recentUpdates = res.data;
+      console.log('Recent Updates:', this.recentUpdates);
     },
-    vAxis: {
-      title: 'Cost (₹)',
-      minValue: 0,
-      viewWindow: { min: 0 },
-      baseline: 0
-    },
-    legend: 'none',
-    colors: ['#4CAF50'], // green for cost
-    areaOpacity: 0.3, // slightly transparent area fill
-    pointSize: 6,
-    lineWidth: 2
-  },
-  width: '100%',
-  height: '400'
-};
-
-
-
+    error: (err) => {
+      console.error('Error fetching data:', err);
+    }
   });
+}
 
- this.chartData = [
-      ['TIN INGOTS', 45, 47, 50],
-      ['FERRO MOLY', 39, 41, 44],
-      ['FERRO NICKEL', 28, 30, 32],
-    ];
+onSearch(event: any): void {
+  const searchTerm = event.target.value.toLowerCase();
+  this.filteredEstimationCost = this.ActualEstimationCost.filter(item =>
+    item.CustomerName?.name.toLowerCase().includes(searchTerm)
+  );
+}
 
-this.dashboardServices.materialGraphData().subscribe((res) => {
+setPagination(): void {
+  this.totalPages = Math.ceil(this.filteredEstimationCost.length / this.itemsPerPage);
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  this.paginatedData = this.filteredEstimationCost.slice(startIndex, endIndex);
+}
+
+nextPage(): void {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+    this.setPagination();
+  }
+}
+
+prevPage(): void {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.setPagination();
+  }
+}
+
+
+
+
+
+
+
+fetchMaterialGraphData() {
+  const start = this.formatDate(this.startDate);
+  const end = this.formatDate(this.endDate);
+
+  this.dashboardServices.materialGraphData(start, end).subscribe((res) => {
   const groupedMaterials: {
     name: string;
     priceHistory: { date: string; unitCost: number }[];
@@ -212,76 +313,17 @@ console.log('Chart Columns:', this.chartColumns);
 console.log('Chart Data:', this.chartData);
 
 });
-
-
-this.dashboardServices.ActualEstimationCost().subscribe((res)=>{
-  this.ActualEstimationCost = res.data;
-   this.filteredEstimationCost = res.data;
-   this.setPagination();
-  console.log('Actual Estimation Cost Data:', this.ActualEstimationCost);
-
-});
-
- 
-
 }
 
-
-fetchRecentUpdatedData(): void {
-  const today = new Date();
-
-  
-  const endDateObj = new Date(today);
-  endDateObj.setDate(endDateObj.getDate() + 1);
-  const endDate = endDateObj.toISOString().split('T')[0]; 
-
-
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(today.getMonth() - 6);
-  const startDate = sixMonthsAgo.toISOString().split('T')[0]; 
-
-  const yearNo = today.getFullYear();
-
-  console.log('Start Date:', startDate);
-  console.log('End Date (+1 day):', endDate);
-
-  this.dashboardServices.getResentUpdatedData(yearNo, startDate, endDate).subscribe({
-    next: (res) => {
-      this.recentUpdates = res.data;
-      console.log('Recent Updates:', this.recentUpdates);
-    },
-    error: (err) => {
-      console.error('Error fetching data:', err);
-    }
-  });
+// Helper
+formatDate(date: Date): string {
+  return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
 }
-
-onSearch(event: any): void {
-  const searchTerm = event.target.value.toLowerCase();
-  this.filteredEstimationCost = this.ActualEstimationCost.filter(item =>
-    item.CustomerName?.name.toLowerCase().includes(searchTerm)
-  );
-}
-
-setPagination(): void {
-  this.totalPages = Math.ceil(this.filteredEstimationCost.length / this.itemsPerPage);
-  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-  const endIndex = startIndex + this.itemsPerPage;
-  this.paginatedData = this.filteredEstimationCost.slice(startIndex, endIndex);
-}
-
-nextPage(): void {
-  if (this.currentPage < this.totalPages) {
-    this.currentPage++;
-    this.setPagination();
+onDateChange() {
+  if (this.startDate && this.endDate) {
+    this.fetchMaterialGraphData();
   }
 }
 
-prevPage(): void {
-  if (this.currentPage > 1) {
-    this.currentPage--;
-    this.setPagination();
-  }
-}
  
 }

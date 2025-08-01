@@ -30,15 +30,16 @@ uploadExcelFile(file: File): Observable<any> {
     return this.http.post<any>('http://localhost:3005/material/upload', formData);
   }
 
+materialGraphData(startDate: string, endDate: string): Observable<any> {
+  const url = `http://localhost:3005/getMaterialMap?yearNo=2025&startDate=${startDate}&endDate=${endDate}`;
+  return this.http.get<any>(url);
+}
 
-  materialGraphData(): Observable<any> {
-    return this.http.get<any>('http://localhost:3005/getMaterialMap?yearNo=2025&startDate=2025-05-01&endDate=2025-07-31');
-  }
 
 
 
 getResentUpdatedData(yearNo: number, startDate: string, endDate: string): Observable<any> {
-  const baseUrl = this.config.getCostingUrl('resentUpdate'); // now: full URL
+  const baseUrl = this.config.getCostingUrl('resentUpdate');
   const url = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
   console.log('Fetching resent updated data from:', url);
   return this.http.get<any>(url);

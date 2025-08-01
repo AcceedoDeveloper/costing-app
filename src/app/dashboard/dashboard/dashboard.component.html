@@ -92,7 +92,9 @@
 
 
 
-  <div class="box full-width-box" *ngIf="chart">
+  <div class="box " *ngIf="chart">
+   
+
     
   <google-chart
   [type]="chart.type"
@@ -108,6 +110,21 @@
 
 
   <div class="box fixed-height-box" >
+     <div class="date-filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Start Date</mat-label>
+    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+    <mat-datepicker #startPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>End Date</mat-label>
+    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+    <mat-datepicker #endPicker></mat-datepicker>
+  </mat-form-field>
+</div>
     <!-- material-chart.component.html -->
 <google-chart
   [type]="chartType"

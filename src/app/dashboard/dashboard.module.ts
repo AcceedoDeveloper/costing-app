@@ -14,6 +14,13 @@ import { MaterialModule } from '../material/material.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+
 import { ChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent,],
@@ -26,7 +33,15 @@ import { ChartsModule } from 'ng2-charts';
     MatTabsModule,
     ChartsModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatIconModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatFormFieldModule
+
+
   ]
 })
 export class DashboardModule { }
