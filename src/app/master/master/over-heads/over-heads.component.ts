@@ -1,5 +1,3 @@
-
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -50,31 +48,55 @@ export class OverHeadsComponent implements OnInit {
     this.powerCostData$.subscribe((data: Overheads[] | null | undefined) => {
       if (!data) return;
       this.overheadRawData = data;
+      console.log('Raw Overhead Data:', this.overheadRawData);
+     this.overheadRawData.forEach(entry => {
+  console.log('Date:', entry.date, 'Formatted:', this.formatMonthYear(entry.date));
+});
+
 
       const processMap = new Map<string, { processName: string; [month: string]: any }>();
 
-      data.forEach(entry => {
-        const processName = entry.processName;
-        const monthKey = this.formatMonthYear(entry.date);
+   data.forEach(entry => {
+  const processName = entry.processName;
 
-        if (!processMap.has(processName)) {
-          const emptyRow: any = { processName };
-          this.tableHeaders.forEach(month => emptyRow[month] = null);
-          processMap.set(processName, emptyRow);
-        }
+  // Ensure row exists
+  if (!processMap.has(processName)) {
+    const emptyRow: any = { processName };
+    this.tableHeaders.forEach(month => emptyRow[month] = null);
+    processMap.set(processName, emptyRow);
+  }
 
-        const row = processMap.get(processName)!;
+  const row = processMap.get(processName)!;
 
-        if (this.tableHeaders.includes(monthKey)) {
-          row[monthKey] = {
-            repairAndMaintenance: entry.repairAndMaintenance,
-            sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
-            financeCost: entry.financeCost,
-            totalOverHeads: entry.totalOverHeads,
-            totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost
-          };
-        }
-      });
+  // 1. Add current (main) entry
+  const mainMonthKey = this.formatMonthYear(entry.date);
+  if (this.tableHeaders.includes(mainMonthKey)) {
+    row[mainMonthKey] = {
+      repairAndMaintenance: entry.repairAndMaintenance,
+      sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
+      financeCost: entry.financeCost,
+      totalOverHeads: entry.totalOverHeads,
+      totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost
+    };
+  }
+
+  // 2. Add entries from previousOverheadsDetails[]
+  if (Array.isArray(entry.previousOverheadsDetails)) {
+    entry.previousOverheadsDetails.forEach(prev => {
+      const prevMonthKey = this.formatMonthYear(prev.date);
+      if (this.tableHeaders.includes(prevMonthKey)) {
+        row[prevMonthKey] = {
+          repairAndMaintenance: prev.repairAndMaintenance,
+          sellingDistributionAndMiscOverHeads: prev.sellingDistributionAndMiscOverHeads,
+          financeCost: prev.financeCost,
+          totalOverHeads: prev.totalOverHeads,
+          totalOverHeadsWithFinanceCost: prev.totalOverHeadsWithFinanceCost
+        };
+      }
+    });
+  }
+});
+
 
       this.overheadTable = Array.from(processMap.values()).map(row => {
         this.tableHeaders.forEach(month => {
@@ -87,10 +109,12 @@ export class OverHeadsComponent implements OnInit {
     });
   }
 
-  formatMonthYear(date: Date | string): string {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    return d.toLocaleString('default', { month: 'long', year: 'numeric' });
-  }
+ formatMonthYear(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleString('default', { month: 'long', year: 'numeric' });
+}
+
+
 
   setMonthHeaders(baseDate: Date) {
     const headers: string[] = [];

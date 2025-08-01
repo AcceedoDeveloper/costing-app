@@ -196,12 +196,12 @@ google-chart {
 
 
 .negative {
-  color: red;
+  color: rgb(253, 70, 70);
   font-weight: bold;
 }
 
 .positive {
-  color: green;
+  color: rgb(68, 234, 68);
   font-weight: bold;
 }
 .pagination-controls {
