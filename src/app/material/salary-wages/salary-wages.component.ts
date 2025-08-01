@@ -213,4 +213,3 @@ export class SalaryWagesComponent implements OnInit {
     this.backupRow = null;
   }
 }
-
