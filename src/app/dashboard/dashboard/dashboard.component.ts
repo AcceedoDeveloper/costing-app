@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   chartType = 'ColumnChart';
   chartData: any[] = [];
-  filteredEstimationCost: any[] = [];
+
 
   paginatedData: any[] = [];
 currentPage: number = 1;
@@ -32,6 +32,11 @@ itemsPerPage: number = 5;
 totalPages: number = 1;
 startDate!: Date;
 endDate!: Date;
+estimationStartDate!: Date;
+estimationEndDate!: Date;
+actualEstimationCost: any[] = [];
+filteredEstimationCost: any[] = [];
+
 
 
   constructor(private dashboardServices: DashboardService, private store : Store) { }
@@ -51,11 +56,21 @@ chartOptions = {
 
 ngOnInit(): void {
 
+
+    
+
+
+
+  
+
    const today = new Date();
   const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+    this.estimationStartDate = sixMonthsAgo;
+  this.estimationEndDate = today;
 
   this.startDate = sixMonthsAgo;
   this.endDate = today;
+  this.fetchActualEstimationCost();
 
   this.fetchMaterialGraphData();
 
@@ -155,13 +170,7 @@ this.dashboardServices.getdata().subscribe((res) => {
 
 
 
-this.dashboardServices.ActualEstimationCost().subscribe((res)=>{
-  this.ActualEstimationCost = res.data;
-   this.filteredEstimationCost = res.data;
-   this.setPagination();
-  console.log('Actual Estimation Cost Data:', this.ActualEstimationCost);
 
-});
 
  
 
@@ -322,6 +331,24 @@ formatDate(date: Date): string {
 onDateChange() {
   if (this.startDate && this.endDate) {
     this.fetchMaterialGraphData();
+  }
+}
+fetchActualEstimationCost() {
+  const start = this.formatDate(this.estimationStartDate);
+  const end = this.formatDate(this.estimationEndDate);
+
+  this.dashboardServices.ActualEstimationCost(start, end).subscribe((res) => {
+    this.actualEstimationCost = res.data;
+    this.filteredEstimationCost = res.data;
+    this.setPagination();
+    console.log('Actual Estimation Cost Data:', this.actualEstimationCost);
+  });
+}
+
+
+onEstimationDateChange() {
+  if (this.estimationStartDate && this.estimationEndDate) {
+    this.fetchActualEstimationCost();
   }
 }
 

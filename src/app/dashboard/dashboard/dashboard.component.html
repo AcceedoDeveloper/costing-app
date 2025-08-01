@@ -2,6 +2,22 @@
   <div class="box customer-box">
      <div class="container">
         <div class="table-header">
+          <div class="date-filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Start Date</mat-label>
+    <input matInput [matDatepicker]="estimationStartPicker" [(ngModel)]="estimationStartDate" (dateChange)="onEstimationDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="estimationStartPicker"></mat-datepicker-toggle>
+    <mat-datepicker #estimationStartPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>End Date</mat-label>
+    <input matInput [matDatepicker]="estimationEndPicker" [(ngModel)]="estimationEndDate" (dateChange)="onEstimationDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="estimationEndPicker"></mat-datepicker-toggle>
+    <mat-datepicker #estimationEndPicker></mat-datepicker>
+  </mat-form-field>
+</div>
+
             <h2>Customer List</h2>
            <input
         type="text"
