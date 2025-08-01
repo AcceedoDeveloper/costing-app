@@ -68,33 +68,41 @@ export class OverHeadsComponent implements OnInit {
 
   const row = processMap.get(processName)!;
 
-  // 1. Add current (main) entry
-  const mainMonthKey = this.formatMonthYear(entry.date);
-  if (this.tableHeaders.includes(mainMonthKey)) {
-    row[mainMonthKey] = {
-      repairAndMaintenance: entry.repairAndMaintenance,
-      sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
-      financeCost: entry.financeCost,
-      totalOverHeads: entry.totalOverHeads,
-      totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost
-    };
-  }
+  const entryMonth = this.formatMonthYear(entry.date);
+const isCurrentMonth = entryMonth === this.currentMonth;
 
-  // 2. Add entries from previousOverheadsDetails[]
-  if (Array.isArray(entry.previousOverheadsDetails)) {
-    entry.previousOverheadsDetails.forEach(prev => {
-      const prevMonthKey = this.formatMonthYear(prev.date);
-      if (this.tableHeaders.includes(prevMonthKey)) {
-        row[prevMonthKey] = {
-          repairAndMaintenance: prev.repairAndMaintenance,
-          sellingDistributionAndMiscOverHeads: prev.sellingDistributionAndMiscOverHeads,
-          financeCost: prev.financeCost,
-          totalOverHeads: prev.totalOverHeads,
-          totalOverHeadsWithFinanceCost: prev.totalOverHeadsWithFinanceCost
-        };
-      }
-    });
-  }
+if (isCurrentMonth) {
+  // ✅ Insert current month data
+  row[entryMonth] = {
+    repairAndMaintenance: entry.repairAndMaintenance,
+    sellingDistributionAndMiscOverHeads: entry.sellingDistributionAndMiscOverHeads,
+    financeCost: entry.financeCost,
+    totalOverHeads: entry.totalOverHeads,
+    totalOverHeadsWithFinanceCost: entry.totalOverHeadsWithFinanceCost
+  };
+}
+
+
+
+
+
+
+if (Array.isArray(entry.previousOverheadsDetails)) {
+  entry.previousOverheadsDetails.forEach(prev => {
+    const prevMonthKey = this.formatMonthYear(prev.date);
+
+    if (this.tableHeaders.includes(prevMonthKey) && !row[prevMonthKey]) {
+      row[prevMonthKey] = {
+        repairAndMaintenance: prev.repairAndMaintenance,
+        sellingDistributionAndMiscOverHeads: prev.sellingDistributionAndMiscOverHeads,
+        financeCost: prev.financeCost,
+        totalOverHeads: prev.totalOverHeads,
+        totalOverHeadsWithFinanceCost: prev.totalOverHeadsWithFinanceCost
+      };
+    }
+  });
+}
+
 });
 
 
@@ -109,7 +117,7 @@ export class OverHeadsComponent implements OnInit {
     });
   }
 
- formatMonthYear(date: Date | string): string {
+formatMonthYear(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   return d.toLocaleString('default', { month: 'long', year: 'numeric' });
 }
