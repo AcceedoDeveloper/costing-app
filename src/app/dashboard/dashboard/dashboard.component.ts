@@ -41,20 +41,34 @@ searchTerm: string = '';
 
 filteredPendingQuotations: CustomerdetailsIn[] = [];
 filteredCompletedQuotations: CustomerdetailsIn[] = [];
+  monthLabels: string[];
 
 
 
 
   constructor(private dashboardServices: DashboardService, private store : Store) { }
 
- chartColumns = ['Material', 'May', 'June', 'July']; 
+chartColumns = ['Material', 'May', 'June', 'July']; 
 
 chartOptions = {
-  title: '3-Month Price Comparison by Material',
-  legend: { position: 'top' },
-  vAxis: { title: 'Price (₹)' },
-  hAxis: { title: 'Material' },
-  bar: { groupWidth: '75%' },
+  legend: { position: 'none' },
+  bar: { groupWidth: '60%' },
+  colors: ['#e74c3c', '#f39c12', '#3498db'], // Red, Orange, Blue
+  hAxis: {
+    title: 'Material',
+    textStyle: { fontSize: 12 }
+  },
+  vAxis: {
+    title: 'Unit Cost',
+    minValue: 0,
+    textStyle: { fontSize: 12 }
+  },
+  tooltip: { trigger: 'focus' }, // Show on click/focus, not hover
+  animation: {
+    duration: 500,
+    easing: 'out',
+    startup: true
+  }
 };
 
 
@@ -253,88 +267,71 @@ prevPage(): void {
 
 
 
+
 fetchMaterialGraphData() {
   const start = this.formatDate(this.startDate);
   const end = this.formatDate(this.endDate);
 
   this.dashboardServices.materialGraphData(start, end).subscribe((res) => {
-  const groupedMaterials: {
-    name: string;
-    priceHistory: { date: string; unitCost: number }[];
-  }[] = [];
+    const materialMap: {
+      [key: string]: { name: string; priceHistory: { date: string; unitCost: number }[] }
+    } = {};
 
-  const materialMap: { [key: string]: { name: string; priceHistory: { date: string; unitCost: number }[] } } = {};
+    Object.keys(res.data).forEach(category => {
+      const materials = res.data[category];
 
-  Object.keys(res.data).forEach(category => {
-    const materials = res.data[category];
+      materials.forEach((material: any) => {
+        const name = material.name;
+        if (!materialMap[name]) {
+          materialMap[name] = { name, priceHistory: [] };
+        }
 
-    materials.forEach((material: any) => {
-      const name = material.name;
-
-      if (!materialMap[name]) {
-        materialMap[name] = {
-          name: name,
-          priceHistory: []
-        };
-      }
-
-      material.priceHistory.forEach((entry: any) => {
-        materialMap[name].priceHistory.push({
-          date: entry.date,
-          unitCost: entry.unitCost
+        material.priceHistory.forEach((entry: any) => {
+          materialMap[name].priceHistory.push({
+            date: entry.date,
+            unitCost: entry.unitCost
+          });
         });
       });
     });
-  });
 
-  // Convert map to array
-  const resultArray = Object.values(materialMap);
+    const resultArray = Object.values(materialMap);
 
-  // Sort by latest price in descending order
-  const sorted = resultArray.sort((a, b) => {
-    const latestA = a.priceHistory[a.priceHistory.length - 1]?.unitCost || 0;
-    const latestB = b.priceHistory[b.priceHistory.length - 1]?.unitCost || 0;
-    return latestB - latestA;
-  });
-
-  // Take top 3
-  const top3 = sorted.slice(0, 3);
-
-  console.log('Top 3 Materials by Latest Unit Cost:', top3);
-
-  // Step 1: Get last 3 months
-const today = new Date();
-const months = [...Array(3)].map((_, i) => {
-  const d = new Date(today.getFullYear(), today.getMonth() - (2 - i), 1);
-  return {
-    label: d.toLocaleString('default', { month: 'short' }), // e.g., Jul
-    key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`     // e.g., 2025-07
-  };
-});
-
-// Step 2: Set chart columns (e.g., ['Material', 'May', 'June', 'July'])
-this.chartColumns = ['Material', ...months.map(m => m.label)];
-
-this.chartData = top3.map(material => {
-  const row: (string | number)[] = [material.name]; // 👈 Fix the type here
-
-  months.forEach(month => {
-    const found = material.priceHistory.find(entry => {
-      const entryMonth = entry.date.substring(0, 7);
-      return entryMonth === month.key;
+    const sorted = resultArray.sort((a, b) => {
+      const latestA = a.priceHistory[a.priceHistory.length - 1]?.unitCost || 0;
+      const latestB = b.priceHistory[b.priceHistory.length - 1]?.unitCost || 0;
+      return latestB - latestA;
     });
 
-    row.push(found ? found.unitCost : 0);
+    const top3 = sorted.slice(0, 3);
+
+    // ✅ Generate last 3 months based on "endDate"
+    const baseDate = new Date(this.endDate || new Date());
+    const months = [...Array(3)].map((_, i) => {
+      const d = new Date(baseDate.getFullYear(), baseDate.getMonth() - 2 + i, 1);
+      return {
+        label: d.toLocaleString('default', { month: 'short' }), // e.g., Jun
+        key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` // e.g., 2025-07
+      };
+    });
+
+    this.monthLabels = months.map(m => m.label); // ✅ For heading
+
+    this.chartColumns = ['Material', ...this.monthLabels];
+
+    this.chartData = top3.map(material => {
+      const row: (string | number)[] = [material.name];
+      months.forEach(month => {
+        const found = material.priceHistory.find(entry =>
+          entry.date.substring(0, 7) === month.key
+        );
+        row.push(found ? found.unitCost : 0);
+      });
+      return row;
+    });
+
+
   });
-
-  return row;
-});
-
-
-console.log('Chart Columns:', this.chartColumns);
-console.log('Chart Data:', this.chartData);
-
-});
 }
 
 // Helper

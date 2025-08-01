@@ -133,7 +133,7 @@
 
 
 
-  <div class="box fixed-height-box" >
+ <div class="box fixed-height-box" >
      <div class="date-filters">
   <mat-form-field appearance="outline">
     <mat-label>Start Date</mat-label>
@@ -149,6 +149,15 @@
     <mat-datepicker #endPicker></mat-datepicker>
   </mat-form-field>
 </div>
+
+  <!-- Month Legend (Color Bars with Labels) -->
+  <div class="month-legend" *ngIf="monthLabels.length === 3">
+    <div class="legend-item"><span class="legend-color red"></span> {{ monthLabels[0] }}</div>
+    <div class="legend-item"><span class="legend-color orange"></span> {{ monthLabels[1] }}</div>
+    <div class="legend-item"><span class="legend-color blue"></span> {{ monthLabels[2] }}</div>
+  </div>
+
+
     <!-- material-chart.component.html -->
 <google-chart
   [type]="chartType"
@@ -158,8 +167,9 @@
   [height]="'400px'">
 </google-chart>
 
-  </div>
 
+
+  </div>
 <div class="box fixed-height-box">
     <h2>Recent Updates</h2>
     <div class="table-wrapper">

@@ -263,3 +263,41 @@ google-chart {
   color: #333;
 }
 
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.legend-color.red {
+  background-color: #e74c3c;
+}
+
+.legend-color.orange {
+  background-color: #f39c12;
+}
+
+.legend-color.blue {
+  background-color: #3498db;
+}
+
+
+
+
+
+
+
+
+
+
+
