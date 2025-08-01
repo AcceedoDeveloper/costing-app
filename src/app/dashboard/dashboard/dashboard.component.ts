@@ -37,7 +37,10 @@ filteredEstimationCost: any[] = [];
 
 estimationStartDate!: Date | null;
 estimationEndDate!: Date | null;
+searchTerm: string = '';
 
+filteredPendingQuotations: CustomerdetailsIn[] = [];
+filteredCompletedQuotations: CustomerdetailsIn[] = [];
 
 
 
@@ -87,11 +90,15 @@ this.fetchActualEstimationCost();
   this.selectedCustomerDetails$ = this.store.select(getCustomerDetails); 
 
   this.selectedCustomerDetails$.subscribe(data => {
-     this.customerDetails = data;
-    console.log('Simplified Data:', data);
+    this.customerDetails = data;
+    this.pendingQuotations = data.filter(item => item.Status?.toLowerCase() === 'pending');
+    this.completedQuotations = data.filter(item => item.Status?.toLowerCase() === 'completed');
 
-    this.pendingQuotations = this.customerDetails.filter(item => item.Status?.toLowerCase() === 'pending');
-      this.completedQuotations = this.customerDetails.filter(item => item.Status?.toLowerCase() === 'completed');
+    // Initialize filtered arrays
+    this.filteredPendingQuotations = [...this.pendingQuotations];
+    this.filteredCompletedQuotations = [...this.completedQuotations];
+
+    this.filterQuotations();
   });
 
 
@@ -357,6 +364,17 @@ onEstimationRangeChange() {
   if (this.estimationStartDate && this.estimationEndDate) {
     this.fetchActualEstimationCost();
   }
+}
+
+
+filterQuotations(): void {
+  const term = this.searchTerm.toLowerCase();
+  this.filteredPendingQuotations = this.pendingQuotations.filter(item =>
+    item.CustomerName?.name.toLowerCase().includes(term)
+  );
+  this.filteredCompletedQuotations = this.completedQuotations.filter(item =>
+    item.CustomerName?.name.toLowerCase().includes(term)
+  );
 }
 
 

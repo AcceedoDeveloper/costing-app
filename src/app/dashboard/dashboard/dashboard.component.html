@@ -70,41 +70,48 @@
   </div>
 
 <div class="box quotation-box">
-  <mat-tab-group animationDuration="500ms">
+  <input
+  type="text"
+  class="search-bar"
+  placeholder="Search Customer"
+  [(ngModel)]="searchTerm"
+  (input)="filterQuotations()"
+/>
 
-    <!-- Pending Quotation -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Pending Quotation <span class="tab-badge warning">{{ pendingQuotations.length }}</span>
-      </ng-template>
-      <div class="tab-display">
-        <div class="quotation-card" *ngFor="let item of pendingQuotations">
-          <div class="info-row">
-            <p><strong>Customer Name:</strong> {{ item.CustomerName?.name }}</p>
-            <p><strong>Part Name:</strong> {{ item.partName }}</p>
-            <p><strong>Status:</strong> <span class="status warning">{{ item.Status }}</span></p>
-          </div>
+<mat-tab-group animationDuration="500ms">
+  <!-- Pending Quotation -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Pending Quotation <span class="tab-badge warning">{{ filteredPendingQuotations.length }}</span>
+    </ng-template>
+    <div class="tab-display">
+      <div class="quotation-card" *ngFor="let item of filteredPendingQuotations">
+        <div class="info-row">
+          <p><strong>Customer Name:</strong> {{ item.CustomerName?.name }}</p>
+          <p><strong>Part Name:</strong> {{ item.partName }}</p>
+          <p><strong>Status:</strong> <span class="status warning">{{ item.Status }}</span></p>
         </div>
       </div>
-    </mat-tab>
+    </div>
+  </mat-tab>
 
-    <!-- Completed Quotation -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        Last Month Quotation <span class="tab-badge success">{{ completedQuotations.length }}</span>
-      </ng-template>
-      <div class="tab-display">
-        <div class="quotation-card" *ngFor="let item of completedQuotations">
-          <div class="info-row">
-            <p><strong>Customer Name:</strong> {{ item.CustomerName?.name }}</p>
-            <p><strong>Part Name:</strong> {{ item.partName }}</p>
-            <p><strong>Status:</strong> <span class="status success">{{ item.Status }}</span></p>
-          </div>
+  <!-- Completed Quotation -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Last Month Quotation <span class="tab-badge success">{{ filteredCompletedQuotations.length }}</span>
+    </ng-template>
+    <div class="tab-display">
+      <div class="quotation-card" *ngFor="let item of filteredCompletedQuotations">
+        <div class="info-row">
+          <p><strong>Customer Name:</strong> {{ item.CustomerName?.name }}</p>
+          <p><strong>Part Name:</strong> {{ item.partName }}</p>
+          <p><strong>Status:</strong> <span class="status success">{{ item.Status }}</span></p>
         </div>
       </div>
-    </mat-tab>
+    </div>
+  </mat-tab>
+</mat-tab-group>
 
-  </mat-tab-group>
 </div>
 
 
