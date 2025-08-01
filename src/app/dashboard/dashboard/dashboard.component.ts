@@ -32,10 +32,13 @@ itemsPerPage: number = 5;
 totalPages: number = 1;
 startDate!: Date;
 endDate!: Date;
-estimationStartDate!: Date;
-estimationEndDate!: Date;
 actualEstimationCost: any[] = [];
 filteredEstimationCost: any[] = [];
+
+estimationStartDate!: Date | null;
+estimationEndDate!: Date | null;
+
+
 
 
 
@@ -64,9 +67,11 @@ ngOnInit(): void {
   
 
    const today = new Date();
-  const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
-    this.estimationStartDate = sixMonthsAgo;
-  this.estimationEndDate = today;
+const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+this.estimationStartDate = sixMonthsAgo;
+this.estimationEndDate = today;
+
+     
 
   this.startDate = sixMonthsAgo;
   this.endDate = today;
@@ -74,6 +79,7 @@ ngOnInit(): void {
 
   this.fetchMaterialGraphData();
 
+this.fetchActualEstimationCost();
   
   this.fetchRecentUpdatedData();
    this.store.dispatch(loadCustomerDetails());
@@ -334,8 +340,8 @@ onDateChange() {
   }
 }
 fetchActualEstimationCost() {
-  const start = this.formatDate(this.estimationStartDate);
-  const end = this.formatDate(this.estimationEndDate);
+  const start = this.formatDate(this.estimationStartDate!);
+  const end = this.formatDate(this.estimationEndDate!);
 
   this.dashboardServices.ActualEstimationCost(start, end).subscribe((res) => {
     this.actualEstimationCost = res.data;
@@ -346,11 +352,13 @@ fetchActualEstimationCost() {
 }
 
 
-onEstimationDateChange() {
+
+onEstimationRangeChange() {
   if (this.estimationStartDate && this.estimationEndDate) {
     this.fetchActualEstimationCost();
   }
 }
+
 
  
 }

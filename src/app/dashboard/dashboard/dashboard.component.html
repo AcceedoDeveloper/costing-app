@@ -2,23 +2,24 @@
   <div class="box customer-box">
      <div class="container">
         <div class="table-header">
-          <div class="date-filters">
-  <mat-form-field appearance="outline">
-    <mat-label>Start Date</mat-label>
-    <input matInput [matDatepicker]="estimationStartPicker" [(ngModel)]="estimationStartDate" (dateChange)="onEstimationDateChange()">
-    <mat-datepicker-toggle matSuffix [for]="estimationStartPicker"></mat-datepicker-toggle>
-    <mat-datepicker #estimationStartPicker></mat-datepicker>
-  </mat-form-field>
 
+
+ <h2>Customer List</h2>
+ <div class="date-filters">
   <mat-form-field appearance="outline">
-    <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="estimationEndPicker" [(ngModel)]="estimationEndDate" (dateChange)="onEstimationDateChange()">
-    <mat-datepicker-toggle matSuffix [for]="estimationEndPicker"></mat-datepicker-toggle>
-    <mat-datepicker #estimationEndPicker></mat-datepicker>
+    <mat-label>Select Date Range</mat-label>
+    <mat-date-range-input [rangePicker]="estimationRangePicker">
+      <input matStartDate placeholder="Start date" [(ngModel)]="estimationStartDate" (dateChange)="onEstimationRangeChange()">
+      <input matEndDate placeholder="End date" [(ngModel)]="estimationEndDate" (dateChange)="onEstimationRangeChange()">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="estimationRangePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #estimationRangePicker></mat-date-range-picker>
   </mat-form-field>
 </div>
 
-            <h2>Customer List</h2>
+
+
+           
            <input
         type="text"
         class="search-bar"
@@ -164,7 +165,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of recentUpdates">
+          <tr *ngFor="let item of recentUpdates | slice:0:10">
             <td>{{ item.user.userName }}</td>
             <td>{{ item.message }}</td>
             <td>{{ item.updatedAt | date: 'short' }}</td>
