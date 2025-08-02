@@ -93,7 +93,29 @@
 { "name": "dashboard-data", "url": "data"},
 { "name": "getQuotationData", "url": "getQuotationData"},
 { "name": "resentUpdate", "url": "getUserRecentUpdate"},
-{ "name": "ActualEstimationCost", "url": "get-ActualEstimationCost"}
+{ "name": "ActualEstimationCost", "url": "get-ActualEstimationCost"},
+{ "name": "customer/quotation", "url": "customer/quotation" },
+{ "name": "updateSalaryWages", "url": "updateSalaryWages" },
+{ "name": "updateOverheads", "url": "updateOverheads"},
+{
+  "name": "getOverheadsMap",
+  "url": "getOverheadsMap"
+},
+{
+  "name": "updatePowerCost",
+  "url": "updatePowerCost"
+},
+  {
+    "name": "getSalaryMap",
+    "url": "getSalaryMap"
+  }
+
+
+
+
+
+
+
 
 
 

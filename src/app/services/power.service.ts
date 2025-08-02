@@ -62,7 +62,8 @@ getPowerCostMap(): Observable<PowerCostData[]> {
 
 
 getSalaryMap(startDate: string, endDate: string, yearNo: number): Observable<SalaryMapResponseData> {
-  const url = `http://localhost:3005/getSalaryMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  const baseUrl = this.configService.getCostingUrl('getSalaryMap');
+  const url = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
   console.log('📡 Salary API URL:', url);
 
   return this.http.get<{ data: SalaryMapResponseData }>(url).pipe(
@@ -73,14 +74,17 @@ getSalaryMap(startDate: string, endDate: string, yearNo: number): Observable<Sal
 
 
 
+
 addPowerCost(data: { processName: string; totalUnitPerProcess: number }) {
     return this.http.post('http://localhost:3005/addProcess-Powercost', data);
   }
 
 
 uupdatePowerCost(id: string, data: PowerCostData): Observable<PowerCostData> {
-   return this.http.put<PowerCostData>(` http://localhost:3005/updatePowerCost/${id}`, data);
+  const url = `${this.configService.getCostingUrl('updatePowerCost')}/${id}`;
+  return this.http.put<PowerCostData>(url, data);
 }
+
 
 adddSlaryProcess(data: any): Observable<any>{
   return this.http.post(this.configService.getCostingUrl('addProcess-SalaryWages'), data);
@@ -89,13 +93,15 @@ adddSlaryProcess(data: any): Observable<any>{
 
 
 getOverHesdsMap(startDate: string, endDate: string, yearNo: number): Observable<Overheads[]> {
-  const url = `http://localhost:3005/getOverheadsMap?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  const baseUrl = this.configService.getCostingUrl('getOverheadsMap');
+  const url = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
   console.log('🌐 API URL:', url);
 
   return this.http.get<{ data: Overheads[] }>(url).pipe(
     map(res => res.data)
   );
 }
+
 
 
 
@@ -122,29 +128,34 @@ downloadQuotation(params: {
     end: params.end,
   });
 
-  const url = `http://localhost:3005/customer/quotation?${queryParams.toString()}`;
+  const url = this.configService.getCostingUrl('customer/quotation') + `?${queryParams.toString()}`;
   console.log('Download URL:', url); 
+
   return this.http.get(url, { responseType: 'blob' });
 }
 
 
 
 
+
 updateSalaryProcess(id: string, payload: any): Observable<any> {
-  const url = this.configService.getCostingUrl('updateSalaryWages');
-  return this.http.put(`http://localhost:3005/updateSalaryWages/${id}`, payload);
+  const url = `${this.configService.getCostingUrl('updateSalaryWages')}/${id}`;
+  return this.http.put(url, payload);
 }
 
- updateOverhead(id: string, data: any) {
+
+updateOverhead(id: string, data: any) {
+  const url = `${this.configService.getCostingUrl('updateOverheads')}/${id}`;
   console.log("🔧 Updating overhead with ID:", id);
   console.log("📋 Data to update:", data);
 
-  return this.http.put(`http://localhost:3005/updateOverheads/${id}`, data).pipe(
+  return this.http.put(url, data).pipe(
     tap(response => {
       console.log("✅ Server response after update:", response);
     })
   );
 }
+
 
 
 }

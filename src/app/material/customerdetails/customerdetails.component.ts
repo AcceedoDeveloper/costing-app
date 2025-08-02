@@ -46,7 +46,7 @@ addCustomerDetails() {
     width: '100%',
     height: '650px',
     autoFocus: false,
-    disableClose: true
+    disableClose: false
   });
 
   
@@ -92,14 +92,14 @@ edit(id: string) {
 
   if (customer) {
     this.dialog.open(UpdateCustomerDetailsComponent, {
-      width: '950px',
-      height: '550px',
+      width: '100%',
+      height: '650px',
       data: {
         mode: 'edit',
         customerData: customer
       },
       autoFocus: false,
-      disableClose: true
+      disableClose: false
     });
     console.log('Editing Customer:', customer);
   } else {
