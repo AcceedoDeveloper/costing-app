@@ -26,7 +26,8 @@ body {
     display: none;
     position: absolute;
     top: 120%;
-    left: 0;
+    left: 50%;                      /* Center horizontally */
+  transform: translateX(-70%);
     background-color: #fff;
     border: 1px solid #ccc;
     color: #333;
