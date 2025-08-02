@@ -33,36 +33,33 @@
 </div>
 
     </div>
-   
+   <div >
+  <!-- Hidden file input -->
+ <input
+  type="file"
+  #fileInput
+  hidden
+  (change)="onFileSelected($event)"
+  accept=".xlsx, .xls"
+/>
+
+
+
+
+  <!-- Icon button to trigger file input -->
+  <button mat-raised-button color="primary" (click)="fileInput.click()" matTooltip="Upload Excel File">
+    <mat-icon>upload_file</mat-icon>
+    Upload Excel
+  </button>
+
+
+</div>
+
 
     <button mat-raised-button color="primary" (click)="openAddMeterialPopup()">
       Add Material
     </button>
   </div>
-<div class="upload-file">
-  <!-- Hidden file input -->
-  <input 
-    type="file"
-    #fileInput
-    (change)="onFileSelected($event)"
-    accept=".xlsx, .xls"
-    style="display: none;"
-  />
-
-    <!-- Icon button to trigger file input -->
-  <button mat-icon-button  (click)="fileInput.click()" matTooltip="Upload Excel File">
-    <mat-icon>download</mat-icon>
-  </button>
-  <!-- Icon button to trigger file input -->
-  <button mat-icon-button color="primary" (click)="fileInput.click()" matTooltip="Upload Excel File">
-    <mat-icon>upload</mat-icon>
-  </button>
-
-  <!-- Actual Upload trigger -->
-  <button mat-raised-button color="primary" (click)="onUpload()" [disabled]="!selectedFile">
-    Upload Excel
-  </button>
-</div>
 
 
 </div>

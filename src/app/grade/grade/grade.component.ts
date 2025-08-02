@@ -101,7 +101,7 @@ materialSet.set(item.name, { name: item.name, unitCost: 0 }); // Mock value
 
   openAddMeterialPopup() {
     this.dialog.open(AddgradeComponent, {
-      width: '480px',
+      width: '50%',
     });
   }
 

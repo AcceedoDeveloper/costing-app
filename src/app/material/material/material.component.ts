@@ -165,12 +165,15 @@ applyFilterMaterialbyHouseType(): void {
   const endIndex = startIndex + this.pageSize;
   this.paginatedMaterials = filtered.slice(startIndex, endIndex);
 }
-onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-    }
+onFileSelected(event: any): void {
+  const file: File = event.target.files[0];
+
+  if (file) {
+    this.selectedFile = file;
+    this.onUpload();
   }
+}
+
 
   onUpload(): void {
     if (!this.selectedFile) return;
