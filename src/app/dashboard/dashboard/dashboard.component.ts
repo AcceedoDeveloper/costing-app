@@ -5,6 +5,10 @@ import { getCustomerDetails} from '../../material/store/material.selector';
 import { CustomerdetailsIn } from '../../models/Customer-details.model';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -43,7 +47,10 @@ filteredPendingQuotations: CustomerdetailsIn[] = [];
 filteredCompletedQuotations: CustomerdetailsIn[] = [];
   monthLabels: string[];
 
+dataSource = new MatTableDataSource<any>();
+displayedColumns: string[] = ['CustomerName', 'partName', 'TotalProcessCost', 'actualCost', 'difference'];
 
+@ViewChild(MatPaginator) paginator!: MatPaginator;
 
 
   constructor(private dashboardServices: DashboardService, private store : Store) { }
@@ -234,32 +241,15 @@ fetchRecentUpdatedData(): void {
 }
 
 onSearch(event: any): void {
-  const searchTerm = event.target.value.toLowerCase();
-  this.filteredEstimationCost = this.ActualEstimationCost.filter(item =>
-    item.CustomerName?.name.toLowerCase().includes(searchTerm)
-  );
+  const value = event.target.value.trim().toLowerCase();
+  this.dataSource.filter = value;
 }
 
-setPagination(): void {
-  this.totalPages = Math.ceil(this.filteredEstimationCost.length / this.itemsPerPage);
-  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-  const endIndex = startIndex + this.itemsPerPage;
-  this.paginatedData = this.filteredEstimationCost.slice(startIndex, endIndex);
+ngAfterViewInit() {
+  this.dataSource.paginator = this.paginator;
 }
 
-nextPage(): void {
-  if (this.currentPage < this.totalPages) {
-    this.currentPage++;
-    this.setPagination();
-  }
-}
 
-prevPage(): void {
-  if (this.currentPage > 1) {
-    this.currentPage--;
-    this.setPagination();
-  }
-}
 
 
 
@@ -334,7 +324,7 @@ fetchMaterialGraphData() {
   });
 }
 
-// Helper
+
 formatDate(date: Date): string {
   return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
 }
@@ -343,17 +333,28 @@ onDateChange() {
     this.fetchMaterialGraphData();
   }
 }
+
+
 fetchActualEstimationCost() {
   const start = this.formatDate(this.estimationStartDate!);
-  const end = this.formatDate(this.estimationEndDate!);
+  const endDateWithOneDay = new Date(this.estimationEndDate!);
+  endDateWithOneDay.setDate(endDateWithOneDay.getDate() + 1);
+  const end = this.formatDate(endDateWithOneDay);
 
   this.dashboardServices.ActualEstimationCost(start, end).subscribe((res) => {
     this.actualEstimationCost = res.data;
     this.filteredEstimationCost = res.data;
-    this.setPagination();
+
+    this.dataSource = new MatTableDataSource(this.filteredEstimationCost);
+
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
+
     console.log('Actual Estimation Cost Data:', this.actualEstimationCost);
   });
 }
+
 
 
 

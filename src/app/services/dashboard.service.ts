@@ -60,6 +60,7 @@ ActualEstimationCost( startDate: string, endDate: string): Observable<any> {
    const yearNo = new Date().getFullYear();
     const baseUrl = this.config.getCostingUrl('ActualEstimationCost');
     const url = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+    console.log('Fetching actual estimation cost from:', url);
     return this.http.get<any>(url);
   }
 

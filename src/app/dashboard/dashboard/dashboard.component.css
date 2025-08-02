@@ -18,7 +18,7 @@
 }
 
 .customer-box, .quotation-box, .fixed-height-box {
-  height: 400px; /* Fixed height for all boxes except full-width */
+  height: 500px; /* Fixed height for all boxes except full-width */
   display: flex;
   flex-direction: column;
 }
