@@ -257,7 +257,9 @@
 
 </div>
 <div class="button-submit" >
-  
+  <button mat-raised-button color="primary" (click)="generateFinalJsonFromLoadedData()">
+    Save Final Updated Data
+  </button>
 </div>
 
 
@@ -409,7 +411,7 @@
             <td>Customer</td>
             <td colspan="2">{{quotationData.customer}}</td>
             <td>Material Grade</td>
-            <td colspan="5">GREY IRON</td>
+            <td colspan="5">{{quotationData.processName}}</td>
         </tr>
         <tr class="company-info">
             <td>Part Name</td>
@@ -421,7 +423,7 @@
             <td>Drawing Number, Revision</td>
             <td colspan="2">6580933</td>
             <td>Process</td>
-            <td colspan="5">SHELL MOULDING</td>
+            <td colspan="5">{{quotationData.grade}}</td>
         </tr>
          <tr class="section-header">
             
@@ -436,10 +438,24 @@
             <td>Casting weight in Kgs</td>
             <td class="numeric">{{quotationCalc.CastingWeight | number:'1.2-2'}}</td>
             <td>Melting Scrap cost</td>
-            <td class="numeric">{{quotationCalc.ScrapCost  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.ScrapCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        Yield% * TotalMetalCost
+        {{quotationCalc.yieldPercent  | number:'1.2-2'}} *  {{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} ) = {{quotationCalc.ScrapCost  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td>
            
-            <td class="numeric">{{quotationCalc.ScrapCostPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.ScrapCostPerKg | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        ScrapCost / CastingWeightKgPerHeat
+        {{quotationCalc.ScrapCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.ScrapCostPerKg  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
             <td class="numeric"></td>
                      
         </tr>
@@ -447,9 +463,26 @@
             <td>No of cavities</td>
             <td class="numeric">{{quotationCalc.Cavities | number:'1.2-2'}}</td>
             <td>Melting Alloying cost</td>
-            <td class="numeric">{{quotationCalc.totalProcessAlloyCostPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalProcessAlloyCostPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        Yield% * ( TotalAlloyCost ) <br>
+        {{quotationCalc.yieldPercent  | number:'1.2-2'}} * {{quotationCalc.totalProcessAlloyCost  | number:'1.2-2'}}  = {{quotationCalc.ScrapCost  | number:'1.2-2'}}
+      </div>
+    </span>
+
+            </td>
             <td>
-            <td class="numeric">{{quotationCalc.totalProcessAlloyCostPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalProcessAlloyCostPerKg | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        totalProcessAlloyCost / CastingWeightKgPerHeat
+        {{quotationCalc.totalProcessAlloyCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.totalProcessAlloyCostPerKg  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
             <td class="numeric"></td>
           >
         </tr>
@@ -457,10 +490,25 @@
             <td>Pouring weight in Kgs</td>
             <td class="numeric">{{quotationCalc.PouringWeight | number:'1.2-2'}}</td>
             <td>Shell mould cost</td>
-            <td class="numeric">{{quotationCalc.MouldCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.MouldCost | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        ( No of Mould/heat * shell Moulding Weight ) * ( TotalSandCost ) / 1000   <br>
+        ({{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} * {{quotationCalc.MouldCost  | number:'1.2-2'}}) * ({{quotationCalc.CoreSand  | number:'1.2-2'}}) / 1000 = {{quotationCalc.ScrapCost  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
             <td></td>
           
-            <td class="numeric">{{quotationCalc.mouldCostPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.mouldCostPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        MouldCost / CastingWeightKgPerHeat
+        {{quotationCalc.MouldCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.mouldCostPerKg  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric"></td>
          
         </tr>
@@ -468,9 +516,25 @@
             <td>Good casting weight Kg / heat</td>
             <td class="numeric">{{quotationCalc.CastingWeightKgPerHeat | number:'1.2-2'}}</td>
             <td>Foundry Consumables</td>
-             <td class="numeric">{{quotationCalc.FoundaryConsumables | number:'1.2-2'}}</td>
+             <td class="numeric">{{quotationCalc.FoundaryConsumables | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        otherConsumables
+        {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} 
+      </div>
+    </span></td>
             <td></td>
-            <td class="numeric">{{quotationCalc.FoundaryConsumablesPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.FoundaryConsumablesPerKg | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        FoundaryConsumables / CastingWeightKgPerHeat
+        {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.FoundaryConsumablesPerKg  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
             <td class="numeric"></td>
             
         </tr>
@@ -478,9 +542,22 @@
             <td>Yield</td>
             <td class="numeric">{{quotationCalc.yield | number:'1.2-2'}}</td>
             <td>Core sand cost</td>
-            <td class="numeric">{{quotationCalc.CoreSand   | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.CoreSand   | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        CoreWeight * CoreSandCost * no of CoresPerMould * no of Moulds per heat * 1.02 <br>
+        {{quotationCalc.CoreWeight  | number:'1.2-2'}} * {{quotationCalc.CoreSandCost  | number:'1.2-2'}} * {{quotationCalc.CoresPerMould  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} * 1.02
+      </div>
+    </span></td>
             <td></td>
-            <td class="numeric">{{quotationCalc.CoreSandPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.CoreSandPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        CoreSand / CastingWeightKgPerHeat
+        {{quotationCalc.CoreSand  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.CoreSandPerKg  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric"></td>
            
         </tr>
@@ -488,10 +565,25 @@
             <td>Material Returned</td>
             <td class="numeric">{{quotationCalc.MaterialReturned | number:'1.2-2'}}</td>
             <td>Material Credited for Rejection</td>
-            <td class="numeric">{{quotationCalc.Mat_Rejection | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.Mat_Rejection | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       Rejection * ( TotalAlloyCost + TotalMetalCost ) * Yield% * 0.9 <br>
+        {{quotationCalc.Rejection  | number:'1.2-2'}} *  ({{quotationCalc.totalProcessAlloyCost  | number:'1.2-2'}} + {{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} ) * {{quotationCalc.yieldPercent  | number:'1.2-2'}} * 0.9 = {{quotationCalc.MaterialReturned | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td></td>
            
-            <td class="numeric">{{quotationCalc.Mat_RejectionPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.Mat_RejectionPerKg | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        Mat_Rejection / CastingWeightKgPerHeat
+        {{quotationCalc.Mat_Rejection  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.Mat_RejectionPerKg  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
             <td class="numeric"></td>
             
         </tr>
@@ -499,9 +591,22 @@
             <td>Yield %</td>
             <td class="numeric">{{quotationCalc.yieldPercent | number:'1.2-2'}}</td>
             <td>Melting Losses</td>
-             <td class="numeric">{{quotationCalc.metalCostPercent | number:'1.2-2'}}</td>
+             <td class="numeric">{{quotationCalc.metalCostPercent | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       TotalMetalCost * 0.02 <br>
+        {{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} * 0.02 = {{quotationCalc.metalCostPercent  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td></td>
-            <td class="numeric">{{quotationCalc.MeltLossPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.MeltLossPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+      <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+      <div class="info-popup">
+        (totalProcessMetalCost * 0.02) / CastingWeightKgPerHeat
+        ({{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} * 0.02 ) / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}  = {{quotationCalc.MeltLossPerKg  | number:'1.2-2'}}
+      </div>
+    </span></td>            
             <td class="numeric"></td>
             
         </tr>
@@ -519,9 +624,32 @@
             <td colspan="2">Moulding Inputs</td>
             <td class="numeric">Subtotal Metal</td>
             <td></td>
-            <td class="numeric">{{quotationCalc.CostPer1050kg | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.subtotalMetalperkg | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.subtotalMetalTotalCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.CostPer1050kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       ScrapCost * totalProcessAlloyCost + MouldCost + FoundaryConsumables + Mat_Rejection + ( totalProcessMetalCost * 0.02 )<br>
+        {{quotationCalc.ScrapCost  | number:'1.2-2'}} + {{quotationCalc.totalProcessAlloyCost  | number:'1.2-2'}} + {{quotationCalc.MouldCost  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} + {{quotationCalc.Mat_Rejection  | number:'1.2-2'}} + ({{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} * 0.02 ) = {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.subtotalMetalperkg | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       CostPer1050kg / CastingWeightKgPerHeat <br>
+        {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
+            <td class="numeric">{{quotationCalc.subtotalMetalTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       ( CostPer1050kg / CastingWeightKgPerHeat ) * 100 <br>
+        ({{quotationCalc.CostPer1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}) * 100 = {{quotationCalc.subtotalMetalTotalCost  | number:'1.2-2'}}
+      </div>
+    </span></td>
             
         </tr>
         <tr>
@@ -539,29 +667,69 @@
             <td>No of moulds/ heat</td>
             <td class="numeric">{{quotationCalc.NoOfMouldperHeat | number:'1.2-2'}}</td>
             <td>Melting &others</td>
-            <td class="numeric">{{quotationCalc.totalUnitCostforOthers | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.totalUnitCostforOthers | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       TotalUnitCostForProcess * CostPerUnit <br>
+        {{quotationCalc.totalUnitCost  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}} =  {{quotationCalc.totalUnitCostforOthers  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
-           <td class="numeric">{{quotationCalc.ShellMouldingPerKg | number:'1.2-2'}}</td>
+           <td class="numeric">{{quotationCalc.MeltingPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       (totalUnitCost * CostPerUnit) / CastingWeightKgPerHeat <br>
+        ({{quotationCalc.totalUnitCost  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}}) / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.MeltingPerKg  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>No bake moulding</td>
             <td class="numeric"></td>
-            <td>Shellmoulding</td>
-        
-            <td class="numeric">{{quotationCalc.MouldPowerCost | number:'1.2-2'}}</td>
+            <td>Shellmoulding</td>        
+            <td class="numeric">{{quotationCalc.MouldPowerCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       TotalUnitCostForMoulding * CostPerUnit <br>
+        {{quotationCalc.MouldingUnit  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}} =  {{quotationCalc.MouldPowerCost  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.ShellMouldingPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.ShellMouldingPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       MouldPowerCost * CastingWeightKgPerHeat <br>
+        {{quotationCalc.MouldPowerCost  | number:'1.2-2'}} * {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} =  {{quotationCalc.ShellMouldingPerKg  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Core Inputs</td>
             <td></td>
             <td>Core making</td>
-           
-            <td class="numeric">{{quotationCalc.CoreMakingPowerCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.CoreMakingPowerCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       ((CoreWeight * CoresPerMould * NoOfMouldperHeat) / 1000) * CoreMakingWages = CoreMakingPowerCost  <br>
+        ((({{quotationCalc.CoreWeight  | number:'1.2-2'}} * {{quotationCalc.CoresPerMould  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}}) / 1000 ) {{quotationCalc.CoreMakingWages  | number:'1.2-2'}}) = {{quotationCalc.CoreMakingPowerCost  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.CastingPerKg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.CastingPerKg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       CoreMakingPowerCost  / CastingWeightKgPerHeat <br>
+        {{quotationCalc.CoreMakingPowerCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} =  {{quotationCalc.CastingPerKg  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -579,9 +747,32 @@
             <td class="numeric">{{quotationCalc.CoresPerMould | number:'1.2-2'}}</td>
             <td>Subtotal Power</td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.CostPer1050_kg | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.roundCostPer_kg | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.subtotalPowerTotalCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.CostPer1050_kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       totalUnitCostforOthers  + ShellMouldingPerKg + CastingPerKg <br>
+        {{quotationCalc.totalUnitCostforOthers  | number:'1.2-2'}} + {{quotationCalc.ShellMouldingPerKg  | number:'1.2-2'}} + {{quotationCalc.CastingPerKg  | number:'1.2-2'}} =  {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}};
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.roundCostPer_kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       CostPer1050_kg  / CastingWeightKgPerHeat <br>
+        {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} =  {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}};
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.subtotalPowerTotalCost | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       (CostPer1050_kg  + OverallTotalCost) * 100<br>
+        ({{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} * 100 ) =  {{quotationCalc.subtotalPowerTotalCost  | number:'1.2-2'}};
+      </div>
+    </span>
+            </td>
         </tr>
         <tr>
             <td>No of cavities in the core box</td>
@@ -595,32 +786,71 @@
             <td class="numeric"></td>
         </tr>
         <tr>
-            <td>No os shootings per shift</td>
+            <td>No of shootings per shift</td>
             <td class="numeric">125</td>
             <td>Salary and Wages</td>
         
-            <td class="numeric">{{quotationCalc.SalaryForProcess | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.SalaryForProcess | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       Salary and Wages for Process = {{quotationCalc.SalaryForProcess  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.roundSalaryPerkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.roundSalaryPerkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       SalaryForProcess / CastingWeightKgPerHeat <br> 
+       {{quotationCalc.SalaryForProcess  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.roundSalaryPerkg  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Core and cost</td>
             <td class="numeric">{{quotationCalc.CoreSandCost | number:'1.2-2'}}</td>
-            <td>Core making</td>
-     
-            <td class="numeric">{{quotationCalc.coremakingTotalcost | number:'1.2-2'}}</td>
+            <td>Core making</td>     
+            <td class="numeric">{{quotationCalc.coremakingTotalcost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       ((CoreWeight * CoresPerMould * NoOfMouldperHeat) / 1000 ) * CoreMakingLabourCost = CoreMakingPowerCost  <br>
+        ((({{quotationCalc.CoreWeight  | number:'1.2-2'}} * {{quotationCalc.CoresPerMould  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}}) / 1000 ) * {{quotationCalc.CoreMakingLabourCost  | number:'1.2-2'}}) = {{quotationCalc.CoreMakingPowerCost  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.roundCoreMakingPerkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.roundCoreMakingPerkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        coremakingTotalcost / CastingWeightKgPerHeat    <br>
+        {{quotationCalc.coremakingTotalcost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.roundCoreMakingPerkg  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
             <td>Commercial Terms</td>
             <td></td>
             <td>Other/Outside Processing labour charges</td>
-            <td class="numeric">{{quotationCalc.otherLabourCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.otherLabourCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       otherLabourCost =  {{quotationCalc.otherLabourCost  | number:'1.2-2'}};
+      </div>
+    </span></td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.roundOtherChargePerkg | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.roundOtherChargePerkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        otherLabourCost / CastingWeightKgPerHeat    <br>
+        {{quotationCalc.otherLabourCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.roundOtherChargePerkg  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -628,9 +858,30 @@
             <td class="numeric">{{quotationCalc.PayMentCreditPeriod | number:'1.2-2'}}</td>
             <td>Sub Total Labour</td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.round_LabourCost | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.labourCostperkg | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.subtotalLabourTotalCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.round_LabourCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        SalaryForProcess + coremakingTotalcost + otherLabourCost   <br>
+        {{quotationCalc.SalaryForProcess  | number:'1.2-2'}} + {{quotationCalc.coremakingTotalcost  | number:'1.2-2'}} + {{quotationCalc.otherLabourCost  | number:'1.2-2'}} = {{quotationCalc.round_LabourCost  | number:'1.2-2'}}
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.labourCostperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        round_LabourCost / CastingWeightKgPerHeat  <br>
+        {{quotationCalc.round_LabourCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.labourCostperkg  | number:'1.2-2'}}
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.subtotalLabourTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        round_LabourCost / OverallTotalCost  <br>
+        {{quotationCalc.round_LabourCost  | number:'1.2-2'}} / {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} = {{quotationCalc.subtotalLabourTotalCost  | number:'1.2-2'}}
+      </div>
+    </span></td>
         </tr>
         <tr>
             <td>Bank interest</td>
@@ -647,10 +898,42 @@
             <td>Margin</td>
             <td class="numeric"></td>
             <td>Admin and selling over heads</td>
-            <td class="numeric">{{quotationCalc.TotalOH | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.totalOHper1050kg  | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.totalOHperkg | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.totalOHCost | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.TotalOH | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+       otherLabourCost 
+        {{quotationCalc.TotalOH  | number:'1.2-2'}};
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.totalOHper1050kg  | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        TotalOH * yieldPercent    <br>
+        {{quotationCalc.TotalOH  | number:'1.2-2'}} * {{quotationCalc.yieldPercent  | number:'1.2-2'}}  = {{quotationCalc.totalOHper1050kg  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
+            <td class="numeric">{{quotationCalc.totalOHperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        totalOHper1050kg / CastingWeightKgPerHeat  <br>
+        {{quotationCalc.totalOHper1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.totalOHperkg  | number:'1.2-2'}}
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.totalOHCost | number:'1.2-2'}}
+              <span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        totalOHper1050kg / OverallTotalCost  <br>
+        {{quotationCalc.totalOHper1050kg  | number:'1.2-2'}} / {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} = {{quotationCalc.totalOHCost  | number:'1.2-2'}}
+      </div>
+    </span>
+            </td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -658,9 +941,32 @@
             <td class="numeric">{{quotationCalc.Profit | number:'1.2-2'}}</td>
             <td>Rejection cost</td>
             <td></td>
-            <td class="numeric">{{quotationCalc.round_TotalOH  | number:'1.2-2' }}</td>
-            <td class="numeric">{{quotationCalc.round_rejectionCost  | number:'1.2-2'}}</td>
-            <td class="numeric">{{quotationCalc.totalRejCost  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.round_TotalOH  | number:'1.2-2' }}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        (totalOHper1050kg + round_LabourCost + CostPer1050_kg + CostPer1050kg + CoreSand + FoundaryConsumables + MouldCost + ScrapCostPerKg ) * Rejection<br>
+        ({{quotationCalc.totalOHper1050kg  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} 
+        {{quotationCalc.CoreSand  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} + {{quotationCalc.MouldCost  | number:'1.2-2'}} + {{quotationCalc.totalProcessAlloyCost  | number:'1.2-2'}} + {{quotationCalc.ScrapCostPerKg  | number:'1.2-2'}}) * {{quotationCalc.Rejection  | number:'1.2-2'}} = {{quotationCalc.round_TotalOH  | number:'1.2-2'}}
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.round_rejectionCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        ((TotalOH * yieldPercent) / CastingWeightKgPerHeat) + labourCostperkg + roundCostPer_kg + subtotalMetalperkg + CoreSandPerKg + FoundaryConsumablesPerKg + mouldCostPerKg  + totalProcessAlloyCostPerKg + mouldCostPerKg + ScrapCostPerKgRejection<br>
+        ((({{quotationCalc.TotalOH  | number:'1.2-2'}} * {{quotationCalc.yieldPercent  | number:'1.2-2'}}) / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}) {{quotationCalc.labourCostperkg  | number:'1.2-2'}} + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}} + {{quotationCalc.CoreSandPerKg  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumablesPerKg  | number:'1.2-2'}} 
+        {{quotationCalc.mouldCostPerKg  | number:'1.2-2'}} + {{quotationCalc.totalProcessAlloyCostPerKg  | number:'1.2-2'}} + {{quotationCalc.ScrapCostPerKg  | number:'1.2-2'}}) * {{quotationCalc.Rejection  | number:'1.2-2'}}  = {{quotationCalc.round_rejectionCost  | number:'1.2-2'}}
+      </div>
+    </span></td>
+            <td class="numeric">{{quotationCalc.totalRejCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+        round_TotalOH / OverallTotalCost  <br>
+        {{quotationCalc.round_TotalOH  | number:'1.2-2'}} / {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} = {{quotationCalc.totalRejCost  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric"></td>
         </tr>
         <tr>
@@ -668,7 +974,14 @@
             <td class="numeric"></td>
             <td>Invertory carrying cost</td>
             <td></td>
-            <td class="numeric">{{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+          ((Round_TotalOH + TotalOH ) * Yield% ) +  round_LabourCost  + ( CostPer1050_kg + CostPer1050kg )     <br>
+        ((({{quotationCalc.round_TotalOH  | number:'1.2-2'}} + {{quotationCalc.TotalOH  | number:'1.2-2'}}) * {{quotationCalc.yieldPercent  | number:'1.2-2'}}) +  {{quotationCalc.round_LabourCost  | number:'1.2-2'}}  {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}};
+        {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} {{quotationCalc.BankInterest  | number:'1.2-2'}} / 365 ) * {{quotationCalc.PayMentCreditPeriod  | number:'1.2-2'}} = {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}     
+      </div></span></td>            
             <td class="numeric">{{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}}</td>
             <td class="numeric">{{quotationCalc.InventoryTotalCost  | number:'1.2-2'}}</td>
             <td class="numeric"></td>
@@ -705,7 +1018,13 @@
             <td></td>
             <td></td>
             <td>High Pressure Cleaning</td>
-            <td class="numeric">{{quotationCalc.SplProcess | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.SplProcess | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+          High Pressure Cleaning = {{quotationCalc.SplProcess  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric">{{quotationCalc.heatTreatmentper1050kg | number:'1.2-2'}}</td>
             <td class="numeric">{{quotationCalc.heatTreatmentperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
@@ -725,7 +1044,13 @@
             <td></td>
             <td></td>
             <td>HEAT TREATMENT</td>
-            <td class="numeric">{{quotationCalc.heatTreatment | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.heatTreatment | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+          Heat Treatment = {{quotationCalc.heatTreatment  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric">{{quotationCalc.postProcessper1050kg | number:'1.2-2'}}</td>
             <td class="numeric">{{quotationCalc.postProcessperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
@@ -735,7 +1060,13 @@
             <td></td>
             <td></td>
             <td>Cutting / Grinding</td>
-            <td class="numeric">{{quotationCalc.postProcess | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.postProcess | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+          Other process = {{quotationCalc.postProcess  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric"></td>
             <td class="numeric"></td>
             <td class="numeric"></td>
@@ -755,7 +1086,13 @@
             <td></td>
             <td></td>
             <td>Packing+TRANSPORT</td>
-            <td class="numeric">{{quotationCalc.packingAndTransport | number:'1.2-2'}}</td>
+            <td class="numeric">{{quotationCalc.packingAndTransport | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+          packingAndTransport = {{quotationCalc.packingAndTransport  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric">{{quotationCalc.packingAndTransportper1050kg | number:'1.2-2'}}</td>
             <td class="numeric">{{quotationCalc.packingAndTransportperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
@@ -765,7 +1102,13 @@
             <td></td>
             <td></td>
             <td>Nozzle shot blasting</td>
-            <td class="numeric">{{ quotationCalc.NozzleShotBlasting  | number:'1.2-2'}}</td>
+            <td class="numeric">{{ quotationCalc.NozzleShotBlasting  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <span class="info-icon"><i class="fas fa-info-circle"></i></span>
+
+      <div class="info-popup">
+          NozzleShotBlasting = {{quotationCalc.NozzleShotBlasting  | number:'1.2-2'}}
+      </div>
+    </span></td>
             <td class="numeric">{{quotationCalc.NozzleShotBlastingper1050kg | number:'1.2-2'}}</td>
             <td class="numeric">{{quotationCalc.NozzleShotBlastingperkg | number:'1.2-2'}}</td>
             <td class="numeric"></td>
