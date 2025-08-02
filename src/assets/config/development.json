@@ -108,7 +108,20 @@
   {
     "name": "getSalaryMap",
     "url": "getSalaryMap"
-  }
+  },
+  { "name": "getPowerCostMap", "url": "getPowercostMap" },
+  { "name": "getQuotationData", "url": "getQuotationData" },
+  { "name": "uploadMaterialExcel", "url": "material/upload" },
+  { "name": "getMaterialMapgraph", "url": "getMaterialMap" },
+  {
+  "name": "ActualEstimationCost",
+  "url": "get-ActualEstimationCost"
+}
+
+
+
+
+
 
 
 

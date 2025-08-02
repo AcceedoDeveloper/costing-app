@@ -16,23 +16,34 @@ export class DashboardService {
   }
 
 
-// costing.service.ts or your API service
+
 getQuoteData(customer: string, drawing: string, part: string): Observable<any> {
-  const url = `http://localhost:3005/getQuotationData/${customer}/${drawing}/${part}`;
+  const baseUrl = this.config.getCostingUrl('getQuotationData');
+  const url = `${baseUrl}/${customer}/${drawing}/${part}`;
+  console.log('📝 Quotation URL:', url);
+
   return this.http.get<any>(url);
 }
 
 
-uploadExcelFile(file: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', file);
 
-    return this.http.post<any>('http://localhost:3005/material/upload', formData);
-  }
+uploadExcelFile(file: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const uploadUrl = this.config.getCostingUrl('uploadMaterialExcel');
+  console.log('📤 Upload URL:', uploadUrl);
+
+  return this.http.post<any>(uploadUrl, formData);
+}
+
 
 materialGraphData(startDate: string, endDate: string): Observable<any> {
-  const url = `http://localhost:3005/getMaterialMap?yearNo=2025&startDate=${startDate}&endDate=${endDate}`;
-  return this.http.get<any>(url);
+  const yearNo = new Date().getFullYear();
+  console.log('📊 Fetching material graph data for year:', yearNo);
+  const baseUrl = this.config.getCostingUrl('getMaterialMapgraph');
+  const url2 = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+  return this.http.get<any>(url2);
 }
 
 
@@ -45,10 +56,12 @@ getResentUpdatedData(yearNo: number, startDate: string, endDate: string): Observ
   return this.http.get<any>(url);
 }
 
-ActualEstimationCost(startDate: string, endDate: string): Observable<any> {
-  const url = `http://localhost:3005/get-ActualEstimationCost?yearNo=2025&startDate=${startDate}&endDate=${endDate}`;
-  return this.http.get<any>(url);
-}
+ActualEstimationCost( startDate: string, endDate: string): Observable<any> {
+   const yearNo = new Date().getFullYear();
+    const baseUrl = this.config.getCostingUrl('ActualEstimationCost');
+    const url = `${baseUrl}?yearNo=${yearNo}&startDate=${startDate}&endDate=${endDate}`;
+    return this.http.get<any>(url);
+  }
 
 
 
