@@ -14,12 +14,9 @@ import { getCustomerWithId } from '../../store/material.selector';
 import { updateCustomerDetails } from '../../store/material.actions';
 import { MatDialogRef } from '@angular/material/dialog';
 import { loadCustomerDetails } from '../../store/material.actions';
-import { getCastingDetails} from '../../../modules/materialinput/store/casting.actions';
-import { selectCastingData  } from '../../../modules/materialinput/store/casting.selectors';
 import {CastingData } from '../../../models/casting-input.model';
 import { getCostSummary } from '../../../modules/materialinput/store/casting.actions';
 import {selectProductionCost } from '../../../modules/materialinput/store/casting.selectors';
-import { CostSummary } from '../../../models/casting-input.model';
 import { addCustomerDetails } from '../../store/material.actions';
 import { DashboardService } from '../../../services/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
@@ -37,7 +34,6 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   customer: any[] = [];
   processes: Process[] =[];
   castingData: CastingData[] | null = null;
-  costsummary: CostSummary[] | null = null;
   selectedProcesses: any[] = [];
   expandedProcessIndex: number | null = null;
   selectedProcessForEdit: any = null;
@@ -116,15 +112,10 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   });
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
-    this.store.dispatch(getCastingDetails());
-    this.store.dispatch(getCostSummary());
+   
+   
 
-     this.store.pipe(select(selectCastingData)).subscribe((castingData: CastingData[] | null) => {
-          
-            this.castingData = castingData;
-            console.log('Casting Data:', this.castingData);
-          
-        });
+  
 
       this.store.pipe(select(selectProductionCost)).subscribe((costSummary: any[] | null) => {
     if (costSummary && costSummary.length > 0) {
@@ -347,7 +338,7 @@ if (this.data?.mode === 'edit' && this.data.customerData) {
       postProcess: customer.UltraSonicWashing?.postProcess || 0,
       packingAndTransport: customer.UltraSonicWashing?.packingAndTransport || 0,
       NozzleShotBlasting: customer.UltraSonicWashing?.NozzleShotBlasting || 0,
-      highPressureCleaning: customer.UltraSonicWashing?.highPressureCleaning || 0,
+      highPressureCleaning: customer.specialProcess?.highPressureCleaning || 0,
       otherConsumables: customer.otherConsumables?.otherConsumableCost || 0
     });
 

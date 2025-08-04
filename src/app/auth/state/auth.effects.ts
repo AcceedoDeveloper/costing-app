@@ -23,7 +23,7 @@ export class AuthEffects {
         this.authService.login(action.username, action.password).pipe(
           map((response) => {
             const user = this.authService.formatUser(response);
-            this.authService.setUserInLocalStorage(user);
+            this.authService.setUserInSessionStorage(user);
             return loginSuccess({ user, token: response.token });
           }),
           catchError((error) => {
@@ -36,7 +36,18 @@ export class AuthEffects {
     )
   );
 
-
+  autoLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(autoLogin),
+      map(() => {
+        const user = this.authService.getUserFromSessionStorage();
+        if (!user) {
+          return { type: '[Auth] Auto Login Failed' };
+        }
+        return loginSuccess({ user, token: user.token });
+      })
+    )
+  );
 
   loginSuccess$ = createEffect(
     () =>

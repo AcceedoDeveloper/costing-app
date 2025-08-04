@@ -46,28 +46,29 @@ formatUser(data: AuthResponseData): User {
     return 'Unknown error occurred. Please try again.';
   }
 
-  setUserInLocalStorage(user: User): void {
-    localStorage.setItem('userData', JSON.stringify(user));
-  }
+ setUserInSessionStorage(user: User): void {
+  sessionStorage.setItem('userData', JSON.stringify(user));
+}
 
-  getUserFromLocalStorage(): User | null {
-    const userDataString = localStorage.getItem('userData');
-    if (userDataString) {
-      const userData = JSON.parse(userDataString);
-      return new User(
-        userData.userId,
-        userData.userCode,
-        userData.userName,
-        userData.token,
-        userData.role
-      );
-    }
-    return null;
+getUserFromSessionStorage(): User | null {
+  const userDataString = sessionStorage.getItem('userData');
+  if (userDataString) {
+    const userData = JSON.parse(userDataString);
+    return new User(
+      userData.userId,
+      userData.userCode,
+      userData.userName,
+      userData.token,
+      userData.role
+    );
   }
+  return null;
+}
 
-  logout(): void {
-    localStorage.removeItem('userData');
-  }
+logout(): void {
+  sessionStorage.removeItem('userData');
+}
+
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred';
