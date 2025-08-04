@@ -191,5 +191,26 @@ onFileSelected(event: any): void {
   }
 
 
+  downloadExcel(): void {
+    this.dhasboard.downloadMaterialExcel().subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'material_data.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.tooster.success('File downloaded successfully');
+      },
+      error: (err) => {
+        console.error('Download failed', err);
+        this.tooster.error('File download failed');
+      }
+    });
+  }
+
+
 
 }
