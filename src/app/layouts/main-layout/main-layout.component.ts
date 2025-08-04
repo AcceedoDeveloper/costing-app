@@ -45,6 +45,7 @@ export class MainLayoutComponent {
     event.preventDefault();
     console.log('Logout triggered');
     this.store.dispatch(autoLogout());
+    localStorage.removeItem('userData');
   }
 
 

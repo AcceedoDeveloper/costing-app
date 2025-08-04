@@ -36,18 +36,7 @@ export class AuthEffects {
     )
   );
 
-  autoLogin$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(autoLogin),
-      map(() => {
-        const user = this.authService.getUserFromLocalStorage();
-        if (!user) {
-          return { type: '[Auth] Auto Login Failed' };
-        }
-        return loginSuccess({ user, token: user.token });
-      })
-    )
-  );
+
 
   loginSuccess$ = createEffect(
     () =>
