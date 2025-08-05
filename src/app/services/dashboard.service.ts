@@ -64,7 +64,21 @@ ActualEstimationCost( startDate: string, endDate: string): Observable<any> {
     return this.http.get<any>(url);
   }
 
-
+downloadMaterialExcel(): Observable<Blob> {
+  const downloadUrl = this.config.getCostingUrl('Export-material');
+  console.log('📥 Download URL:', downloadUrl);
+  
+  return this.http.get(downloadUrl, { responseType: 'blob' }).pipe(
+    map((response: Blob) => {
+      console.log('📄 Material Excel downloaded successfully');
+      return response;
+    }),
+    catchError((error) => {
+      console.error('❌ Error downloading Material Excel:', error);
+      throw error;
+    })
+  );
+}
 
 
 }

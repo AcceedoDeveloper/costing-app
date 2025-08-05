@@ -109,6 +109,7 @@ saveCostPerUnit(item: PowerCost) {
     this.store.dispatch(updatePowerCost({ id: item._id, powerCost: updatedPowerCost }));
     this.store.dispatch(loadPowerCosts());
   }
+  this.store.dispatch(loadPowerCosts());
 
   this.cancelEditCostPerUnit();
 }

@@ -54,6 +54,8 @@ export class OverHeadsComponent implements OnInit {
 this.powerCostData$.subscribe((data: Overheads[] | null | undefined) => {
   if (!data) return;
   this.overheadRawData = data;
+  console.log('Overhead Raw Data:', this.overheadRawData);
+  
 
   const today = new Date();
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",

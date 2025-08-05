@@ -116,6 +116,7 @@ export class AddgradeComponent implements OnInit {
       this.store.dispatch(GradeActions.addGrade({ grade: payload }));
       this.store.dispatch(GradeActions.loadGrades());
     }
+    this.store.dispatch(GradeActions.loadGrades());
     this.dialogRef.close();
   }
 
