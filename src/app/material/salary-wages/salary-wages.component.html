@@ -128,19 +128,22 @@
           </td>
 
           <!-- Action Buttons -->
-          <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
-            <div class="action-content">
-              <ng-container *ngIf="editingRow === row.processName; else editButton">
-                <button mat-raised-button color="primary" (click)="saveSalaryWages()">Save</button>
-                <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
-              </ng-container>
-              <ng-template #editButton>
-                <button mat-icon-button color="accent" (click)="editSalaryWagesFull(row.processName)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-              </ng-template>
-            </div>
-          </td>
+         <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
+  <div class="action-content">
+    <ng-container *ngIf="editingRow === row.processName; else editButtonTemplate">
+      <button mat-raised-button color="primary" (click)="saveFormattedRow(row)">Save</button>
+      <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
+    </ng-container>
+
+    <ng-template #editButtonTemplate>
+      <button mat-icon-button color="accent" (click)="editSalaryWagesFull(row.processName)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </ng-template>
+  </div>
+</td>
+
+
 
         </tr>
       </ng-container>
