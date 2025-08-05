@@ -8,6 +8,10 @@
   margin: 0 auto;
 }
 
+.date-picker {
+  width: 100%;
+  max-width: 150px;
+}
 .box {
   border: 1px solid #e0e0e0;
   border-radius: 8px;

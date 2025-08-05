@@ -6,7 +6,7 @@
 
  <h2>Customer List</h2>
  <div class="date-filters">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="date-picker">
     <mat-label>Select Date Range</mat-label>
     <mat-date-range-input [rangePicker]="estimationRangePicker">
       <input matStartDate placeholder="Start date" [(ngModel)]="estimationStartDate" (dateChange)="onEstimationRangeChange()">
