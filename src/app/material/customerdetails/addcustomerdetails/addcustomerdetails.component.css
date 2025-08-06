@@ -54,6 +54,14 @@ body {
   color: #3f51b5;
 }
 
+.stepper-button-wrapper {
+  display: flex;
+  justify-content: flex-end; /* Align to right */
+  align-items: flex-end;     /* Align to bottom if there's vertical space */
+  padding: 16px;
+  height: 100%;              /* Optional: for full-height container */
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -128,12 +136,7 @@ body {
   margin-bottom: 8px;
 }
 
-.stepper-button-wrapper {
-  text-align: left;
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
+
 
 .three-column-grid {
   display: grid;
@@ -186,9 +189,7 @@ body {
   box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
 }
 
-.stepper-button-wrapper {
-  margin-top: 20px;
-}
+
 
 /* Responsive */
 @media (max-width: 1024px) {

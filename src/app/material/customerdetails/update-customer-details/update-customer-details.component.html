@@ -122,7 +122,7 @@
     </div>
 
     <div class="stepper-button-wrapper">
-      <button mat-button matStepperNext color="primary" (click)="submitStep2()">Next</button>
+      <button mat-raised-button matStepperNext color="primary" (click)="submitStep2()">Next</button>
     </div>
   </form>
 </mat-step>
@@ -261,9 +261,9 @@
 
 
 
-    <div class="mt-3">
+    <div class="stepper-button-wrapper">
       
-      <button mat-button matStepperNext color="primary" >Next</button>
+      <button mat-raised-button matStepperNext color="primary" >Next</button>
     </div>
   </form>
 </mat-step>
@@ -376,7 +376,7 @@
     </div>
 
     <div class="stepper-button-wrapper">
-      <button mat-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()" (click)="generateFinalJsonFromLoadedData()">Next</button>
+      <button mat-raised-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()" (click)="generateFinalJsonFromLoadedData()">Next</button>
     </div>
   </form>
 </mat-step>
@@ -385,45 +385,57 @@
     <ng-template matStepLabel>Genarate Code</ng-template>
      <table  *ngIf="quotationData" >
         <tr class="header-row">
-            <td colspan="9">INDO SHELL CAST PRIVATE LIMITED</td>
+            <td colspan="3">INDO SHELL CAST PRIVATE LIMITED
+              A14, SIDCO INDUSTRIAL ESTATE, COIMBATORE - 641 021
+            </td>
+            <td colspan="3">MARKETING DEPARTMENT
+            </td>
+            <td colspan="2">
+              ISC-TS-MKTG-CES-R03<br>
+              SHEET NO :
+            </td>
         </tr>
-        <tr class="header-row">
-            <td colspan="9">MARKETING DEPARTMENT</td>
+
+         <tr class="header-row">
+            <td colspan="3">
+            </td>
+            <td colspan="3">COST ESTIMATION SHEET
+            </td>
+            <td colspan="2">
+              DATE : {{ today | date:'dd.MM.yyyy' }}
+            </td>
         </tr>
-        <tr class="header-row">
-            <td colspan="9">ISC-TS-MKTG-CES-R03</td>
-        </tr>
-        <tr class="company-info">
-            <td colspan="5">A14, SIDCO INDUSTRIAL ESTATE, COIMBATORE - 641 021</td>
-            <td colspan="4">SHEET NO :</td>
-        </tr>
-        <tr class="header-row">
-            <td colspan="9">COST ESTIMATION SHEET</td>
-        </tr>
-        <tr class="company-info">
-            <td colspan="9">DATE : 05.12.2025</td>
-        </tr>
+        
+        
+       
+        
+
         <tr class="company-info">
             <td>Customer</td>
-            <td colspan="2">{{quotationData.customer}}</td>
+            <td colspan="3">{{quotationData.customer}}</td>
             <td>Material Grade</td>
-            <td colspan="5">{{quotationData.processName}}</td>
+            <td colspan="3">{{quotationData.processName}}</td>
         </tr>
         <tr class="company-info">
             <td>Part Name</td>
-            <td colspan="2">{{quotationData.part}}</td>
+            <td colspan="3">{{quotationData.part}}</td>
             <td>Annual Volume</td>
-            <td colspan="5"></td>
+            <td colspan="3"></td>
         </tr>
         <tr class="company-info">
             <td>Drawing Number, Revision</td>
-            <td colspan="2">6580933</td>
+            <td colspan="3">6580933</td>
             <td>Process</td>
-            <td colspan="5">{{quotationData.grade}}</td>
+            <td colspan="3">{{quotationData.grade}}</td>
+        </tr>
+        <tr class="company-info">
+            <td colspan="7"  style="height: 30px;" ></td>
+            
         </tr>
          <tr class="section-header">
             
             <td colspan="2">Casting Inputs</td>
+            <td style="width: 30px; background-color:rgb(249, 249, 249);" ></td>
             <td class="numeric">Material Cost</td>
             <td class="numeric">Cost</td>
             <td class="numeric">Cost  Per 1050Kgs of Molten Metal</td>
@@ -433,6 +445,7 @@
         <tr>
             <td>Casting weight in Kgs</td>
             <td class="numeric">{{quotationCalc.CastingWeight | number:'1.2-2'}}</td>
+            <td></td>
             <td>Melting Scrap cost</td>
             <td class="numeric">{{quotationCalc.ScrapCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
       <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -458,6 +471,7 @@
         <tr>
             <td>No of cavities</td>
             <td class="numeric">{{quotationCalc.Cavities | number:'1.2-2'}}</td>
+            <td></td>
             <td>Melting Alloying cost</td>
             <td class="numeric">{{quotationCalc.totalAlloyCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -484,6 +498,7 @@
         <tr>
             <td>Pouring weight in Kgs</td>
             <td class="numeric">{{quotationCalc.PouringWeight | number:'1.2-2'}}</td>
+            <td></td>
             <td>Shell mould cost</td>
             <td class="numeric">{{quotationCalc.MouldCost | number:'1.2-2'}}
               <span class="info-container" tabindex="0">
@@ -510,6 +525,7 @@
         <tr>
             <td>Good casting weight Kg / heat</td>
             <td class="numeric">{{quotationCalc.CastingWeightKgPerHeat | number:'1.2-2'}}</td>
+            <td></td>
             <td>Foundry Consumables</td>
              <td class="numeric">{{quotationCalc.FoundaryConsumables | number:'1.2-2'}}
               <span class="info-container" tabindex="0">
@@ -535,6 +551,7 @@
         <tr>
             <td>Yield</td>
             <td class="numeric">{{quotationCalc.yield | number:'1.2-2'}}</td>
+            <td></td>
             <td>Core sand cost</td>
             <td class="numeric">{{quotationCalc.CoreSand | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -558,6 +575,7 @@
         <tr>
             <td>Material Returned</td>
             <td class="numeric">{{quotationCalc.MaterialReturned | number:'1.2-2'}}</td>
+            <td></td>
             <td>Material Credited for Rejection</td>
             <td class="numeric">{{quotationCalc.Mat_Rejection | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -584,6 +602,7 @@
         <tr>
             <td>Yield %</td>
             <td class="numeric">{{quotationCalc.yieldPercent | number:'1.2-2'}}</td>
+            <td></td>
             <td>Melting Losses</td>
              <td class="numeric">{{quotationCalc.metalCostPercent | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -605,7 +624,7 @@
             
         </tr>
         <tr>
-            <td>Yield %</td>
+            <td></td>
             <td class="numeric"></td>
             <td></td>
             <td class="numeric"></td>
@@ -615,10 +634,11 @@
           
         </tr>
         <tr class="highlight">
-            <td colspan="2">Moulding Inputs</td>
-            <td class="numeric">Subtotal Metal</td>
+            <td colspan="2" style="color: red;" >Moulding Inputs</td>
             <td></td>
-            <td class="numeric">{{quotationCalc.CostPer1050kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #d9ead3;">Subtotal Metal</td>
+            <td style="background-color: #d9ead3;"></td>
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.CostPer1050kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -626,7 +646,7 @@
         (({{quotationCalc.ScrapCost  | number:'1.2-2'}} + {{quotationCalc.totalAlloyCost  | number:'1.2-2'}} + {{quotationCalc.MouldCost  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} + {{quotationCalc.CoreSand  | number:'1.2-2'}} ) {{quotationCalc.Mat_Rejection  | number:'1.2-2'}}) + ({{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} * 0.02 ) = {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.subtotalMetalperkg | number:'1.2-2'}}
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.subtotalMetalperkg | number:'1.2-2'}}
               <span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
@@ -636,7 +656,7 @@
       </div>
     </span>
             </td>
-            <td class="numeric">{{quotationCalc.subtotalMetalTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.subtotalMetalTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -649,6 +669,7 @@
         <tr>
             <td>SHELL Moulding Weight</td>
             <td class="numeric">{{quotationCalc.shellMouldWeight | number:'1.2-2'}}</td>
+            <td></td>
             <td>Power Cost</td>
             <td></td>
             <td></td>
@@ -659,6 +680,7 @@
         <tr>
             <td>No of moulds/ heat</td>
             <td class="numeric">{{quotationCalc.NoOfMouldperHeat | number:'1.2-2'}}</td>
+            <td></td>
             <td>Melting &others</td>
             <td class="numeric">{{quotationCalc.totalUnitCostforOthers | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -682,6 +704,7 @@
         <tr>
             <td>No bake moulding</td>
             <td class="numeric"></td>
+            <td></td>
             <td>Shellmoulding</td>        
             <td class="numeric">{{quotationCalc.MouldPowerCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -703,7 +726,8 @@
             <td class="numeric"></td>
         </tr>
         <tr>
-            <td>Core Inputs</td>
+            <td style="color: red;" >Core Inputs</td>
+            <td></td>
             <td></td>
             <td>Core making</td>
             <td class="numeric">{{quotationCalc.CoreMakingPowerCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -730,6 +754,7 @@
             <td class="numeric">{{quotationCalc.CoreWeight | number:'1.2-2'}}</td>
             <td></td>
             <td></td>
+            <td></td>
             <td class="numeric"></td>
             <td class="numeric"></td>
             <td class="numeric"></td>
@@ -737,9 +762,10 @@
         <tr>
             <td>No of cores /mould</td>
             <td class="numeric">{{quotationCalc.CoresPerMould | number:'1.2-2'}}</td>
-            <td>Subtotal Power</td>
-            <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.CostPer1050_kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td></td>
+            <td style="background-color: #d9ead3;">Subtotal Power</td>
+            <td class="numeric" style="background-color: #d9ead3;"></td>
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.CostPer1050_kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -747,7 +773,7 @@
         ({{quotationCalc.totalUnitCostforOthers  | number:'1.2-2'}} + {{quotationCalc.MouldPowerCost  | number:'1.2-2'}} + {{quotationCalc.CoreMakingPowerCost  | number:'1.2-2'}}) =  {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.roundCostPer_kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.roundCostPer_kg | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -755,7 +781,7 @@
         ({{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}) =  {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}};
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.subtotalPowerTotalCost | number:'1.2-2'}}
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.subtotalPowerTotalCost | number:'1.2-2'}}
               <span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
@@ -769,6 +795,7 @@
         <tr>
             <td>No of cavities in the core box</td>
             <td class="numeric">1</td>
+            <td></td>
             <td>Labour</td>
             <td></td>
             <td></td>
@@ -778,6 +805,7 @@
         <tr>
             <td>No of shootings per shift</td>
             <td class="numeric">125</td>
+            <td></td>
             <td>Salary and Wages</td>
         
             <td class="numeric">{{quotationCalc.SalaryForProcess | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -801,6 +829,7 @@
         <tr>
             <td>Core and cost</td>
             <td class="numeric">{{quotationCalc.CoreSandCost | number:'1.2-2'}}</td>
+            <td></td>
             <td>Core making</td>     
             <td class="numeric">{{quotationCalc.coremakingTotalcost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -822,7 +851,8 @@
             <td class="numeric"></td>
         </tr>
         <tr>
-            <td>Commercial Terms</td>
+            <td style="color: red;">Commercial Terms</td>
+            <td></td>
             <td></td>
             <td>Other/Outside Processing labour charges</td>
             <td class="numeric">{{quotationCalc.otherLabourCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -846,9 +876,10 @@
         <tr>
             <td>Payment credit period</td>
             <td class="numeric">{{quotationCalc.PayMentCreditPeriod | number:'1.2-2'}}</td>
-            <td>Sub Total Labour</td>
-            <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.round_LabourCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td></td>
+            <td style="background-color: #d9ead3;">Sub Total Labour</td>
+            <td class="numeric" style="background-color: #d9ead3;"></td>
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.round_LabourCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -856,7 +887,7 @@
         ({{quotationCalc.SalaryForProcess  | number:'1.2-2'}} + {{quotationCalc.coremakingTotalcost  | number:'1.2-2'}} + {{quotationCalc.otherLabourCost  | number:'1.2-2'}} )= {{quotationCalc.round_LabourCost  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.labourCostperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.labourCostperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -864,7 +895,7 @@
         {{quotationCalc.round_LabourCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} = {{quotationCalc.labourCostperkg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.subtotalLabourTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.subtotalLabourTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -876,6 +907,7 @@
         <tr>
             <td>Bank interest</td>
             <td class="numeric">{{quotationCalc.BankInterest | number:'1.2-2'}}</td>
+            <td></td>
             <td>Over heads</td>
             <td></td>
             <td></td>
@@ -883,8 +915,9 @@
             <td class="numeric"></td>
         </tr>
         <tr>
-            <td>Margin</td>
+            <td style="color: red;" >Margin</td>
             <td class="numeric"></td>
+            <td></td>
             <td>Admin and selling over heads</td>
             <td class="numeric">{{quotationCalc.TotalOH | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -925,9 +958,10 @@
         <tr>
             <td>Profit</td>
             <td class="numeric">{{quotationCalc.Profit | number:'1.2-2'}}</td>
-            <td>Rejection cost</td>
             <td></td>
-            <td class="numeric">{{quotationCalc.round_TotalOH  | number:'1.2-2' }}<span class="info-container" tabindex="0">
+            <td style="background-color: #F7CB65;" >Rejection cost</td>
+            <td style="background-color: #F7CB65;"></td>
+            <td class="numeric" style="background-color: #F7CB65;">{{quotationCalc.round_TotalOH  | number:'1.2-2' }}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup2">
@@ -936,7 +970,7 @@
         {{quotationCalc.CoreSand  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} + {{quotationCalc.MouldCost  | number:'1.2-2'}} + {{quotationCalc.totalAlloyCost  | number:'1.2-2'}} + {{quotationCalc.ScrapCost | number:'1.2-2'}}) * {{quotationCalc.Rejection  | number:'1.2-2'}} = {{quotationCalc.round_TotalOH  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.round_rejectionCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #F7CB65;">{{quotationCalc.round_rejectionCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup2">
@@ -957,8 +991,9 @@
 
         </tr>
         <tr>
-            <td>Anticipated Rejection%</td>
+            <td style="color: red;" >Anticipated Rejection%</td>
             <td class="numeric"></td>
+            <td></td>
             <td>Invertory carrying cost</td>
             <td></td>
             <td class="numeric">{{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -992,9 +1027,21 @@
         <tr>
             <td>Rejection %</td>
             <td class="numeric">{{quotationCalc.Rejection  | number:'1.2-2'}}</td>
-            <td>Sub total Over Heads</td>
+             <td></td>
+            <td></td>
+            <td></td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric"></td>
+            <td class="numeric"></td>
+            
+        </tr>
+        <tr>
+           <td></td>
+            <td class="numeric"></td>
+            <td></td>
+          <td style="background-color: #d9ead3;">Sub total Over Heads</td>
+            <td class="numeric" style="background-color: #d9ead3;"></td>
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -1002,7 +1049,7 @@
         ({{quotationCalc.totalOHper1050kg  | number:'1.2-2'}} + {{quotationCalc.round_TotalOH  | number:'1.2-2'}} + {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}) = {{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #d9ead3;">{{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -1010,14 +1057,15 @@
         ({{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}} + {{quotationCalc.round_rejectionCost  | number:'1.2-2'}} + {{quotationCalc.totalOHperkg  | number:'1.2-2'}}) = {{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric"></td>
+            <td class="numeric" style="background-color: #d9ead3;"></td>
         </tr>
         <tr>
             <td></td>
             <td></td>
-            <td>Total cost per Kg</td>
-            <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.totalCostper1050kg  | number:'1.2-2' }}<span class="info-container" tabindex="0">
+            <td></td>
+            <td style="background-color: #F7CB65;">Total cost per Kg</td>
+            <td class="numeric" style="background-color: #F7CB65;"></td>
+            <td class="numeric" style="background-color: #F7CB65;">{{quotationCalc.totalCostper1050kg  | number:'1.2-2' }}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -1025,7 +1073,7 @@
         ({{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}) = {{quotationCalc.totalCostper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric">{{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #F7CB65;">{{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -1033,9 +1081,10 @@
         ({{quotationCalc.overHeadscostperKg  | number:'1.2-2'}} + {{quotationCalc.labourCostperkg  | number:'1.2-2'}} + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}}) = {{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
-            <td class="numeric"></td>
+            <td class="numeric" style="background-color: #F7CB65;"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>Special Process (Per Heat)</td>
@@ -1045,6 +1094,7 @@
             <td class="numeric"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>High Pressure Cleaning</td>
@@ -1076,6 +1126,7 @@
         <tr>
             <td></td>
             <td></td>
+            <td></td>
             <td>Ultra sonic washing</td>
             <td></td>
             <td class="numeric"></td>
@@ -1083,6 +1134,7 @@
             <td class="numeric"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>HEAT TREATMENT</td>
@@ -1115,6 +1167,7 @@
         <tr>
             <td></td>
             <td></td>
+            <td></td>
             <td>Cutting / Grinding</td>
             <td class="numeric">{{quotationCalc.postProcess | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -1144,6 +1197,7 @@
         <tr>
             <td></td>
             <td></td>
+            <td></td>
             <td>Powder Coating/ Painting/ Surface Treatment</td>
             <td></td>
             <td class="numeric"></td>
@@ -1151,6 +1205,7 @@
             <td class="numeric"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>Packing+TRANSPORT</td>
@@ -1182,6 +1237,7 @@
         <tr>
             <td></td>
             <td></td>
+            <td></td>
             <td>Nozzle shot blasting</td>
             <td class="numeric">{{ quotationCalc.NozzleShotBlasting  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -1209,6 +1265,7 @@
             <td class="numeric"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>Profit</td>
@@ -1241,9 +1298,10 @@
         <tr class="highlight">
             <td></td>
             <td></td>
+            <td></td>
             <td>Total cost</td>
             <td class="numeric"></td>
-            <td class="numeric">{{quotationCalc.OverallTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
+            <td class="numeric" style="background-color: #F7CB65;">{{quotationCalc.OverallTotalCost | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
@@ -1255,6 +1313,7 @@
             <td class="numeric"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>Cost per Part</td>
@@ -1271,6 +1330,7 @@
             <td class="numeric"></td>
         </tr>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td>Cost Per Kg</td>
@@ -1291,8 +1351,8 @@
             <td colspan="5">APPROVED BY</td>
         </tr>
     </table>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
+    <div class="stepper-button-wrapper" >
+     
        <button mat-button color="accent"  (click)="submitForm()" >Submit</button>
     </div>
   </mat-step>

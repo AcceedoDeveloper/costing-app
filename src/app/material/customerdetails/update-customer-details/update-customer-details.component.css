@@ -211,11 +211,13 @@ body {
 }
 
 .stepper-button-wrapper {
-  text-align: left;
-  margin-top: 10px;
   display: flex;
-  gap: 10px;
+  justify-content: flex-end; /* Align to right */
+  align-items: flex-end;     /* Align to bottom if there's vertical space */
+  padding: 16px;
+  height: 100%;              /* Optional: for full-height container */
 }
+
 
 .three-column-grid {
   display: grid;
@@ -623,10 +625,7 @@ table table td {
             color: #fff;
             text-align: center;
         }
-        .header-row {
-            background-color: #e0e0e0;
-            font-weight: bold;
-        }
+        
         .company-info {
             background-color: #f0f0f0;
         }

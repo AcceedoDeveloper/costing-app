@@ -47,6 +47,8 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   editId: string | null = null;
   quotationData: any;
   quotationCalc: any;
+  today: Date = new Date();
+
    
 
 
