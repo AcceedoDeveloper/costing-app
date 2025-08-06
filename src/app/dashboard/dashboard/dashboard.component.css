@@ -311,3 +311,51 @@ google-chart {
 
 
 
+.header-with-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-picker-field {
+  width: 200px;
+}
+
+.no-data-message {
+  text-align: center;
+  margin: 20px 0;
+  color: #888;
+  font-style: italic;
+}
+
+
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+
+
+
+.date-nav-minimal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.date-picker-field {
+  width: 220px;
+  margin: 0;
+}
+
+mat-icon-button {
+  height: 36px;
+  width: 36px;
+  padding: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+

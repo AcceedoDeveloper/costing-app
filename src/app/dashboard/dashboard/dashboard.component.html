@@ -150,21 +150,20 @@
 
 
  <div class="box fixed-height-box" >
-     <div class="date-filters">
+   <div class="date-filters">
   <mat-form-field appearance="outline">
-    <mat-label>Start Date</mat-label>
-    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onDateChange()">
-    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-    <mat-datepicker #startPicker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="onDateChange()">
-    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-    <mat-datepicker #endPicker></mat-datepicker>
+    <mat-label>Select Month</mat-label>
+    <input
+      matInput
+      [matDatepicker]="monthPicker"
+      [value]="selectedDate"
+      (dateChange)="onSingleDateChange($event.value)"
+    />
+    <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+    <mat-datepicker #monthPicker startView="multi-year" (monthSelected)="onSingleDateChange($event)" panelClass="month-picker" [startAt]="selectedDate" [touchUi]="true" ></mat-datepicker>
   </mat-form-field>
 </div>
+
 
   <!-- Month Legend (Color Bars with Labels) -->
   <div class="month-legend" *ngIf="monthLabels.length === 3">
@@ -192,27 +191,65 @@
 
 
   
+
 <div class="box fixed-height-box">
-    <h2>Recent Updates</h2>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>User Name</th>
-            <th>Message</th>
-            <th>Updated At</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of recentUpdates | slice:0:10">
-            <td>{{ item.user.userName }}</td>
-            <td>{{ item.message }}</td>
-            <td>{{ item.updatedAt | date: 'short' }}</td>
-          </tr>
-        </tbody>
-      </table>
+
+  <div class="header-row">
+    <h2 class="section-title">Recent Updates</h2>
+
+  
+    <div class="date-nav-minimal">
+      <button mat-icon-button (click)="changeDate(-1)" aria-label="Previous Day">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <mat-form-field appearance="outline" class="date-picker-field">
+        <mat-label>Select Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          [(ngModel)]="selectedDate"
+          (dateChange)="onDateChange()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-icon-button (click)="changeDate(1)" aria-label="Next Day">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
     </div>
   </div>
+
+<div class="table-wrapper" *ngIf="recentUpdates?.length > 0; else noData">
+
+    <table>
+      <thead>
+        <tr>
+          <th><span class="icon">👤</span> User Name</th>
+          <th><span class="icon">💬</span> Message</th>
+          <th><span class="icon">🕒</span> Updated At</th>
+        </tr>
+      </thead>
+      <tbody>
+     <tr *ngFor="let item of recentUpdates | slice: 0:10">
+    <td>{{ item.user?.userName || '—' }}</td>
+    <td>{{ item.message || '—' }}</td>
+    <td>{{ item.updatedAt ? (item.updatedAt | date: 'short') : '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noData>
+    <div class="no-data-message">No updates found for selected date.</div>
+  </ng-template>
+</div>
+
+
+
+
+
  
 </div>
 

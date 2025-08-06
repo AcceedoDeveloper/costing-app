@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   chartType = 'ColumnChart';
   chartData: any[] = [];
+  selectedDate: Date = new Date();
 
 
   paginatedData: any[] = [];
@@ -95,7 +96,7 @@ const sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1);
 this.estimationStartDate = sixMonthsAgo;
 this.estimationEndDate = today;
 
-     
+     this.onSingleDateChange(this.selectedDate);
 
   this.startDate = sixMonthsAgo;
   this.endDate = today;
@@ -105,7 +106,7 @@ this.estimationEndDate = today;
 
 this.fetchActualEstimationCost();
   
-  this.fetchRecentUpdatedData();
+  this.fetchRecentUpdatedData(this.selectedDate);
    this.store.dispatch(loadCustomerDetails());
 
   this.selectedCustomerDetails$ = this.store.select(getCustomerDetails); 
@@ -211,34 +212,57 @@ this.dashboardServices.getdata().subscribe((res) => {
 }
 
 
-fetchRecentUpdatedData(): void {
-  const today = new Date();
-
+fetchRecentUpdatedData(date: Date): void {
   
-  const endDateObj = new Date(today);
-  endDateObj.setDate(endDateObj.getDate() + 1);
-  const endDate = endDateObj.toISOString().split('T')[0]; 
+  const startDate = new Date(date);
+  const endDate = new Date(date);
+  endDate.setDate(endDate.getDate() + 1); 
 
+  const formatDate = (d: Date): string => {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
 
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(today.getMonth() - 6);
-  const startDate = sixMonthsAgo.toISOString().split('T')[0]; 
+  const formattedStartDate = formatDate(startDate);
+  const formattedEndDate = formatDate(endDate);
+  const yearNo = startDate.getFullYear();
 
-  const yearNo = today.getFullYear();
-
-  console.log('Start Date:', startDate);
-  console.log('End Date (+1 day):', endDate);
-
-  this.dashboardServices.getResentUpdatedData(yearNo, startDate, endDate).subscribe({
+  this.dashboardServices.getResentUpdatedData(yearNo, formattedStartDate, formattedEndDate).subscribe({
     next: (res) => {
-      this.recentUpdates = res.data;
-      console.log('Recent Updates:', this.recentUpdates);
+      const dateField = 'updatedAt';
+
+      this.recentUpdates = (res.data || []).filter(item => {
+        if (!item[dateField]) return false;
+        const itemDate = new Date(item[dateField]);
+        return formatDate(itemDate) === formattedStartDate;
+      });
     },
     error: (err) => {
-      console.error('Error fetching data:', err);
+      console.error('API error:', err);
+      this.recentUpdates = [];
     }
   });
 }
+changeDate(days: number): void {
+  const newDate = new Date(this.selectedDate);
+  newDate.setDate(newDate.getDate() + days);
+  this.selectedDate = newDate;
+  this.fetchRecentUpdatedData(this.selectedDate);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 onSearch(event: any): void {
   const value = event.target.value.trim().toLowerCase();
@@ -376,5 +400,16 @@ filterQuotations(): void {
 }
 
 
- 
+ onSingleDateChange(selected: Date): void {
+  if (!selected) return;
+
+  // Set the selected month (1st of selected month)
+  this.endDate = new Date(selected.getFullYear(), selected.getMonth(), 1);
+
+  // Go back 2 months and set it to 1st of that month
+  this.startDate = new Date(selected.getFullYear(), selected.getMonth() - 2, 1);
+
+  this.fetchMaterialGraphData();
+}
+
 }
