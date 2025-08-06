@@ -622,8 +622,8 @@
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
-       ScrapCost * totalProcessAlloyCost + MouldCost + FoundaryConsumables + Mat_Rejection + ( totalProcessMetalCost * 0.02 )<br>
-        {{quotationCalc.ScrapCost  | number:'1.2-2'}} + {{quotationCalc.totalProcessAlloyCost  | number:'1.2-2'}} + {{quotationCalc.MouldCost  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} + {{quotationCalc.Mat_Rejection  | number:'1.2-2'}} + ({{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} * 0.02 ) = {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}
+       ScrapCost * totalAlloyCost + MouldCost + FoundaryConsumables + CoreSand Cost + Mat_Rejection + ( totalProcessMetalCost * 0.02 )<br>
+        (({{quotationCalc.ScrapCost  | number:'1.2-2'}} + {{quotationCalc.totalAlloyCost  | number:'1.2-2'}} + {{quotationCalc.MouldCost  | number:'1.2-2'}} + {{quotationCalc.FoundaryConsumables  | number:'1.2-2'}} + {{quotationCalc.CoreSand  | number:'1.2-2'}} ) {{quotationCalc.Mat_Rejection  | number:'1.2-2'}}) + ({{quotationCalc.totalProcessMetalCost  | number:'1.2-2'}} * 0.02 ) = {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.subtotalMetalperkg | number:'1.2-2'}}
@@ -752,7 +752,7 @@
 
       <div class="info-popup">
        ( Subtotal Power  / CastingWeightKgPerHeat )<br>
-        ({{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}) =  {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}};
+        ({{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}}) =  {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}};
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.subtotalPowerTotalCost | number:'1.2-2'}}
@@ -964,10 +964,10 @@
             <td class="numeric">{{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
-      <div class="info-popup">
-          ((Round_TotalOH + TotalOH ) * Yield% ) +  round_LabourCost  + ( CostPer1050_kg + CostPer1050kg )     <br>
-        (({{quotationCalc.round_TotalOH  | number:'1.2-2'}} + ({{quotationCalc.TotalOH  | number:'1.2-2'}}) * {{quotationCalc.yieldPercent  | number:'1.2-2'}}) +  {{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}}
-        + {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} + {{quotationCalc.BankInterest  | number:'1.2-2'}} / 365 ) * {{quotationCalc.PayMentCreditPeriod  | number:'1.2-2'}} = {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}     
+      <div class="info-popup2">
+          ((((Round_TotalOH + (TotalOH  * Yield% )) + (round_LabourCost + CostPer1050_kg + CostPer1050kg)) <br>* ( BankInterest /365  )) * PayMentCreditPeriod)     <br>
+        ((({{quotationCalc.round_TotalOH  | number:'1.2-2'}} + ({{quotationCalc.TotalOH  | number:'1.2-2'}}) * ({{quotationCalc.yieldPercent  | number:'1.2-2'}})) +  ({{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}}
+        + {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} )) * ({{quotationCalc.BankInterest  | number:'1.2-2'}} / 365 ) )* {{quotationCalc.PayMentCreditPeriod  | number:'1.2-2'}} = {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}     
       </div></span></td>            
             <td class="numeric">{{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
@@ -976,7 +976,7 @@
         (((((round_rejectionCost + (TotalOH * yieldPercent)) / CastingWeightKgPerHeat) + (labourCostperkg) + <br>
         (roundCostPer_kg) + (subtotalMetalperkg)) * (BankInterest)/365)) * PayMentCreditPeriod<br>
         ((((({{quotationCalc.round_rejectionCost  | number:'1.2-2'}} + ({{quotationCalc.TotalOH  | number:'1.2-2'}} * {{quotationCalc.yieldPercent  | number:'1.2-2'}})) / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} )
-        + {{quotationCalc.labourCostperkg  | number:'1.2-2'}}  + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}} )* ({{quotationCalc.BankInterest  | number:'1.2-2'}} / 365 )) *
+        + ({{quotationCalc.labourCostperkg  | number:'1.2-2'}}  + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}})) * ({{quotationCalc.BankInterest  | number:'1.2-2'}} / 365 )) *
         {{quotationCalc.PayMentCreditPeriod  | number:'1.2-2'}}) = {{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}}
       </div>
     </span></td>
@@ -985,7 +985,7 @@
 
       <div class="info-popup">
         roundInvertoryCost / OverallTotalCost  <br>
-        {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}} / {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} = {{quotationCalc.InventoryTotalCost  | number:'1.2-2'}}
+        ({{quotationCalc.roundInvertoryCost  | number:'1.2-2'}} / {{quotationCalc.OverallTotalCost  | number:'1.2-2'}}) = {{quotationCalc.InventoryTotalCost  | number:'1.2-2'}}
       </div>
     </span></td>
         </tr>
@@ -999,7 +999,7 @@
 
       <div class="info-popup">
         totalOHper1050kg + rejection cost + roundInvertoryCost  <br>
-        {{quotationCalc.totalOHper1050kg  | number:'1.2-2'}} + {{quotationCalc.round_TotalOH  | number:'1.2-2'}} + {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}} = {{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}}
+        ({{quotationCalc.totalOHper1050kg  | number:'1.2-2'}} + {{quotationCalc.round_TotalOH  | number:'1.2-2'}} + {{quotationCalc.roundInvertoryCost  | number:'1.2-2'}}) = {{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1007,7 +1007,7 @@
 
       <div class="info-popup">
         roundInvertoryCostPerkg + round_rejectionCost + totalOHperkg  <br>
-        {{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}} + {{quotationCalc.round_rejectionCost  | number:'1.2-2'}} + {{quotationCalc.totalOHperkg  | number:'1.2-2'}} = {{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}
+        ({{quotationCalc.roundInvertoryCostPerkg  | number:'1.2-2'}} + {{quotationCalc.round_rejectionCost  | number:'1.2-2'}} + {{quotationCalc.totalOHperkg  | number:'1.2-2'}}) = {{quotationCalc.overHeadscostperKg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1022,7 +1022,7 @@
 
       <div class="info-popup">
         overHeadscostper1050Kg + round_LabourCost + CostPer1050_kg + CostPer1050kg<br>
-        {{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} = {{quotationCalc.totalCostper1050kg  | number:'1.2-2'}}
+        ({{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} + {{quotationCalc.CostPer1050_kg  | number:'1.2-2'}} + {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}) = {{quotationCalc.totalCostper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1030,7 +1030,7 @@
 
       <div class="info-popup">
         overHeadscostperKg + labourCostperkg + roundCostPer_kg + subtotalMetalperkg<br>
-        {{quotationCalc.overHeadscostperKg  | number:'1.2-2'}} + {{quotationCalc.labourCostperkg  | number:'1.2-2'}} + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}} = {{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}
+        ({{quotationCalc.overHeadscostperKg  | number:'1.2-2'}} + {{quotationCalc.labourCostperkg  | number:'1.2-2'}} + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}}) = {{quotationCalc.totalCPer1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1060,7 +1060,7 @@
 
       <div class="info-popup">
           CastingWeightKgPerHeat *  heatTreatment * ((100 - Rejection)/100) <br>
-          {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.heatTreatment  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) = {{quotationCalc.splProcessper1050kg  | number:'1.2-2'}}
+          ({{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.heatTreatment  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100)) = {{quotationCalc.splProcessper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.splProcessperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1068,7 +1068,7 @@
 
       <div class="info-popup">
           splProcessper1050kg / (CastingWeight * Cavities * NoOfMouldperHeat)<br>
-          {{quotationCalc.splProcessper1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} = {{quotationCalc.splProcessperkg  | number:'1.2-2'}}
+          ({{quotationCalc.splProcessper1050kg  | number:'1.2-2'}} / ({{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}})) = {{quotationCalc.splProcessperkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1098,7 +1098,7 @@
 
       <div class="info-popup">
           CastingWeightKgPerHeat *  heatTreatment * ((100 - Rejection)/100) <br>
-          {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.heatTreatment  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) = {{quotationCalc.heatTreatmentper1050kg  | number:'1.2-2'}}
+          ({{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.heatTreatment  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100)) = {{quotationCalc.heatTreatmentper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.heatTreatmentperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1106,7 +1106,7 @@
 
       <div class="info-popup">
           heatTreatmentper1050kg / (CastingWeight * Cavities * NoOfMouldperHeat)<br>
-          {{quotationCalc.heatTreatmentper1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} = {{quotationCalc.heatTreatmentperkg  | number:'1.2-2'}}
+          ({{quotationCalc.heatTreatmentper1050kg  | number:'1.2-2'}} / ({{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}}) )= {{quotationCalc.heatTreatmentperkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1128,7 +1128,7 @@
 
       <div class="info-popup">
           CastingWeightKgPerHeat *  postProcess * ((100 - Rejection)/100) <br>
-          {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.postProcess  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) = {{quotationCalc.postProcessper1050kg  | number:'1.2-2'}}
+          ({{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.postProcess  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) )= {{quotationCalc.postProcessper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.postProcessperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1136,7 +1136,7 @@
 
       <div class="info-popup">
           postProcessper1050kg / (CastingWeight * Cavities * NoOfMouldperHeat)<br>
-          {{quotationCalc.postProcessper1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} = {{quotationCalc.postProcessperkg  | number:'1.2-2'}}
+          ({{quotationCalc.postProcessper1050kg  | number:'1.2-2'}} / ({{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}})) = {{quotationCalc.postProcessperkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1166,7 +1166,7 @@
 
       <div class="info-popup">
           CastingWeightKgPerHeat *  packingAndTransport * ((100 - Rejection)/100) <br>
-          {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.packingAndTransport  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) = {{quotationCalc.packingAndTransportper1050kg  | number:'1.2-2'}}
+          ({{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.packingAndTransport  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) )= {{quotationCalc.packingAndTransportper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.packingAndTransportperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1174,7 +1174,7 @@
 
       <div class="info-popup">
           packingAndTransportper1050kg / (CastingWeight * Cavities * NoOfMouldperHeat)<br>
-          {{quotationCalc.packingAndTransportper1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} = {{quotationCalc.packingAndTransportperkg  | number:'1.2-2'}}
+          ({{quotationCalc.packingAndTransportper1050kg  | number:'1.2-2'}} / ({{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}})) = {{quotationCalc.packingAndTransportperkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1195,7 +1195,7 @@
 
       <div class="info-popup">
           CastingWeightKgPerHeat *  packingAndTransport * ((100 - Rejection)/100) <br>
-          {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.NozzleShotBlasting  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) = {{quotationCalc.NozzleShotBlastingper1050kg  | number:'1.2-2'}}
+         ( {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.NozzleShotBlasting  | number:'1.2-2'}} * ((100 - {{quotationCalc.Rejection  | number:'1.2-2'}}) / 100) )= {{quotationCalc.NozzleShotBlastingper1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.NozzleShotBlastingperkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1203,7 +1203,7 @@
 
       <div class="info-popup">
           NozzleShotBlastingper1050kg / (CastingWeight * Cavities * NoOfMouldperHeat)<br>
-          {{quotationCalc.NozzleShotBlastingper1050kg  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}} = {{quotationCalc.NozzleShotBlastingperkg  | number:'1.2-2'}}
+          ({{quotationCalc.NozzleShotBlastingper1050kg  | number:'1.2-2'}} / ({{quotationCalc.CastingWeight  | number:'1.2-2'}} * {{quotationCalc.Cavities  | number:'1.2-2'}} * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}}) )= {{quotationCalc.NozzleShotBlastingperkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1218,7 +1218,7 @@
 
       <div class="info-popup">
           TotalcostforProfit + overHeadscostper1050Kg + round_LabourCost + CostPer1050kg<br>
-          {{quotationCalc.TotalcostforProfit  | number:'1.2-2'}} + {{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} * {{quotationCalc.CostPer1050kg  | number:'1.2-2'}} = {{quotationCalc.TotalProfitPer1050kg  | number:'1.2-2'}}
+          ({{quotationCalc.TotalcostforProfit  | number:'1.2-2'}} + {{quotationCalc.overHeadscostper1050Kg  | number:'1.2-2'}} + {{quotationCalc.round_LabourCost  | number:'1.2-2'}} * {{quotationCalc.CostPer1050kg  | number:'1.2-2'}}) = {{quotationCalc.TotalProfitPer1050kg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.TotalProfitPerkg | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1226,7 +1226,7 @@
 
       <div class="info-popup">
           (NozzleShotBlastingper1050kg + overHeadscostperKg + labourCostperkg + subtotalMetalperkg + roundCostPer_kg )* (Profit / 100) <br>
-          ({{quotationCalc.NozzleShotBlastingper1050kg  | number:'1.2-2'}} + {{quotationCalc.overHeadscostperKg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}} + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}}) * ({{quotationCalc.Profit  | number:'1.2-2'}} / 100) = {{quotationCalc.TotalProfitPerkg  | number:'1.2-2'}}
+          (({{quotationCalc.NozzleShotBlastingper1050kg  | number:'1.2-2'}} + {{quotationCalc.overHeadscostperKg  | number:'1.2-2'}} + {{quotationCalc.subtotalMetalperkg  | number:'1.2-2'}} + {{quotationCalc.roundCostPer_kg  | number:'1.2-2'}}) * ({{quotationCalc.Profit  | number:'1.2-2'}} / 100)) = {{quotationCalc.TotalProfitPerkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric">{{quotationCalc.TotalCostNozzle | number:'1.2-2'}}<span class="info-container" tabindex="0">
@@ -1234,7 +1234,7 @@
 
       <div class="info-popup">
           OverallTotalCost / TotalProfitPer1050kg<br>
-          {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} / {{quotationCalc.TotalProfitPer1050kg  | number:'1.2-2'}} = {{quotationCalc.TotalCostNozzle  | number:'1.2-2'}}
+          ({{quotationCalc.OverallTotalCost  | number:'1.2-2'}} / {{quotationCalc.TotalProfitPer1050kg  | number:'1.2-2'}}) = {{quotationCalc.TotalCostNozzle  | number:'1.2-2'}}
       </div>
     </span></td>
         </tr>
@@ -1248,7 +1248,7 @@
 
       <div class="info-popup">
           TotalcostforProfit + TotalProfitPer1050kg + totalCostper1050kg<br>
-          {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} + {{quotationCalc.TotalProfitPer1050kg  | number:'1.2-2'}} + {{quotationCalc.totalCostper1050kg  | number:'1.2-2'}} = {{quotationCalc.TotalCostNozzle  | number:'1.2-2'}}
+          ({{quotationCalc.OverallTotalCost  | number:'1.2-2'}} + {{quotationCalc.TotalProfitPer1050kg  | number:'1.2-2'}} + {{quotationCalc.totalCostper1050kg  | number:'1.2-2'}} )= {{quotationCalc.TotalCostNozzle  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1264,7 +1264,7 @@
 
       <div class="info-popup">
           ( OverallTotalCost / CastingWeightKgPerHeat ) * CastingWeight<br>
-          {{quotationCalc.OverallTotalCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.CastingWeight  | number:'1.2-2'}} = {{quotationCalc.CostPerPart  | number:'1.2-2'}}
+          ({{quotationCalc.OverallTotalCost  | number:'1.2-2'}} / {{quotationCalc.CastingWeightKgPerHeat  | number:'1.2-2'}} * {{quotationCalc.CastingWeight  | number:'1.2-2'}} )= {{quotationCalc.CostPerPart  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -1280,7 +1280,7 @@
 
       <div class="info-popup">
            CostPerPart / CastingWeight <br>
-          {{quotationCalc.CostPerPart  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}}  = {{quotationCalc.CostPerkg  | number:'1.2-2'}}
+          ({{quotationCalc.CostPerPart  | number:'1.2-2'}} / {{quotationCalc.CastingWeight  | number:'1.2-2'}} ) = {{quotationCalc.CostPerkg  | number:'1.2-2'}}
       </div>
     </span></td>
             <td class="numeric"></td>
