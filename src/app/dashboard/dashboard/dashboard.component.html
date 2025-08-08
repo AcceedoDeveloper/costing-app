@@ -6,7 +6,7 @@
 
  <h2>Customer List</h2>
  <div class="date-filters">
-  <mat-form-field appearance="outline" class="date-picker">
+  <mat-form-field appearance="outline" class="date-picker" style="width: 250px;">
     <mat-label>Select Date Range</mat-label>
     <mat-date-range-input [rangePicker]="estimationRangePicker">
       <input matStartDate placeholder="Start date" [(ngModel)]="estimationStartDate" (dateChange)="onEstimationRangeChange()">
@@ -18,14 +18,16 @@
 </div>
 
 
-
-           
-           <input
+<div class="search-container  ">
+  <input
         type="text"
         class="search-bar"
         placeholder="Search Customer"
         (input)="onSearch($event)"
       />
+</div>
+           
+         
         </div>
 
         <div class="table-wrapper">
@@ -150,8 +152,9 @@
 
 
  <div class="box fixed-height-box" >
+  
    <div class="date-filters">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" style="width: 150px;" class="custom-datepicker">
     <mat-label>Select Month</mat-label>
     <input
       matInput
@@ -199,11 +202,11 @@
 
   
     <div class="date-nav-minimal">
-      <button mat-icon-button (click)="changeDate(-1)" aria-label="Previous Day">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
+      
+        <mat-icon class="icon" (click)="changeDate(-1)"  >chevron_left</mat-icon>
+  
 
-      <mat-form-field appearance="outline" class="date-picker-field">
+      <mat-form-field appearance="outline" class="date-picker-field" style="width: 150px;">
         <mat-label>Select Date</mat-label>
         <input
           matInput
@@ -215,9 +218,9 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <button mat-icon-button (click)="changeDate(1)" aria-label="Next Day">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
+      
+        <mat-icon class="icon" (click)="changeDate(1)" >chevron_right</mat-icon>
+   
     </div>
   </div>
 
@@ -226,9 +229,9 @@
     <table>
       <thead>
         <tr>
-          <th><span class="icon">👤</span> User Name</th>
-          <th><span class="icon">💬</span> Message</th>
-          <th><span class="icon">🕒</span> Updated At</th>
+           <th><mat-icon class="icon2" >person</mat-icon> User Name</th>
+        <th><mat-icon class="icon2" >chat</mat-icon> Message</th>
+        <th><mat-icon class="icon2" >schedule</mat-icon> Updated At</th>
         </tr>
       </thead>
       <tbody>

@@ -308,7 +308,9 @@ google-chart {
 
 
 
-
+.search-container{
+  margin-bottom: 20px;
+}
 
 
 .header-with-picker {
@@ -319,6 +321,46 @@ google-chart {
 
 .date-picker-field {
   width: 200px;
+  
+}
+
+.icon{
+  margin-bottom: 10px;
+}
+
+.icon2{
+  position: relative;
+  top: 7px;
+}
+
+
+.icon:hover{
+  cursor: pointer;
+}
+
+
+
+
+/* Reduce the icon size */
+.custom-datepicker .mat-datepicker-toggle-default-icon {
+  font-size: 18px; /* adjust as needed */
+}
+
+/* Optional: control padding/margin of the toggle button */
+.custom-datepicker .mat-datepicker-toggle {
+  position: relative;
+  top: 8px;
+}
+
+/* Reduce the icon size */
+.date-picker .mat-datepicker-toggle-default-icon {
+  font-size: 18px; /* adjust as needed */
+}
+
+/* Optional: control padding/margin of the toggle button */
+.date-picker .mat-datepicker-toggle {
+  position: relative;
+  top: 8px;
 }
 
 .no-data-message {

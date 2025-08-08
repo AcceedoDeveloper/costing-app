@@ -259,6 +259,7 @@ addProcess$ = createEffect(() =>
         catchError(error => {
           this.toastr.error('Failed to add process.', 'Error');
           return of(addProcessFailure({ error }));
+          
         })
       )
     )
