@@ -30,16 +30,16 @@
     <thead>
       <tr>
         <th style="width: 80%;">Material Type</th>
-        <th>Actions</th>
+        <!-- <th>Actions</th> -->
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let material of materialTypes$ | async">
         <td>{{ material.name }}</td>
-        <td class="actions">
+        <!-- <td class="actions">
           <mat-icon aria-label="Edit material type" class="icon" (click)="startEdit(material)">edit</mat-icon>
           <mat-icon aria-label="Delete material type" class="icon" (click)="deleteMaterialType(material._id)">delete</mat-icon>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>

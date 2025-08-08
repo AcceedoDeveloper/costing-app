@@ -206,6 +206,7 @@ this.thirdFormGroup = this.fb.group({
 
 this.store.select(getCustomerWithId).subscribe((state) => {
   console.log('👀 Selector State:', state);
+  
 
    if (state?.customer?._id) {
     // Save customer ID
@@ -402,7 +403,10 @@ submitStep2() {
     };
   }
 
-  console.log('📝 Updated Input Data:', selectedFields);
+  console.log(' Updated Input Data:', selectedFields);
+  this.thirdFormGroup.get('selectedProcesses')?.setValue([]);
+this.selectedProcesses = [];
+
 }
 
 submitCostForm(): void {
@@ -414,6 +418,7 @@ processdata(){
   const processType = selectedProcessObjects.map((p: any) => p.processName);
 
   console.log('processType:', processType);
+  this.selectedProcesses = [];
 
 }
 

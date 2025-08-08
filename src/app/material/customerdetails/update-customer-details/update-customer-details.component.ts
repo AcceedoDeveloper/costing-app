@@ -198,48 +198,7 @@ this.store.select(getCustomerWithId).subscribe((state) => {
      console.log('customer ID', this.customerId);
   }
 
-  if (state?.customer?.processName) {
-    this.selectedProcesses = state.customer.processName.map(process => {
-  const updatedProcess = { ...process };
-
-  if (updatedProcess.grade?.length > 0) {
-    const clonedGrade = updatedProcess.grade.map(innerArray =>
-      innerArray.map(g => ({
-        ...g,
-        rawMaterial: g.rawMaterial.map(rm => ({
-          ...rm,
-          materialsUsed: rm.materialsUsed.map(mat => ({
-            ...mat,
-            updatedQuantity: mat.quantity,
-            updatedUnitCost: mat.unitCost
-          }))
-        }))
-      }))
-    );
-
-    updatedProcess.grade = clonedGrade;
-
-  } else if (updatedProcess.rawMaterial?.length > 0) {
-    updatedProcess.rawMaterial = updatedProcess.rawMaterial.map(rm => ({
-      ...rm,
-      materialsUsed: rm.materialsUsed.map(mat => ({
-        ...mat,
-        updatedQuantity: mat.quantity,
-        updatedUnitCost: mat.unitCost
-      }))
-    }));
-  }
-
-  return updatedProcess;
-});
-
-
-    console.log('✅ Extracted Processes (Cloned & Editable):', this.selectedProcesses);
-
-    this.thirdFormGroup.patchValue({
-      selectedProcesses: this.selectedProcesses
-    });
-  }
+  
 });
 
 
@@ -601,6 +560,7 @@ generateFinalJson(): void {
 
 submitForm() {
    this.tooster.success('Customer Details created successfully!', 'Success');
+   this.store.dispatch(loadCustomerDetails())
   this.dialogRef.close(); 
 }
 

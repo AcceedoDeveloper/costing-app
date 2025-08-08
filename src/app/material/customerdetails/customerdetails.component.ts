@@ -101,6 +101,7 @@ edit(id: string) {
       autoFocus: false,
       disableClose: false
     });
+    this.store.dispatch(loadCustomerDetails());
     console.log('Editing Customer:', customer);
   } else {
     console.warn('Customer not found for editing:', id);
