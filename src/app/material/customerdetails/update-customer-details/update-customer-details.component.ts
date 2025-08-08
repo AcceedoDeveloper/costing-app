@@ -189,7 +189,7 @@ this.thirdFormGroup = this.fb.group({
 
 
 this.store.select(getCustomerWithId).subscribe((state) => {
-  console.log('👀 Selector State:', state);
+  console.log(' Selector State:', state);
 
    if (state?.customer?._id) {
     // Save customer ID
@@ -458,7 +458,7 @@ finalSubmit() {
     otherConsumables: cost.otherConsumables  
   };
 
-  console.log('📦 Final Submission JSON:', finalData);
+  console.log(' Final Submission JSON:', finalData);
 
   if(this.data?.mode === 'edit'){
     this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
@@ -537,7 +537,7 @@ generateFinalJson(): void {
     Status: 'Completed'
   };
 
-  console.log('✅ Final Full JSON Format:', finalData);
+  console.log(' Final Full JSON Format:', finalData);
     this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
 
 
@@ -545,13 +545,13 @@ generateFinalJson(): void {
 
   this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo).subscribe(
     response => {
-      console.log('🚀 API Success:', response);
+      console.log('Calculation ', response);
 
       this.quotationData = response;
       this.quotationCalc = response.calculations?.[0] || {};
     },
     error => {
-      console.error('❌ API Error:', error);
+      console.error('API Error:', error);
     }
   );
 }
@@ -559,7 +559,7 @@ generateFinalJson(): void {
 
 
 submitForm() {
-   this.tooster.success('Customer Details created successfully!', 'Success');
+   this.tooster.success('Customer Details updated successfully!', 'Success');
    this.store.dispatch(loadCustomerDetails())
   this.dialogRef.close(); 
 }
@@ -635,14 +635,14 @@ submitForm() {
 
 generateFinalJsonFromLoadedData(): void {
   if (!this.customer) {
-    console.error('❌ No customer data available');
+    console.error(' No customer data available');
     return;
   }
 
   const d = this.customer[0];
   const fullProcessData = this.getFullUpdatedProcessData();
    const finalData: any = {
-    CustomerName: d.CustomerName?.name  ?? '',  // ✅ string only
+    CustomerName: d.CustomerName?.name  ?? '',  
     drawingNo: d.drawingNo ?? '',
     partName: d.partName ?? '',
     processName: fullProcessData,
@@ -700,7 +700,7 @@ generateFinalJsonFromLoadedData(): void {
   };
   
 
-  console.log('📦 Final JSON from Loaded Data:', finalData);
+  console.log(' Final JSON from Loaded Data:', finalData);
 
 
 

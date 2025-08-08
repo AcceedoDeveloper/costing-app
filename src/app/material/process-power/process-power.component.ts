@@ -170,7 +170,7 @@ this.store.dispatch(updatePowerCost({ id: this.editId, updatedData: processData 
 
   onEdit(item: PowerCostData): void {
     this.editMode = true;
-    this.editId = item._id;
+    this.editId = item.processId;
 
     this.processForm.patchValue({
       processName: item.processName,

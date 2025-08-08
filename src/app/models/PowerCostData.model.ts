@@ -13,4 +13,5 @@ export interface PowerCostData {
   previousUnitCostDetails: PreviousCostDetail[];
   createdAt: string;
   updatedAt: string;
+  processId: string; 
 }
