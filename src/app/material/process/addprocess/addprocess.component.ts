@@ -91,9 +91,9 @@ export class AddprocessComponent implements OnInit {
 
   createMaterialGroup(): FormGroup {
     return this.fb.group({
-      selectedType: [null, Validators.required],
-      selectedName: [null, Validators.required],
-      quantity: [null, [Validators.required, Validators.min(0.001)]],
+      selectedType: [null, ],
+      selectedName: [null, ],
+      quantity: [null, ],
       filteredNames: [[]]
     });
   }
@@ -116,9 +116,9 @@ export class AddprocessComponent implements OnInit {
 onSubmit(): void {
   if (this.processForm.valid) {
     const formValue = this.processForm.value;
+    const selectedType = formValue.type[0]; // 'grade' or 'material'
 
-    const selectedType = formValue.type[0]; // can be undefined
-    let payload: any = {
+    const payload: any = {
       processName: formValue.processName,
       rawMaterial: [],
       grade: ''
@@ -127,18 +127,27 @@ onSubmit(): void {
     if (selectedType === 'grade') {
       payload.grade = formValue.grade;
     } else if (selectedType === 'material') {
-      payload.rawMaterial = formValue.materials.map((material: any) => ({
-        type: material.selectedType,
-        materialsUsed: [
-          {
-            name: material.selectedName,
-            quantity: material.quantity
-          }
-        ]
-      }));
+      const validMaterials = formValue.materials
+        .filter((material: any) =>
+          material.selectedType &&
+          material.selectedName &&
+          material.quantity !== null &&
+          material.quantity !== undefined
+        )
+        .map((material: any) => ({
+          type: material.selectedType,
+          materialsUsed: [
+            {
+              name: material.selectedName,
+              quantity: material.quantity
+            }
+          ]
+        }));
+
+      payload.rawMaterial = validMaterials;
     }
 
-    console.log('data', payload);
+    console.log('Cleaned Payload:', payload);
 
     this.store.dispatch(addProcess({ process: payload }));
     this.dialogRef.close();
@@ -146,6 +155,7 @@ onSubmit(): void {
     this.processForm.markAllAsTouched();
   }
 }
+
 
 
   onCancel(): void {
