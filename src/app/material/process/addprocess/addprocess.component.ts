@@ -93,7 +93,7 @@ export class AddprocessComponent implements OnInit {
     return this.fb.group({
       selectedType: [null, Validators.required],
       selectedName: [null, Validators.required],
-      quantity: [null, [Validators.required, Validators.min(0.01)]],
+      quantity: [null, [Validators.required, Validators.min(0.001)]],
       filteredNames: [[]]
     });
   }
