@@ -169,7 +169,7 @@ selectedFile: File | null = null;
 
     this.store.select(getAllProcesses).subscribe((data: Process[]) => {
 
-
+      console.log('Processes Data:', data);
   this.processes = data.map(p => ({
     ...p,
     grade: Array.isArray(p.grade) && Array.isArray(p.grade[0]) ? p.grade[0] : p.grade

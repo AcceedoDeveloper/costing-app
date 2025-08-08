@@ -70,9 +70,17 @@
                 <input matInput type="number" formControlName="quantity" />
               </mat-form-field>
 
-              <button mat-icon-button color="primary" (click)="addMaterial()" *ngIf="i === materials.length - 1 && group.valid">
-                <mat-icon>add</mat-icon>
-              </button>
+              <button
+  mat-icon-button
+  color="primary"
+  matTooltip="Fill all fields to add another material"
+  (click)="addMaterial()"
+  *ngIf="i === materials.length - 1"
+  [disabled]="!group.valid"
+>
+  <mat-icon>add</mat-icon>
+</button>
+
             </div>
           </div>
         </div>
