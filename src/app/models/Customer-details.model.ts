@@ -122,6 +122,7 @@ export interface CustomerdetailsIn {
     mouldingInputs: string[];
   };
   Status: string;
+  createdAt?: string;
 }
 
 

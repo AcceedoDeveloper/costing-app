@@ -69,7 +69,7 @@
       </tbody>
     </table>
 
-    <button mat-stroked-button color="primary" (click)="addMaterial()" style="margin-top: 10px;">
+    <button mat-stroked-button color="primary" (click)="addMaterial()" style="margin-top: 10px;"   *ngIf="!data.grade || data.grade.length === 0" >
       <mat-icon>add</mat-icon> Add Material
     </button>
   </form>

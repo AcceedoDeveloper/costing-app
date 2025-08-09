@@ -1,4 +1,5 @@
 import { createFeatureSelector, createSelector, State } from '@ngrx/store';
+import { CustomerdetailsIn } from '../../models/Customer-details.model';
 
  
 
@@ -39,8 +40,9 @@ export const getSuppliers = createSelector(
 
 export const getCustomerDetails = createSelector(
   getMaterialState,
-  (state) => state.customers
+  (state): CustomerdetailsIn[] => state.customers
 );
+
 
 
 export const getAllProcesses = createSelector(

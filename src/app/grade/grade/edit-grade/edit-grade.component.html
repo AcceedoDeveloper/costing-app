@@ -1,10 +1,19 @@
 <div class="popup-overlay" *ngIf="fullGradeData">
   <div class="popup-container">
     <div class="popup-header">
-      <div class="grade-info">
-        <p><strong>Grade No:</strong> {{ fullGradeData.gradeNo }} <strong>Grade Name:</strong> {{ fullGradeData.name }}</p>
-      </div>
-    </div>
+  <div class="grade-info">
+    <mat-form-field appearance="outline" style="width: 150px; margin-right: 10px;">
+      <mat-label>Grade No</mat-label>
+      <input matInput [(ngModel)]="fullGradeData.gradeNo" placeholder="Enter Grade No" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 250px;">
+      <mat-label>Grade Name</mat-label>
+      <input matInput [(ngModel)]="fullGradeData.name" placeholder="Enter Grade Name" />
+    </mat-form-field>
+  </div>
+</div>
+
 
     <!-- Dynamic material type buttons -->
     <div class="add-type-buttons">

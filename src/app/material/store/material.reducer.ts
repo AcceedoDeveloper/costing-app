@@ -21,7 +21,7 @@ import { loadMaterialsSuccess, loadMaterialsFailure, deleteMaterialSuccess
 import { Material } from '../../models/material.model';
 import {MaterialItem} from '../../models/MaterialMap.model';
 import { Supplier } from '../../models/Supplier.model';
-import {Customerdetails} from '../../models/Customer-details.model';
+import {Customerdetails, CustomerdetailsIn} from '../../models/Customer-details.model';
 import { Process } from '../../models/process.model';
 import { MaterialType} from '../../models/material-type.model';
 import { CustomerProcess } from '../../models/Customer-details.model';
@@ -36,7 +36,7 @@ import { SalaryMapResponseData } from '../../models/SalaryMapResponse.model';
   error: string | null;
   materialMap: { [key: string]: MaterialItem[] };
   suppliers: Supplier[];
-  customers: Customerdetails[];
+  customers: CustomerdetailsIn[];
   processes: Process[];
    materialTypes: MaterialType[];
    customersProcess: CustomerProcess[];

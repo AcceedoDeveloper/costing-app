@@ -23,6 +23,10 @@ export class CustomerdetailsComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   customerDetails : CustomerdetailsIn[] = [];
   searchText: string = '';
+  startDate: Date | null = null;
+endDate: Date | null = null;
+filteredCustomersList: CustomerdetailsIn[] = [];
+
 
 
   constructor(private store: Store<{ materials: MaterialState }>, 
@@ -32,12 +36,14 @@ export class CustomerdetailsComponent implements OnInit {
   ngOnInit(): void {
   this.store.dispatch(loadCustomerDetails());
 
-  this.selectedCustomerDetails$ = this.store.select(getCustomerDetails); 
+  this.selectedCustomerDetails$ = this.store.select(getCustomerDetails);
 
-  this.selectedCustomerDetails$.subscribe(data => {
-     this.customerDetails = data;
-    console.log('Simplified Data:', data);
-  });
+this.selectedCustomerDetails$.subscribe((data: CustomerdetailsIn[]) => {
+  this.customerDetails = data;
+  console.log('Customer Details:', this.customerDetails);
+  
+});
+
 
 
 
@@ -138,6 +144,17 @@ downloadQuotation(customer: any) {
   });
 }
 
+applyDateFilter() {
+  this.filteredCustomersList = this.customerDetails.filter(customer => {
+    const createdDate = new Date(customer.createdAt);
+    const start = this.startDate ? new Date(this.startDate) : null;
+    const end = this.endDate ? new Date(this.endDate) : null;
+
+    // Match only if within range
+    return (!start || createdDate >= start) && (!end || createdDate <= end);
+  });
+}
+
 get filteredCustomers() {
   const search = this.searchText.toLowerCase().trim();
 
@@ -145,14 +162,23 @@ get filteredCustomers() {
     const customerName = c.CustomerName?.name?.toLowerCase() || '';
     const drawingNo = c.drawingNo?.toLowerCase() || '';
     const partName = c.partName?.toLowerCase() || '';
+    const createdDate = new Date(c.createdAt);
 
-    return (
+    const matchesSearch =
       customerName.includes(search) ||
       drawingNo.includes(search) ||
-      partName.includes(search)
-    );
+      partName.includes(search);
+
+    const matchesDate =
+      (!this.startDate || createdDate >= new Date(this.startDate)) &&
+      (!this.endDate || createdDate <= new Date(this.endDate));
+
+    return matchesSearch && matchesDate;
   });
 }
+
+
+
 
 
 }
