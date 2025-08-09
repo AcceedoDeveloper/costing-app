@@ -44,7 +44,8 @@ export class ProcessComponent implements OnInit {
 
   openAddMaterial() {
     this.dialog.open(AddprocessComponent, {
-      width: '600px'
+      width: '60%',
+       panelClass: 'custom-dialog-container'
     });
   }
 
@@ -74,7 +75,7 @@ editAllMaterials(id: string): void {
     console.log('Full process object:', clonedProcess);
 
     this.dialog.open(ProcesseditComponent, {
-      width: '700px',
+      width: '60%',
       data: clonedProcess  
     });
   } else {

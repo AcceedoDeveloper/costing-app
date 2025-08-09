@@ -22,6 +22,8 @@ import {UpdateCustomerDetailsComponent } from './update-customer-details/update-
 export class CustomerdetailsComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   customerDetails : CustomerdetailsIn[] = [];
+  searchText: string = '';
+
 
   constructor(private store: Store<{ materials: MaterialState }>, 
     private dialog : MatDialog,
@@ -136,6 +138,21 @@ downloadQuotation(customer: any) {
   });
 }
 
+get filteredCustomers() {
+  const search = this.searchText.toLowerCase().trim();
+
+  return this.customerDetails.filter(c => {
+    const customerName = c.CustomerName?.name?.toLowerCase() || '';
+    const drawingNo = c.drawingNo?.toLowerCase() || '';
+    const partName = c.partName?.toLowerCase() || '';
+
+    return (
+      customerName.includes(search) ||
+      drawingNo.includes(search) ||
+      partName.includes(search)
+    );
+  });
+}
 
 
 }

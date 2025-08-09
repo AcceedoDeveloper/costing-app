@@ -1,4 +1,4 @@
-<div class="popup-overlay">
+
   <div class="popup-container">
     <div class="popup-scroll">
       <h2>Add Process</h2>
@@ -56,7 +56,7 @@
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field appearance="standard" class="material-field">
+              <mat-form-field appearance="standard" class="name-field">
                 <mat-label>Material Name</mat-label>
                 <mat-select formControlName="selectedName">
                   <mat-option *ngFor="let name of group.value.filteredNames" [value]="name.name">
@@ -93,4 +93,4 @@
       </form>
     </div>
   </div>
-</div>
+

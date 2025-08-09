@@ -1,0 +1,6 @@
+.name-field {
+  flex: 2;              /* Increase flex size if needed */
+  min-width: 350px;     /* Optional: increase minimum */
+  max-width: 100%;     /* ✅ Increase max width */
+  width: 100%;
+}

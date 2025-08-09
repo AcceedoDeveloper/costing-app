@@ -1,5 +1,12 @@
 <div class="header">
-  <h2>Customer Details</h2>
+  <h2>Quotation Generator</h2>
+  <div class="search-bar">
+  <mat-form-field appearance="standard" class="full-width">
+    <mat-label>Search by Customer / Drawing No / Part No</mat-label>
+    <input matInput [(ngModel)]="searchText" placeholder="Type to filter..." />
+  </mat-form-field>
+</div>
+
   <button mat-raised-button color="primary" (click)="addCustomerDetails()">Add Customer Details</button>
 </div>
 
@@ -12,27 +19,31 @@
         <th>Part No</th>
         <th>No of Process</th>
         <th>Previous Cost</th>
+        
+        <th>Download</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-  <ng-container *ngFor="let customer of customerDetails">
+  <ng-container *ngFor="let customer of filteredCustomers">
     <tr>
       <td>{{ customer.CustomerName.name }}</td>
       <td>{{ customer.drawingNo }}</td>
       <td>{{ customer.partName }}</td>
       <td>{{ customer.processName?.length }} Process</td>
       <td>{{ customer.totalProcessCost }}</td>
+     
       <td>
+       <p  class="Quotation" (click)="downloadQuotation(customer)">Download Quotation </p> 
+      </td>
+    
+     <td>
         <button mat-icon-button>
           <mat-icon (click)="edit(customer._id)" >edit</mat-icon>
         </button>
         <button mat-icon-button>
           <mat-icon (click)="delete(customer._id)" >delete</mat-icon>
         </button>
-         <button mat-icon-button>
-           <mat-icon (click)="downloadQuotation(customer)">file_download</mat-icon> 
-         </button>
       </td>
     </tr>
   </ng-container>

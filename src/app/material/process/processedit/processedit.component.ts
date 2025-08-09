@@ -48,6 +48,7 @@ ngOnInit(): void {
 
   // Initialize the form structure once
   this.form = this.fb.group({
+    processName: [this.data.processName || '', Validators.required],
     materialFormArray: this.fb.array([]),
     grade: this.fb.group({
       _id: [this.data.grade?.[0]?._id || '']
@@ -104,10 +105,11 @@ save(): void {
       const gradeName = selectedGrade?.name || '';
 
       const updatedProcess = {
-        processName: this.data.processName,
-        rawMaterial: reconstructedRawMaterial,
-        grade: gradeName,
-      };
+  processName: this.form.get('processName')?.value, 
+  rawMaterial: reconstructedRawMaterial,
+  grade: gradeName,
+};
+
 
       console.log('data', updatedProcess);
       this.store.dispatch(updateProcess({ id: this.data._id, process: updatedProcess }));

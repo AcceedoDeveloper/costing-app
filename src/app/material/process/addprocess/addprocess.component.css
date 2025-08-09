@@ -11,16 +11,7 @@
   z-index: 1000;
 }
 
-.popup-container {
-  width: 640px;
-  max-height: 90vh;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+
 
 .popup-scroll {
   padding: 20px;
@@ -79,3 +70,12 @@
 .material-field{
     width: 50%;
 }
+
+
+.name-field {
+  flex: 2;              /* Increase flex size if needed */
+  min-width: 350px;     /* Optional: increase minimum */
+  max-width: 100%;     /* ✅ Increase max width */
+  width: 100%;
+}
+

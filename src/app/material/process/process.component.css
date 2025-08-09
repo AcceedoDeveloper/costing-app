@@ -192,3 +192,14 @@ mat-icon.icon:hover {
     padding: 8px 10px;
   }
 }
+
+.custom-dialog-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+::ng-deep .cdk-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.4); /* Dark semi-transparent overlay */
+}

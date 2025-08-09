@@ -3,6 +3,17 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <!-- ✅ Grade section now correctly inside the form -->
+
+
+    <mat-form-field appearance="fill" class="full-width">
+  <mat-label>Process Name</mat-label>
+  <input matInput formControlName="processName" placeholder="Enter process name" />
+  <mat-error *ngIf="form.get('processName')?.touched && form.get('processName')?.hasError('required')">
+    Process name is required
+  </mat-error>
+</mat-form-field>
+
+
     <div formGroupName="grade" class="grade-section">
       <mat-form-field appearance="fill">
         <mat-label>Select Grade</mat-label>
@@ -36,7 +47,7 @@
             </mat-form-field>
           </td>
           <td>
-            <mat-form-field>
+            <mat-form-field class="name-field" >
               <mat-select formControlName="name">
                 <mat-option *ngFor="let item of getMaterialsForType(mat.get('type')?.value)" [value]="item.name">
                   {{ item.name }}
