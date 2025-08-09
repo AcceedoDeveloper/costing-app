@@ -52,7 +52,9 @@ export class AddcustomerdetailsComponent implements OnInit {
   editMode: { [index: number]: boolean } = {};
   customerId: string | null = null;
   editId: string | null = null;
-
+  castingWeightKg : number = 0;
+  yeild : number = 0;
+  NoOfMouldperHeat : number = 0;
 
 
   quotationData: any = null;
@@ -127,6 +129,7 @@ selectedFile: File | null = null;
     this.store.dispatch(loadProcesses());
     this.store.dispatch(getCastingDetails());
     this.store.dispatch(getCostSummary());
+     
 
      this.store.pipe(select(selectCastingData)).subscribe((castingData: CastingData[] | null) => {
           
@@ -184,6 +187,7 @@ this.secondFormGroup = this.fb.group({
   CastingWeight: [0, Validators.required],
   Cavities: [0, Validators.required],
   PouringWeight: [0, Validators.required],
+  
 
   // Moulding fields
   MouldingWeight: [0, Validators.required],
@@ -201,6 +205,7 @@ this.secondFormGroup = this.fb.group({
 this.thirdFormGroup = this.fb.group({
   selectedProcesses: this.fb.control([])
 });
+
 
 
 
@@ -260,6 +265,19 @@ this.store.select(getCustomerWithId).subscribe((state) => {
 });
 
 
+this.secondFormGroup.valueChanges.subscribe(values => {
+  const { CastingWeight = 0, Cavities = 0, PouringWeight = 1 } = values;
+
+  if (PouringWeight === 0) {
+    this.castingWeightKg = 0;
+    return;
+  }
+  this.castingWeightKg = Math.round(((CastingWeight * Cavities) / PouringWeight) * 1050);
+  this.yeild = (this.castingWeightKg / 1050) * 100;
+  this.NoOfMouldperHeat = Math.round(1050 / PouringWeight);
+  console.log('Calculated Value:', this.castingWeightKg);
+});
+
 
 
 this.firstFormGroup = this.fb.group({
@@ -302,6 +320,10 @@ if (this.data?.mode === 'edit' && this.data.customerData) {
       ShootingPerShift: customer.coreInputs?.ShootingPerShift || 0,
       CoreSand: customer.coreInputs?.CoreSand || 0,
     });
+
+
+
+
 
     this.thirdFormGroup.patchValue({
       selectedProcesses: customer.processName
@@ -641,6 +663,7 @@ submitForm() {
    this.tooster.success('Customer Details created successfully!', 'Success');
   this.dialogRef.close(); 
 }
+
 
 
 }

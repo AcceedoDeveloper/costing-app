@@ -2,23 +2,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-
+  padding: 8px 0; /* no extra horizontal padding so it matches table */
   margin-bottom: 12px;
-  max-width: 96%;
+  width: 90%;              /* match table width */
+  max-width: 1200px;       /* match table max-width */
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
 }
 
-/* Left-aligned heading */
+/* Left-aligned heading - matches table first column */
 .header h2 {
   font-size: 20px;
   font-weight: 500;
-   padding-left: 48px; 
-  margin: 0%;
+  margin: 0;
+  padding-left: 16px; /* same as table's first column */
   white-space: nowrap;
 }
 
-/* Right-side controls (search + button) */
+/* Right-side controls */
 .header-controls {
   display: flex;
   gap: 12px;
@@ -26,14 +28,12 @@
   flex-wrap: wrap;
 }
 
-/* Search box sizing */
+/* Search box */
 .search-box {
   width: 200px;
 }
 
-
-
-/* Table Container */
+/* ===== TABLE CONTAINER ===== */
 .table-container {
   width: 90%;
   max-width: 1200px;
@@ -44,7 +44,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Table Styling */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -76,26 +75,15 @@ tr:hover {
   background-color: #f9f9f9;
 }
 
-
-/* Special left alignment for Process Name */
+/* First column alignment */
 th:first-child,
 td:first-child {
   text-align: left;
   padding-left: 16px;
   font-size: 16px;
-
-
 }
 
-td {
-  text-align: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  font-weight: 500;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
+/* ===== ADD SECTION ===== */
 .add-section {
   display: flex;
   align-items: center;
@@ -113,7 +101,7 @@ td {
   font-size: 28px;
 }
 
-/* Paginator */
+/* ===== PAGINATOR ===== */
 mat-paginator {
   display: flex;
   justify-content: end;
@@ -138,11 +126,15 @@ mat-paginator {
 .mat-paginator-page-size-select .mat-select {
   color: #5b84ff;
 }
-/* Responsive */
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px 10px;
   }
 
   .table-container {
@@ -165,6 +157,7 @@ mat-paginator {
   }
 }
 
+/* ===== POPUP ===== */
 .popup-overlay {
   position: fixed;
   top: 0;

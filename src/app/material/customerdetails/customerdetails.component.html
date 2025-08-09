@@ -35,7 +35,7 @@
         <th>Drawing No</th>
         <th>Part No</th>
         <th>No of Process</th>
-        <th>Previous Cost</th>
+        <th>Overall Cost</th>
         
         <th>Download</th>
         <th>Action</th>
@@ -48,7 +48,8 @@
       <td>{{ customer.drawingNo }}</td>
       <td>{{ customer.partName }}</td>
       <td>{{ customer.processName?.length }} Process</td>
-      <td>{{ customer.totalProcessCost }}</td>
+      <td>{{ customer.OverallTotalCost  | number:'1.2-2'
+ }}</td>
      
       <td>
        <p  class="Quotation" (click)="downloadQuotation(customer)">Download Quotation </p> 

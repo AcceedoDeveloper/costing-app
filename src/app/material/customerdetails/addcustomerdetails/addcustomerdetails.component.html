@@ -82,6 +82,25 @@
           <label>Pouring Weight</label>
           <input matInput type="number" formControlName="PouringWeight" />
         </div>
+        <div class="row">
+          <label>Good casting weight Kg / heat</label>
+          {{ castingWeightKg  | number:'1.2-2'}}
+        </div>
+        <div class="row">
+          <label>Yield
+</label>
+          {{ yeild  | number:'1.2-2'}}
+        </div>
+        <div class="row">
+          <label>Material Returned
+</label>
+            {{ castingWeightKg  | number:'1.2-2'}}
+        </div><div class="row">
+          <label>PYield %
+</label>
+         {{ yeild  | number:'1.2-2'}} %
+        </div>
+
       </div>
 
       <!-- Moulding Input -->
@@ -95,6 +114,10 @@
           <label>Bake Moulding</label>
           <input matInput type="number" formControlName="BakeMoulding" />
         </div>
+        <div class="row">
+          <label>No of moulds/ heat </label>
+          {{ NoOfMouldperHeat  | number:'1.2-2'}}
+        </div>  
       </div>
 
       <!-- Core Input -->

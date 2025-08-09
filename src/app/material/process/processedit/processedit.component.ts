@@ -21,6 +21,8 @@ export class ProcesseditComponent implements OnInit {
   materialTypes: string[] = [];
   form: FormGroup;
   materialFormArray: FormArray;
+  hasMaterialData = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -45,6 +47,9 @@ ngOnInit(): void {
   });
 
   this.grades$ = this.store.select(fromGrade.selectAllGrades);
+
+  this.hasMaterialData =  this.data.rawMaterial.length > 0;
+
 
   // Initialize the form structure once
   this.form = this.fb.group({

@@ -3,7 +3,7 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <!-- ✅ Grade section now correctly inside the form -->
-
+ <div class="form-row">
 
     <mat-form-field appearance="fill" class="full-width">
   <mat-label>Process Name</mat-label>
@@ -12,18 +12,21 @@
     Process name is required
   </mat-error>
 </mat-form-field>
-
-
-    <div formGroupName="grade" class="grade-section">
+<div formGroupName="grade" class="grade-section" *ngIf="!hasMaterialData">
       <mat-form-field appearance="fill">
         <mat-label>Select Grade</mat-label>
-        <mat-select formControlName="_id">
+        <mat-select formControlName="_id" >
           <mat-option *ngFor="let g of (grades$ | async)" [value]="g._id">
             {{ g.gradeNo }} - {{ g.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
+ </div>
+
+
+
+    
 
 
 

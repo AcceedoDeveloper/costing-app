@@ -9,6 +9,7 @@
       <tr>
         <th class="col-process">Process Name</th>
         <th class="col-grade">Grade / Raw Material</th>
+        <th class="col-grade">Cost</th>
         <th class="col-action">Action</th>
       </tr>
     </thead>
@@ -27,6 +28,8 @@
               Materials
             </ng-container>
           </td>
+          <td class="" >{{ process.totalPowerCost
+}}</td>
           <td class="col-action">
             <div class="actions">
               <mat-icon class="icon" (click)="toggleExpand(i)">
@@ -39,7 +42,7 @@
         </tr>
 
         <tr *ngIf="expandedIndex === i" class="expanded-row">
-          <td colspan="3">
+          <td colspan="4">
             <div class="dropdown-container single-column">
               <!-- Grade Table -->
               <div class="dropdown-table" *ngIf="process.grade?.length > 0">
@@ -50,6 +53,7 @@
                       <th class="col-process">Grade Material Type</th>
                       <th class="col-grade">Grade Material</th>
                       <th class="col-action">Grade Quantity</th>
+                       <th class="col-action">Unit Cost</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -60,6 +64,7 @@
                             <td class="col-process">{{ raw.type }}</td>
                             <td class="col-grade">{{ material.name }}</td>
                             <td class="col-action">{{ material.quantity }}</td>
+                            <td class="col-action">{{ material.unitCost | number:'1.2-2' }}</td> 
                           </tr>
                         </ng-container>
                       </ng-container>
@@ -77,6 +82,7 @@
                       <th class="col-process">Material Type</th>
                       <th class="col-grade">Material Name</th>
                       <th class="col-action">Material Quantity</th>
+                       <th class="col-action">Unit Cost</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -86,6 +92,7 @@
                           <td class="col-process">{{ raw.type }}</td>
                           <td class="col-grade">{{ material.name }}</td>
                           <td class="col-action">{{ material.quantity }}</td>
+                          <td class="col-action">{{ material.unitCost | number:'1.2-2' }}</td> 
                         </tr>
                       </ng-container>
                     </ng-container>

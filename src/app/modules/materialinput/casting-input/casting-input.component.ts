@@ -225,7 +225,7 @@ saveAllCastingChanges() {
     }
   };
 
-  // ✅ Flat version for summary or analytics
+
   const flatData: FlatCastingData = {
     CastingWeight: this.editableItem.CastingInput.CastingWeight,
     Cavities: this.editableItem.CastingInput.Cavities,
