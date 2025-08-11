@@ -1,3 +1,5 @@
+
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f3f3f3;
@@ -5,7 +7,6 @@ body {
   padding: 0;
 }
 
-/* Header Section: Title Left & Button Right */
 .header {
   display: flex;
   align-items: center;
@@ -13,32 +14,60 @@ body {
   width: 90%;
   max-width: 1200px;
   margin: 30px auto 16px auto;
-  padding: 0;
 }
 
 .header h2 {
   margin: 0;
   font-size: 24px;
-  color:  #070707; 
+  color: #070707;
+  white-space: nowrap;
 }
+
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+
+.search-bar {
+  flex: 0 0 auto;
+  max-width: 250px;
+}
+.search-bar mat-form-field {
+  width: 100%;
+}
+
+
+.date-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.date-filters mat-form-field {
+  width: 160px;
+}
+
 
 .header button {
   height: 36px;
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
-  background-color:  #3f51b5; 
+  background-color: #3f51b5;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  white-space: nowrap;
 }
-
 .header button:hover {
-  background-color: #3f51b5; 
+  background-color: #303f9f;
 }
 
-/* Table Container */
+
 .table-container {
   width: 90%;
   max-width: 1200px;
@@ -49,57 +78,6 @@ body {
   overflow-x: auto;
 }
 
-/* Add Section (Optional search or filter bar) */
-.add-section {
-  padding: 0px;
-  display: flex;
-  align-items: center;
-}
-
-mat-form-field {
-  width: 200px;
-}
-
-/* Circular Icon Buttons */
-.circular-button {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 40px;
-}
-
-.primary-button {
-  background-color: #ff4081;
-  color: white;
-}
-
-.primary-button:disabled {
-  background-color: #ccc;
-  color: #999;
-}
-
-.warn-button {
-  background-color: #666;
-  color: white;
-}
-
-.warn-button:hover {
-  background-color: #555;
-}
-
-.circular-button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-}
-
-/* Table Styling */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -127,128 +105,51 @@ td {
   white-space: nowrap;
 }
 
-/* Action Column */
 td.actions {
-  padding: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0;
 }
 
 .actions mat-icon.icon {
   font-size: 20px;
-  width: 20px;
-  height: 20px;
   color: #000;
   cursor: pointer;
   margin: 0 2px;
 }
-
 .actions mat-icon.icon:hover {
   color: #ff4081;
 }
 
-tr:hover {
-  background-color: #f9f9f9;
-}
-
-/* Paginator */
 mat-paginator {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 10px;
   background: #fff;
   border-radius: 0 0 10px 10px;
   height: 67px;
 }
 
-.mat-paginator-container {
-  font-family: Arial, sans-serif;
-}
-
-.mat-paginator-page-size-label,
-.mat-paginator-range-label {
-  color: #5b84ff;
-}
-
-.mat-paginator-icon {
-  color: #5b84ff;
-}
-
-.mat-paginator-page-size-select .mat-select {
-  color: #5b84ff;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
   }
-
+  .header-controls {
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+  .search-bar,
+  .date-filters,
   .header button {
-    align-self: flex-end;
-  }
-
-  .table-container {
-    width: 100%;
-    margin: 20px 10px;
-  }
-
-  .add-section {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 10px;
-  }
-
-  mat-form-field {
     width: 100%;
   }
-
-  th, td {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .actions mat-icon.icon {
-    font-size: 18px;
-  }
-
-  mat-paginator {
-    font-size: 14px;
-  }
 }
-
-@media (max-width: 480px) {
-  th, td {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  .actions mat-icon.icon {
-    font-size: 16px;
-  }
-
-  mat-paginator {
-    font-size: 12px;
-  }
-
-  .mat-paginator-icon {
-    width: 20px;
-  }
-}
-
 
 .Quotation {
   color: red;
   text-decoration: underline;
-  cursor: pointer; 
+  cursor: pointer;
   margin-top: 10px;
 }
-.search-bar {
-  width: 100%;
-  max-width: 400px;
-  margin: 16px 0;
-}
+

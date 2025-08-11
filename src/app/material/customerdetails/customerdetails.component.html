@@ -1,30 +1,32 @@
 <div class="header">
   <h2>Quotation Generator</h2>
-  <div class="search-bar">
-  <mat-form-field appearance="standard" class="full-width">
-    <mat-label>Search by Customer / Drawing No / Part No</mat-label>
-    <input matInput [(ngModel)]="searchText" placeholder="Type to filter..." />
-  </mat-form-field>
-</div>
 
-<div class="date-filters">
-  <mat-form-field appearance="outline">
-    <mat-label>Start Date</mat-label>
-    <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="applyDateFilter()" />
-    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-    <mat-datepicker #startPicker></mat-datepicker>
-  </mat-form-field>
+  <div class="header-controls">
+    <div class="search-bar">
+      <mat-form-field appearance="standard" class="full-width">
+        <mat-label>Search by Customer</mat-label>
+        <input matInput [(ngModel)]="searchText" placeholder="Type to filter..." />
+      </mat-form-field>
+    </div>
 
-  <mat-form-field appearance="outline">
-    <mat-label>End Date</mat-label>
-    <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="applyDateFilter()" />
-    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-    <mat-datepicker #endPicker></mat-datepicker>
-  </mat-form-field>
-</div>
+    <div class="date-filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="applyDateFilter()" />
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
 
+      <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="applyDateFilter()" />
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
 
-  <button mat-raised-button color="primary" (click)="addCustomerDetails()">Add Customer Details</button>
+    <button mat-raised-button color="primary" (click)="addCustomerDetails()">Add Customer Details</button>
+  </div>
 </div>
 
 <div class="table-container">

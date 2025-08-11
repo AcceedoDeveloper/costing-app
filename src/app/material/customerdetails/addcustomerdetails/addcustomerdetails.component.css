@@ -535,6 +535,17 @@ td input.updated-cost-input {
   }
 }
 
+.value-container {
+  position: relative;
+  margin-left: 51%;
+  bottom: 20px; 
+}
+
+.dim{
+ 
+  width: 300px;
+
+}
 
 
 /* Table container */
