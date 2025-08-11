@@ -48,6 +48,11 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   quotationData: any;
   quotationCalc: any;
   today: Date = new Date();
+  castingWeightKg : number = 0;
+  yeild : number = 0;
+  NoOfMouldperHeat : number = 0;
+  meterialRefund : number = 0;
+
 
    
 
@@ -253,6 +258,23 @@ if (this.data?.mode === 'edit' && this.data.customerData) {
 
   return process;
 });
+
+
+
+this.secondFormGroup.valueChanges.subscribe(values => {
+  const { CastingWeight = 0, Cavities = 0, PouringWeight = 1 } = values;
+
+  if (PouringWeight === 0) {
+    this.castingWeightKg = 0;
+    return;
+  }
+  this.castingWeightKg = Math.round(((CastingWeight * Cavities) / PouringWeight) * 1050);
+  this.yeild = (this.castingWeightKg / 1050) * 100;
+  this.meterialRefund = 1050 - this.castingWeightKg;
+  this.NoOfMouldperHeat = Math.round(1050 / PouringWeight);
+  console.log('Calculated Value:', this.castingWeightKg);
+});
+
 
     console.log('Edit Mode - Customer ID:', this.data.customerData._id);
 

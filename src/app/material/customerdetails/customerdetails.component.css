@@ -153,3 +153,13 @@ mat-paginator {
   margin-top: 10px;
 }
 
+.date-filters .mat-datepicker-toggle {
+  position: relative;
+  top: 2px;   
+  right: -4px; 
+}
+
+
+.date-filters .mat-datepicker-toggle .mat-icon {
+  font-size: 20px; 
+}

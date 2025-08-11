@@ -12,7 +12,7 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { UpdateaddcustomerdDetailsComponent} from './updateaddcustomerd-details/updateaddcustomerd-details.component';
 import { PowerService } from '../../services/power.service';
 import {UpdateCustomerDetailsComponent } from './update-customer-details/update-customer-details.component';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-customerdetails',
@@ -31,7 +31,8 @@ filteredCustomersList: CustomerdetailsIn[] = [];
 
   constructor(private store: Store<{ materials: MaterialState }>, 
     private dialog : MatDialog,
-    private power: PowerService ) {}
+    private power: PowerService,
+    private tooster: ToastrService ) {}
 
   ngOnInit(): void {
   this.store.dispatch(loadCustomerDetails());
@@ -141,6 +142,7 @@ downloadQuotation(customer: any) {
     link.href = downloadURL;
     link.download = `${customerName}_quotation.xlsx`;
     link.click();
+     this.tooster.success('Quotation downloaded successfully!', 'Success');
   });
 }
 

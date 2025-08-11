@@ -55,6 +55,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   castingWeightKg : number = 0;
   yeild : number = 0;
   NoOfMouldperHeat : number = 0;
+  meterialRefund : number = 0;
 
 
   quotationData: any = null;
@@ -274,6 +275,7 @@ this.secondFormGroup.valueChanges.subscribe(values => {
   }
   this.castingWeightKg = Math.round(((CastingWeight * Cavities) / PouringWeight) * 1050);
   this.yeild = (this.castingWeightKg / 1050) * 100;
+  this.meterialRefund = 1050 - this.castingWeightKg;
   this.NoOfMouldperHeat = Math.round(1050 / PouringWeight);
   console.log('Calculated Value:', this.castingWeightKg);
 });

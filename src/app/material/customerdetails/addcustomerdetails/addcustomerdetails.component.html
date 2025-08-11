@@ -91,6 +91,7 @@
 
           <div class="info-popup  dim">
             (((Casting weight in Kgs  * No of cavities)/Pouring weight in Kgs)*1050) <br>
+            (( {{ castingWeightKg  | number:'1.2-2'}} * {{ NoOfCavities  | number:'1.2-2'}}) / {{ pouringWeight  | number:'1.2-2'}}) * 1050 = {{ castingWeightKg  | number:'1.2-2'}}
         
           </div>
         </span>
@@ -106,6 +107,7 @@
 
           <div class="info-popup dim">
             ((Good casting weight Kg / heat)  / 1050%) <br>
+            ({{ castingWeightKg  | number:'1.2-2'}} / 1050) = {{ yeild  | number:'1.2-2'}}
           </div>
         </span>
             
@@ -115,12 +117,13 @@
         <div class="row">
           <label>Material Returned</label>
           <div class="value-container" >
-               {{ castingWeightKg  | number:'1.2-2'}}
+               {{ meterialRefund | number:'1.2-2'}}
                  <span class="info-container" tabindex="0">
           <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
           <div class="info-popup dim">
             (1050 - Good casting weight Kg / heat ) <br>
+            (1050 - {{ castingWeightKg  | number:'1.2-2'}}) = {{ meterialRefund  | number:'1.2-2'}}
         
           </div>
         </span>
@@ -136,6 +139,7 @@
 
           <div class="info-popup dim">
            ((Casting weight in Kgs * No of cavities )/ Pouring weight in Kgs) <br>
+            (( {{ castingWeightKg  | number:'1.2-2'}} * {{ NoOfCavities  | number:'1.2-2'}}) / {{ pouringWeight  | number:'1.2-2'}}) = {{ yeild  | number:'1.2-2'}} %
         
           </div>
         </span>
@@ -166,6 +170,8 @@
 
           <div class="info-popup">
             (1050 / Pouring weight in Kgs) <br>
+            (1050 / {{ pouringWeight  | number:'1.2-2'}}) = {{ NoOfMouldperHeat  | number:'1.2-2'}}
+
         
           </div>
         </span>
