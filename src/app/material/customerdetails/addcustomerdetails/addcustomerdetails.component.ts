@@ -56,6 +56,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   yeild : number = 0;
   NoOfMouldperHeat : number = 0;
   meterialRefund : number = 0;
+  isSaved = false;
 
 
   quotationData: any = null;
@@ -435,6 +436,7 @@ this.selectedProcesses = [];
 
 submitCostForm(): void {
   console.log('Submitted Cost Form:', this.costForm.value);
+  this.isSaved = true; 
 }
 
 processdata(){

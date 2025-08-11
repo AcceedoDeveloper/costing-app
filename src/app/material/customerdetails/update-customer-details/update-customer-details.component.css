@@ -262,6 +262,7 @@ body {
   align-items: flex-end;     /* Align to bottom if there's vertical space */
   padding: 16px;
   height: 100%;              /* Optional: for full-height container */
+  gap: 10px;
 }
 
 

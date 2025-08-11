@@ -183,7 +183,8 @@ body {
   justify-content: flex-end; /* Align to right */
   align-items: flex-end;     /* Align to bottom if there's vertical space */
   padding: 16px;
-  height: 100%;              /* Optional: for full-height container */
+  height: 100%;    
+  gap: 10px;          /* Optional: for full-height container */
 }
 
 .form-grid {

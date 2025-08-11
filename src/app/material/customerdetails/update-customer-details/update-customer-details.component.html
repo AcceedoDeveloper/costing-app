@@ -457,7 +457,8 @@
     </div>
 
     <div class="stepper-button-wrapper">
-      <button mat-raised-button matStepperNext color="primary" (click)="submitCostForm(); generateFinalJson()" (click)="generateFinalJsonFromLoadedData()">Next</button>
+            <button mat-raised-button  color="warn" (click)="submitCostForm(); generateFinalJson()" (click)="generateFinalJsonFromLoadedData()">Save</button>
+      <button mat-raised-button matStepperNext color="primary"  [disabled]="!isSaved" (click)="submitCostForm(); generateFinalJson()" (click)="generateFinalJsonFromLoadedData()">View Quote</button>
     </div>
   </form>
 </mat-step>
@@ -771,7 +772,7 @@
             <td>SHELL Moulding Weight</td>
             <td class="numeric">{{quotationCalc.shellMouldWeight | number:'1.2-2'}}</td>
             <td></td>
-            <td>Power Cost</td>
+            <td style="color: red;"> Power Cost</td>
             <td></td>
             <td></td>
             <td class="numeric"></td>
@@ -904,7 +905,7 @@
             <td>No of cavities in the core box</td>
             <td class="numeric">1</td>
             <td></td>
-            <td>Labour</td>
+            <td  style="color: red;" > Labour</td>
             <td></td>
             <td></td>
             <td class="numeric"></td>
@@ -1016,7 +1017,7 @@
             <td>Bank interest</td>
             <td class="numeric">{{quotationCalc.BankInterest | number:'1.2-2'}}</td>
             <td></td>
-            <td>Over heads</td>
+            <td style="color: red;" >Over heads</td>
             <td></td>
             <td></td>
             <td class="numeric"></td>

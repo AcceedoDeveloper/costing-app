@@ -52,6 +52,7 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   yeild : number = 0;
   NoOfMouldperHeat : number = 0;
   meterialRefund : number = 0;
+  isSaved = false;
 
 
    
@@ -406,6 +407,7 @@ submitStep2() {
 
 submitCostForm(): void {
   console.log('Submitted Cost Form:', this.costForm.value);
+  this.isSaved = true;
 }
 
 processdata(){
