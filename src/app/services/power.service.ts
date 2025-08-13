@@ -75,7 +75,7 @@ getSalaryMap(startDate: string, endDate: string, yearNo: number): Observable<Sal
 
 
 addPowerCost(data: { processName: string; totalUnitPerProcess: number }) {
-    return this.http.post('http://localhost:3005/addProcess-Powercost', data);
+    return this.http.post(this.configService.getCostingUrl('addProcess-Powercost'), data);
   }
 
 
