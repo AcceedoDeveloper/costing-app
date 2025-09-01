@@ -50,58 +50,62 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let row of pagedOverheadTable">
-        <tr *ngFor="let month of reversedTableHeaders; let first = first">
-          <td *ngIf="first" class="process-name-cell" [attr.rowspan]="reversedTableHeaders.length">
-            <div class="process-name-content">{{ row.processName }}</div>
-          </td>
-          <td class="month-cell">{{ month }}</td>
-          <td>
-            <ng-container *ngIf="row[month]; else noData">
-              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlyRepair">
-                <input type="number" [(ngModel)]="row[month].repairAndMaintenance" />
-              </ng-container>
-              <ng-template #readOnlyRepair>{{ row[month].repairAndMaintenance || '-' }}</ng-template>
-            </ng-container>
-            <ng-template #noData>-</ng-template>
-          </td>
-          <td>
-            <ng-container *ngIf="row[month]; else noData">
-              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlySell">
-                <input type="number" [(ngModel)]="row[month].sellingDistributionAndMiscOverHeads" />
-              </ng-container>
-              <ng-template #readOnlySell>{{ row[month].sellingDistributionAndMiscOverHeads || '-' }}</ng-template>
-            </ng-container>
-            <ng-template #noData>-</ng-template>
-          </td>
-          <td>
-            <ng-container *ngIf="row[month]; else noData">
-              <ng-container *ngIf="editingRow === row.processName && month === currentMonth; else readOnlyFinance">
-                <input type="number" [(ngModel)]="row[month].financeCost" />
-              </ng-container>
-              <ng-template #readOnlyFinance>{{ row[month].financeCost || '-' }}</ng-template>
-            </ng-container>
-            <ng-template #noData>-</ng-template>
-          </td>
-          <td>{{ row[month]?.totalOverHeadsWithFinanceCost || '-' }}</td>
-          <td *ngIf="first" class="action-cell" [attr.rowspan]="reversedTableHeaders.length">
-            <div class="action-content">
-              <ng-container *ngIf="editingRow === row.processName; else editButton">
-                <button mat-raised-button color="primary" (click)="saveOverheads()">Save</button>
-                <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
-              </ng-container>
-              <ng-template #editButton>
-                <button mat-icon-button color="accent" (click)="startEditing(row.processName)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-              </ng-template>
-            </div>
-          </td>
-        </tr>
+      <ng-container >
+
+
+   <tr *ngFor="let row of formattedOverheadTableData">
+  <td>{{ row.processName }}</td>
+  <td>{{ row.month }}</td>
+
+  <!-- Repair -->
+  <td>
+    <ng-container *ngIf="row.month === currentMonth && editingRow === row.processName; else readOnlyRepair">
+      <input type="number" [(ngModel)]="row.repair" />
+    </ng-container>
+    <ng-template #readOnlyRepair>{{ row.repair }}</ng-template>
+  </td>
+
+  <!-- Sell/Misc -->
+  <td>
+    <ng-container *ngIf="row.month === currentMonth && editingRow === row.processName; else readOnlySell">
+      <input type="number" [(ngModel)]="row.sellMisc" />
+    </ng-container>
+    <ng-template #readOnlySell>{{ row.sellMisc }}</ng-template>
+  </td>
+
+  <!-- Finance -->
+  <td>
+    <ng-container *ngIf="row.month === currentMonth && editingRow === row.processName; else readOnlyFinance">
+      <input type="number" [(ngModel)]="row.finance" />
+    </ng-container>
+    <ng-template #readOnlyFinance>{{ row.finance }}</ng-template>
+  </td>
+
+  <!-- Total -->
+  <td>{{ row.total }}</td>
+
+  <!-- Action: Show only on current month row and isFirstRow -->
+  <td *ngIf="row.isFirstRow && row.month === currentMonth" [attr.rowspan]="reversedTableHeaders.length">
+    <div class="action-content">
+      <ng-container *ngIf="editingRow === row.processName; else editButton">
+        <button mat-raised-button color="primary" (click)="saveFormattedRow(row)">Save</button>
+        <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
+      </ng-container>
+      <ng-template #editButton>
+        <button mat-icon-button color="accent" (click)="startEditing(row.processName)">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-template>
+    </div>
+  </td>
+</tr>
+
+
       </ng-container>
     </tbody>
   </table>
 
   <mat-paginator [length]="filteredData.length" [pageSize]="pageSize" [pageSizeOptions]="[3, 6, 9]" showFirstLastButtons (page)="onPageChange($event)"></mat-paginator>
 </div>
+
 
