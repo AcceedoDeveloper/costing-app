@@ -7,6 +7,7 @@ import { ProcessComponent } from './process/process.component';
 import { MaterialtypeComponent} from './materialtype/materialtype.component';
 import {ProcessPowerComponent } from './process-power/process-power.component';
 import { SalaryWagesComponent} from './salary-wages/salary-wages.component';
+import{ SalaryWagesHistoryComponent } from './salary-wages-history/salary-wages-history.component';
 
 const routes: Routes = [
   { path: 'list', component: MaterialComponent },
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'process', component: ProcessComponent },
   { path: 'material/type', component: MaterialtypeComponent},
   { path : 'power-cost', component : ProcessPowerComponent},
-  { path : 'salary-wages', component: SalaryWagesComponent}
+  { path : 'salary-wages', component:SalaryWagesComponent },
+  { path : 'salary-wages-history', component:SalaryWagesHistoryComponent }
 ];
 
 @NgModule({

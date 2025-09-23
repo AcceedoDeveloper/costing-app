@@ -49,14 +49,14 @@ import { ProcessPowerComponent } from './process-power/process-power.component';
 import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
 import { AddSalaryWagesComponent } from './salary-wages/add-salary-wages/add-salary-wages.component';
 import { UpdateCustomerDetailsComponent } from './customerdetails/update-customer-details/update-customer-details.component';
-
+import { SalaryWagesHistoryComponent } from './salary-wages-history/salary-wages-history.component';
 
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent, 
     SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, 
     ProcessComponent, AddprocessComponent, MaterialtypeComponent, 
     ProcesseditComponent, AddcustomerdetailsComponent, 
-    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent],
+    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent, SalaryWagesHistoryComponent],
   imports: [
     MatAutocompleteModule,
    MatOptionModule,
@@ -75,6 +75,7 @@ import { UpdateCustomerDetailsComponent } from './customerdetails/update-custome
     ReactiveFormsModule,
     MatDialogModule,
     MatPaginatorModule,
+   
     CommonModule,
     MaterialRoutingModule,
     HttpClientModule,

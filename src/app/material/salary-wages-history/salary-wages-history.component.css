@@ -1,0 +1,159 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  align-items: stretch;
+}
+
+.salary-container {
+  display: flex;
+  justify-content: flex-start;
+  margin: 20px;
+  gap: 20px;
+}
+
+.salary-box {
+  min-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 20px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  transition: transform 0.2s ease-in-out;
+  overflow-x: auto;
+}
+
+.salary-box:hover {
+  transform: translateY(-3px);
+}
+
+.salary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.salary-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.edit-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.edit-icon:hover {
+  color: #007bff;
+}
+
+.salary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.salary-row:last-child {
+  border-bottom: none;
+}
+
+.salary-row .label {
+  font-weight: 500;
+  color: #555;
+}
+
+.salary-row .value {
+  font-weight: 600;
+  color: #222;
+}
+
+.salary-row.total {
+  margin-top: 10px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+
+.overhead-container {
+  display: flex;
+  justify-content:flex-start;
+  margin: 20px;
+  gap: 20px;
+}
+
+.overhead-box {
+  min-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 20px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  transition: transform 0.2s ease-in-out;
+}
+
+.overhead-box:hover {
+  transform: translateY(-3px);
+}
+
+.overhead-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.overhead-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.edit-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.edit-icon:hover {
+  color: #007bff;
+}
+
+.overhead-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.overhead-row:last-child {
+  border-bottom: none;
+}
+
+.overhead-row .label {
+  font-weight: 500;
+  color: #555;
+}
+
+.overhead-row .value {
+  font-weight: 600;
+  color: #222;
+}
+
+.overhead-row.total {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.overhead-row.total-finance {
+  font-weight: bold;
+  color: #28a745;
+}
