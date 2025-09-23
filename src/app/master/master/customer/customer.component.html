@@ -20,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let element of customers">
+      <tr *ngFor="let element of  paginatedCustomers">
         <td>{{ element.name }}</td>
         <td>{{ element.address }}</td>
         <td>{{ element.phoneNo }}</td>
@@ -31,4 +31,12 @@
       </tr>
     </tbody>
   </table>
+
+  <mat-paginator
+  [length]="customers.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 20]"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
 </div>

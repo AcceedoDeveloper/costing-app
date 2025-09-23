@@ -125,7 +125,10 @@ selectedFile: File | null = null;
   highPressureCleaning: [0],
 
 
-  otherConsumables: [0] // Add this line for other consumables
+  otherConsumables: [0], // Add this line for other consumables
+  power1 : [0],
+  power2: [0],
+  power3: [0]
   });
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
@@ -350,7 +353,11 @@ if (this.data?.mode === 'edit' && this.data.customerData) {
       packingAndTransport: customer.UltraSonicWashing?.packingAndTransport || 0,
       NozzleShotBlasting: customer.UltraSonicWashing?.NozzleShotBlasting || 0,
       highPressureCleaning: customer.UltraSonicWashing?.highPressureCleaning || 0,
-      otherConsumables: customer.otherConsumables?.otherConsumableCost || 0
+      otherConsumables: customer.otherConsumables?.otherConsumableCost || 0,
+      powerCost1 :customer.otherConsumables?.otherConsumableCost|| 0,
+      powerCost2 : customer.otherConsumables?.otherConsumableCost || 0,
+      powerCost3 : customer.otherConsumables?.otherConsumableCost || 0,
+
     });
 
     this.selectedProcesses = customer.processName || [];
@@ -624,7 +631,16 @@ generateFinalJson(): void {
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumableCost: cost.otherConsumables,
-    Status: 'Completed'
+    Status: 'Completed',
+    // power1: cost.power1,
+    // power2: cost.power2,
+    // power3: cost.power3,
+    powerCost: {
+    MeltAndOthersPower: cost.power1,
+    mouldPower: cost.power2,
+    corePower: cost.power3
+  }
+
   };
 
   console.log('✅ Final Full JSON Format:', finalData);

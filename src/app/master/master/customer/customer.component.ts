@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { loadCustomers } from '../store/master.action';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectCustomers } from '../store/master.selector'; // Adjust the import path as necessary
-import { updateCustomer } from '../store/master.action'; // Adjust the import path as necessary
+import { selectCustomers } from '../store/master.selector'; 
+import { updateCustomer } from '../store/master.action'; 
 import { addCustomer } from '../store/master.action';
-import { deleteCustomer } from '../store/master.action'; // Adjust the import path as necessary
+import { deleteCustomer } from '../store/master.action'; 
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddcustomerComponent} from './addcustomer/addcustomer.component';
 import { Customer } from '../../../models/Customer-details.model';
-
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-customer',
@@ -24,6 +24,10 @@ import { Customer } from '../../../models/Customer-details.model';
 export class CustomerComponent implements OnInit {
   customers$: Observable<any>;
   customers: any[] = [];
+    paginatedCustomers: any[] = []; 
+
+  pageSize = 5;
+  pageIndex = 0;
 
   newCustomerName: string = '';
   isEditMode: boolean = false;
@@ -33,16 +37,18 @@ export class CustomerComponent implements OnInit {
 
   constructor(private store: Store, private dialog: MatDialog) {}
 
-  ngOnInit(): void {
-    this.store.dispatch(loadCustomers());
+ngOnInit(): void {
+  this.store.dispatch(loadCustomers());
 
-    this.customers$ = this.store.select(selectCustomers);
-   
-    this.customers$.subscribe((customers) => {
-      this.customers = customers;
-      console.log('Customers:', this.customers);
-    });
-  }
+  this.customers$ = this.store.select(selectCustomers);
+ 
+  this.customers$.subscribe((customers) => {
+    this.customers = customers;
+    console.log('Customers:', this.customers);
+    this.updatePaginatedCustomers(); 
+  });
+}
+
 
   addCustomer() {
     console.log('Add:', this.newCustomerName);
@@ -50,6 +56,7 @@ export class CustomerComponent implements OnInit {
       name: this.newCustomerName.trim()
     };
     console.log('New Customer:', newCustomer);
+    this.updatePaginatedCustomers();
     this.store.dispatch(addCustomer({ customer: newCustomer }));
     this.cancelAction();
   }
@@ -114,5 +121,38 @@ deleteCustomer(id: string) {
     this.newCustomerName = '';
     this.currentEditId = null;
   }
+
+   updatePaginatedCustomers() {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedCustomers = this.customers.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePaginatedCustomers();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 

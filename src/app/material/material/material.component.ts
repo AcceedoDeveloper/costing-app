@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MaterialComponent implements OnInit, AfterViewInit {
   selectedMaterialType: string = '';
-  selectedHouseType: string = 'supplier';
+  selectedHouseType: string = 'in-house';
   materialTypes: string[] = []; 
   searchTerm: string = '';
   sortedPriceHistory: { unitCost: number; date: string }[] = [];

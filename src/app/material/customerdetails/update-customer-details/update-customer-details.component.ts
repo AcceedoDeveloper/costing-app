@@ -116,7 +116,10 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   highPressureCleaning: [0],
 
 
-  otherConsumables: [0] // Add this line for other consumables
+  otherConsumables: [0], // Add this line for other consumables
+      power1 : [0],
+  power2: [0],
+  power3: [0]
   });
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
@@ -323,7 +326,11 @@ this.secondFormGroup.valueChanges.subscribe(values => {
       packingAndTransport: customer.UltraSonicWashing?.packingAndTransport || 0,
       NozzleShotBlasting: customer.UltraSonicWashing?.NozzleShotBlasting || 0,
       highPressureCleaning: customer.specialProcess?.highPressureCleaning || 0,
-      otherConsumables: customer.otherConsumables?.otherConsumableCost || 0
+      otherConsumables: customer.otherConsumables?.otherConsumableCost || 0,
+       power1 :customer.powerCost?.MeltAndOthersPower || 0,
+      power2 : customer.powerCost?.mouldPower || 0,
+      power3 : customer.powerCost?.corePower || 0,
+
     });
 
     this.selectedProcesses = customer.processName || [];
@@ -558,7 +565,14 @@ generateFinalJson(): void {
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumableCost: cost.otherConsumables,
-    Status: 'Completed'
+    Status: 'Completed',
+
+    powerCost: {
+    MeltAndOthersPower: cost.power1,
+    mouldPower: cost.power2,
+    corePower: cost.power3
+  }
+
   };
 
   console.log(' Final Full JSON Format:', finalData);
