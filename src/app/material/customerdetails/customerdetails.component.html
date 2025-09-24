@@ -46,7 +46,7 @@
     <tbody>
   <ng-container *ngFor="let customer of filteredCustomers">
     <tr>
-      <td>{{ customer.CustomerName.name }}</td>
+      <td>{{ customer.CustomerName.name || '-'}}</td>
       <td>{{ customer.drawingNo }}</td>
       <td>{{ customer.partName }}</td>
       <td>{{ customer.processName?.length }} Process</td>

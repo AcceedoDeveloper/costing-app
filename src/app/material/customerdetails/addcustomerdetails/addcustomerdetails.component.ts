@@ -290,8 +290,8 @@ this.firstFormGroup = this.fb.group({
   customerName: ['', Validators.required],
   partNo: ['', Validators.required],
   drawing: ['', Validators.required],
-  CastingInput: [false],
-  MouldingInput: [false],
+  CastingInput: [true],
+  MouldingInput: [true],
   CoreInput: [false]
 });
 

@@ -160,24 +160,27 @@ applyDateFilter() {
 get filteredCustomers() {
   const search = this.searchText.toLowerCase().trim();
 
-  return this.customerDetails.filter(c => {
-    const customerName = c.CustomerName?.name?.toLowerCase() || '';
-    const drawingNo = c.drawingNo?.toLowerCase() || '';
-    const partName = c.partName?.toLowerCase() || '';
-    const createdDate = new Date(c.createdAt);
+  return this.customerDetails
+    .filter(c => !!c.CustomerName)  // remove null CustomerName
+    .filter(c => {
+      const customerName = c.CustomerName?.name?.toLowerCase() || '';
+      const drawingNo = c.drawingNo?.toLowerCase() || '';
+      const partName = c.partName?.toLowerCase() || '';
+      const createdDate = new Date(c.createdAt);
 
-    const matchesSearch =
-      customerName.includes(search) ||
-      drawingNo.includes(search) ||
-      partName.includes(search);
+      const matchesSearch =
+        customerName.includes(search) ||
+        drawingNo.includes(search) ||
+        partName.includes(search);
 
-    const matchesDate =
-      (!this.startDate || createdDate >= new Date(this.startDate)) &&
-      (!this.endDate || createdDate <= new Date(this.endDate));
+      const matchesDate =
+        (!this.startDate || createdDate >= new Date(this.startDate)) &&
+        (!this.endDate || createdDate <= new Date(this.endDate));
 
-    return matchesSearch && matchesDate;
-  });
+      return matchesSearch && matchesDate;
+    });
 }
+
 
 
 
