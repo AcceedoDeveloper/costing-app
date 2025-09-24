@@ -1,23 +1,27 @@
 <div class="grid-container1">
   <!-- Salary & Wages History Section -->
-  <h1>Salary & Wages History</h1>
+   <div class="subheader">
+      <h1>Salary & Wages History</h1>
 
-  <!-- Date Filter -->
-  <div class="date-filters">
-    <mat-form-field appearance="outline">
-      <mat-label>Start Date</mat-label>
-      <input matInput [matDatepicker]="salaryStartPicker" [(ngModel)]="salaryStartDate" (dateChange)="applySalaryFilter()" />
-      <mat-datepicker-toggle matSuffix [for]="salaryStartPicker"></mat-datepicker-toggle>
-      <mat-datepicker #salaryStartPicker></mat-datepicker>
-    </mat-form-field>
+     <!-- Date Filter -->
+     <div class="date-filters">
+       <mat-form-field appearance="outline">
+         <mat-label>Start Date</mat-label>
+         <input matInput [matDatepicker]="salaryStartPicker" [(ngModel)]="salaryStartDate" (dateChange)="applySalaryFilter()" />
+         <mat-datepicker-toggle matSuffix [for]="salaryStartPicker"></mat-datepicker-toggle>
+         <mat-datepicker #salaryStartPicker></mat-datepicker>
+       </mat-form-field>
+   
+       <mat-form-field appearance="outline">
+         <mat-label>End Date</mat-label>
+         <input matInput [matDatepicker]="salaryEndPicker" [(ngModel)]="salaryEndDate" (dateChange)="applySalaryFilter()" />
+         <mat-datepicker-toggle matSuffix [for]="salaryEndPicker"></mat-datepicker-toggle>
+         <mat-datepicker #salaryEndPicker></mat-datepicker>
+       </mat-form-field>
+     </div>
+   </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>End Date</mat-label>
-      <input matInput [matDatepicker]="salaryEndPicker" [(ngModel)]="salaryEndDate" (dateChange)="applySalaryFilter()" />
-      <mat-datepicker-toggle matSuffix [for]="salaryEndPicker"></mat-datepicker-toggle>
-      <mat-datepicker #salaryEndPicker></mat-datepicker>
-    </mat-form-field>
-  </div>
+
 
   <div class="salary-container">
     <ng-container *ngIf="filteredSalaryHistory?.length > 0; else noSalaryData">
@@ -57,25 +61,31 @@
     </ng-template>
   </div>
 
-  <!-- Overheads Section -->
-  <h1>Overhead History</h1>
 
-  <!-- Date Filter -->
-  <div class="date-filters">
-    <mat-form-field appearance="outline">
-      <mat-label>Start Date</mat-label>
-      <input matInput [matDatepicker]="overheadStartPicker" [(ngModel)]="overheadStartDate" (dateChange)="applyOverheadFilter()" />
-      <mat-datepicker-toggle matSuffix [for]="overheadStartPicker"></mat-datepicker-toggle>
-      <mat-datepicker #overheadStartPicker></mat-datepicker>
-    </mat-form-field>
+  <div class="subheader">
+    <!-- Overheads Section -->
+    <h1>Overhead History</h1>
+    <!-- Date Filter -->
+    <div class="date-filters">
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="overheadStartPicker" [(ngModel)]="overheadStartDate" (dateChange)="applyOverheadFilter()" />
+        <mat-datepicker-toggle matSuffix [for]="overheadStartPicker"></mat-datepicker-toggle>
+        <mat-datepicker #overheadStartPicker></mat-datepicker>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="overheadEndPicker" [(ngModel)]="overheadEndDate" (dateChange)="applyOverheadFilter()" />
+        <mat-datepicker-toggle matSuffix [for]="overheadEndPicker"></mat-datepicker-toggle>
+        <mat-datepicker #overheadEndPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>End Date</mat-label>
-      <input matInput [matDatepicker]="overheadEndPicker" [(ngModel)]="overheadEndDate" (dateChange)="applyOverheadFilter()" />
-      <mat-datepicker-toggle matSuffix [for]="overheadEndPicker"></mat-datepicker-toggle>
-      <mat-datepicker #overheadEndPicker></mat-datepicker>
-    </mat-form-field>
   </div>
+
+
 
   <div class="overhead-container">
     <ng-container *ngIf="filteredOverHeadsHistory?.length > 0; else noOverheadData">

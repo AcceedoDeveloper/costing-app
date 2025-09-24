@@ -157,3 +157,17 @@
   font-weight: bold;
   color: #28a745;
 }
+
+
+.subheader{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.date-filters{
+   display: flex;
+  /* justify-content: flex-start; */
+  gap: 20px;
+}
