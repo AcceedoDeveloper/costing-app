@@ -129,8 +129,16 @@
  {
   "name": "UpdateOverHeadsByIds",
   "url": "UpdateOverHeadsByIds"
-}
+},
+ {
+  "name": "getSalaryAndWagesHistory",
+  "url": "getSalaryAndWagesHistory"
+},
+{
+  "name":"getOverHeadsHistory",
+  "url":"getOverHeadsHistory"
 
+}
 
 
 

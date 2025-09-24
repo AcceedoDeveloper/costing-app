@@ -17,4 +17,27 @@ export interface Process {
 }
 
 
+export interface SalaryHistory {
+  salaryforProcess: number;
+  salaryExcludingCoreMaking: number;
+  salaryForCoreProduction: number;
+  outSourcingCost: number;
+  splOutSourcingCost: number;
+  TotalOutSourcingCost: number;
+  updatedAt: string;
+  _id?: string;
+}
+
+
+export interface OverHeadsHistory {
+  repairAndMaintenance: number;
+  sellingDistributionAndMiscOverHeads: number;
+  financeCost: number;
+  totalOverHeads: number;
+  totalOverHeadsWithFinanceCost: number;
+  updatedAt: string;
+  _id?: string;
+}
+
+
 
