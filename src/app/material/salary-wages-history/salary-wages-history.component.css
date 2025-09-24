@@ -161,9 +161,8 @@
 
 .subheader{
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 33%;
 }
 
 .date-filters{
