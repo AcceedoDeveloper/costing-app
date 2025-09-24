@@ -7,11 +7,22 @@ import { SalaryHistory, OverHeadsHistory } from '../../models/process.model';
   templateUrl: './salary-wages-history.component.html',
   styleUrls: ['./salary-wages-history.component.css']
 })
+
+
+
+
 export class SalaryWagesHistoryComponent implements OnInit {
   salaryHistory: SalaryHistory[] = [];
+  filteredSalaryHistory: SalaryHistory[] = [];
+
   overHeadsHistory: OverHeadsHistory[] = [];
-  isLoading: boolean = true; 
-  errorMessage: string | null = null; 
+  filteredOverHeadsHistory: OverHeadsHistory[] = [];
+
+  salaryStartDate: Date | null = null;
+  salaryEndDate: Date | null = null;
+
+  overheadStartDate: Date | null = null;
+  overheadEndDate: Date | null = null;
 
   constructor(private processService: ProcessService) {}
 
@@ -21,39 +32,46 @@ export class SalaryWagesHistoryComponent implements OnInit {
   }
 
   loadSalaryWagesHistory(): void {
-    this.isLoading = true;
     this.processService.getSalaryAndWagesHistory().subscribe({
       next: (data: any) => {
-    
         this.salaryHistory = Array.isArray(data) ? data : (data?.SalaryAndWagesHistory || []);
-        console.log('Salary & Wages History Data:', data);
-        this.isLoading = false;
+        this.filteredSalaryHistory = [...this.salaryHistory]; // initially full list
       },
       error: (err) => {
         console.error('Error fetching Salary & Wages History:', err);
-        this.errorMessage = 'Failed to load salary and wages history.';
         this.salaryHistory = [];
-        this.isLoading = false;
+        this.filteredSalaryHistory = [];
       }
     });
   }
 
   loadOverHeadsHistory(): void {
-    this.isLoading = true;
     this.processService.getOverHeadsHistory().subscribe({
       next: (data: any) => {
-      
         this.overHeadsHistory = Array.isArray(data) ? data : (data?.OverHeadsHistory || []);
-        console.log('Overheads History Data:', data);
-      
-        this.isLoading = false;
+        this.filteredOverHeadsHistory = [...this.overHeadsHistory]; // initially full list
       },
       error: (err) => {
         console.error('Error fetching Overheads History:', err);
-        this.errorMessage = 'Failed to load overheads history.';
         this.overHeadsHistory = [];
-        this.isLoading = false;
+        this.filteredOverHeadsHistory = [];
       }
+    });
+  }
+
+  applySalaryFilter(): void {
+    this.filteredSalaryHistory = this.salaryHistory.filter(item => {
+      const date = new Date(item.updatedAt);
+      return (!this.salaryStartDate || date >= this.salaryStartDate) &&
+             (!this.salaryEndDate || date <= this.salaryEndDate);
+    });
+  }
+
+  applyOverheadFilter(): void {
+    this.filteredOverHeadsHistory = this.overHeadsHistory.filter(item => {
+      const date = new Date(item.updatedAt);
+      return (!this.overheadStartDate || date >= this.overheadStartDate) &&
+             (!this.overheadEndDate || date <= this.overheadEndDate);
     });
   }
 }
