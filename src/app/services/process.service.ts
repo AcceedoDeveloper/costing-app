@@ -5,8 +5,13 @@ import { Process } from '../models/process.model';
 import { ConfigService } from '../shared/components/config.service'; // ✅ Use ConfigService
 
 @Injectable({ providedIn: 'root' })
+
+
 export class ProcessService {
   constructor(private http: HttpClient, private config: ConfigService) {}
+
+
+
 
   getProcesses(): Observable<Process[]> {
     return this.http.get<Process[]>(this.config.getCostingUrl('getProcess'));
@@ -24,6 +29,7 @@ export class ProcessService {
     return this.http.delete(`${this.config.getCostingUrl('deleteProcessType')}/${id}`);
   }
 
+ 
 
   updateSalary(id: string, salary : any): Observable<any> {
     return this.http.put<any>(`${this.config.getCostingUrl('UpdateSalaryAndWages')}/${id}`, salary);
@@ -32,5 +38,16 @@ export class ProcessService {
   updateOverheads(id: string, overheads : any): Observable<any> {
     return this.http.put<any>(`${this.config.getCostingUrl('UpdateOverHeadsByIds')}/${id}`, overheads);
   }
+
+    getSalaryAndWagesHistory():Observable<any[]>{
+    return this.http.get<any[]>(this.config.getCostingUrl('getSalaryAndWagesHistory'))
+  }
+
+  
+  getOverHeadsHistory(): Observable<any[]> {
+    return this.http.get<any[]>(this.config.getCostingUrl('getOverHeadsHistory'));
+  }
+
+
 
 }

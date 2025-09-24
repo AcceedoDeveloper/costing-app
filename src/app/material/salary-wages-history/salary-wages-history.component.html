@@ -1,124 +1,77 @@
 <div class="grid-container1">
-
-    <h1>Salary & Wages-History</h1>
-
-  <!-- Salary & Wages Cards -->
+  <!-- Salary & Wages History Section -->
+  <h1>Salary & Wages History</h1>
   <div class="salary-container">
-    <div class="salary-box">
-      <div class="salary-header">
-       <h3>22-12-2025</h3>
+    <ng-container *ngIf="salaryHistory?.length > 0; else noSalaryData">
+      <div class="salary-box" *ngFor="let salary of salaryHistory">
+        <div class="salary-header">
+          <h3>{{ salary.updatedAt | date: 'dd-MM-yyyy' }}</h3>
+        </div>
+        <div class="salary-row">
+          <div class="label">Salary for Process</div>
+          <div class="value">₹ {{ salary.salaryforProcess  }}</div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Excluding Core Making</div>
+          <div class="value">₹ {{ salary.salaryExcludingCoreMaking  }}</div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Core Production</div>
+          <div class="value">₹ {{ salary.salaryForCoreProduction }}</div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Outsourcing Cost</div>
+          <div class="value">₹ {{ salary.outSourcingCost}}</div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Special Outsourcing</div>
+          <div class="value">₹ {{ salary.splOutSourcingCost  }}</div>
+        </div>
+        <div class="salary-row total">
+          <div class="label">Total Outsourcing</div>
+          <div class="value">₹ {{ salary.TotalOutSourcingCost }}</div>
+        </div>
       </div>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">₹ 48,000</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">₹ 30,000</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">₹ 18,000</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">₹ 12,000</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">₹ 7,000</div></div>
-      <div class="salary-row total"><div class="label">Total Outsourcing</div><div class="value">₹ 19,000</div></div>
-    </div>
-
-    
-    <div class="salary-box">
-
-      <div class="salary-header">
-       <h3>22-12-2025</h3>
-      </div>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">₹ 48,000</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">₹ 30,000</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">₹ 18,000</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">₹ 12,000</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">₹ 7,000</div></div>
-      <div class="salary-row total"><div class="label">Total Outsourcing</div><div class="value">₹ 19,000</div></div>
-    </div>
-
-    
-      
-    <div class="salary-box">
-
-      <div class="salary-header">
-       <h3>22-12-2025</h3>
-      </div>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">₹ 48,000</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">₹ 30,000</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">₹ 18,000</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">₹ 12,000</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">₹ 7,000</div></div>
-      <div class="salary-row total"><div class="label">Total Outsourcing</div><div class="value">₹ 19,000</div></div>
-    </div>
-    
-    <div class="salary-box">
-      <div class="salary-header">
-        <h3>1-12-2025</h3>
-      </div>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">₹ 55,000</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">₹ 36,000</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">₹ 19,000</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">₹ 15,000</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">₹ 8,000</div></div>
-      <div class="salary-row total"><div class="label">Total Outsourcing</div><div class="value">₹ 23,000</div></div>
-    </div>
-
-    <div class="salary-box">
-      <div class="salary-header">
-        <h3>23-12-2025</h3>
-      </div>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">₹ 62,000</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">₹ 40,000</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">₹ 22,000</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">₹ 20,000</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">₹ 10,000</div></div>
-      <div class="salary-row total"><div class="label">Total Outsourcing</div><div class="value">₹ 30,000</div></div>
-    </div>
-
-    <div class="salary-box">
-      <div class="salary-header">
-           <h3>23-2-2025</h3>
-      </div>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">₹ 70,000</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">₹ 45,000</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">₹ 25,000</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">₹ 22,000</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">₹ 12,000</div></div>
-      <div class="salary-row total"><div class="label">Total Outsourcing</div><div class="value">₹ 34,000</div></div>
-    </div>
+    </ng-container>
+    <ng-template #noSalaryData>
+      <p *ngIf="salaryHistory !== null">No salary and wages history available.</p>
+      <p *ngIf="salaryHistory === null">Loading salary and wages history...</p>
+    </ng-template>
   </div>
 
-  <!-- Overheads Cards -->
-    <h1>Overhead-History</h1>
+  <!-- Overheads History Section -->
+  <h1>Overhead History</h1>
   <div class="overhead-container">
-    <div class="overhead-box">
-      <div class="overhead-header"><h3>1-2-2034</h3></div>
-      <div class="overhead-row"><div class="label">Repair & Maintenance</div><div class="value">₹ 9,500</div></div>
-      <div class="overhead-row"><div class="label">Selling & Misc</div><div class="value">₹ 13,000</div></div>
-      <div class="overhead-row"><div class="label">Finance Cost</div><div class="value">₹ 6,500</div></div>
-      <div class="overhead-row total"><div class="label">Total Overheads</div><div class="value">₹ 22,000</div></div>
-      <div class="overhead-row total-finance"><div class="label">Total with Finance</div><div class="value">₹ 28,500</div></div>
-    </div>
-
-    <div class="overhead-box">
-       <div class="overhead-header"><h3>23-5-2024</h3></div>
-      <div class="overhead-row"><div class="label">Repair & Maintenance</div><div class="value">₹ 11,000</div></div>
-      <div class="overhead-row"><div class="label">Selling & Misc</div><div class="value">₹ 15,500</div></div>
-      <div class="overhead-row"><div class="label">Finance Cost</div><div class="value">₹ 8,000</div></div>
-      <div class="overhead-row total"><div class="label">Total Overheads</div><div class="value">₹ 26,500</div></div>
-      <div class="overhead-row total-finance"><div class="label">Total with Finance</div><div class="value">₹ 34,500</div></div>
-    </div>
-
-    <div class="overhead-box">
-        <div class="overhead-header"><h3>13-5-2024</h3></div>
-      <div class="overhead-row"><div class="label">Repair & Maintenance</div><div class="value">₹ 10,500</div></div>
-      <div class="overhead-row"><div class="label">Selling & Misc</div><div class="value">₹ 14,200</div></div>
-      <div class="overhead-row"><div class="label">Finance Cost</div><div class="value">₹ 7,300</div></div>
-      <div class="overhead-row total"><div class="label">Total Overheads</div><div class="value">₹ 24,000</div></div>
-      <div class="overhead-row total-finance"><div class="label">Total with Finance</div><div class="value">₹ 31,300</div></div>
-    </div>
-
-    <div class="overhead-box">
-             <div class="overhead-header"><h3>18-5-2024</h3></div>
-      <div class="overhead-row"><div class="label">Repair & Maintenance</div><div class="value">₹ 12,000</div></div>
-      <div class="overhead-row"><div class="label">Selling & Misc</div><div class="value">₹ 16,000</div></div>
-      <div class="overhead-row"><div class="label">Finance Cost</div><div class="value">₹ 9,000</div></div>
-      <div class="overhead-row total"><div class="label">Total Overheads</div><div class="value">₹ 28,000</div></div>
-      <div class="overhead-row total-finance"><div class="label">Total with Finance</div><div class="value">₹ 37,000</div></div>
-    </div>
+    <ng-container *ngIf="overHeadsHistory?.length > 0; else noOverheadData">
+      <div class="overhead-box" *ngFor="let overhead of overHeadsHistory">
+        <div class="overhead-header">
+          <h3>{{ overhead.updatedAt | date: 'dd-MM-yyyy' }}</h3>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Repair & Maintenance</div>
+          <div class="value">₹ {{ overhead.repairAndMaintenance  }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Selling & Misc</div>
+          <div class="value">₹ {{ overhead.sellingDistributionAndMiscOverHeads }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Finance Cost</div>
+          <div class="value">₹ {{ overhead.financeCost  }}</div>
+        </div>
+        <div class="overhead-row total">
+          <div class="label">Total Overheads</div>
+          <div class="value">₹ {{ overhead.totalOverHeads }}</div>
+        </div>
+        <div class="salary-row total">
+          <div class="label">Total with Finance</div>
+          <div class="value">₹ {{ overhead.totalOverHeadsWithFinanceCost  }}</div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #noOverheadData>
+      <p *ngIf="overHeadsHistory !== null">No overheads history available.</p>
+      <p *ngIf="overHeadsHistory === null">Loading overheads history...</p>
+    </ng-template>
   </div>
 </div>
