@@ -25,5 +25,12 @@ export class ProcessService {
   }
 
 
+  updateSalary(id: string, salary : any): Observable<any> {
+    return this.http.put<any>(`${this.config.getCostingUrl('UpdateSalaryAndWages')}/${id}`, salary);
+  }
+
+  updateOverheads(id: string, overheads : any): Observable<any> {
+    return this.http.put<any>(`${this.config.getCostingUrl('UpdateOverHeadsByIds')}/${id}`, overheads);
+  }
 
 }

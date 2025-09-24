@@ -120,6 +120,15 @@
  {
   "name": "Export-material",
   "url": "export-material"
+},
+
+ {
+  "name": "UpdateSalaryAndWages",
+  "url": "UpdateSalaryAndWages"
+},
+ {
+  "name": "UpdateOverHeadsByIds",
+  "url": "UpdateOverHeadsByIds"
 }
 
 

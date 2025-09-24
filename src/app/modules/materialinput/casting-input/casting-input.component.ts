@@ -13,6 +13,8 @@ import { CostSummary } from '../../../models/casting-input.model';
 import {updateProductionCost } from '../store/casting.actions';
 import {FlatCastingData } from '../../../models/casting-input.model';
 import { updateCastingFlatSummary } from '../store/casting.actions'; // Import the new action
+import { ProcessService } from '../../../services/process.service';
+
 
 @Component({
   selector: 'app-casting-input',
@@ -38,7 +40,7 @@ editableItem: any = null;
 
 
 
-  constructor(private store: Store) {}
+  constructor(private store: Store, private processServices: ProcessService) {}
 
 
   ngOnInit(): void {
@@ -136,6 +138,83 @@ enableEditMode(section: string, item: any) {
 cancelEditMode(section: string) {
   this.editMode[section] = false;
   this.editableItem = null;
+}
+calculateSalary() {
+  if (!this.editableItem || !this.editableItem.SalaryAndWages) {
+    return;
+  }
+
+  const wages = this.editableItem.SalaryAndWages;
+
+ 
+  const salaryForProcess = Number(wages.salaryforProcess) || 0;
+  const salaryExcludingCoreMaking = Number(wages.salaryExcludingCoreMaking) || 0;
+  const salaryForCoreProduction = Number(wages.salaryForCoreProduction) || 0;
+  const outSourcingCost = Number(wages.outSourcingCost) || 0;
+  const splOutSourcingCost = Number(wages.splOutSourcingCost) || 0;
+
+
+  wages.TotalOutSourcingCost = outSourcingCost + splOutSourcingCost;
+
+
+  console.log("Updated Salary & Wages:", wages);
+}
+
+saveSlaray(section: string) {
+  const original = this.costsummary?.find(i => i._id === this.editableItem._id);
+  if (!original) return;
+
+  const wages = this.editableItem.SalaryAndWages;
+
+  const id = wages._id;   
+  const data = {
+    salaryforProcess: wages.salaryforProcess,
+    salaryExcludingCoreMaking: wages.salaryExcludingCoreMaking,
+    salaryForCoreProduction: wages.salaryForCoreProduction,
+    outSourcingCost: wages.outSourcingCost,
+    splOutSourcingCost: wages.splOutSourcingCost,
+    TotalOutSourcingCost: wages.TotalOutSourcingCost
+  };
+
+  console.log('id:', id);
+  console.log('updated data:', data);
+
+  this.processServices.updateSalary(id, data).subscribe({
+    next: (res) => console.log('Salary updated', res),
+    error: (err) => console.error('Error updating salary', err)
+  });
+
+      this.store.dispatch(getCostSummary());
+
+  this.cancelEditMode(section);
+}
+
+saveOverHeads(section: string) {
+  const original = this.costsummary?.find(i => i._id === this.editableItem._id);
+  if (!original) return;
+
+
+  const overheads = this.editableItem.OverHeads;
+  console.log('data', overheads);
+  
+  const id = overheads._id;
+  const data = {
+    repairAndMaintenance: overheads.repairAndMaintenance,
+    financeCost: overheads.financeCost,
+    sellingDistributionAndMiscOverHeads
+: overheads.sellingDistributionAndMiscOverHeads,
+  };
+
+  console.log('id:', id);
+  console.log('updated data:', data);
+  this.processServices.updateOverheads(id, data).subscribe({
+    next: (res) => console.log('Overheads updated', res),
+    error: (err) => console.error('Error updating overheads', err)
+  });
+
+      this.store.dispatch(getCostSummary());
+
+  this.cancelEditMode(section);
 }
 
 saveChanges(section: string) {
