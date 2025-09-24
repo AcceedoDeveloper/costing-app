@@ -26,7 +26,7 @@ export class AddcustomerComponent implements OnInit {
     this.customerForm = this.fb.group({
       name: ['', Validators.required],
       address: ['', Validators.required],
-      phoneNo: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      phoneNo: ['', [Validators.required, Validators.email]],
     });
 
     // If data is provided, switch to edit mode and patch form values
@@ -63,6 +63,13 @@ this.store.dispatch(updateCustomer({ id: this.editCustomerId, data: customer }))
             } else {
               
               const data = formValue;
+           const    customer = {
+          name: formValue.name,
+          lowerCaseName: formValue.name.toLowerCase(),
+          address: formValue.address,
+          phoneNo: formValue.email,
+          __v: this.data.customer?.__v ?? 0,
+        };
        
         console.log('Dispatching createCustomer with:', data );
             this.store.dispatch(addCustomer({ customer: data }));

@@ -1,9 +1,14 @@
 
-<div class="header">
+<div class="header table-container2">
  
-  <div class="toggle-group">
-    <!-- No toggle buttons added -->
-  </div>
+
+  <input
+    type="text"
+    placeholder="Search by name"
+    [(ngModel)]="searchTerm"
+    (input)="applyFilter()"
+  />
+
   <button (click)="openAddCustomer()">Add Customer</button>
   
 </div>
@@ -15,7 +20,7 @@
       <tr>
         <th style="width: 21%;">Customer Name</th>
         <th style="width: 50%;">Address</th>
-        <th style="width: 17%;">Phone.No</th>
+        <th style="width: 17%;">Email</th>
         <th style="width: 12%;">Actions</th>
       </tr>
     </thead>
@@ -32,11 +37,12 @@
     </tbody>
   </table>
 
-  <mat-paginator
-  [length]="customers.length"
+<mat-paginator
+  [length]="searchTerm ? paginatedCustomers.length : customers.length"
   [pageSize]="pageSize"
   [pageSizeOptions]="[5, 10, 20]"
   (page)="onPageChange($event)">
 </mat-paginator>
+
 
 </div>

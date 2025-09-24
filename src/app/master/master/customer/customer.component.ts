@@ -28,6 +28,7 @@ export class CustomerComponent implements OnInit {
 
   pageSize = 5;
   pageIndex = 0;
+    searchTerm: string = ''; 
 
   newCustomerName: string = '';
   isEditMode: boolean = false;
@@ -45,7 +46,7 @@ ngOnInit(): void {
   this.customers$.subscribe((customers) => {
     this.customers = customers;
     console.log('Customers:', this.customers);
-    this.updatePaginatedCustomers(); 
+      this.applyFilter();
   });
 }
 
@@ -131,16 +132,26 @@ deleteCustomer(id: string) {
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.updatePaginatedCustomers();
+      this.applyFilter();
+  }
+applyFilter() {
+  let filtered = this.customers;
+
+  if (this.searchTerm.trim()) {
+    const term = this.searchTerm.toLowerCase();
+    filtered = this.customers.filter(
+      c =>
+        (c.name && c.name.toLowerCase().includes(term)) ||
+        (c.phoneNo && c.phoneNo.toString().includes(term)) ||
+        (c.address && c.address.toLowerCase().includes(term))
+    );
   }
 
-
-
-
-
-
-
-
+  // ✅ Apply pagination to filtered data
+  const startIndex = this.pageIndex * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  this.paginatedCustomers = filtered.slice(startIndex, endIndex);
+}
 
 
 

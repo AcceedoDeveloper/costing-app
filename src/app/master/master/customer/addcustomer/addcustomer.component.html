@@ -18,18 +18,19 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Phone Number Field -->
-        <mat-form-field appearance="outline" class="phone-field">
-          <mat-label>Phone Number</mat-label>
-          <input matInput id="phoneNo" formControlName="phoneNo" placeholder="Enter phone number" />
-          <mat-icon matSuffix>phone</mat-icon>
-          <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('required')">
-            Phone Number is required
-          </mat-error>
-          <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('pattern')">
-            Please enter a valid 10-digit phone number
-          </mat-error>
-        </mat-form-field>
+      <!-- Email Field -->
+<mat-form-field appearance="outline" class="email-field">
+  <mat-label>Email</mat-label>
+  <input matInput id="phoneNo" formControlName="phoneNo" placeholder="Enter email address" />
+  <mat-icon matSuffix>email</mat-icon>
+  <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('required')">
+    Email is required
+  </mat-error>
+  <mat-error *ngIf="customerForm.get('phoneNo')?.hasError('phoneNo')">
+    Please enter a valid email address
+  </mat-error>
+</mat-form-field>
+
       </div>
 
       <!-- Address Field (full width, using textarea) -->
