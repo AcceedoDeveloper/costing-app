@@ -810,7 +810,7 @@
 
       <div class="info-popup">
        (TotalUnitCost For Melting &others * CostPerUnit) <br>
-        (Input from Process PowerCost page * {{quotationCalc.CostPerUnit  | number:'1.2-2'}}) =  {{quotationCalc.totalUnitCostforOthers  | number:'1.2-2'}};
+        ({{quotationCalc.MeltPowerCost  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}}) =  {{quotationCalc.totalUnitCostforOthers  | number:'1.2-2'}};
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -834,7 +834,7 @@
 
       <div class="info-popup">
        (TotalUnitCost For ShellMoulding * CostPerUnit) <br>
-       ( {{quotationCalc.MouldingPowerCost  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}}) =  {{quotationCalc.MouldPowerCost  | number:'1.2-2'}};
+       ( {{quotationCalc.mouldPower  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}}) =  {{quotationCalc.MouldPowerCost  | number:'1.2-2'}};
       </div>
     </span></td>
             <td class="numeric"></td>
@@ -857,8 +857,8 @@
             <span class="info-icon"><i class="fas fa-info-circle"></i></span>
 
       <div class="info-popup">
-       ((((CoreWeight * CoresPerMould) * NoOfMouldperHeat) / 1000) * CoreMakingWages)  <br>
-        (((({{quotationCalc.CoreWeight  | number:'1.2-2'}} * {{quotationCalc.CoresPerMould  | number:'1.2-2'}}) * {{quotationCalc.NoOfMouldperHeat  | number:'1.2-2'}}) / 1000 ) *{{quotationCalc.CoreMakingWages  | number:'1.2-2'}}) = {{quotationCalc.CoreMakingPowerCost  | number:'1.2-2'}};
+       (CorePowerCost * CostPerUnit)<br>
+        ({{quotationCalc.CorePowerCost  | number:'1.2-2'}} * {{quotationCalc.CostPerUnit  | number:'1.2-2'}}) = {{quotationCalc.CoreMakingPowerCost  | number:'1.2-2'}};
       </div>
     </span></td>
             <td class="numeric"></td>
