@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProcessService } from '../../services/process.service';
 import { SalaryHistory, OverHeadsHistory } from '../../models/process.model';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-salary-wages-history',
@@ -14,6 +15,11 @@ import { SalaryHistory, OverHeadsHistory } from '../../models/process.model';
 export class SalaryWagesHistoryComponent implements OnInit {
   salaryHistory: SalaryHistory[] = [];
   filteredSalaryHistory: SalaryHistory[] = [];
+    paginatedSalary: SalaryHistory[] = []; 
+
+
+      pageSize = 5;
+  pageIndex = 0;
 
   overHeadsHistory: OverHeadsHistory[] = [];
   filteredOverHeadsHistory: OverHeadsHistory[] = [];
@@ -35,7 +41,10 @@ export class SalaryWagesHistoryComponent implements OnInit {
     this.processService.getSalaryAndWagesHistory().subscribe({
       next: (data: any) => {
         this.salaryHistory = Array.isArray(data) ? data : (data?.SalaryAndWagesHistory || []);
+        console.log('data', this.salaryHistory);
+        
         this.filteredSalaryHistory = [...this.salaryHistory]; // initially full list
+        this.updatePaginatedSalary();
       },
       error: (err) => {
         console.error('Error fetching Salary & Wages History:', err);
@@ -49,6 +58,7 @@ export class SalaryWagesHistoryComponent implements OnInit {
     this.processService.getOverHeadsHistory().subscribe({
       next: (data: any) => {
         this.overHeadsHistory = Array.isArray(data) ? data : (data?.OverHeadsHistory || []);
+        console.log('data', this.overHeadsHistory);
         this.filteredOverHeadsHistory = [...this.overHeadsHistory]; // initially full list
       },
       error: (err) => {
@@ -59,13 +69,16 @@ export class SalaryWagesHistoryComponent implements OnInit {
     });
   }
 
-  applySalaryFilter(): void {
-    this.filteredSalaryHistory = this.salaryHistory.filter(item => {
-      const date = new Date(item.updatedAt);
-      return (!this.salaryStartDate || date >= this.salaryStartDate) &&
-             (!this.salaryEndDate || date <= this.salaryEndDate);
-    });
-  }
+applySalaryFilter(): void {
+  this.filteredSalaryHistory = this.salaryHistory.filter(item => {
+    const date = new Date(item.updatedAt);
+    return (!this.salaryStartDate || date >= this.salaryStartDate) &&
+           (!this.salaryEndDate || date <= this.salaryEndDate);
+  });
+  this.pageIndex = 0; // reset to first page
+  this.updatePaginatedSalary();
+}
+
 
   applyOverheadFilter(): void {
     this.filteredOverHeadsHistory = this.overHeadsHistory.filter(item => {
@@ -73,5 +86,18 @@ export class SalaryWagesHistoryComponent implements OnInit {
       return (!this.overheadStartDate || date >= this.overheadStartDate) &&
              (!this.overheadEndDate || date <= this.overheadEndDate);
     });
+  }
+
+
+    updatePaginatedSalary() {
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedSalary = this.filteredSalaryHistory.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+      this.updatePaginatedSalary();
   }
 }

@@ -137,7 +137,14 @@
 {
   "name":"getOverHeadsHistory",
   "url":"getOverHeadsHistory"
-
+},
+{
+  "name":"productionPowerCost",
+  "url":"getProductionPowerCost"
+},
+{
+  "name":"updateProductionPowerCost",
+  "url":"updateProductionPowerCost"
 }
 
 

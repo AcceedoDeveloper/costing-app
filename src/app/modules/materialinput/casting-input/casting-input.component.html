@@ -373,4 +373,53 @@
 
 
 
+
+
+<!-- PRODUCTION POWER -->
+<div class="grid-item" *ngIf="productionPower">
+  <mat-card class="power-box">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3>Production Power Details</h3>
+      <mat-icon style="cursor: pointer;" (click)="enablePowerEdit()">edit</mat-icon>
+    </div>
+
+    <!-- Edit Mode -->
+    <ng-container *ngIf="editMode['power']; else viewPower">
+      <div class="power-row">
+        <div class="label">Melt & Others Power</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editablePower.MeltAndOthersPower" />
+        </div>
+      </div>
+      <div class="power-row">
+        <div class="label">Mould Power</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editablePower.mouldPower" />
+        </div>
+      </div>
+      <div class="power-row">
+        <div class="label">Core Power</div>
+        <div class="value">
+          <input type="number" [(ngModel)]="editablePower.corePower" />
+        </div>
+      </div>
+
+      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
+        <button mat-raised-button color="primary" (click)="savePower()">Save</button>
+        <button mat-raised-button color="warn" (click)="cancelPowerEdit()">Cancel</button>
+      </div>
+    </ng-container>
+
+    <!-- View Mode -->
+    <ng-template #viewPower>
+      <div class="power-row"><div class="label">Melt & Others Power</div><div class="value">{{ productionPower.MeltAndOthersPower }}</div></div>
+      <div class="power-row"><div class="label">Mould Power</div><div class="value">{{ productionPower.mouldPower }}</div></div>
+      <div class="power-row"><div class="label">Core Power</div><div class="value">{{ productionPower.corePower }}</div></div>
+    </ng-template>
+  </mat-card>
+</div>
+
+
+
+
 </div>

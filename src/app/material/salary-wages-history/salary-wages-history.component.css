@@ -1,172 +1,100 @@
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  padding: 20px;
-  align-items: stretch;
-}
-
-.salary-container {
-  display: flex;
-  justify-content: flex-start;
-  margin: 20px;
-  gap: 20px;
-}
-
-.salary-box {
-  min-width: 400px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  padding: 20px;
-  font-family: "Segoe UI", Arial, sans-serif;
-  transition: transform 0.2s ease-in-out;
-  overflow-x: auto;
-}
-
-.salary-box:hover {
-  transform: translateY(-3px);
-}
-
-.salary-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
-
-.salary-header h3 {
+/* General body styling to match the theme */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
   margin: 0;
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.edit-icon {
-  cursor: pointer;
-  font-size: 18px;
-  color: #666;
-  transition: color 0.2s;
-}
-
-.edit-icon:hover {
-  color: #007bff;
-}
-
-.salary-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed #eee;
-}
-
-.salary-row:last-child {
-  border-bottom: none;
-}
-
-.salary-row .label {
-  font-weight: 500;
-  color: #555;
-}
-
-.salary-row .value {
-  font-weight: 600;
-  color: #222;
-}
-
-.salary-row.total {
-  margin-top: 10px;
-  font-size: 1.05rem;
-  font-weight: bold;
-  color: #007bff;
-}
-
-
-.overhead-container {
-  display: flex;
-  justify-content:flex-start;
-  margin: 20px;
-  gap: 20px;
-}
-
-.overhead-box {
-  min-width: 400px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 20px;
-  font-family: "Segoe UI", Arial, sans-serif;
-  transition: transform 0.2s ease-in-out;
 }
 
-.overhead-box:hover {
-  transform: translateY(-3px);
-}
-
-.overhead-header {
+/* Heading styling to match the theme */
+h1 {
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  color: #3f51b5; /* Primary color from buttons */
+  font-weight: bold;
+  text-align: center;
+  margin: 30px 0 20px;
+  text-transform: uppercase;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
 }
 
-.overhead-header h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  color: #333;
+/* Table container styling to match table-container and table-container2 */
+.table-container {
+  width: 900px;
+  margin: 10px auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-.edit-icon {
-  cursor: pointer;
-  font-size: 18px;
-  color: #666;
-  transition: color 0.2s;
+/* Second table container for Overheads History */
+.table-container2 {
+  width: 700px;
+  margin: 10px auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-.edit-icon:hover {
-  color: #007bff;
+/* Table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.overhead-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px dashed #eee;
+/* Table headers */
+thead {
+  background-color: #fff;
 }
 
-.overhead-row:last-child {
-  border-bottom: none;
+th {
+  text-align: left;
+  padding: 14px 20px;
+  color: #5b84ff; /* Matches th color from provided CSS */
+  font-weight: bold;
+  font-size: 14px;
+  border-bottom: 2px solid #5b84ff; /* Matches th border from provided CSS */
+  text-transform: uppercase;
 }
 
-.overhead-row .label {
+/* Table cells */
+td {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: #333; /* Matches icon and general text color */
   font-weight: 500;
-  color: #555;
+  border-bottom: 1px solid #eee; /* Matches td border from provided CSS */
 }
 
-.overhead-row .value {
-  font-weight: 600;
-  color: #222;
+/* Hover effect on rows */
+tr:hover {
+  background-color: #f9f9f9; /* Matches tr:hover from provided CSS */
 }
 
-.overhead-row.total {
-  margin-top: 10px;
-  font-weight: bold;
-  color: #007bff;
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+  .table-container, .table-container2 {
+    width: 100%;
+    margin: 10px 5px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    min-width: 100px;
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
 }
 
-.overhead-row.total-finance {
-  font-weight: bold;
-  color: #28a745;
-}
-
-
-.subheader{
-  display: flex;
-  align-items: center;
-  gap: 33%;
-}
-
-.date-filters{
-   display: flex;
-  /* justify-content: flex-start; */
-  gap: 20px;
+/* Ensure date column formatting is consistent */
+td:last-child {
+  color: #333;
+  font-weight: 500;
 }

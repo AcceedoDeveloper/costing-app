@@ -14,6 +14,7 @@ import {updateProductionCost } from '../store/casting.actions';
 import {FlatCastingData } from '../../../models/casting-input.model';
 import { updateCastingFlatSummary } from '../store/casting.actions'; // Import the new action
 import { ProcessService } from '../../../services/process.service';
+import { ProductPower } from '../../../models/ProductionPower.model';
 
 
 @Component({
@@ -35,7 +36,9 @@ editableCostPerUnit: number | null = null;
  editMode: { [key: string]: boolean } = {};
 editableItem: any = null;
 
+productionPower!: ProductPower;
 
+editablePower: any = {};
 
 
 
@@ -73,7 +76,7 @@ editableItem: any = null;
     }
   });
 
-
+this.getPower();
   
   }
 
@@ -331,6 +334,59 @@ saveAllCastingChanges() {
 }
 
 
+getPower(): void {
+  this.processServices.getProductionCost().subscribe(
+    (res: ProductPower[]) => {
+      if (res && res.length > 0) {
+        this.productionPower = res[0]; // take first element
+      }
+      console.log('Power data:', this.productionPower);
+    },
+    (error) => {
+      console.error('Error fetching power data:', error);
+    }
+  );
+}
+
+// Inside CastingInputComponent class
+
+// Function to enable edit mode for power
+enablePowerEdit() {
+  this.editMode['power'] = true;
+  // Make a copy of productionPower to avoid direct mutation
+  this.editablePower = { ...this.productionPower };
+}
+
+// Function to cancel power edit
+cancelPowerEdit() {
+  this.editMode['power'] = false;
+  this.editablePower = {};
+}
+
+// Function to save power
+savePower() {
+  if (!this.editablePower) return;
+  console.log('data', this.editablePower);
+
+  const { MeltAndOthersPower, mouldPower, corePower } = this.editablePower; 
+
+  const play = { MeltAndOthersPower, mouldPower, corePower };
+
+  console.log('data', play);
+this.processServices.updatePowerCost(this.editablePower._id, play).subscribe({
+    next: (res) => {
+      console.log('Update successful:', res);
+      this.cancelPowerEdit(); // Close or reset the edit form
+    },
+    error: (err) => {
+      console.error('Update failed:', err);
+    }
+  });
+  
+  this.getPower();
+this.cancelPowerEdit();
+
+}
 
 
 

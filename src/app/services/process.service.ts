@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Process } from '../models/process.model';
 import { ConfigService } from '../shared/components/config.service'; // ✅ Use ConfigService
+import { ProductPower } from '../models/ProductionPower.model';
 
 @Injectable({ providedIn: 'root' })
 
@@ -48,6 +49,14 @@ export class ProcessService {
     return this.http.get<any[]>(this.config.getCostingUrl('getOverHeadsHistory'));
   }
 
+  getProductionCost(): Observable<ProductPower[]>  {
+    return this.http.get<ProductPower[]>(this.config.getCostingUrl('productionPowerCost'));
+  }
+
+  updatePowerCost(id : string, play: any) : Observable<any> {
+        return this.http.put<any>(`${this.config.getCostingUrl('updateProductionPowerCost')}/${id}`, play);
+
+  }
 
 
 }
