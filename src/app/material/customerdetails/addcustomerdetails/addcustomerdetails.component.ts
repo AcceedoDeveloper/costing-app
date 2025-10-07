@@ -25,6 +25,8 @@ import { DashboardService } from '../../../services/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
+import { ProcessService } from '../../../services/process.service';
+import { ProductPower } from '../../../models/ProductionPower.model';
 
 
 
@@ -61,7 +63,7 @@ export class AddcustomerdetailsComponent implements OnInit {
 
   quotationData: any = null;
   quotationCalc: any = null;
-
+  productionPower: ProductPower | null = null;
 
   selectedFileName: string = '';
 selectedFile: File | null = null;
@@ -81,12 +83,16 @@ selectedFile: File | null = null;
 
 
 
-  constructor(private store: Store, private fb: FormBuilder, 
-    private dialog: MatDialog,  
-     @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(
+    private store: Store,
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<AddcustomerdetailsComponent>,
-    private dhashboardServices: DashboardService ,
-    private tooster: ToastrService ) {} 
+    private dhashboardServices: DashboardService,
+    private tooster: ToastrService,
+    private processService: ProcessService
+  ) {} 
 
  ngOnInit(): void {
 
@@ -134,6 +140,9 @@ selectedFile: File | null = null;
     this.store.dispatch(loadProcesses());
     this.store.dispatch(getCastingDetails());
     this.store.dispatch(getCostSummary());
+    
+    // Fetch power cost data
+    this.getPowerCostData();
      
 
      this.store.pipe(select(selectCastingData)).subscribe((castingData: CastingData[] | null) => {
@@ -682,6 +691,28 @@ onFileSelected(event: Event): void {
 submitForm() {
    this.tooster.success('Customer Details created successfully!', 'Success');
   this.dialogRef.close(); 
+}
+
+getPowerCostData(): void {
+  this.processService.getProductionCost().subscribe(
+    (res: ProductPower[]) => {
+      if (res && res.length > 0) {
+        this.productionPower = res[0]; // Take first element
+        
+        // Populate the form with power cost data
+        this.costForm.patchValue({
+          power1: this.productionPower.MeltAndOthersPower,
+          power2: this.productionPower.mouldPower,
+          power3: this.productionPower.corePower
+        });
+        
+        console.log('Power cost data loaded:', this.productionPower);
+      }
+    },
+    (error) => {
+      console.error('Error fetching power cost data:', error);
+    }
+  );
 }
 
 
