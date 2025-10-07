@@ -13,6 +13,7 @@ import { UpdateaddcustomerdDetailsComponent} from './updateaddcustomerd-details/
 import { PowerService } from '../../services/power.service';
 import {UpdateCustomerDetailsComponent } from './update-customer-details/update-customer-details.component';
 import { ToastrService } from 'ngx-toastr';
+import { ViewQuotationComponent } from './view-quotation/view-quotation.component';
 
 @Component({
   selector: 'app-customerdetails',
@@ -118,6 +119,16 @@ edit(id: string) {
 }
 
 
+viewQuotation(customer: any) {
+  this.dialog.open(ViewQuotationComponent, {
+    width: '100%',
+    height: '650px',
+    data: customer,
+    autoFocus: false,
+    disableClose: false
+  });
+}
+
 downloadQuotation(customer: any) {
   const customerName = customer?.CustomerName?.name || '';
   const drawingNo = customer?.drawingNo || '';
@@ -148,7 +159,7 @@ downloadQuotation(customer: any) {
 
 applyDateFilter() {
   this.filteredCustomersList = this.customerDetails.filter(customer => {
-    const createdDate = new Date(customer.createdAt);
+    const createdDate = new Date(customer.createdAt || '');
     const start = this.startDate ? new Date(this.startDate) : null;
     const end = this.endDate ? new Date(this.endDate) : null;
 
@@ -166,7 +177,7 @@ get filteredCustomers() {
       const customerName = c.CustomerName?.name?.toLowerCase() || '';
       const drawingNo = c.drawingNo?.toLowerCase() || '';
       const partName = c.partName?.toLowerCase() || '';
-      const createdDate = new Date(c.createdAt);
+      const createdDate = new Date(c.createdAt || '');
 
       const matchesSearch =
         customerName.includes(search) ||
