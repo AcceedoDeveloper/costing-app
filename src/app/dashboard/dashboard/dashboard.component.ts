@@ -46,7 +46,7 @@ searchTerm: string = '';
 
 filteredPendingQuotations: CustomerdetailsIn[] = [];
 filteredCompletedQuotations: CustomerdetailsIn[] = [];
-  monthLabels: string[];
+  monthLabels: string[] = [];
 
 dataSource = new MatTableDataSource<any>();
 displayedColumns: string[] = ['CustomerName', 'partName', 'TotalProcessCost', 'actualCost', 'difference'];

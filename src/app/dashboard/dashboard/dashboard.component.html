@@ -169,7 +169,7 @@
 
 
   <!-- Month Legend (Color Bars with Labels) -->
-  <div class="month-legend" *ngIf="monthLabels.length === 3">
+  <div class="month-legend" *ngIf="monthLabels && monthLabels.length === 3">
     <div class="legend-item"><span class="legend-color red"></span> {{ monthLabels[0] }}</div>
     <div class="legend-item"><span class="legend-color orange"></span> {{ monthLabels[1] }}</div>
     <div class="legend-item"><span class="legend-color blue"></span> {{ monthLabels[2] }}</div>
