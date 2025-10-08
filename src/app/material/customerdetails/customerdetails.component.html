@@ -1,73 +1,108 @@
-<div class="header">
-  <h2>QuotePro</h2>
+<div class="app-container">
 
-  <div class="header-controls">
-    <div class="search-bar">
-      <mat-form-field appearance="standard" class="full-width">
-        <mat-label>Search by Customer</mat-label>
-        <input matInput [(ngModel)]="searchText" placeholder="Type to filter..." />
-      </mat-form-field>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <div class="content-header">
+      
+      <div class="header-controls">
+        <div class="search-section">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search by Customer</mat-label>
+            <input matInput [(ngModel)]="searchText" placeholder="Search by category name, company etc." />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <div class="date-filters">
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>Start Date</mat-label>
+            <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="applyDateFilter()" placeholder="Select start date" />
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>End Date</mat-label>
+            <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="applyDateFilter()" placeholder="Select end date" />
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button color="primary" class="add-but" (click)="addCustomerDetails()">
+          Add Quotation
+        </button>
+      </div>
     </div>
 
-    <div class="date-filters">
-      <mat-form-field appearance="outline">
-        <mat-label>Start Date</mat-label>
-        <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="applyDateFilter()" />
-        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>End Date</mat-label>
-        <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" (dateChange)="applyDateFilter()" />
-        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-        <mat-datepicker #endPicker></mat-datepicker>
-      </mat-form-field>
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Customer Name</th>
+            <th>Drawing No</th>
+            <th>Part No</th>
+            <th>No of Process</th>
+            <th>Overall Cost</th>
+            <th>Download</th>
+            <th>Action</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let customer of filteredCustomers; let i = index">
+            <tr>
+              <td>{{ 7781 + i }}</td>
+              <td>{{ customer.CustomerName?.name || '-' }}</td>
+              <td>{{ customer.drawingNo || '-' }}</td>
+              <td>{{ customer.partName || '-' }}</td>
+              <td>{{ customer.processName?.length || 0 }} Process</td>
+              <td>{{ customer.OverallTotalCost | number:'1.2-2' }}</td>
+                <td class="download-cell">
+                  <div class="combined-button">
+                    <div class="view-section" (click)="viewQuotation(customer)">
+                      <span>View</span>
+                    </div>
+                    <div class="download-section" (click)="downloadQuotation(customer)">
+                      <span>Download</span>
+                    </div>
+                  </div>
+                </td>
+              <td >
+                <button mat-icon-button  (click)="edit(customer._id)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button  (click)="delete(customer._id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+              <td >
+                <div class="progress-circle">
+                  <svg class="progress-ring" width="40" height="40">
+                    <circle class="progress-ring-circle" cx="20" cy="20" r="18" fill="transparent" stroke="#e0e0e0" stroke-width="3"/>
+                    <circle class="progress-ring-circle progress-ring-fill" cx="20" cy="20" r="18" fill="transparent" stroke="#2196F3" stroke-width="3" 
+                            [style.stroke-dasharray]="getProgressDashArray(customer)" 
+                            [style.stroke-dashoffset]="getProgressOffset(customer)"/>
+                  </svg>
+                  <span class="progress-text">{{ getProgressPercentage(customer) }}%</span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      
+      <!-- Paginator -->
+      <mat-paginator 
+        [length]="totalRecords"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)"
+        class="custom-paginator">
+      </mat-paginator>
     </div>
-
-    <button mat-raised-button color="primary" (click)="addCustomerDetails()">Add Customer Details</button>
   </div>
-</div>
-
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>Customer Name</th>
-        <th>Drawing No</th>
-        <th>Part No</th>
-        <th>No of Process</th>
-        <th>Overall Cost</th>
-        
-        <th>Download</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-  <ng-container *ngFor="let customer of filteredCustomers">
-    <tr>
-      <td>{{ customer.CustomerName.name || '-'}}</td>
-      <td>{{ customer.drawingNo }}</td>
-      <td>{{ customer.partName }}</td>
-      <td>{{ customer.processName?.length }} Process</td>
-      <td>{{ customer.OverallTotalCost  | number:'1.2-2'
- }}</td>
-     
-      <td>
-        <p  class="Quotation" ><span (click)="viewQuotation(customer)">View</span><span (click)="downloadQuotation(customer)">/Download Quotation </span></p> 
-      </td>
-    
-     <td>
-        <button mat-icon-button>
-          <mat-icon (click)="edit(customer._id)" >edit</mat-icon>
-        </button>
-        <button mat-icon-button>
-          <mat-icon (click)="delete(customer._id)" >delete</mat-icon>
-        </button>
-      </td>
-    </tr>
-  </ng-container>
-</tbody>
-
-  </table>
 </div>

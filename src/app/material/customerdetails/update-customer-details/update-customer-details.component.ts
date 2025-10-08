@@ -79,6 +79,10 @@ export class UpdateCustomerDetailsComponent implements OnInit {
     private tooster: ToastrService 
    ) { }
 
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
  ngOnInit(): void {
 
 

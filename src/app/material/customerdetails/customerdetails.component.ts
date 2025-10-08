@@ -14,6 +14,7 @@ import { PowerService } from '../../services/power.service';
 import {UpdateCustomerDetailsComponent } from './update-customer-details/update-customer-details.component';
 import { ToastrService } from 'ngx-toastr';
 import { ViewQuotationComponent } from './view-quotation/view-quotation.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-customerdetails',
@@ -25,8 +26,15 @@ export class CustomerdetailsComponent implements OnInit {
   customerDetails : CustomerdetailsIn[] = [];
   searchText: string = '';
   startDate: Date | null = null;
-endDate: Date | null = null;
-filteredCustomersList: CustomerdetailsIn[] = [];
+  endDate: Date | null = null;
+  filteredCustomersList: CustomerdetailsIn[] = [];
+
+  // Pagination properties
+  pageSize: number = 10;
+  pageIndex: number = 0;
+  pageSizeOptions: number[] = [ 10, 25, 50, 100];
+  totalRecords: number = 0;
+  paginatedCustomers: CustomerdetailsIn[] = [];
 
 
 
@@ -56,7 +64,7 @@ addCustomerDetails() {
     width: '100%',
     height: '650px',
     autoFocus: false,
-    disableClose: false
+    disableClose: true
   });
 
   
@@ -158,20 +166,13 @@ downloadQuotation(customer: any) {
 }
 
 applyDateFilter() {
-  this.filteredCustomersList = this.customerDetails.filter(customer => {
-    const createdDate = new Date(customer.createdAt || '');
-    const start = this.startDate ? new Date(this.startDate) : null;
-    const end = this.endDate ? new Date(this.endDate) : null;
-
-    // Match only if within range
-    return (!start || createdDate >= start) && (!end || createdDate <= end);
-  });
+  this.pageIndex = 0; // Reset to first page when filter changes
 }
 
 get filteredCustomers() {
   const search = this.searchText.toLowerCase().trim();
 
-  return this.customerDetails
+  const filtered = this.customerDetails
     .filter(c => !!c.CustomerName)  // remove null CustomerName
     .filter(c => {
       const customerName = c.CustomerName?.name?.toLowerCase() || '';
@@ -190,11 +191,46 @@ get filteredCustomers() {
 
       return matchesSearch && matchesDate;
     });
+
+  // Update total records for paginator
+  this.totalRecords = filtered.length;
+  
+  // Apply pagination
+  const startIndex = this.pageIndex * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  
+  return filtered.slice(startIndex, endIndex);
 }
 
+// Progress circle methods
+getProgressPercentage(customer: any): number {
+  // Calculate percentage based on some logic - you can modify this
+  const processCount = customer.processName?.length || 0;
+  const maxProcesses = 5; // Assuming max 5 processes
+  return Math.min(Math.round((processCount / maxProcesses) * 100), 100);
+}
 
+getProgressDashArray(customer: any): string {
+  const percentage = this.getProgressPercentage(customer);
+  const circumference = 2 * Math.PI * 18; // radius = 18
+  const offset = circumference - (percentage / 100) * circumference;
+  return `${circumference} ${circumference}`;
+}
 
+getProgressOffset(customer: any): string {
+  const percentage = this.getProgressPercentage(customer);
+  const circumference = 2 * Math.PI * 18; // radius = 18
+  return `${circumference - (percentage / 100) * circumference}`;
+}
 
+onPageChange(event: PageEvent) {
+  this.pageIndex = event.pageIndex;
+  this.pageSize = event.pageSize;
+}
+
+resetPagination() {
+  this.pageIndex = 0;
+}
 
 
 }

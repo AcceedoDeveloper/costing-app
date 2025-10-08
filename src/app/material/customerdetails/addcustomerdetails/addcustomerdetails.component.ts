@@ -94,6 +94,10 @@ selectedFile: File | null = null;
     private processService: ProcessService
   ) {} 
 
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
  ngOnInit(): void {
 
 

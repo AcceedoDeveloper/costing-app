@@ -1,7 +1,15 @@
-<h5>
-  <span class="material-icons">add_circle</span>
-  Add Customer Details
-</h5>
+<div class="dialog-header">
+  <h5>
+    <span class="material-icons">add_circle</span>
+    Add Customer Details
+  </h5>
+  <button mat-icon-button class="close-button" (click)="closeDialog()" matTooltip="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+
+
 
 <!-- Stepper -->
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
