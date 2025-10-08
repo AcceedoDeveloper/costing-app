@@ -10,37 +10,39 @@
   <div class="grid-item" *ngFor="let item of powerCosts">
     <mat-card class="power-card">
       <h3>Power Cost</h3>
-      <div class="power-row">
-        <div class="label">Cost Per Unit</div>
-        <div class="value">
-          <ng-container *ngIf="!editCostPerUnit; else editTemplate">
-            {{ item.costPerUnit }}
-            <mat-icon style="cursor: pointer;" (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
-          </ng-container>
-          <ng-template #editTemplate>
-            <input [(ngModel)]="editableCostPerUnit" type="number" />
-            <button mat-icon-button (click)="saveCostPerUnit(item)">
-              <mat-icon>save</mat-icon>
-            </button>
-            <button mat-icon-button (click)="cancelEditCostPerUnit()">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </ng-template>
+      <div class="card-content">
+        <div class="power-row">
+          <div class="label">Cost Per Unit</div>
+          <div class="value">
+            <ng-container *ngIf="!editCostPerUnit; else editTemplate">
+              {{ item.costPerUnit }}
+              <mat-icon style="cursor: pointer;" (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
+            </ng-container>
+            <ng-template #editTemplate>
+              <input [(ngModel)]="editableCostPerUnit" type="number" />
+              <button mat-icon-button (click)="saveCostPerUnit(item)">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button mat-icon-button (click)="cancelEditCostPerUnit()">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-template>
+          </div>
         </div>
-      </div>
-      <div class="power-row">
-        <div class="label">Effective Date</div>
-        <div class="value">{{ item.effectiveDate }}</div>
-      </div>
-      <div class="power-row" style="position: relative;">
-        <div class="label">Previous Cost</div>
-        <div class="value">
-          {{ item.previousCostDetails[0]?.cost }}
-          <mat-icon  style="cursor: pointer;" (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
-          <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
-            <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
-            <div *ngFor="let detail of item.previousCostDetails">
-              <p>Cost: {{ detail.cost }} | Date: {{ detail.date }}</p>
+        <div class="power-row">
+          <div class="label">Effective Date</div>
+          <div class="value">{{ item.effectiveDate }}</div>
+        </div>
+        <div class="power-row" style="position: relative;">
+          <div class="label">Previous Cost</div>
+          <div class="value">
+            {{ item.previousCostDetails[0]?.cost }}
+            <mat-icon  style="cursor: pointer;" (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
+            <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
+              <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
+              <div *ngFor="let detail of item.previousCostDetails">
+                <p>Cost: {{ detail.cost }} | Date: {{ detail.date }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -56,30 +58,32 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('casting', item)">edit</mat-icon>
     </div>
 
-    <ng-container *ngIf="editMode['casting'] && editableItem?._id === item._id; else viewCasting">
-      <div class="casting-row"><div class="label">Casting Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.CastingWeight" /></div></div>
-      <div class="casting-row"><div class="label">Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.Cavities" /></div></div>
-      <div class="casting-row"><div class="label">Pouring Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.PouringWeight" /></div></div>
-      <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ editableItem.CastingInput.CastingWeightKgPerHeat }}</div></div>
-      <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ editableItem.CastingInput.MaterialReturned }}</div></div>
-      <div class="casting-row"><div class="label">Yield</div><div class="value">{{ editableItem.CastingInput.Yeild }}</div></div>
-      <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ editableItem.CastingInput.YeildPercent }}</div></div>
+    <div class="card-content">
+      <ng-container *ngIf="editMode['casting'] && editableItem?._id === item._id; else viewCasting">
+        <div class="casting-row"><div class="label">Casting Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.CastingWeight" /></div></div>
+        <div class="casting-row"><div class="label">Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.Cavities" /></div></div>
+        <div class="casting-row"><div class="label">Pouring Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.PouringWeight" /></div></div>
+        <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ editableItem.CastingInput.CastingWeightKgPerHeat }}</div></div>
+        <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ editableItem.CastingInput.MaterialReturned }}</div></div>
+        <div class="casting-row"><div class="label">Yield</div><div class="value">{{ editableItem.CastingInput.Yeild }}</div></div>
+        <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ editableItem.CastingInput.YeildPercent }}</div></div>
 
-      <div class="action-buttons">
-        <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('casting')">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('casting')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <ng-template #viewCasting>
-      <div class="casting-row"><div class="label">Casting Weight</div><div class="value">{{ item.CastingInput.CastingWeight }}</div></div>
-      <div class="casting-row"><div class="label">Cavities</div><div class="value">{{ item.CastingInput.Cavities }}</div></div>
-      <div class="casting-row"><div class="label">Pouring Weight</div><div class="value">{{ item.CastingInput.PouringWeight }}</div></div>
-      <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ item.CastingInput.CastingWeightKgPerHeat }}</div></div>
-      <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ item.CastingInput.MaterialReturned }}</div></div>
-      <div class="casting-row"><div class="label">Yield</div><div class="value">{{ item.CastingInput.Yeild }}</div></div>
-      <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ item.CastingInput.YeildPercent }}</div></div>
-    </ng-template>
+      <ng-template #viewCasting>
+        <div class="casting-row"><div class="label">Casting Weight</div><div class="value">{{ item.CastingInput.CastingWeight }}</div></div>
+        <div class="casting-row"><div class="label">Cavities</div><div class="value">{{ item.CastingInput.Cavities }}</div></div>
+        <div class="casting-row"><div class="label">Pouring Weight</div><div class="value">{{ item.CastingInput.PouringWeight }}</div></div>
+        <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ item.CastingInput.CastingWeightKgPerHeat }}</div></div>
+        <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ item.CastingInput.MaterialReturned }}</div></div>
+        <div class="casting-row"><div class="label">Yield</div><div class="value">{{ item.CastingInput.Yeild }}</div></div>
+        <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ item.CastingInput.YeildPercent }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -92,22 +96,24 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('moulding', item)">edit</mat-icon>
     </div>
 
-    <ng-container *ngIf="editMode['moulding'] && editableItem?._id === item._id; else viewMoulding">
-      <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.MouldingInput.MouldingWeight" /></div></div>
-      <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ editableItem.MouldingInput.MouldsPerHeat}}</div></div>
-      <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{editableItem.MouldingInput.BakeMoulding}}</div></div>
+    <div class="card-content">
+      <ng-container *ngIf="editMode['moulding'] && editableItem?._id === item._id; else viewMoulding">
+        <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.MouldingInput.MouldingWeight" /></div></div>
+        <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ editableItem.MouldingInput.MouldsPerHeat}}</div></div>
+        <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{editableItem.MouldingInput.BakeMoulding}}</div></div>
 
-      <div class="action-buttons">
-        <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('moulding')">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('moulding')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <ng-template #viewMoulding>
-      <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value">{{ item.MouldingInput.MouldingWeight }}</div></div>
-      <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ item.MouldingInput.MouldsPerHeat }}</div></div>
-      <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{ item.MouldingInput.BakeMoulding }}</div></div>
-    </ng-template>
+      <ng-template #viewMoulding>
+        <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value">{{ item.MouldingInput.MouldingWeight }}</div></div>
+        <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ item.MouldingInput.MouldsPerHeat }}</div></div>
+        <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{ item.MouldingInput.BakeMoulding }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -120,26 +126,28 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('core', item)">edit</mat-icon>
     </div>
 
-    <ng-container *ngIf="editMode['core'] && editableItem?._id === item._id; else viewCore">
-      <div class="core-row"><div class="label">Core Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreWeight" /></div></div>
-      <div class="core-row"><div class="label">Cores Per Mould</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoresPerMould" /></div></div>
-      <div class="core-row"><div class="label">Core Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreCavities" /></div></div>
-      <div class="core-row"><div class="label">Shooting/Shift</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.ShootingPerShift" /></div></div>
-      <div class="core-row"><div class="label">Core Sand</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreSand" /></div></div>
+    <div class="card-content">
+      <ng-container *ngIf="editMode['core'] && editableItem?._id === item._id; else viewCore">
+        <div class="core-row"><div class="label">Core Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreWeight" /></div></div>
+        <div class="core-row"><div class="label">Cores Per Mould</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoresPerMould" /></div></div>
+        <div class="core-row"><div class="label">Core Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreCavities" /></div></div>
+        <div class="core-row"><div class="label">Shooting/Shift</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.ShootingPerShift" /></div></div>
+        <div class="core-row"><div class="label">Core Sand</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreSand" /></div></div>
 
-      <div class="action-buttons">
-        <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('core')">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('core')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <ng-template #viewCore>
-      <div class="core-row"><div class="label">Core Weight</div><div class="value">{{ item.CoreInput.CoreWeight }}</div></div>
-      <div class="core-row"><div class="label">Cores Per Mould</div><div class="value">{{ item.CoreInput.CoresPerMould }}</div></div>
-      <div class="core-row"><div class="label">Core Cavities</div><div class="value">{{ item.CoreInput.CoreCavities }}</div></div>
-      <div class="core-row"><div class="label">Shooting/Shift</div><div class="value">{{ item.CoreInput.ShootingPerShift }}</div></div>
-      <div class="core-row"><div class="label">Core Sand</div><div class="value">{{ item.CoreInput.CoreSand }}</div></div>
-    </ng-template>
+      <ng-template #viewCore>
+        <div class="core-row"><div class="label">Core Weight</div><div class="value">{{ item.CoreInput.CoreWeight }}</div></div>
+        <div class="core-row"><div class="label">Cores Per Mould</div><div class="value">{{ item.CoreInput.CoresPerMould }}</div></div>
+        <div class="core-row"><div class="label">Core Cavities</div><div class="value">{{ item.CoreInput.CoreCavities }}</div></div>
+        <div class="core-row"><div class="label">Shooting/Shift</div><div class="value">{{ item.CoreInput.ShootingPerShift }}</div></div>
+        <div class="core-row"><div class="label">Core Sand</div><div class="value">{{ item.CoreInput.CoreSand }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -155,49 +163,51 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('salary', item)">edit</mat-icon>
     </div>
 
-    <!-- Edit Mode -->
-    <ng-container *ngIf="editMode['salary'] && editableItem?._id === item._id; else viewSalary">
-      <div class="salary-row">
-        <div class="label">Salary for Process</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryforProcess" (ngModelChange)="calculateSalary()" /></div>
-      </div>
-      <div class="salary-row">
-        <div class="label">Excluding Core Making</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryExcludingCoreMaking" (ngModelChange)="calculateSalary()" /></div>
-      </div>
-      <div class="salary-row">
-        <div class="label">Core Production</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryForCoreProduction" (ngModelChange)="calculateSalary()" /></div>
-      </div>
-      <div class="salary-row">
-        <div class="label">Outsourcing Cost</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.outSourcingCost" (ngModelChange)="calculateSalary()" /></div>
-      </div>
-      <div class="salary-row">
-        <div class="label">Special Outsourcing</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.splOutSourcingCost" (ngModelChange)="calculateSalary()" /></div>
-      </div>
-      <div class="salary-row">
-        <div class="label">Total Outsourcing</div>
-        <div class="value">{{ editableItem.SalaryAndWages.TotalOutSourcingCost }}</div>
-      </div>
+    <div class="card-content">
+      <!-- Edit Mode -->
+      <ng-container *ngIf="editMode['salary'] && editableItem?._id === item._id; else viewSalary">
+        <div class="salary-row">
+          <div class="label">Salary for Process</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryforProcess" (ngModelChange)="calculateSalary()" /></div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Excluding Core Making</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryExcludingCoreMaking" (ngModelChange)="calculateSalary()" /></div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Core Production</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryForCoreProduction" (ngModelChange)="calculateSalary()" /></div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Outsourcing Cost</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.outSourcingCost" (ngModelChange)="calculateSalary()" /></div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Special Outsourcing</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.splOutSourcingCost" (ngModelChange)="calculateSalary()" /></div>
+        </div>
+        <div class="salary-row">
+          <div class="label">Total Outsourcing</div>
+          <div class="value">{{ editableItem.SalaryAndWages.TotalOutSourcingCost }}</div>
+        </div>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button mat-raised-button color="primary" (click)="saveSlaray('salary')">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('salary')">Cancel</button>
-      </div>
-    </ng-container>
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveSlaray('salary')">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('salary')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <!-- View Mode -->
-    <ng-template #viewSalary>
-      <div class="salary-row"><div class="label">Salary for Process</div><div class="value">{{ item.SalaryAndWages.salaryforProcess }}</div></div>
-      <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">{{ item.SalaryAndWages.salaryExcludingCoreMaking }}</div></div>
-      <div class="salary-row"><div class="label">Core Production</div><div class="value">{{ item.SalaryAndWages.salaryForCoreProduction }}</div></div>
-      <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">{{ item.SalaryAndWages.outSourcingCost }}</div></div>
-      <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">{{ item.SalaryAndWages.splOutSourcingCost }}</div></div>
-      <div class="salary-row"><div class="label">Total Outsourcing</div><div class="value">{{ item.SalaryAndWages.TotalOutSourcingCost }}</div></div>
-    </ng-template>
+      <!-- View Mode -->
+      <ng-template #viewSalary>
+        <div class="salary-row"><div class="label">Salary for Process</div><div class="value">{{ item.SalaryAndWages.salaryforProcess }}</div></div>
+        <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">{{ item.SalaryAndWages.salaryExcludingCoreMaking }}</div></div>
+        <div class="salary-row"><div class="label">Core Production</div><div class="value">{{ item.SalaryAndWages.salaryForCoreProduction }}</div></div>
+        <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">{{ item.SalaryAndWages.outSourcingCost }}</div></div>
+        <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">{{ item.SalaryAndWages.splOutSourcingCost }}</div></div>
+        <div class="salary-row"><div class="label">Total Outsourcing</div><div class="value">{{ item.SalaryAndWages.TotalOutSourcingCost }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -211,60 +221,61 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('overhead', item)">edit</mat-icon>
     </div>
 
-    <!-- Edit Mode -->
-    <ng-container *ngIf="editMode['overhead'] && editableItem?._id === item._id; else viewOverhead">
-      <div class="overhead-row">
-        <div class="label">Repair & Maintenance</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.repairAndMaintenance" /></div>
-      </div>
-      <div class="overhead-row">
-        <div class="label">Selling & Misc</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.sellingDistributionAndMiscOverHeads" /></div>
-      </div>
-      <div class="overhead-row">
-        <div class="label">Finance Cost</div>
-        <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.financeCost" /></div>
-      </div>
-      <div class="overhead-row">
-  <div class="label">Total Overheads</div>
-  <div class="value">{{ editableItem.OverHeads.totalOverHeads }}</div>
-</div>
-<div class="overhead-row">
-  <div class="label">Total with Finance</div>
-  <div class="value">{{ editableItem.OverHeads.totalOverHeadsWithFinanceCost }}</div>
-</div>
+    <div class="card-content">
+      <!-- Edit Mode -->
+      <ng-container *ngIf="editMode['overhead'] && editableItem?._id === item._id; else viewOverhead">
+        <div class="overhead-row">
+          <div class="label">Repair & Maintenance</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.repairAndMaintenance" /></div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Selling & Misc</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.sellingDistributionAndMiscOverHeads" /></div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Finance Cost</div>
+          <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.financeCost" /></div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Total Overheads</div>
+          <div class="value">{{ editableItem.OverHeads.totalOverHeads }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Total with Finance</div>
+          <div class="value">{{ editableItem.OverHeads.totalOverHeadsWithFinanceCost }}</div>
+        </div>
 
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveOverHeads('overhead')">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('overhead')">Cancel</button>
+        </div>
+      </ng-container>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button mat-raised-button color="primary" (click)="saveOverHeads('overhead')">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('overhead')">Cancel</button>
-      </div>
-    </ng-container>
-
-    <!-- View Mode -->
-    <ng-template #viewOverhead>
-      <div class="overhead-row">
-        <div class="label">Repair & Maintenance</div>
-        <div class="value">{{ item.OverHeads.repairAndMaintenance }}</div>
-      </div>
-      <div class="overhead-row">
-        <div class="label">Selling & Misc</div>
-        <div class="value">{{ item.OverHeads.sellingDistributionAndMiscOverHeads }}</div>
-      </div>
-      <div class="overhead-row">
-        <div class="label">Finance Cost</div>
-        <div class="value">{{ item.OverHeads.financeCost }}</div>
-      </div>
-      <div class="overhead-row">
-        <div class="label">Total Overheads</div>
-        <div class="value">{{ item.OverHeads.totalOverHeads }}</div>
-      </div>
-      <div class="overhead-row">
-        <div class="label">Total with Finance</div>
-        <div class="value">{{ item.OverHeads.totalOverHeadsWithFinanceCost }}</div>
-      </div>
-    </ng-template>
+      <!-- View Mode -->
+      <ng-template #viewOverhead>
+        <div class="overhead-row">
+          <div class="label">Repair & Maintenance</div>
+          <div class="value">{{ item.OverHeads.repairAndMaintenance }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Selling & Misc</div>
+          <div class="value">{{ item.OverHeads.sellingDistributionAndMiscOverHeads }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Finance Cost</div>
+          <div class="value">{{ item.OverHeads.financeCost }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Total Overheads</div>
+          <div class="value">{{ item.OverHeads.totalOverHeads }}</div>
+        </div>
+        <div class="overhead-row">
+          <div class="label">Total with Finance</div>
+          <div class="value">{{ item.OverHeads.totalOverHeadsWithFinanceCost }}</div>
+        </div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -277,32 +288,34 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('terms', item)">edit</mat-icon>
     </div>
 
-    <!-- Edit Mode -->
-    <ng-container *ngIf="editMode['terms'] && editableItem?._id === item._id; else viewTerms">
-      <div class="terms-row">
-        <div class="label">Payment Credit Period</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editableItem.CommercialTerms.paymentCreditPeriod" />
+    <div class="card-content">
+      <!-- Edit Mode -->
+      <ng-container *ngIf="editMode['terms'] && editableItem?._id === item._id; else viewTerms">
+        <div class="terms-row">
+          <div class="label">Payment Credit Period</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editableItem.CommercialTerms.paymentCreditPeriod" />
+          </div>
         </div>
-      </div>
-      <div class="terms-row">
-        <div class="label">Bank Interest</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editableItem.CommercialTerms.bankInterest" />
+        <div class="terms-row">
+          <div class="label">Bank Interest</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editableItem.CommercialTerms.bankInterest" />
+          </div>
         </div>
-      </div>
 
-      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button mat-raised-button color="primary" (click)="saveChanges('terms')">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('terms')">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveChanges('terms')">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('terms')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <!-- View Mode -->
-    <ng-template #viewTerms>
-      <div class="terms-row"><div class="label">Payment Credit Period</div><div class="value">{{ item.CommercialTerms?.paymentCreditPeriod }}</div></div>
-      <div class="terms-row"><div class="label">Bank Interest</div><div class="value">{{ item.CommercialTerms?.bankInterest }}</div></div>
-    </ng-template>
+      <!-- View Mode -->
+      <ng-template #viewTerms>
+        <div class="terms-row"><div class="label">Payment Credit Period</div><div class="value">{{ item.CommercialTerms?.paymentCreditPeriod }}</div></div>
+        <div class="terms-row"><div class="label">Bank Interest</div><div class="value">{{ item.CommercialTerms?.bankInterest }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -316,25 +329,27 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('margin', item)">edit</mat-icon>
     </div>
 
-    <!-- Edit Mode -->
-    <ng-container *ngIf="editMode['margin'] && editableItem?._id === item._id; else viewMargin">
-      <div class="margin-row">
-        <div class="label">Profit %</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editableItem.Margin.profit" />
+    <div class="card-content">
+      <!-- Edit Mode -->
+      <ng-container *ngIf="editMode['margin'] && editableItem?._id === item._id; else viewMargin">
+        <div class="margin-row">
+          <div class="label">Profit %</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editableItem.Margin.profit" />
+          </div>
         </div>
-      </div>
 
-      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button mat-raised-button color="primary" (click)="saveChanges('margin')">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('margin')">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveChanges('margin')">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('margin')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <!-- View Mode -->
-    <ng-template #viewMargin>
-      <div class="margin-row"><div class="label">Profit %</div><div class="value">{{ item.Margin?.profit }}</div></div>
-    </ng-template>
+      <!-- View Mode -->
+      <ng-template #viewMargin>
+        <div class="margin-row"><div class="label">Profit %</div><div class="value">{{ item.Margin?.profit }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -348,25 +363,27 @@
       <mat-icon style="cursor: pointer;" (click)="enableEditMode('rejection', item)">edit</mat-icon>
     </div>
 
-    <!-- Edit Mode -->
-    <ng-container *ngIf="editMode['rejection'] && editableItem?._id === item._id; else viewRejection">
-      <div class="rejection-row">
-        <div class="label">Rejection %</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editableItem.AnticipatedRejection.rejection" />
+    <div class="card-content">
+      <!-- Edit Mode -->
+      <ng-container *ngIf="editMode['rejection'] && editableItem?._id === item._id; else viewRejection">
+        <div class="rejection-row">
+          <div class="label">Rejection %</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editableItem.AnticipatedRejection.rejection" />
+          </div>
         </div>
-      </div>
 
-      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button mat-raised-button color="primary" (click)="saveChanges('rejection')">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelEditMode('rejection')">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveChanges('rejection')">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelEditMode('rejection')">Cancel</button>
+        </div>
+      </ng-container>
 
-    <!-- View Mode -->
-    <ng-template #viewRejection>
-      <div class="rejection-row"><div class="label">Rejection %</div><div class="value">{{ item.AnticipatedRejection?.rejection }}</div></div>
-    </ng-template>
+      <!-- View Mode -->
+      <ng-template #viewRejection>
+        <div class="rejection-row"><div class="label">Rejection %</div><div class="value">{{ item.AnticipatedRejection?.rejection }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 
@@ -383,39 +400,41 @@
       <mat-icon style="cursor: pointer;" (click)="enablePowerEdit()">edit</mat-icon>
     </div>
 
-    <!-- Edit Mode -->
-    <ng-container *ngIf="editMode['power']; else viewPower">
-      <div class="power-row">
-        <div class="label">Melt & Others Power</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editablePower.MeltAndOthersPower" />
+    <div class="card-content">
+      <!-- Edit Mode -->
+      <ng-container *ngIf="editMode['power']; else viewPower">
+        <div class="power-row">
+          <div class="label">Melt & Others Power</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editablePower.MeltAndOthersPower" />
+          </div>
         </div>
-      </div>
-      <div class="power-row">
-        <div class="label">Mould Power</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editablePower.mouldPower" />
+        <div class="power-row">
+          <div class="label">Mould Power</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editablePower.mouldPower" />
+          </div>
         </div>
-      </div>
-      <div class="power-row">
-        <div class="label">Core Power</div>
-        <div class="value">
-          <input type="number" [(ngModel)]="editablePower.corePower" />
+        <div class="power-row">
+          <div class="label">Core Power</div>
+          <div class="value">
+            <input type="number" [(ngModel)]="editablePower.corePower" />
+          </div>
         </div>
-      </div>
 
-      <div class="action-buttons" style="margin-top: 12px; display: flex; justify-content: flex-end; gap: 10px;">
-        <button mat-raised-button color="primary" (click)="savePower()">Save</button>
-        <button mat-raised-button color="warn" (click)="cancelPowerEdit()">Cancel</button>
-      </div>
-    </ng-container>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="savePower()">Save</button>
+          <button mat-raised-button color="warn" (click)="cancelPowerEdit()">Cancel</button>
+        </div>
+      </ng-container>
 
-    <!-- View Mode -->
-    <ng-template #viewPower>
-      <div class="power-row"><div class="label">Melt & Others Power</div><div class="value">{{ productionPower.MeltAndOthersPower }}</div></div>
-      <div class="power-row"><div class="label">Mould Power</div><div class="value">{{ productionPower.mouldPower }}</div></div>
-      <div class="power-row"><div class="label">Core Power</div><div class="value">{{ productionPower.corePower }}</div></div>
-    </ng-template>
+      <!-- View Mode -->
+      <ng-template #viewPower>
+        <div class="power-row"><div class="label">Melt & Others Power</div><div class="value">{{ productionPower.MeltAndOthersPower }}</div></div>
+        <div class="power-row"><div class="label">Mould Power</div><div class="value">{{ productionPower.mouldPower }}</div></div>
+        <div class="power-row"><div class="label">Core Power</div><div class="value">{{ productionPower.corePower }}</div></div>
+      </ng-template>
+    </div>
   </mat-card>
 </div>
 

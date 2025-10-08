@@ -117,7 +117,7 @@ edit(id: string) {
         customerData: customer
       },
       autoFocus: false,
-      disableClose: false
+      disableClose: true
     });
     this.store.dispatch(loadCustomerDetails());
     console.log('Editing Customer:', customer);
