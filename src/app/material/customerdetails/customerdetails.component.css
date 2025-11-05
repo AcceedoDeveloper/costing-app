@@ -119,11 +119,11 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-
+  display: flex;
+  flex-direction: column;
 }
 
 .add-but{
-  margin-bottom: 20px;
   padding: 8px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -140,14 +140,9 @@ body {
 }
 
 .content-header {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  padding-top: 8px;
-    padding-right: 10px;
-    padding-left: 20px;
-    height: 75px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .content-header h1 {
@@ -158,42 +153,472 @@ body {
   text-align: left;
 }
 
+.filter-da {
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+
 .header-controls {
   display: flex;
+  flex-direction: row;
+  gap: 12px;
   align-items: center;
-  gap: 20px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 2;
   flex-wrap: wrap;
 }
 
-.search-section {
-  flex: 1;
-  min-width: 300px;
+/* Ensure filter cards are positioned next to each other */
+.filter-da > .filter-card + .filter-card {
+  margin-left: 0;
 }
 
-.search-field {
-  width: 100%;
-}
-
-.search-field .mat-form-field-wrapper {
-  padding-bottom: 0;
-}
-
-.date-filters {
+.filter-da {
   display: flex;
-  gap: 15px;
+  flex-direction: row;
+  gap: 0;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.filter-card {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 5px 5px 5px 10px;
+  border-radius: 12px;
+  flex-wrap: nowrap;
+  position: relative;
+  z-index: 10;
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 40px;
+  padding-top: 20px;
+    margin: 25px;
+}
+
+/* Remove padding on the right side of first filter card to bring cards closer */
+.filter-card:first-of-type {
+  padding-right: 5px;
+}
+
+/* Add minimal padding on the left of second filter card */
+.filter-card:last-of-type {
+  padding-left: 5px;
+}
+
+.filter-field {
+  flex: 1 1 auto;
+  min-width: 180px;
+  max-width: 250px;
+  transition: all 0.3s ease;
+  opacity: 1;
+  display: flex;
   align-items: center;
 }
 
-.date-field {
-  width: 180px;
+/* Ensure week picker container aligns properly */
+.week-picker-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 180px;
+  max-width: 250px;
+  z-index: 10001;
 }
 
-.date-field .mat-form-field-wrapper {
-  padding-bottom: 0;
+/* Ensure second dropdown appears immediately next to first */
+.filter-card > .filter-field:first-child + .filter-field {
+  margin-left: 0;
+}
+
+/* When only one field in card, it can expand but with max constraint */
+.filter-card > .filter-field:only-child {
+  flex: 1 1 auto;
+  max-width: 250px;
+}
+
+/* When two fields in card, they share width equally (50% each) */
+/* First field when there are 2 children */
+.filter-card > .filter-field:first-child:not(:only-child),
+.filter-card > .filter-field:nth-child(2):nth-last-child(1) {
+  flex: 1 1 calc(50% - 2px);
+  max-width: calc(50% - 2px);
+  min-width: 180px;
+}
+
+/* Week picker container should also share width when there are 2 items */
+.filter-card > .week-picker-container:first-child:not(:only-child),
+.filter-card > .week-picker-container:nth-child(2):nth-last-child(1) {
+  flex: 1 1 calc(50% - 2px);
+  max-width: calc(50% - 2px);
+  min-width: 180px;
+}
+
+/* When first field has a sibling (second field or week picker), share width */
+.filter-card > .filter-field:first-child + .filter-field,
+.filter-card > .filter-field:first-child + .week-picker-container {
+  flex: 1 1 calc(50% - 2px);
+  max-width: calc(50% - 2px);
+  min-width: 180px;
+  margin-left: 0;
+}
+
+/* Override Angular Material to make all fields look like normal HTML inputs */
+.filter-field .mat-form-field-wrapper,
+.week-picker-container .filter-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  height: 44px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Unified height for all filter fields - make them look like normal HTML */
+.filter-field .mat-form-field,
+.week-picker-container .filter-field .mat-form-field {
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 44px !important;
+}
+
+.filter-field .mat-form-field-appearance-outline,
+.week-picker-container .filter-field .mat-form-field-appearance-outline {
+  height: 44px !important;
+  line-height: 44px !important;
+}
+
+/* Make infix container compact like normal HTML input */
+.filter-field .mat-form-field-infix,
+.week-picker-container .filter-field .mat-form-field-infix {
+  padding: 0 !important;
+  border-top: 0 !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 44px !important;
+}
+
+/* All inputs should have same height as normal HTML - unified styling */
+.filter-field input:not([matInput]),
+.filter-field input[matInput],
+.week-picker-container .filter-field input {
+  height: 44px !important;
+  line-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  width: 100% !important;
+  font-size: 14px !important;
+  color: #333 !important;
+  font-family: inherit !important;
+}
+
+.filter-field .mat-select-trigger,
+.filter-field .mat-select-value {
+  height: 44px !important;
+  line-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.filter-field .mat-select-trigger {
+  min-height: 44px !important;
+  height: 44px !important;
+}
+
+/* Remove Material's default spacing */
+.filter-field .mat-form-field-subscript-wrapper {
+  display: none !important;
+  margin-top: 0 !important;
+  height: 0 !important;
+}
+
+/* Make outline look like normal HTML border */
+.filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
+  top: 0 !important;
+  bottom: 0 !important;
+  height: 44px !important;
+}
+
+.filter-field .mat-form-field-appearance-outline .mat-form-field-outline-start,
+.filter-field .mat-form-field-appearance-outline .mat-form-field-outline-end,
+.filter-field .mat-form-field-appearance-outline .mat-form-field-outline-gap {
+  border-width: 1px !important;
+  height: 44px !important;
+}
+
+/* Label positioning - make it like normal HTML */
+.filter-field .mat-form-field-label-wrapper {
+  top: 0 !important;
+  padding-top: 0 !important;
+  height: 44px !important;
+  display: flex;
+  align-items: center;
+}
+
+.filter-field .mat-form-field-label {
+  top: 0 !important;
+  margin-top: 0 !important;
+  transform: translateY(0) !important;
+  position: absolute !important;
+  left: 12px !important;
+  font-size: 12px !important;
+  color: #666 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* When input has value or is focused, move label up like normal HTML placeholder */
+.filter-field .mat-form-field-label.mat-form-field-label-floating {
+  transform: translateY(-20px) scale(0.75) !important;
+  top: 0 !important;
+}
+
+/* Date picker toggle styles consolidated above */
+
+.filter-field .mat-form-field-suffix,
+.week-picker-container .filter-field .mat-form-field-suffix {
+  align-self: center !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  margin-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ensure prefix/suffix containers don't add extra spacing */
+.filter-field .mat-form-field-prefix,
+.filter-field .mat-form-field-suffix {
+  height: 44px !important;
+  line-height: 44px !important;
+}
+
+.filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #d0d0d0 !important;
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+.filter-field.active .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: #9c27b0 !important;
+  border-width: 2px !important;
+}
+
+.filter-field.active .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #9c27b0 !important;
+}
+
+
+/* Force equal height for all filter pickers - normal HTML style */
+.filter-field .mat-form-field-flex,
+.week-picker-container .filter-field .mat-form-field-flex {
+  height: 44px !important;
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Date picker inputs use same styles as defined above in unified input section */
+
+/* Date picker toggle - make it look like normal HTML button */
+.filter-field .mat-datepicker-toggle,
+.week-picker-container .filter-field .mat-datepicker-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 44px !important;
+  width: 44px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.filter-field .mat-datepicker-toggle .mat-icon-button,
+.week-picker-container .filter-field .mat-datepicker-toggle .mat-icon-button {
+  width: 44px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.filter-field .mat-datepicker-toggle .mat-icon,
+.week-picker-container .filter-field .mat-datepicker-toggle .mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  line-height: 20px !important;
+  color: #666 !important;
+}
+
+/* Uniform border and radius for all fields */
+.filter-field .mat-form-field-outline {
+  border-radius: 8px !important;
+  height: 44px !important;
+}
+
+/* Native HTML input styling - match Material design */
+.filter-field .native-input {
+  width: 100% !important;
+  height: 44px !important;
+  padding: 0 12px !important;
+  border: 1px solid #d0d0d0 !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  color: #333 !important;
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+  transition: border-color 0.3s ease !important;
+  font-family: inherit !important;
+}
+
+.filter-field .native-input:focus {
+  border-color: #2196F3 !important;
+  border-width: 2px !important;
+}
+
+.filter-field .native-input:hover {
+  border-color: #999 !important;
+}
+
+/* Label styling for native inputs */
+.filter-field .input-label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 4px;
+  pointer-events: none;
+}
+
+/* Ensure filter-field container with native inputs has proper height */
+.filter-field:has(.native-input) {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+}
+
+.filter-fields {
+border: 1px solid rgb(123, 123, 123);
+position: relative;
+    bottom: 10px;
+    margin-left: 8px;
+    border-radius: 5px;
+    height: 44px;
+}
+
+.filter-field:has(.native-input) .input-label {
+  display: none;
+}
+
+.filter-field:has(.native-input) .native-input {
+  height: 44px;
+  margin: 0;
+  padding: 0 12px;
+}
+
+
+
+.add-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 4px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.add-but {
+  height: 42px;
+  padding: 0 32px;
+  font-weight: 500;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  border-radius: 8px;
+}
+
+.add-but:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Improve form field consistency */
+.header-controls .mat-form-field {
+  margin-bottom: 0;
+}
+
+.header-controls .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #e0e0e0;
+}
+
+.header-controls .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #2196F3;
+}
+
+.header-controls .mat-form-field-appearance-outline .mat-form-field-label {
+  color: #666;
+}
+
+.header-controls .mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+  color: #2196F3;
+}
+
+/* Responsive design for filters */
+@media (max-width: 768px) {
+  .filter-card {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .filter-field {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .add-button-wrapper {
+    justify-content: center;
+  width: 100%;
+}
+
+  .add-but {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .filter-field {
+    min-width: 200px;
+    max-width: 300px;
+  }
 }
 
 .date-field .mat-datepicker-toggle {
- 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -221,6 +646,219 @@ body {
   justify-content: center;
 }
 
+/* Custom Week Picker Styles */
+.week-picker-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-icon {
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.calendar-icon:hover {
+  color: #1976D2;
+}
+
+.custom-week-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10000;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+  min-width: 400px;
+  max-width: 400px;
+  padding: 16px;
+  max-height: 420px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.week-picker-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: transparent;
+}
+
+.week-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.nav-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+.nav-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.month-year-label {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+  text-align: center;
+}
+
+.week-picker-calendar {
+  margin-bottom: 16px;
+  max-height: 320px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.calendar-header {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 8px;
+}
+
+.week-number-header {
+  width: 60px;
+  padding: 8px 4px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+  border-right: 1px solid #e0e0e0;
+}
+
+.days-header {
+  display: flex;
+  flex: 1;
+}
+
+.day-header {
+  flex: 1;
+  padding: 8px 4px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #666;
+  text-align: center;
+}
+
+.calendar-week {
+  display: flex;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  transition: background-color 0.2s;
+}
+
+.calendar-week:hover {
+  background-color: #f5f5f5;
+}
+
+.calendar-week.selected-week {
+  background-color: #e3f2fd;
+}
+
+.week-number-cell {
+  width: 60px;
+  padding: 12px 4px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  border-right: 1px solid #e0e0e0;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.week-number-cell.selected-week-number {
+  background-color: #1976D2;
+  color: white;
+  font-weight: 600;
+}
+
+.days-row {
+  display: flex;
+  flex: 1;
+}
+
+.day-cell {
+  flex: 1;
+  padding: 12px 4px;
+  text-align: center;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.day-cell.other-month {
+  color: #ccc;
+}
+
+.day-cell.selected-day {
+  background-color: #1976D2;
+  color: white;
+  font-weight: 500;
+}
+
+.day-cell.today {
+  font-weight: 600;
+}
+
+.day-cell.today:not(.selected-day) {
+  color: #1976D2;
+}
+
+.week-picker-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.clear-button,
+.this-week-button {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.clear-button {
+  color: #666;
+}
+
+.clear-button:hover {
+  background-color: #f5f5f5;
+}
+
+.this-week-button {
+  color: #1976D2;
+}
+
+.this-week-button:hover {
+  background-color: #e3f2fd;
+}
+
 .add-button {
   background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
   color: white !important;
@@ -244,6 +882,10 @@ body {
   overflow: hidden;
   overflow-x: auto;
   border: 1px solid #e0e0e0;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
 }
 
 .data-table {
@@ -517,4 +1159,55 @@ body {
     width: 30px !important;
     height: 30px !important;
   }
+}
+
+/* Custom height for Month Date Picker */
+::ng-deep .mat-datepicker-popup {
+  max-height: 400px;
+}
+
+::ng-deep .mat-datepicker-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Month picker - when startView is "year" */
+::ng-deep .mat-calendar[matCalendar] {
+  max-height: 380px;
+  overflow: hidden;
+}
+
+::ng-deep .mat-calendar-table {
+  max-height: 300px;
+}
+
+/* Year picker - when startView is "multi-year" */
+::ng-deep .mat-calendar[matCalendar] .mat-calendar-body {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+::ng-deep .mat-calendar-multi-year-view {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+/* Regular date picker */
+::ng-deep .mat-datepicker-content .mat-calendar {
+  max-height: 350px;
+}
+
+/* Custom height adjustments for different picker types */
+::ng-deep .mat-datepicker-popup[cdk-overlay-pane] {
+  max-height: 400px;
+}
+
+/* Specific styling for month picker panel */
+::ng-deep .mat-calendar-month-view .mat-calendar-body-cell {
+  min-height: 40px;
+}
+
+/* Specific styling for year picker panel */
+::ng-deep .mat-calendar-multi-year-view .mat-calendar-body-cell {
+  min-height: 48px;
 }

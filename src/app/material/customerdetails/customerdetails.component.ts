@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { loadCustomerDetails } from '../store/material.actions'; 
 import { MaterialState } from '../store/material.reducer';
@@ -25,9 +25,23 @@ export class CustomerdetailsComponent implements OnInit {
   selectedCustomerDetails$: Observable<any>;
   customerDetails : CustomerdetailsIn[] = [];
   searchText: string = '';
-  startDate: Date | null = null;
-  endDate: Date | null = null;
-  filteredCustomersList: CustomerdetailsIn[] = [];
+filteredCustomersList: CustomerdetailsIn[] = [];
+
+  // Search Filter properties
+  searchFilterType: string = 'none'; // 'none', 'customerName', 'drawingNo', 'partNo'
+  selectedSearchValue: string = '';
+  searchFilterOptions: string[] = [];
+
+  // Date Filter properties
+  dateFilterType: string = 'none'; // 'none', 'date', 'week', 'month', 'year'
+  
+  // Native HTML input filters
+  filters: any = {
+    singleDate: '',
+    week: '',
+    month: '',
+    year: null
+  };
 
   // Pagination properties
   pageSize: number = 10;
@@ -41,7 +55,8 @@ export class CustomerdetailsComponent implements OnInit {
   constructor(private store: Store<{ materials: MaterialState }>, 
     private dialog : MatDialog,
     private power: PowerService,
-    private tooster: ToastrService ) {}
+    private tooster: ToastrService,
+    private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
   this.store.dispatch(loadCustomerDetails());
@@ -51,7 +66,10 @@ export class CustomerdetailsComponent implements OnInit {
 this.selectedCustomerDetails$.subscribe((data: CustomerdetailsIn[]) => {
   this.customerDetails = data;
   console.log('Customer Details:', this.customerDetails);
-  
+  // Update search filter options when data changes
+  if (this.searchFilterType !== 'none') {
+    this.updateSearchFilterOptions();
+  }
 });
 
 
@@ -169,8 +187,198 @@ applyDateFilter() {
   this.pageIndex = 0; // Reset to first page when filter changes
 }
 
+// Removed - no longer using Material date pickers
+
+// Handle search filter type change
+onSearchFilterTypeChange() {
+  this.selectedSearchValue = '';
+  this.updateSearchFilterOptions();
+  this.applyDateFilter();
+}
+
+// Update search filter options based on selected type
+updateSearchFilterOptions() {
+  this.searchFilterOptions = [];
+  
+  if (this.searchFilterType === 'none' || !this.customerDetails.length) {
+    return;
+  }
+
+  const uniqueValues = new Set<string>();
+
+  this.customerDetails.forEach(customer => {
+    if (this.searchFilterType === 'customerName' && customer.CustomerName?.name) {
+      uniqueValues.add(customer.CustomerName.name);
+    } else if (this.searchFilterType === 'drawingNo' && customer.drawingNo) {
+      uniqueValues.add(customer.drawingNo);
+    } else if (this.searchFilterType === 'partNo' && customer.partName) {
+      uniqueValues.add(customer.partName);
+    }
+  });
+
+  this.searchFilterOptions = Array.from(uniqueValues).sort();
+}
+
+// Handle search value change
+onSearchValueChange() {
+  this.applyDateFilter();
+}
+
+// Get search filter label
+getSearchFilterLabel(): string {
+  switch (this.searchFilterType) {
+    case 'customerName': return 'Select Customer Name';
+    case 'drawingNo': return 'Select Drawing No';
+    case 'partNo': return 'Select Part No';
+    default: return '';
+  }
+}
+
+// Handle filter type change
+onFilterTypeChange() {
+  // Reset all filter values when filter type changes
+  this.filters.singleDate = '';
+  this.filters.week = '';
+  this.filters.month = '';
+  this.filters.year = null;
+  this.applyDateFilter();
+}
+
+// Handle native input changes
+onDateChange() {
+  this.applyDateFilter();
+}
+
+onWeekChange() {
+  this.applyDateFilter();
+}
+
+onMonthChange() {
+  this.applyDateFilter();
+}
+
+onYearChange() {
+  this.applyDateFilter();
+}
+
+// Removed Material date picker and custom week picker methods - using native HTML inputs now
+
+// Get week number from date (ISO week standard)
+getWeekNumber(date: Date): number {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  const dayOfWeek = d.getDay() || 7;
+  d.setDate(d.getDate() + 4 - dayOfWeek);
+  const jan4 = new Date(d.getFullYear(), 0, 4);
+  jan4.setHours(0, 0, 0, 0);
+  const jan4Day = jan4.getDay() || 7;
+  const jan4Thursday = new Date(jan4);
+  jan4Thursday.setDate(jan4.getDate() + 4 - jan4Day);
+  const weekNo = Math.ceil(((d.getTime() - jan4Thursday.getTime()) / 86400000 + 1) / 7);
+  return weekNo;
+}
+
+// Get number of weeks in a year
+getWeeksInYear(year: number): number {
+  const jan1 = new Date(year, 0, 1);
+  const dec31 = new Date(year, 11, 31);
+  const weekJan1 = this.getWeekNumber(jan1);
+  const weekDec31 = this.getWeekNumber(dec31);
+  if (weekDec31 === 1 && dec31.getDay() !== 0) {
+    return weekJan1 === 53 ? 53 : 52;
+  }
+  return weekDec31;
+}
+
+// Get week date range for display
+getWeekDateRange(year: number, week: number): { start: string; end: string } {
+  const weekStart = this.getWeekStartDate(year, week);
+  const weekEnd = this.getWeekEndDate(year, week);
+  return {
+    start: weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    end: weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  };
+}
+
+// Get start date of a week (Monday)
+getWeekStartDate(year: number, week: number): Date {
+  const jan4 = new Date(year, 0, 4);
+  const jan4Day = jan4.getDay() || 7;
+  const jan4Thursday = new Date(jan4);
+  jan4Thursday.setDate(jan4.getDate() + 4 - jan4Day);
+  const week1Monday = new Date(jan4Thursday);
+  week1Monday.setDate(jan4Thursday.getDate() - 3);
+  const weekStart = new Date(week1Monday);
+  weekStart.setDate(week1Monday.getDate() + (week - 1) * 7);
+  weekStart.setHours(0, 0, 0, 0);
+  return weekStart;
+}
+
+// Get end date of a week (Sunday)
+getWeekEndDate(year: number, week: number): Date {
+  const weekStart = this.getWeekStartDate(year, week);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  weekEnd.setHours(23, 59, 59, 999);
+  return weekEnd;
+}
+
+// Get month start date
+getMonthStartDate(year: number, month: number): Date {
+  return new Date(year, month, 1);
+}
+
+// Get month end date
+getMonthEndDate(year: number, month: number): Date {
+  return new Date(year, month + 1, 0, 23, 59, 59, 999);
+}
+
+// Get year start date
+getYearStartDate(year: number): Date {
+  return new Date(year, 0, 1);
+}
+
+// Get year end date
+getYearEndDate(year: number): Date {
+  return new Date(year, 11, 31, 23, 59, 59, 999);
+}
+
 get filteredCustomers() {
   const search = this.searchText.toLowerCase().trim();
+
+  // Get search filter value
+  const searchFilterValue = this.selectedSearchValue ? this.selectedSearchValue.toLowerCase().trim() : '';
+
+  // Calculate date range based on filter type using native inputs
+  let startDate: Date | null = null;
+  let endDate: Date | null = null;
+
+  if (this.dateFilterType === 'date' && this.filters.singleDate) {
+    // Single date filter
+    const date = new Date(this.filters.singleDate);
+    startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    endDate.setHours(23, 59, 59, 999);
+  } else if (this.dateFilterType === 'week' && this.filters.week) {
+    // Week filter (format: YYYY-Www)
+    const [year, week] = this.filters.week.split('-W').map(Number);
+    const weekStart = this.getWeekStartDate(year, week);
+    const weekEnd = this.getWeekEndDate(year, week);
+    startDate = weekStart;
+    endDate = weekEnd;
+  } else if (this.dateFilterType === 'month' && this.filters.month) {
+    // Month filter (format: YYYY-MM)
+    const [year, month] = this.filters.month.split('-').map(Number);
+    startDate = new Date(year, month - 1, 1);
+    endDate = new Date(year, month, 0);
+    endDate.setHours(23, 59, 59, 999);
+  } else if (this.dateFilterType === 'year' && this.filters.year) {
+    // Year filter
+    const year = Number(this.filters.year);
+    startDate = new Date(year, 0, 1);
+    endDate = new Date(year, 11, 31);
+    endDate.setHours(23, 59, 59, 999);
+  }
 
   const filtered = this.customerDetails
     .filter(c => !!c.CustomerName)  // remove null CustomerName
@@ -180,14 +388,49 @@ get filteredCustomers() {
       const partName = c.partName?.toLowerCase() || '';
       const createdDate = new Date(c.createdAt || '');
 
-      const matchesSearch =
+      // Filter by search text (if still used)
+      let matchesSearch = true;
+      if (search) {
+        matchesSearch =
         customerName.includes(search) ||
         drawingNo.includes(search) ||
         partName.includes(search);
+      }
 
-      const matchesDate =
-        (!this.startDate || createdDate >= new Date(this.startDate)) &&
-        (!this.endDate || createdDate <= new Date(this.endDate));
+      // Filter by selected search filter value
+      if (this.searchFilterType !== 'none' && searchFilterValue) {
+        let matchesFilter = false;
+        
+        if (this.searchFilterType === 'customerName') {
+          matchesFilter = customerName === searchFilterValue;
+        } else if (this.searchFilterType === 'drawingNo') {
+          matchesFilter = drawingNo === searchFilterValue;
+        } else if (this.searchFilterType === 'partNo') {
+          matchesFilter = partName === searchFilterValue;
+        }
+        
+        if (!matchesFilter) {
+          return false;
+        }
+      }
+
+      // Filter by date range if date filter is active
+      let matchesDate = true;
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        matchesDate = createdDate >= start && createdDate <= end;
+      } else if (startDate) {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        matchesDate = createdDate >= start;
+      } else if (endDate) {
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        matchesDate = createdDate <= end;
+      }
 
       return matchesSearch && matchesDate;
     });
@@ -202,25 +445,23 @@ get filteredCustomers() {
   return filtered.slice(startIndex, endIndex);
 }
 
-// Progress circle methods
-getProgressPercentage(customer: any): number {
-  // Calculate percentage based on some logic - you can modify this
-  const processCount = customer.processName?.length || 0;
-  const maxProcesses = 5; // Assuming max 5 processes
-  return Math.min(Math.round((processCount / maxProcesses) * 100), 100);
-}
+// Removed percentage-related methods - no longer displaying percentage column
 
-getProgressDashArray(customer: any): string {
-  const percentage = this.getProgressPercentage(customer);
-  const circumference = 2 * Math.PI * 18; // radius = 18
-  const offset = circumference - (percentage / 100) * circumference;
-  return `${circumference} ${circumference}`;
-}
-
-getProgressOffset(customer: any): string {
-  const percentage = this.getProgressPercentage(customer);
-  const circumference = 2 * Math.PI * 18; // radius = 18
-  return `${circumference - (percentage / 100) * circumference}`;
+// Format ID with month abbreviation, date, and sequential number
+getFormattedId(customer: any, index: number): string {
+  // Get date from updatedAt or createdAt
+  const dateStr = customer.updatedAt || customer.createdAt;
+  if (!dateStr) {
+    return `${7781 + index}`;
+  }
+  
+  const date = new Date(dateStr);
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month = monthNames[date.getMonth()];
+  const day = date.getDate();
+  const sequentialNumber = index + 1;
+  
+  return `${month}${day}${sequentialNumber}`;
 }
 
 onPageChange(event: PageEvent) {
