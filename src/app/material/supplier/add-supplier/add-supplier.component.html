@@ -1,56 +1,163 @@
-<h2 mat-dialog-title>Add Supplier</h2>
+<div class="form-container">
+  <h2 class="form-title">{{ isEditMode ? 'Edit Supplier' : 'Add Supplier' }}</h2>
+  
+  <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="supplier-form">
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name" class="form-label">
+          <mat-icon class="label-icon">business</mat-icon>
+          Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          class="form-input"
+          formControlName="name"
+          placeholder="Enter supplier name"
+        />
+        <div class="error-message" *ngIf="supplierForm.get('name')?.hasError('required') && supplierForm.get('name')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Name is required
+        </div>
+      </div>
 
-<form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" mat-dialog-content class="form-container">
-  <div class="grid-container">
-    <mat-form-field appearance="outline" class="half-width">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
-    </mat-form-field>
+      <div class="form-group">
+        <label for="materialType" class="form-label">
+          <mat-icon class="label-icon">category</mat-icon>
+          Material Type
+        </label>
+        <div class="select-wrapper">
+          <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+          <select
+            id="materialType"
+            class="form-select"
+            formControlName="materialType"
+            [disabled]="isEditMode"
+          >
+            <option value="" disabled>Select material type</option>
+            <option *ngFor="let key of materialTypeKeys" [value]="key">
+              {{ key }}
+            </option>
+          </select>
+        </div>
+        <div class="error-message" *ngIf="supplierForm.get('materialType')?.hasError('required') && supplierForm.get('materialType')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Material Type is required
+        </div>
+      </div>
 
-    <mat-form-field appearance="outline" class="half-width">
-  <mat-label>Material Type</mat-label>
-  <mat-select formControlName="materialType"  [disabled]="isEditMode">
-    <mat-option *ngFor="let key of materialTypeKeys" [value]="key">
-      {{ key }}
-    </mat-option>
-  </mat-select>
-  <mat-error *ngIf="supplierForm.get('materialType')?.hasError('required')">
-    Material Type is required
-  </mat-error>
-</mat-form-field>
+      <div class="form-group">
+        <label for="materialName" class="form-label">
+          <mat-icon class="label-icon">inventory</mat-icon>
+          Material Name
+        </label>
+        <input
+          id="materialName"
+          type="text"
+          class="form-input"
+          formControlName="materialName"
+          placeholder="Enter material name"
+        />
+        <div class="error-message" *ngIf="supplierForm.get('materialName')?.hasError('required') && supplierForm.get('materialName')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Material Name is required
+        </div>
+      </div>
+    </div>
 
+    <div class="form-row">
+      <div class="form-group">
+        <label for="quantity" class="form-label">
+          <mat-icon class="label-icon">scale</mat-icon>
+          Quantity
+        </label>
+        <input
+          id="quantity"
+          type="number"
+          class="form-input"
+          formControlName="quantity"
+          placeholder="Enter quantity"
+          min="1"
+          step="0.01"
+        />
+        <div class="error-message" *ngIf="supplierForm.get('quantity')?.hasError('required') && supplierForm.get('quantity')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Quantity is required
+        </div>
+        <div class="error-message" *ngIf="supplierForm.get('quantity')?.hasError('min') && supplierForm.get('quantity')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Quantity must be at least 1
+        </div>
+      </div>
 
-    <mat-form-field appearance="outline" class="half-width">
-      <mat-label>Material Name</mat-label>
-      <input matInput formControlName="materialName" />
-    </mat-form-field>
+      <div class="form-group">
+        <label for="ratePerKg" class="form-label">
+          <mat-icon class="label-icon">attach_money</mat-icon>
+          Rate per Kg
+        </label>
+        <input
+          id="ratePerKg"
+          type="number"
+          class="form-input"
+          formControlName="ratePerKg"
+          placeholder="Enter rate per kg"
+          min="0"
+          step="0.01"
+        />
+        <div class="error-message" *ngIf="supplierForm.get('ratePerKg')?.hasError('required') && supplierForm.get('ratePerKg')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Rate per Kg is required
+        </div>
+      </div>
 
-    <mat-form-field appearance="outline" class="half-width">
-      <mat-label>Quantity</mat-label>
-      <input matInput type="number" formControlName="quantity" />
-    </mat-form-field>
+      <div class="form-group">
+        <label for="effectiveTill" class="form-label">
+          <mat-icon class="label-icon">event</mat-icon>
+          Effective Till
+        </label>
+        <input
+          id="effectiveTill"
+          type="date"
+          class="form-input"
+          formControlName="effectiveTill"
+        />
+        <div class="error-message" *ngIf="supplierForm.get('effectiveTill')?.hasError('required') && supplierForm.get('effectiveTill')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Effective Till is required
+        </div>
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="half-width">
-      <mat-label>Rate per Kg</mat-label>
-      <input matInput formControlName="ratePerKg" />
-    </mat-form-field>
+    <div class="form-row">
+      <div class="form-group address-group">
+        <label for="address" class="form-label">
+          <mat-icon class="label-icon">location_on</mat-icon>
+          Address
+        </label>
+        <textarea
+          id="address"
+          class="form-textarea"
+          formControlName="address"
+          placeholder="Enter supplier address"
+          rows="3"
+        ></textarea>
+        <div class="error-message" *ngIf="supplierForm.get('address')?.hasError('required') && supplierForm.get('address')?.touched">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Address is required
+        </div>
+      </div>
+    </div>
 
-    <mat-form-field appearance="outline" class="half-width">
-      <mat-label>Effective Till</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="effectiveTill" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </div>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Address</mat-label>
-    <textarea matInput formControlName="address"></textarea>
-  </mat-form-field>
-
-  <div mat-dialog-actions class="action-buttons">
-  <button mat-button type="button" (click)="onCancel()">Cancel</button>
-  <button mat-flat-button color="primary" type="submit">Save</button>
+    <div class="form-actions">
+      <button type="button" class="btn btn-cancel" (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-submit" [disabled]="supplierForm.invalid">
+        <mat-icon>save</mat-icon>
+        Save
+      </button>
+    </div>
+  </form>
 </div>
-
-</form>

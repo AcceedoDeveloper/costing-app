@@ -1,96 +1,162 @@
+<div class="form-container">
+  <h2 class="form-title">Add Process</h2>
 
-  <div class="popup-container">
-    <div class="popup-scroll">
-      <h2>Add Process</h2>
-
-      <form [formGroup]="processForm" (ngSubmit)="onSubmit()">
-        <!-- Process Name + Checkboxes in same row -->
-        <div class="process-type-row">
-          <mat-form-field appearance="standard" class="process-name-field">
-            <mat-label>Process Name</mat-label>
-            <input matInput formControlName="processName" placeholder="Enter process name" />
-            <mat-error *ngIf="processForm.get('processName')?.touched && processForm.get('processName')?.hasError('required')">
-              Process name is required
-            </mat-error>
-          </mat-form-field>
-
-          <div class="checkbox-group-inline">
-            <mat-label>Select Type</mat-label>
-            <mat-checkbox
-              [checked]="isChecked('grade')"
-              (change)="onExclusiveCheckboxChange('grade', $event.checked)"
-            >
-              Grade
-            </mat-checkbox>
-            <mat-checkbox
-              [checked]="isChecked('material')"
-              (change)="onExclusiveCheckboxChange('material', $event.checked)"
-            >
-              Material
-            </mat-checkbox>
-          </div>
-
-
-         
+  <form [formGroup]="processForm" (ngSubmit)="onSubmit()" class="process-form">
+    <!-- Process Name + Checkboxes in same row -->
+    <div class="process-type-row">
+      <div class="form-group process-name-group">
+        <label for="processName" class="form-label">
+          <mat-icon class="label-icon">settings</mat-icon>
+          Process Name
+        </label>
+        <input
+          id="processName"
+          type="text"
+          class="form-input"
+          formControlName="processName"
+          placeholder="Enter process name"
+        />
+        <div class="error-message" *ngIf="processForm.get('processName')?.touched && processForm.get('processName')?.hasError('required')">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Process name is required
         </div>
+      </div>
 
-        <!-- Grade Dropdown -->
-        <mat-form-field *ngIf="isChecked('grade')" appearance="outline" class="full-width">
-          <mat-label>Grade</mat-label>
-          <mat-select formControlName="grade" placeholder="Select grade">
-            <mat-option *ngFor="let grade of grades$ | async" [value]="grade.name">{{ grade.name }}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="processForm.get('grade')?.touched && processForm.get('grade')?.hasError('required')">
-            Grade is required
-          </mat-error>
-        </mat-form-field>
+      <div class="checkbox-group-inline">
+        <label class="checkbox-group-label">Select Type</label>
+        <div class="checkbox-options">
+          <label class="checkbox-option">
+            <input
+              type="checkbox"
+              [checked]="isChecked('grade')"
+              (change)="onExclusiveCheckboxChange('grade', $event.target.checked)"
+            />
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Grade</span>
+          </label>
+          <label class="checkbox-option">
+            <input
+              type="checkbox"
+              [checked]="isChecked('material')"
+              (change)="onExclusiveCheckboxChange('material', $event.target.checked)"
+            />
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Material</span>
+          </label>
+        </div>
+      </div>
+    </div>
 
-        <!-- Material Dropdowns -->
-        <div *ngIf="isChecked('material')" class="materials">
-          <div formArrayName="materials">
-            <div *ngFor="let group of materials.controls; let i = index" [formGroupName]="i" class="material-row">
-              <mat-form-field appearance="standard" class="material-field">
-                <mat-label>Type</mat-label>
-                <mat-select formControlName="selectedType" (selectionChange)="onTypeChange(i, $event.value)">
-                  <mat-option *ngFor="let type of materialTypes" [value]="type">{{ type }}</mat-option>
-                </mat-select>
-              </mat-form-field>
+    <!-- Grade Dropdown -->
+    <div class="form-group" *ngIf="isChecked('grade')">
+      <label for="grade" class="form-label">
+        <mat-icon class="label-icon">star</mat-icon>
+        Grade
+      </label>
+      <div class="select-wrapper">
+        <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+        <select
+          id="grade"
+          class="form-select"
+          formControlName="grade"
+        >
+          <option value="" disabled>Select grade</option>
+          <option *ngFor="let grade of grades$ | async" [value]="grade.name">
+            {{ grade.name }}
+          </option>
+        </select>
+      </div>
+      <div class="error-message" *ngIf="processForm.get('grade')?.touched && processForm.get('grade')?.hasError('required')">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        Grade is required
+      </div>
+    </div>
 
-              <mat-form-field appearance="standard" class="name-field">
-                <mat-label>Material Name</mat-label>
-                <mat-select formControlName="selectedName">
-                  <mat-option *ngFor="let name of group.value.filteredNames" [value]="name.name">
-                    {{ name.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <mat-form-field appearance="standard" class="material-field">
-                <mat-label>Quantity</mat-label>
-                <input matInput type="number" formControlName="quantity" />
-              </mat-form-field>
-
-              <button
-  mat-icon-button
-  color="primary"
-  matTooltip="Fill all fields to add another material"
-  (click)="addMaterial()"
-  *ngIf="i === materials.length - 1"
-  [disabled]="!group.valid"
->
-  <mat-icon>add</mat-icon>
-</button>
-
+    <!-- Material Dropdowns -->
+    <div *ngIf="isChecked('material')" class="materials-section">
+      <div formArrayName="materials">
+        <div *ngFor="let group of materials.controls; let i = index" [formGroupName]="i" class="material-row">
+          <div class="form-group type-group">
+            <label [for]="'type-' + i" class="form-label">
+              <mat-icon class="label-icon">category</mat-icon>
+              Type
+            </label>
+            <div class="select-wrapper">
+              <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+              <select
+                [id]="'type-' + i"
+                class="form-select"
+                formControlName="selectedType"
+                (change)="onTypeChange(i, $event.target.value)"
+              >
+                <option value="" disabled>Select type</option>
+                <option *ngFor="let type of materialTypes" [value]="type">
+                  {{ type }}
+                </option>
+              </select>
             </div>
           </div>
-        </div>
 
-        <!-- Buttons -->
-        <div class="button-group">
-          <button mat-raised-button color="primary" type="submit">Submit</button>
-          <button mat-stroked-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+          <div class="form-group name-group">
+            <label [for]="'name-' + i" class="form-label">
+              <mat-icon class="label-icon">inventory</mat-icon>
+              Material Name
+            </label>
+            <div class="select-wrapper">
+              <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+              <select
+                [id]="'name-' + i"
+                class="form-select"
+                formControlName="selectedName"
+              >
+                <option value="" disabled>Select material name</option>
+                <option *ngFor="let name of group.value.filteredNames" [value]="name.name">
+                  {{ name.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group quantity-group">
+            <label [for]="'quantity-' + i" class="form-label">
+              <mat-icon class="label-icon">scale</mat-icon>
+              Quantity
+            </label>
+            <input
+              [id]="'quantity-' + i"
+              type="number"
+              class="form-input"
+              formControlName="quantity"
+              placeholder="Enter quantity"
+              min="0"
+              step="0.01"
+            />
+          </div>
+
+          <button
+            *ngIf="i === materials.length - 1"
+            type="button"
+            class="btn-add"
+            (click)="addMaterial()"
+            [disabled]="!group.valid"
+            matTooltip="Fill all fields to add another material"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
 
+    <!-- Buttons -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-cancel" (click)="onCancel()">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-submit" [disabled]="processForm.invalid">
+        <mat-icon>add</mat-icon>
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

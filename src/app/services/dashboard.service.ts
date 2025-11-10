@@ -29,12 +29,22 @@ getQuoteData(customer: string, drawing: string, part: string): Observable<any> {
 
 uploadExcelFile(file: File): Observable<any> {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', file, file.name);
 
   const uploadUrl = this.config.getCostingUrl('uploadMaterialExcel');
   console.log('📤 Upload URL:', uploadUrl);
+  console.log('📤 File details:', {
+    name: file.name,
+    size: file.size,
+    type: file.type
+  });
 
-  return this.http.post<any>(uploadUrl, formData);
+  // Note: HttpClient automatically sets Content-Type to multipart/form-data
+  // with the correct boundary when using FormData
+  return this.http.post<any>(uploadUrl, formData, {
+    reportProgress: false,
+    observe: 'body'
+  });
 }
 
 

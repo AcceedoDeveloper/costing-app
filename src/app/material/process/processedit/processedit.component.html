@@ -1,84 +1,155 @@
-<h2 mat-dialog-title>Edit Raw Materials</h2>
+<div class="form-container">
+  <h2 class="form-title">Edit Raw Materials</h2>
 
-<mat-dialog-content>
-  <form [formGroup]="form">
-    <!-- ✅ Grade section now correctly inside the form -->
- <div class="form-row">
+  <form [formGroup]="form" class="process-edit-form">
+    <div class="form-row">
+      <div class="form-group process-name-group">
+        <label for="processName" class="form-label">
+          <mat-icon class="label-icon">settings</mat-icon>
+          Process Name
+        </label>
+        <input
+          id="processName"
+          type="text"
+          class="form-input"
+          formControlName="processName"
+          placeholder="Enter process name"
+        />
+        <div class="error-message" *ngIf="form.get('processName')?.touched && form.get('processName')?.hasError('required')">
+          <mat-icon class="error-icon">error_outline</mat-icon>
+          Process name is required
+        </div>
+      </div>
 
-    <mat-form-field appearance="fill" class="full-width">
-  <mat-label>Process Name</mat-label>
-  <input matInput formControlName="processName" placeholder="Enter process name" />
-  <mat-error *ngIf="form.get('processName')?.touched && form.get('processName')?.hasError('required')">
-    Process name is required
-  </mat-error>
-</mat-form-field>
-<div formGroupName="grade" class="grade-section" *ngIf="!hasMaterialData">
-      <mat-form-field appearance="fill">
-        <mat-label>Select Grade</mat-label>
-        <mat-select formControlName="_id" >
-          <mat-option *ngFor="let g of (grades$ | async)" [value]="g._id">
-            {{ g.gradeNo }} - {{ g.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <div formGroupName="grade" class="form-group grade-group" *ngIf="!hasMaterialData">
+        <label for="grade" class="form-label">
+          <mat-icon class="label-icon">star</mat-icon>
+          Select Grade
+        </label>
+        <div class="select-wrapper">
+          <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+          <select
+            id="grade"
+            class="form-select"
+            formControlName="_id"
+          >
+            <option value="" disabled>Select grade</option>
+            <option *ngFor="let g of (grades$ | async)" [value]="g._id">
+              {{ g.gradeNo }} - {{ g.name }}
+            </option>
+          </select>
+        </div>
+      </div>
     </div>
- </div>
 
+    <!-- Materials Table -->
+    <div class="table-container">
+      <table class="edit-table">
+        <thead>
+          <tr>
+            <th>Material Type</th>
+            <th>Material Name</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="materialFormArray">
+          <tr *ngIf="materialFormArray.length === 0" class="no-data-row">
+            <td colspan="4" class="no-data-cell">
+              <div class="no-data-container">
+                <mat-icon class="no-data-icon">inventory_2</mat-icon>
+                <p class="no-data-message">No materials added</p>
+                <p class="no-data-submessage">Click "Add Material" to add a new material</p>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let mat of materialFormArray.controls; let i = index" [formGroupName]="i" class="material-row">
+            <td class="type-cell">
+              <div class="form-group-inline">
+                <div class="select-wrapper">
+                  <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+                  <select
+                    class="form-select table-select"
+                    formControlName="type"
+                    (change)="onTypeChange(i)"
+                  >
+                    <option value="" disabled>Select type</option>
+                    <option *ngFor="let type of materialTypes" [value]="type">
+                      {{ type }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </td>
+            <td class="name-cell">
+              <div class="form-group-inline">
+                <div class="select-wrapper">
+                  <mat-icon class="select-icon">arrow_drop_down</mat-icon>
+                  <select
+                    class="form-select table-select"
+                    formControlName="name"
+                  >
+                    <option value="" disabled>Select name</option>
+                    <option *ngFor="let item of getMaterialsForType(mat.get('type')?.value)" [value]="item.name">
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </td>
+            <td class="quantity-cell">
+              <div class="form-group-inline">
+                <input
+                  type="number"
+                  class="form-input table-input"
+                  formControlName="quantity"
+                  placeholder="Quantity"
+                  min="1"
+                  step="0.01"
+                />
+                <div class="error-message-inline" *ngIf="mat.get('quantity')?.touched && mat.get('quantity')?.hasError('required')">
+                  Required
+                </div>
+                <div class="error-message-inline" *ngIf="mat.get('quantity')?.touched && mat.get('quantity')?.hasError('min')">
+                  Min: 1
+                </div>
+              </div>
+            </td>
+            <td class="actions-cell">
+              <button
+                type="button"
+                class="btn-delete"
+                (click)="removeMaterial(i)"
+                matTooltip="Delete material"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-
-    
-
-
-
-
-    <table class="edit-table">
-      <thead>
-        <tr>
-          <th>Material Type</th>
-          <th>Material Name</th>
-          <th>Quantity</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody formArrayName="materialFormArray">
-        <tr *ngFor="let mat of materialFormArray.controls; let i = index" [formGroupName]="i">
-          <td>
-            <mat-form-field>
-              <mat-select formControlName="type" (selectionChange)="onTypeChange(i)">
-                <mat-option *ngFor="let type of materialTypes" [value]="type">{{ type }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field class="name-field" >
-              <mat-select formControlName="name">
-                <mat-option *ngFor="let item of getMaterialsForType(mat.get('type')?.value)" [value]="item.name">
-                  {{ item.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-          <td>
-            <mat-form-field>
-              <input matInput type="number" formControlName="quantity" />
-            </mat-form-field>
-          </td>
-          <td>
-            <button mat-icon-button color="warn" (click)="removeMaterial(i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button mat-stroked-button color="primary" (click)="addMaterial()" style="margin-top: 10px;"   *ngIf="!data.grade || data.grade.length === 0" >
-      <mat-icon>add</mat-icon> Add Material
+    <button
+      *ngIf="!data.grade || data.grade.length === 0"
+      type="button"
+      class="btn btn-add-material"
+      (click)="addMaterial()"
+    >
+      <mat-icon>add</mat-icon>
+      Add Material
     </button>
   </form>
-</mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="save()">Save</button>
-</mat-dialog-actions>
+  <!-- Footer Actions -->
+  <div class="form-actions">
+    <button type="button" class="btn btn-cancel" (click)="cancel()">
+      <mat-icon>close</mat-icon>
+      Cancel
+    </button>
+    <button type="button" class="btn btn-submit" (click)="save()">
+      <mat-icon>save</mat-icon>
+      Save
+    </button>
+  </div>
+</div>

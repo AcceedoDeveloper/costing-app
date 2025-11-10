@@ -1,48 +1,77 @@
+<div class="main">
 
-<div class="header table-container2">
- 
-
-  <input
-    type="text"
-    placeholder="Search by name"
-    [(ngModel)]="searchTerm"
-    (input)="applyFilter()"
-  />
-
-  <button (click)="openAddCustomer()">Add Customer</button>
+  <div class="sub">
+    
+    <div class="search-field">
+      <label for="search-input" class="search-label">Search by name</label>
+      <div class="search-input-wrapper">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          id="search-input"
+          type="text"
+          class="search-input"
+          placeholder="Search by name"
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+        />
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="clear-btn"
+          aria-label="Clear search"
+          (click)="searchTerm = ''; applyFilter()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
   
-</div>
-
-<!-- Customer Table -->
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 21%;">Customer Name</th>
-        <th style="width: 50%;">Address</th>
-        <th style="width: 17%;">Email</th>
-        <th style="width: 12%;">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let element of  paginatedCustomers">
-        <td>{{ element.name }}</td>
-        <td>{{ element.address }}</td>
-        <td>{{ element.phoneNo }}</td>
-        <td class="actions">
-          <mat-icon aria-label="Edit customer" class="icon" (click)="openAddCustomer(element)">edit</mat-icon>
-          <mat-icon aria-label="Delete customer" class="icon" (click)="deleteCustomer(element._id)">delete</mat-icon>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-<mat-paginator
-  [length]="searchTerm ? paginatedCustomers.length : customers.length"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[5, 10, 20]"
-  (page)="onPageChange($event)">
-</mat-paginator>
-
-
+    <button (click)="openAddCustomer()">
+      <mat-icon>person_add</mat-icon>
+      Add Customer
+    </button>
+  </div>
+  
+  <!-- Customer Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th >Customer Name</th>
+          <th >Address</th>
+          <th >Email</th>
+          <th >Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="paginatedCustomers.length === 0" class="no-data-row">
+          <td colspan="4" class="no-data-cell">
+            <div class="no-data-container">
+              <mat-icon class="no-data-icon">person_outline</mat-icon>
+              <p class="no-data-message">No customers found</p>
+              <p class="no-data-submessage">Click "Add Customer" to create a new customer</p>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let element of paginatedCustomers">
+          <td>{{ element.name }}</td>
+          <td class="address-cell">{{ element.address }}</td>
+          <td>{{ element.phoneNo }}</td>
+          <td class="actions">
+            <mat-icon aria-label="Edit customer" class="icon" (click)="openAddCustomer(element)">edit</mat-icon>
+            <mat-icon aria-label="Delete customer" class="icon delete-icon" (click)="deleteCustomer(element._id)">delete</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+  <mat-paginator
+    [length]="searchTerm ? paginatedCustomers.length : customers.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+  
+  
+  </div>
 </div>

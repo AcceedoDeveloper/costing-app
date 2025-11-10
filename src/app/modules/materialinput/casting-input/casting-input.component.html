@@ -1,278 +1,677 @@
-<div>
-  <header>
-    <h1>Production Cost Settings</h1>
+<div class="production-cost-container">
+  <header class="page-header">
+    <h1 class="page-title">Production Cost Settings</h1>
   </header>
-</div>
 
-
-<div class="grid-container">
-  <!-- POWER COST INPUT -->
-  <div class="grid-item" *ngFor="let item of powerCosts">
-    <mat-card class="power-card">
-      <h3>Power Cost</h3>
-      <div class="card-content">
-        <div class="power-row">
-          <div class="label">Cost Per Unit</div>
-          <div class="value">
-            <ng-container *ngIf="!editCostPerUnit; else editTemplate">
-              {{ item.costPerUnit }}
-              <mat-icon style="cursor: pointer;" (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
-            </ng-container>
-            <ng-template #editTemplate>
-              <input [(ngModel)]="editableCostPerUnit" type="number" />
-              <button mat-icon-button (click)="saveCostPerUnit(item)">
-                <mat-icon>save</mat-icon>
-              </button>
-              <button mat-icon-button (click)="cancelEditCostPerUnit()">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </ng-template>
+  <div class="content-wrapper">
+    <!-- POWER COST INPUT -->
+    <div *ngFor="let item of powerCosts" class="section-wrapper">
+      <mat-card class="cost-card power-cost-card">
+        <div class="card-header">
+          <h3 class="card-title">Power Cost</h3>
+        </div>
+        <div class="card-content">
+          <div class="field-row">
+            <div class="field-label">Cost Per Unit</div>
+            <div class="field-value">
+              <ng-container *ngIf="!editCostPerUnit; else editTemplate">
+                <span class="value-text">{{ item.costPerUnit }}</span>
+                <mat-icon class="edit-icon" (click)="enableEdit(item.costPerUnit)">edit</mat-icon>
+              </ng-container>
+              <ng-template #editTemplate>
+                <div class="edit-controls">
+                  <input class="edit-input" [(ngModel)]="editableCostPerUnit" type="number" />
+                  <button mat-icon-button class="action-btn save-btn" (click)="saveCostPerUnit(item)">
+                    <mat-icon>save</mat-icon>
+                  </button>
+                  <button mat-icon-button class="action-btn cancel-btn" (click)="cancelEditCostPerUnit()">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </ng-template>
+            </div>
           </div>
-        </div>
-        <div class="power-row">
-          <div class="label">Effective Date</div>
-          <div class="value">{{ item.effectiveDate }}</div>
-        </div>
-        <div class="power-row" style="position: relative;">
-          <div class="label">Previous Cost</div>
-          <div class="value">
-            {{ item.previousCostDetails[0]?.cost }}
-            <mat-icon  style="cursor: pointer;" (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
-            <div class="inline-popup" *ngIf="activePopupId === item._id" (click)="$event.stopPropagation()">
-              <h4>Previous Cost History <mat-icon (click)="closePopup()" class="close-icon">cancel</mat-icon></h4>
-              <div *ngFor="let detail of item.previousCostDetails">
-                <p>Cost: {{ detail.cost }} | Date: {{ detail.date }}</p>
+          <div class="field-row">
+            <div class="field-label">Effective Date</div>
+            <div class="field-value">
+              <span class="value-text">{{ item.effectiveDate }}</span>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Previous Cost</div>
+            <div class="field-value">
+              <span class="value-text">{{ item.previousCostDetails[0]?.cost }}</span>
+              <mat-icon class="info-icon" (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
+              <div *ngIf="activePopupId === item._id" class="popup-overlay" (click)="$event.stopPropagation()">
+                <div class="popup-content">
+                  <div class="popup-header">
+                    <h4>Previous Cost History</h4>
+                    <mat-icon class="close-icon" (click)="closePopup()">close</mat-icon>
+                  </div>
+                  <div class="popup-body">
+                    <div *ngFor="let detail of item.previousCostDetails" class="history-item">
+                      <span class="history-cost">Cost: {{ detail.cost }}</span>
+                      <span class="history-date">Date: {{ detail.date }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </mat-card>
+    </div>
+
+       <!-- PRODUCTION POWER -->
+       <div *ngIf="productionPower" class="section-wrapper">
+        <mat-card class="cost-card power-card">
+          <div class="card-header">
+            <h3 class="card-title">Production Power Details</h3>
+            <mat-icon class="edit-icon header-edit" (click)="enablePowerEdit()">edit</mat-icon>
+          </div>
+          <div class="card-content">
+            <!-- Edit Mode -->
+            <ng-container *ngIf="editMode['power']; else viewPower">
+              <div class="field-row">
+                <div class="field-label">Melt & Others Power</div>
+                <div class="field-value">
+                  <input class="edit-input" type="number" [(ngModel)]="editablePower.MeltAndOthersPower" />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label">Mould Power</div>
+                <div class="field-value">
+                  <input class="edit-input" type="number" [(ngModel)]="editablePower.mouldPower" />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label">Core Power</div>
+                <div class="field-value">
+                  <input class="edit-input" type="number" [(ngModel)]="editablePower.corePower" />
+                </div>
+              </div>
+              <div class="action-buttons">
+                <button class="save-button" (click)="savePower()">Save</button>
+                <button class="cancel-button" (click)="cancelPowerEdit()">Cancel</button>
+              </div>
+            </ng-container>
+  
+            <!-- View Mode -->
+            <ng-template #viewPower>
+              <div class="field-row">
+                <div class="field-label">Melt & Others Power</div>
+                <div class="field-value">
+                  <span class="value-text">{{ productionPower.MeltAndOthersPower }}</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label">Mould Power</div>
+                <div class="field-value">
+                  <span class="value-text">{{ productionPower.mouldPower }}</span>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-label">Core Power</div>
+                <div class="field-value">
+                  <span class="value-text">{{ productionPower.corePower }}</span>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </mat-card>
       </div>
-    </mat-card>
-  </div>
 
-  <!-- CASTING INPUT -->
- <div class="grid-item" *ngFor="let item of castingData">
-  <mat-card class="casting-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Casting Input</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('casting', item)">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <ng-container *ngIf="editMode['casting'] && editableItem?._id === item._id; else viewCasting">
-        <div class="casting-row"><div class="label">Casting Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.CastingWeight" /></div></div>
-        <div class="casting-row"><div class="label">Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.Cavities" /></div></div>
-        <div class="casting-row"><div class="label">Pouring Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CastingInput.PouringWeight" /></div></div>
-        <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ editableItem.CastingInput.CastingWeightKgPerHeat }}</div></div>
-        <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ editableItem.CastingInput.MaterialReturned }}</div></div>
-        <div class="casting-row"><div class="label">Yield</div><div class="value">{{ editableItem.CastingInput.Yeild }}</div></div>
-        <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ editableItem.CastingInput.YeildPercent }}</div></div>
-
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('casting')">Cancel</button>
+     <!-- MOULDING INPUT -->
+     <div *ngFor="let item of castingData" class="section-wrapper">
+      <mat-card class="cost-card moulding-card">
+        <div class="card-header">
+          <h3 class="card-title">Moulding Input</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('moulding', item)">edit</mat-icon>
         </div>
-      </ng-container>
+        <div class="card-content">
+          <ng-container *ngIf="editMode['moulding'] && editableItem?._id === item._id; else viewMoulding">
+            <div class="field-row">
+              <div class="field-label">Moulding Weight</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.MouldingInput.MouldingWeight" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Moulds Per Heat</div>
+              <div class="field-value">
+                <span class="value-text">{{ editableItem.MouldingInput.MouldsPerHeat }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Bake Moulding</div>
+              <div class="field-value">
+                <span class="value-text">{{ editableItem.MouldingInput.BakeMoulding }}</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveAllCastingChanges()">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('moulding')">Cancel</button>
+            </div>
+          </ng-container>
 
-      <ng-template #viewCasting>
-        <div class="casting-row"><div class="label">Casting Weight</div><div class="value">{{ item.CastingInput.CastingWeight }}</div></div>
-        <div class="casting-row"><div class="label">Cavities</div><div class="value">{{ item.CastingInput.Cavities }}</div></div>
-        <div class="casting-row"><div class="label">Pouring Weight</div><div class="value">{{ item.CastingInput.PouringWeight }}</div></div>
-        <div class="casting-row"><div class="label">Weight/Heat</div><div class="value">{{ item.CastingInput.CastingWeightKgPerHeat }}</div></div>
-        <div class="casting-row"><div class="label">Material Returned</div><div class="value">{{ item.CastingInput.MaterialReturned }}</div></div>
-        <div class="casting-row"><div class="label">Yield</div><div class="value">{{ item.CastingInput.Yeild }}</div></div>
-        <div class="casting-row"><div class="label">Yield %</div><div class="value">{{ item.CastingInput.YeildPercent }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-  <!-- MOULDING INPUT -->
-<div class="grid-item" *ngFor="let item of castingData">
-  <mat-card class="moulding-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Moulding Input</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('moulding', item)">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <ng-container *ngIf="editMode['moulding'] && editableItem?._id === item._id; else viewMoulding">
-        <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.MouldingInput.MouldingWeight" /></div></div>
-        <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ editableItem.MouldingInput.MouldsPerHeat}}</div></div>
-        <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{editableItem.MouldingInput.BakeMoulding}}</div></div>
-
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('moulding')">Cancel</button>
+          <ng-template #viewMoulding>
+            <div class="field-row">
+              <div class="field-label">Moulding Weight</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.MouldingInput.MouldingWeight }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Moulds Per Heat</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.MouldingInput.MouldsPerHeat }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Bake Moulding</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.MouldingInput.BakeMoulding }}</span>
+              </div>
+            </div>
+          </ng-template>
         </div>
-      </ng-container>
-
-      <ng-template #viewMoulding>
-        <div class="moulding-row"><div class="label">Moulding Weight</div><div class="value">{{ item.MouldingInput.MouldingWeight }}</div></div>
-        <div class="moulding-row"><div class="label">Moulds Per Heat</div><div class="value">{{ item.MouldingInput.MouldsPerHeat }}</div></div>
-        <div class="moulding-row"><div class="label">Bake Moulding</div><div class="value">{{ item.MouldingInput.BakeMoulding }}</div></div>
-      </ng-template>
+      </mat-card>
     </div>
-  </mat-card>
-</div>
+    
+    <!-- CASTING INPUT -->
+    <div *ngFor="let item of castingData" class="section-wrapper">
+      <mat-card class="cost-card casting-card">
+        <div class="card-header">
+          <h3 class="card-title">Casting Input</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('casting', item)">edit</mat-icon>
+        </div>
+        <div class="card-content">
+          <ng-container *ngIf="editMode['casting'] && editableItem?._id === item._id; else viewCasting">
+            <div class="field-row">
+              <div class="field-label">Casting Weight</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.CastingInput.CastingWeight" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Cavities</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.CastingInput.Cavities" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Pouring Weight</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.CastingInput.PouringWeight" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Weight/Heat</div>
+              <div class="field-value">
+                <span class="value-text">{{ editableItem.CastingInput.CastingWeightKgPerHeat }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Material Returned</div>
+              <div class="field-value">
+                <span class="value-text">{{ editableItem.CastingInput.MaterialReturned }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Yield</div>
+              <div class="field-value">
+                <span class="value-text">{{ editableItem.CastingInput.Yeild }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Yield %</div>
+              <div class="field-value">
+                <span class="value-text">{{ editableItem.CastingInput.YeildPercent }}</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveAllCastingChanges()">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('casting')">Cancel</button>
+            </div>
+          </ng-container>
 
-
-  <!-- CORE INPUT -->
-<div class="grid-item" *ngFor="let item of castingData">
-  <mat-card class="core-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Core Input</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('core', item)">edit</mat-icon>
+          <ng-template #viewCasting>
+            <div class="field-row">
+              <div class="field-label">Casting Weight</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.CastingWeight }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Cavities</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.Cavities }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Pouring Weight</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.PouringWeight }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Weight/Heat</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.CastingWeightKgPerHeat }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Material Returned</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.MaterialReturned }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Yield</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.Yeild }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Yield %</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CastingInput.YeildPercent }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
     </div>
 
+
+   
+
+
+   
+
+
+
+
+    <!-- SALARY AND WAGES -->
+    <div *ngFor="let item of costsummary" class="section-wrapper">
+      <mat-card class="cost-card salary-card">
+        <div class="card-header">
+          <h3 class="card-title">Salary & Wages</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('salary', item)">edit</mat-icon>
+        </div>
+        <div class="card-content">
+          <!-- Edit Mode -->
+          <ng-container *ngIf="editMode['salary'] && editableItem?._id === item._id; else viewSalary">
+            <div class="field-row">
+              <div class="field-label">Salary for Process</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryforProcess" (ngModelChange)="calculateSalary()" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Excluding Core Making</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryExcludingCoreMaking" (ngModelChange)="calculateSalary()" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Core Production</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryForCoreProduction" (ngModelChange)="calculateSalary()" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Outsourcing Cost</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.SalaryAndWages.outSourcingCost" (ngModelChange)="calculateSalary()" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Special Outsourcing</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.SalaryAndWages.splOutSourcingCost" (ngModelChange)="calculateSalary()" />
+              </div>
+            </div>
+            <div class="field-row highlight-row">
+              <div class="field-label">Total Outsourcing</div>
+              <div class="field-value">
+                <span class="value-text highlight-value">{{ editableItem.SalaryAndWages.TotalOutSourcingCost }}</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveSlaray('salary')">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('salary')">Cancel</button>
+            </div>
+          </ng-container>
+
+          <!-- View Mode -->
+          <ng-template #viewSalary>
+            <div class="field-row">
+              <div class="field-label">Salary for Process</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.SalaryAndWages.salaryforProcess }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Excluding Core Making</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.SalaryAndWages.salaryExcludingCoreMaking }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Core Production</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.SalaryAndWages.salaryForCoreProduction }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Outsourcing Cost</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.SalaryAndWages.outSourcingCost }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Special Outsourcing</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.SalaryAndWages.splOutSourcingCost }}</span>
+              </div>
+            </div>
+            <div class="field-row highlight-row">
+              <div class="field-label">Total Outsourcing</div>
+              <div class="field-value">
+                <span class="value-text highlight-value">{{ item.SalaryAndWages.TotalOutSourcingCost }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+
+
+    <!-- OVERHEADS -->
+    <div *ngFor="let item of costsummary" class="section-wrapper">
+      <mat-card class="cost-card overhead-card">
+        <div class="card-header">
+          <h3 class="card-title">Overheads</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('overhead', item)">edit</mat-icon>
+        </div>
+        <div class="card-content">
+          <!-- Edit Mode -->
+          <ng-container *ngIf="editMode['overhead'] && editableItem?._id === item._id; else viewOverhead">
+            <div class="field-row">
+              <div class="field-label">Repair & Maintenance</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.OverHeads.repairAndMaintenance" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Selling & Misc</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.OverHeads.sellingDistributionAndMiscOverHeads" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Finance Cost</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.OverHeads.financeCost" />
+              </div>
+            </div>
+            <div class="field-row highlight-row">
+              <div class="field-label">Total Overheads</div>
+              <div class="field-value">
+                <span class="value-text highlight-value">{{ editableItem.OverHeads.totalOverHeads }}</span>
+              </div>
+            </div>
+            <div class="field-row highlight-row">
+              <div class="field-label">Total with Finance</div>
+              <div class="field-value">
+                <span class="value-text highlight-value">{{ editableItem.OverHeads.totalOverHeadsWithFinanceCost }}</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveOverHeads('overhead')">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('overhead')">Cancel</button>
+            </div>
+          </ng-container>
+
+          <!-- View Mode -->
+          <ng-template #viewOverhead>
+            <div class="field-row">
+              <div class="field-label">Repair & Maintenance</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.OverHeads.repairAndMaintenance }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Selling & Misc</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.OverHeads.sellingDistributionAndMiscOverHeads }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Finance Cost</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.OverHeads.financeCost }}</span>
+              </div>
+            </div>
+            <div class="field-row highlight-row">
+              <div class="field-label">Total Overheads</div>
+              <div class="field-value">
+                <span class="value-text highlight-value">{{ item.OverHeads.totalOverHeads }}</span>
+              </div>
+            </div>
+            <div class="field-row highlight-row">
+              <div class="field-label">Total with Finance</div>
+              <div class="field-value">
+                <span class="value-text highlight-value">{{ item.OverHeads.totalOverHeadsWithFinanceCost }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+
+   
+
+
+    <!-- COMMERCIAL TERMS -->
+    <div *ngFor="let item of costsummary" class="section-wrapper">
+      <mat-card class="cost-card terms-card">
+        <div class="card-header">
+          <h3 class="card-title">Commercial Terms</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('terms', item)">edit</mat-icon>
+        </div>
+        <div class="card-content">
+          <!-- Edit Mode -->
+          <ng-container *ngIf="editMode['terms'] && editableItem?._id === item._id; else viewTerms">
+            <div class="field-row">
+              <div class="field-label">Payment Credit Period</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.CommercialTerms.paymentCreditPeriod" />
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Bank Interest</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.CommercialTerms.bankInterest" />
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveChanges('terms')">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('terms')">Cancel</button>
+            </div>
+          </ng-container>
+
+          <!-- View Mode -->
+          <ng-template #viewTerms>
+            <div class="field-row">
+              <div class="field-label">Payment Credit Period</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CommercialTerms?.paymentCreditPeriod }}</span>
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Bank Interest</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.CommercialTerms?.bankInterest }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+
+
+
+    <!-- PROFIT MARGIN -->
+    <div *ngFor="let item of costsummary" class="section-wrapper">
+      <mat-card class="cost-card margin-card">
+        <div class="card-header">
+          <h3 class="card-title">Profit Margin</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('margin', item)">edit</mat-icon>
+        </div>
+        <div class="card-content">
+          <!-- Edit Mode -->
+          <ng-container *ngIf="editMode['margin'] && editableItem?._id === item._id; else viewMargin">
+            <div class="field-row">
+              <div class="field-label">Profit %</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.Margin.profit" />
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveChanges('margin')">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('margin')">Cancel</button>
+            </div>
+          </ng-container>
+
+          <!-- View Mode -->
+          <ng-template #viewMargin>
+            <div class="field-row">
+              <div class="field-label">Profit %</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.Margin?.profit }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+
+
+
+    <!-- ANTICIPATED REJECTION -->
+    <div *ngFor="let item of costsummary" class="section-wrapper">
+      <mat-card class="cost-card rejection-card">
+        <div class="card-header">
+          <h3 class="card-title">Anticipated Rejection</h3>
+          <mat-icon class="edit-icon header-edit" (click)="enableEditMode('rejection', item)">edit</mat-icon>
+        </div>
+        <div class="card-content">
+          <!-- Edit Mode -->
+          <ng-container *ngIf="editMode['rejection'] && editableItem?._id === item._id; else viewRejection">
+            <div class="field-row">
+              <div class="field-label">Rejection %</div>
+              <div class="field-value">
+                <input class="edit-input" type="number" [(ngModel)]="editableItem.AnticipatedRejection.rejection" />
+              </div>
+            </div>
+            <div class="action-buttons">
+              <button class="save-button" (click)="saveChanges('rejection')">Save</button>
+              <button class="cancel-button" (click)="cancelEditMode('rejection')">Cancel</button>
+            </div>
+          </ng-container>
+
+          <!-- View Mode -->
+          <ng-template #viewRejection>
+            <div class="field-row">
+              <div class="field-label">Rejection %</div>
+              <div class="field-value">
+                <span class="value-text">{{ item.AnticipatedRejection?.rejection }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </mat-card>
+    </div>
+
+
+
+ <!-- CORE INPUT -->
+ <div *ngFor="let item of castingData" class="section-wrapper">
+  <mat-card class="cost-card core-card">
+    <div class="card-header">
+      <h3 class="card-title">Core Input</h3>
+      <mat-icon class="edit-icon header-edit" (click)="enableEditMode('core', item)">edit</mat-icon>
+    </div>
     <div class="card-content">
       <ng-container *ngIf="editMode['core'] && editableItem?._id === item._id; else viewCore">
-        <div class="core-row"><div class="label">Core Weight</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreWeight" /></div></div>
-        <div class="core-row"><div class="label">Cores Per Mould</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoresPerMould" /></div></div>
-        <div class="core-row"><div class="label">Core Cavities</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreCavities" /></div></div>
-        <div class="core-row"><div class="label">Shooting/Shift</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.ShootingPerShift" /></div></div>
-        <div class="core-row"><div class="label">Core Sand</div><div class="value"><input type="number" [(ngModel)]="editableItem.CoreInput.CoreSand" /></div></div>
-
+        <div class="field-row">
+          <div class="field-label">Core Weight</div>
+          <div class="field-value">
+            <input class="edit-input" type="number" [(ngModel)]="editableItem.CoreInput.CoreWeight" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Cores Per Mould</div>
+          <div class="field-value">
+            <input class="edit-input" type="number" [(ngModel)]="editableItem.CoreInput.CoresPerMould" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Core Cavities</div>
+          <div class="field-value">
+            <input class="edit-input" type="number" [(ngModel)]="editableItem.CoreInput.CoreCavities" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Shooting/Shift</div>
+          <div class="field-value">
+            <input class="edit-input" type="number" [(ngModel)]="editableItem.CoreInput.ShootingPerShift" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Core Sand</div>
+          <div class="field-value">
+            <input class="edit-input" type="number" [(ngModel)]="editableItem.CoreInput.CoreSand" />
+          </div>
+        </div>
         <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveAllCastingChanges()">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('core')">Cancel</button>
+          <button class="save-button" (click)="saveAllCastingChanges()">Save</button>
+          <button class="cancel-button" (click)="cancelEditMode('core')">Cancel</button>
         </div>
       </ng-container>
 
       <ng-template #viewCore>
-        <div class="core-row"><div class="label">Core Weight</div><div class="value">{{ item.CoreInput.CoreWeight }}</div></div>
-        <div class="core-row"><div class="label">Cores Per Mould</div><div class="value">{{ item.CoreInput.CoresPerMould }}</div></div>
-        <div class="core-row"><div class="label">Core Cavities</div><div class="value">{{ item.CoreInput.CoreCavities }}</div></div>
-        <div class="core-row"><div class="label">Shooting/Shift</div><div class="value">{{ item.CoreInput.ShootingPerShift }}</div></div>
-        <div class="core-row"><div class="label">Core Sand</div><div class="value">{{ item.CoreInput.CoreSand }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-
-
-  <!-- SALARY AND WAGES -->
-<div class="grid-item" *ngFor="let item of costsummary">
-  <mat-card class="salary-box">
-    <!-- Header with Edit Icon -->
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Salary & Wages</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('salary', item)">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <!-- Edit Mode -->
-      <ng-container *ngIf="editMode['salary'] && editableItem?._id === item._id; else viewSalary">
-        <div class="salary-row">
-          <div class="label">Salary for Process</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryforProcess" (ngModelChange)="calculateSalary()" /></div>
+        <div class="field-row">
+          <div class="field-label">Core Weight</div>
+          <div class="field-value">
+            <span class="value-text">{{ item.CoreInput.CoreWeight }}</span>
+          </div>
         </div>
-        <div class="salary-row">
-          <div class="label">Excluding Core Making</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryExcludingCoreMaking" (ngModelChange)="calculateSalary()" /></div>
+        <div class="field-row">
+          <div class="field-label">Cores Per Mould</div>
+          <div class="field-value">
+            <span class="value-text">{{ item.CoreInput.CoresPerMould }}</span>
+          </div>
         </div>
-        <div class="salary-row">
-          <div class="label">Core Production</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.salaryForCoreProduction" (ngModelChange)="calculateSalary()" /></div>
+        <div class="field-row">
+          <div class="field-label">Core Cavities</div>
+          <div class="field-value">
+            <span class="value-text">{{ item.CoreInput.CoreCavities }}</span>
+          </div>
         </div>
-        <div class="salary-row">
-          <div class="label">Outsourcing Cost</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.outSourcingCost" (ngModelChange)="calculateSalary()" /></div>
+        <div class="field-row">
+          <div class="field-label">Shooting/Shift</div>
+          <div class="field-value">
+            <span class="value-text">{{ item.CoreInput.ShootingPerShift }}</span>
+          </div>
         </div>
-        <div class="salary-row">
-          <div class="label">Special Outsourcing</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.SalaryAndWages.splOutSourcingCost" (ngModelChange)="calculateSalary()" /></div>
-        </div>
-        <div class="salary-row">
-          <div class="label">Total Outsourcing</div>
-          <div class="value">{{ editableItem.SalaryAndWages.TotalOutSourcingCost }}</div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveSlaray('salary')">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('salary')">Cancel</button>
-        </div>
-      </ng-container>
-
-      <!-- View Mode -->
-      <ng-template #viewSalary>
-        <div class="salary-row"><div class="label">Salary for Process</div><div class="value">{{ item.SalaryAndWages.salaryforProcess }}</div></div>
-        <div class="salary-row"><div class="label">Excluding Core Making</div><div class="value">{{ item.SalaryAndWages.salaryExcludingCoreMaking }}</div></div>
-        <div class="salary-row"><div class="label">Core Production</div><div class="value">{{ item.SalaryAndWages.salaryForCoreProduction }}</div></div>
-        <div class="salary-row"><div class="label">Outsourcing Cost</div><div class="value">{{ item.SalaryAndWages.outSourcingCost }}</div></div>
-        <div class="salary-row"><div class="label">Special Outsourcing</div><div class="value">{{ item.SalaryAndWages.splOutSourcingCost }}</div></div>
-        <div class="salary-row"><div class="label">Total Outsourcing</div><div class="value">{{ item.SalaryAndWages.TotalOutSourcingCost }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-<!-- OVERHEADS -->
-<div class="grid-item" *ngFor="let item of costsummary">
-  <mat-card class="overhead-box">
-    <!-- Header with Edit Icon -->
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Overheads</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('overhead', item)">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <!-- Edit Mode -->
-      <ng-container *ngIf="editMode['overhead'] && editableItem?._id === item._id; else viewOverhead">
-        <div class="overhead-row">
-          <div class="label">Repair & Maintenance</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.repairAndMaintenance" /></div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Selling & Misc</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.sellingDistributionAndMiscOverHeads" /></div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Finance Cost</div>
-          <div class="value"><input type="number" [(ngModel)]="editableItem.OverHeads.financeCost" /></div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Total Overheads</div>
-          <div class="value">{{ editableItem.OverHeads.totalOverHeads }}</div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Total with Finance</div>
-          <div class="value">{{ editableItem.OverHeads.totalOverHeadsWithFinanceCost }}</div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveOverHeads('overhead')">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('overhead')">Cancel</button>
-        </div>
-      </ng-container>
-
-      <!-- View Mode -->
-      <ng-template #viewOverhead>
-        <div class="overhead-row">
-          <div class="label">Repair & Maintenance</div>
-          <div class="value">{{ item.OverHeads.repairAndMaintenance }}</div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Selling & Misc</div>
-          <div class="value">{{ item.OverHeads.sellingDistributionAndMiscOverHeads }}</div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Finance Cost</div>
-          <div class="value">{{ item.OverHeads.financeCost }}</div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Total Overheads</div>
-          <div class="value">{{ item.OverHeads.totalOverHeads }}</div>
-        </div>
-        <div class="overhead-row">
-          <div class="label">Total with Finance</div>
-          <div class="value">{{ item.OverHeads.totalOverHeadsWithFinanceCost }}</div>
+        <div class="field-row">
+          <div class="field-label">Core Sand</div>
+          <div class="field-value">
+            <span class="value-text">{{ item.CoreInput.CoreSand }}</span>
+          </div>
         </div>
       </ng-template>
     </div>
@@ -280,165 +679,7 @@
 </div>
 
 
-<!-- COMMERCIAL TERMS -->
-<div class="grid-item" *ngFor="let item of costsummary">
-  <mat-card class="terms-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Commercial Terms</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('terms', item)">edit</mat-icon>
-    </div>
+ 
 
-    <div class="card-content">
-      <!-- Edit Mode -->
-      <ng-container *ngIf="editMode['terms'] && editableItem?._id === item._id; else viewTerms">
-        <div class="terms-row">
-          <div class="label">Payment Credit Period</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editableItem.CommercialTerms.paymentCreditPeriod" />
-          </div>
-        </div>
-        <div class="terms-row">
-          <div class="label">Bank Interest</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editableItem.CommercialTerms.bankInterest" />
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveChanges('terms')">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('terms')">Cancel</button>
-        </div>
-      </ng-container>
-
-      <!-- View Mode -->
-      <ng-template #viewTerms>
-        <div class="terms-row"><div class="label">Payment Credit Period</div><div class="value">{{ item.CommercialTerms?.paymentCreditPeriod }}</div></div>
-        <div class="terms-row"><div class="label">Bank Interest</div><div class="value">{{ item.CommercialTerms?.bankInterest }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-
-<!-- PROFIT MARGIN -->
-<div class="grid-item" *ngFor="let item of costsummary">
-  <mat-card class="margin-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Profit Margin</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('margin', item)">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <!-- Edit Mode -->
-      <ng-container *ngIf="editMode['margin'] && editableItem?._id === item._id; else viewMargin">
-        <div class="margin-row">
-          <div class="label">Profit %</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editableItem.Margin.profit" />
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveChanges('margin')">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('margin')">Cancel</button>
-        </div>
-      </ng-container>
-
-      <!-- View Mode -->
-      <ng-template #viewMargin>
-        <div class="margin-row"><div class="label">Profit %</div><div class="value">{{ item.Margin?.profit }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-
-<!-- ANTICIPATED REJECTION -->
-<div class="grid-item" *ngFor="let item of costsummary">
-  <mat-card class="rejection-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Anticipated Rejection</h3>
-      <mat-icon style="cursor: pointer;" (click)="enableEditMode('rejection', item)">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <!-- Edit Mode -->
-      <ng-container *ngIf="editMode['rejection'] && editableItem?._id === item._id; else viewRejection">
-        <div class="rejection-row">
-          <div class="label">Rejection %</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editableItem.AnticipatedRejection.rejection" />
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="saveChanges('rejection')">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelEditMode('rejection')">Cancel</button>
-        </div>
-      </ng-container>
-
-      <!-- View Mode -->
-      <ng-template #viewRejection>
-        <div class="rejection-row"><div class="label">Rejection %</div><div class="value">{{ item.AnticipatedRejection?.rejection }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-
-
-
-
-<!-- PRODUCTION POWER -->
-<div class="grid-item" *ngIf="productionPower">
-  <mat-card class="power-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>Production Power Details</h3>
-      <mat-icon style="cursor: pointer;" (click)="enablePowerEdit()">edit</mat-icon>
-    </div>
-
-    <div class="card-content">
-      <!-- Edit Mode -->
-      <ng-container *ngIf="editMode['power']; else viewPower">
-        <div class="power-row">
-          <div class="label">Melt & Others Power</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editablePower.MeltAndOthersPower" />
-          </div>
-        </div>
-        <div class="power-row">
-          <div class="label">Mould Power</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editablePower.mouldPower" />
-          </div>
-        </div>
-        <div class="power-row">
-          <div class="label">Core Power</div>
-          <div class="value">
-            <input type="number" [(ngModel)]="editablePower.corePower" />
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button mat-raised-button color="primary" (click)="savePower()">Save</button>
-          <button mat-raised-button color="warn" (click)="cancelPowerEdit()">Cancel</button>
-        </div>
-      </ng-container>
-
-      <!-- View Mode -->
-      <ng-template #viewPower>
-        <div class="power-row"><div class="label">Melt & Others Power</div><div class="value">{{ productionPower.MeltAndOthersPower }}</div></div>
-        <div class="power-row"><div class="label">Mould Power</div><div class="value">{{ productionPower.mouldPower }}</div></div>
-        <div class="power-row"><div class="label">Core Power</div><div class="value">{{ productionPower.corePower }}</div></div>
-      </ng-template>
-    </div>
-  </mat-card>
-</div>
-
-
-
-
+  </div>
 </div>

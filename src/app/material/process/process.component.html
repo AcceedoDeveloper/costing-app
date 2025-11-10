@@ -1,6 +1,14 @@
-<div class="header">
+<div class="main">
+
+
+
+
+<div class="sub">
   <h2>Process List</h2>
-  <button mat-raised-button color="primary" (click)="openAddMaterial()">Add Process</button>
+  <button (click)="openAddMaterial()">
+    <mat-icon>add</mat-icon>
+    Add Process
+  </button>
 </div>
 
 <div class="table-container">
@@ -14,6 +22,15 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngIf="processes.length === 0" class="no-data-row">
+        <td colspan="4" class="no-data-cell">
+          <div class="no-data-container">
+            <mat-icon class="no-data-icon">settings</mat-icon>
+            <p class="no-data-message">No processes found</p>
+            <p class="no-data-submessage">Click "Add Process" to create a new process</p>
+          </div>
+        </td>
+      </tr>
       <ng-container *ngFor="let process of processes; let i = index">
         <tr class="main-row">
           <td class="col-process">{{ process.processName }}</td>
@@ -35,7 +52,7 @@
               <mat-icon class="icon" (click)="toggleExpand(i)">
                 {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
               </mat-icon>
-              <mat-icon (click)="deleteProcess(process._id)" class="icon">delete</mat-icon>
+              <mat-icon (click)="deleteProcess(process._id)" class="icon delete-icon">delete</mat-icon>
               <mat-icon (click)="editAllMaterials(process._id)" class="icon">edit</mat-icon>
             </div>
           </td>
@@ -105,4 +122,6 @@
       </ng-container>
     </tbody>
   </table>
+</div>
+
 </div>

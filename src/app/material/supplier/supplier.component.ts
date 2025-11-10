@@ -20,10 +20,11 @@ export class SupplierComponent implements OnInit {
   suppliers$: Observable<Supplier[]> = new Observable<Supplier[]>();
   suppliers: Supplier[] = [];
   paginatedSuppliers: Supplier[] = [];
+  filteredSuppliers: Supplier[] = [];
 
   selectedMaterialType: string = '';
-searchTerm: string = '';
-materialTypes: string[] = [];
+  searchTerm: string = '';
+  materialTypes: string[] = [];
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -44,8 +45,7 @@ materialTypes: string[] = [];
     this.suppliers = suppliers;
     this.materialTypes = [...new Set(suppliers.map(s => s.materialType))];
 
-  this.applyFilter();
-    this.updatePaginatedSuppliers();
+    this.applyFilter();
   });
 }
 
@@ -59,18 +59,25 @@ materialTypes: string[] = [];
   onPageChange(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-     this.applyFilter();
+    // Apply pagination without resetting filters
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedSuppliers = this.filteredSuppliers.slice(startIndex, endIndex);
   }
 
   addSupplier() {
     this.dialog.open(AddSupplierComponent, {
-      width: '500px',
+      width: '800px',
+      height: '520px',
+      disableClose: true,
     });
   }
 
 startEdit(supplier: Supplier) {
   const dialogRef = this.dialog.open(AddSupplierComponent, {
-    width: '500px',
+    width: '800px',
+    height: '520px',
+    disableClose: true,
     data: supplier // Pass the supplier data to the form
   });
 
@@ -84,6 +91,8 @@ startEdit(supplier: Supplier) {
 deleteSupplier(id: string) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
+    height:'auto',
+    disableClose: true,
     data: {
       title: 'Confirm Delete',
       message: 'Are you sure you want to delete this supplier?'
@@ -100,16 +109,30 @@ deleteSupplier(id: string) {
 applyFilter() {
   let filtered = this.suppliers;
 
+  // Filter by material type
   if (this.selectedMaterialType) {
     filtered = filtered.filter(s => s.materialType === this.selectedMaterialType);
   }
 
-  if (this.searchTerm) {
+  // Filter by search term (search in supplier name and material name)
+  if (this.searchTerm && this.searchTerm.trim()) {
+    const searchLower = this.searchTerm.toLowerCase().trim();
     filtered = filtered.filter(s =>
-      s.materialName.toLowerCase().includes(this.searchTerm.toLowerCase())
+      (s.name && s.name.toLowerCase().includes(searchLower)) ||
+      (s.materialName && s.materialName.toLowerCase().includes(searchLower))
     );
   }
 
+  // Store filtered results
+  this.filteredSuppliers = filtered;
+
+  // Reset to first page when filtering
+  this.pageIndex = 0;
+  if (this.paginator) {
+    this.paginator.pageIndex = 0;
+  }
+
+  // Apply pagination
   const startIndex = this.pageIndex * this.pageSize;
   const endIndex = startIndex + this.pageSize;
   this.paginatedSuppliers = filtered.slice(startIndex, endIndex);

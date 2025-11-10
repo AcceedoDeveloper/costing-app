@@ -86,4 +86,8 @@ export class RoleComponent implements OnInit {
     this.editRoleId = null;
     this.isEditMode = false;
   }
+
+  isAdminRole(roleName: string): boolean {
+    return roleName?.toLowerCase() === 'admin';
+  }
 }

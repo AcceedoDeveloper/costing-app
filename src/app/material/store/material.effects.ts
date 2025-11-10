@@ -115,6 +115,13 @@ updateMaterialSuccess$ = createEffect(() =>
   )
 );
 
+createMaterialSuccess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(createMaterialSuccess),
+    map(() => loadMaterials())
+  )
+);
+
 
 
  deleteMaterial$ = createEffect(() => {

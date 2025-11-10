@@ -87,6 +87,7 @@ this.store.dispatch(updateCustomer({ id: this.currentEditId, data: updatedCustom
 deleteCustomer(id: string) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
+    disableClose: true,
     data: {
       title: 'Delete Confirmation',
       message: 'Are you sure you want to delete this customer?'
@@ -106,7 +107,8 @@ deleteCustomer(id: string) {
 
  openAddCustomer(customer?: Customer): void {
     const dialogRef = this.dialog.open(AddcustomerComponent, {
-      width: '400px',
+      width: '600px',
+      disableClose: true,
       data: customer ? { customer } : {}
     });
 

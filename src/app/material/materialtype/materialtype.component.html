@@ -1,6 +1,6 @@
-<div class="table-wrapper">
+<div class="main">
   <!-- Form Section: top-right -->
-  <div class="form-actions">
+  <div class="sub">
     <mat-form-field appearance="standard">
       <mat-label>Material Type Name</mat-label>
       <input matInput [(ngModel)]="newMaterialType" />
@@ -33,15 +33,24 @@
         <!-- <th>Actions</th> -->
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let material of materialTypes$ | async">
-        <td>{{ material.name }}</td>
-        <!-- <td class="actions">
-          <mat-icon aria-label="Edit material type" class="icon" (click)="startEdit(material)">edit</mat-icon>
-          <mat-icon aria-label="Delete material type" class="icon" (click)="deleteMaterialType(material._id)">delete</mat-icon>
-        </td> -->
-      </tr>
-    </tbody>
+      <tbody>
+        <tr *ngIf="(materialTypes$ | async)?.length === 0" class="no-data-row">
+          <td colspan="1" class="no-data-cell">
+            <div class="no-data-container">
+              <mat-icon class="no-data-icon">category</mat-icon>
+              <p class="no-data-message">No material types found</p>
+              <p class="no-data-submessage">Add a new material type using the form above</p>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let material of materialTypes$ | async">
+          <td>{{ material.name }}</td>
+          <!-- <td class="actions">
+            <mat-icon aria-label="Edit material type" class="icon" (click)="startEdit(material)">edit</mat-icon>
+            <mat-icon aria-label="Delete material type" class="icon" (click)="deleteMaterialType(material._id)">delete</mat-icon>
+          </td> -->
+        </tr>
+      </tbody>
   </table>
 
  

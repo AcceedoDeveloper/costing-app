@@ -1,52 +1,69 @@
-<div class="header">
-  <div class="toggle-group">
-    <!-- Optional toggle buttons -->
+<div class="main">
+  <div class="sub">
+    <div class="toggle-group">
+      <!-- Optional toggle buttons -->
+    </div>
+  
+    <div class="add-section">
+      <mat-form-field appearance="standard">
+        <mat-label>Role Name</mat-label>
+        <input matInput [(ngModel)]="newRoleName" />
+      </mat-form-field>
+  
+      <button
+        mat-raised-button
+        class="circular-button primary-button"
+        color="primary"
+        (click)="isEditMode ? updateRole() : addRole()"
+        [disabled]="newRoleName.trim().length === 0"
+      >
+        <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      </button>
+  
+      <button
+        mat-button
+        color="warn"
+        *ngIf="isEditMode"
+        (click)="cancelAction()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 80%;">Role Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="(roles$ | async)?.length === 0" class="no-data-row">
+          <td colspan="2" class="no-data-cell">
+            <div class="no-data-container">
+              <mat-icon class="no-data-icon">admin_panel_settings</mat-icon>
+              <p class="no-data-message">No roles found</p>
+              <p class="no-data-submessage">Add a new role using the form above</p>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let role of roles$ | async">
+          <td>{{ role.name }}</td>
+          <td class="actions">
+            <ng-container *ngIf="isAdminRole(role.name); else editableActions">
+              <mat-icon aria-label="locked" class="icon lock-icon">lock</mat-icon>
+            </ng-container>
+            <ng-template #editableActions>
+              <mat-icon aria-label="edit role" class="icon" (click)="startEdit(role)">edit</mat-icon>
+              <mat-icon aria-label="Delete role" class="icon delete-icon" (click)="deleteRole(role._id)">delete</mat-icon>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="add-section">
-    <mat-form-field appearance="standard">
-      <mat-label>Role Name</mat-label>
-      <input matInput [(ngModel)]="newRoleName" />
-    </mat-form-field>
-
-    <button
-      mat-raised-button
-      class="circular-button primary-button"
-      color="primary"
-      (click)="isEditMode ? updateRole() : addRole()"
-      [disabled]="newRoleName.trim().length === 0"
-    >
-      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
-    </button>
-
-    <button
-      mat-button
-      color="warn"
-      *ngIf="isEditMode"
-      (click)="cancelAction()"
-    >
-      <mat-icon>cancel</mat-icon>
-      Cancel
-    </button>
-  </div>
-</div>
-
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 80%;">Role Name</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let role of roles$ | async">
-        <td>{{ role.name }}</td>
-        <td class="actions">
-          <mat-icon aria-label="edit role" class="icon" (click)="startEdit(role)">edit</mat-icon>
-          <mat-icon aria-label="Delete role" class="icon" (click)="deleteRole(role._id)">delete</mat-icon>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>

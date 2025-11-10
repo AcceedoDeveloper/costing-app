@@ -1,54 +1,70 @@
-<div class="header">
-  <!-- Left Side: Empty (or optional toggle group) -->
-  <div class="toggle-group"></div>
 
-  <!-- Right Side: Input and Buttons -->
-  <div class="add-section">
-    <mat-form-field appearance="standard">
-      <mat-label>Department Name</mat-label>
-      <input matInput [(ngModel)]="newDepartmentName" />
-    </mat-form-field>
 
-    <button
-      mat-raised-button
-      class="circular-button primary-button"
-      color="primary"
-      (click)="isEditMode ? updateDepartment() : addDepartment()"
-      [disabled]="newDepartmentName.trim().length === 0"
-    >
-      <mat-icon>{{ isEditMode ? 'save' : 'add_business' }}</mat-icon>
-    </button>
+<div class="main">
 
-    <button
-      mat-button
-      color="warn"
-      *ngIf="isEditMode"
-      (click)="cancelAction()"
-    >
-      <mat-icon>cancel</mat-icon>
-      Cancel
-    </button>
+  <div class="sub">
+    <!-- Left Side: Empty (or optional toggle group) -->
+    <div class="toggle-group"></div>
+  
+    <!-- Right Side: Input and Buttons -->
+    <div class="add-section">
+      <mat-form-field appearance="standard">
+        <mat-label>Department Name</mat-label>
+        <input matInput [(ngModel)]="newDepartmentName" />
+      </mat-form-field>
+  
+      <button
+        mat-raised-button
+        class="circular-button primary-button"
+        color="primary"
+        (click)="isEditMode ? updateDepartment() : addDepartment()"
+        [disabled]="newDepartmentName.trim().length === 0"
+      >
+        <mat-icon>{{ isEditMode ? 'save' : 'add_business' }}</mat-icon>
+      </button>
+  
+      <button
+        mat-button
+        color="warn"
+        *ngIf="isEditMode"
+        (click)="cancelAction()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+    </div>
+  </div>
+  
+  <!-- Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 80%;">Department Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="departments.length === 0" class="no-data-row">
+          <td colspan="2" class="no-data-cell">
+            <div class="no-data-container">
+              <mat-icon class="no-data-icon">business</mat-icon>
+              <p class="no-data-message">No departments found</p>
+              <p class="no-data-submessage">Add a new department using the form above</p>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let element of departments">
+          <td>{{ element.name }}</td>
+          <td class="actions">
+            <mat-icon aria-label="Edit department" class="icon" (click)="startEdit(element)">edit</mat-icon>
+            <mat-icon aria-label="Delete department" class="icon delete-icon" (click)="deleteDepartment(element._id)">delete</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
-<!-- Table -->
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 80%;">Department Name</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let element of departments">
-        <td>{{ element.name }}</td>
-        <td class="actions">
-          <mat-icon aria-label="Edit department" class="icon" (click)="startEdit(element)">edit</mat-icon>
-          <mat-icon aria-label="Delete department" class="icon" (click)="deleteDepartment(element._id)">delete</mat-icon>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
 

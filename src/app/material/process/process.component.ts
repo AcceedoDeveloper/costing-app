@@ -45,6 +45,7 @@ export class ProcessComponent implements OnInit {
   openAddMaterial() {
     this.dialog.open(AddprocessComponent, {
       width: '60%',
+      disableClose: true,
        panelClass: 'custom-dialog-container'
     });
   }
@@ -52,6 +53,8 @@ export class ProcessComponent implements OnInit {
  deleteProcess(id: string) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
+    height:'auto',
+    disableClose: true,
     data: {
       title: 'Confirm Delete',
       message: 'Are you sure you want to delete this process?'
@@ -75,7 +78,11 @@ editAllMaterials(id: string): void {
     console.log('Full process object:', clonedProcess);
 
     this.dialog.open(ProcesseditComponent, {
-      width: '60%',
+      width: '70%',
+      maxWidth: '900px',
+      maxHeight: '90vh',
+      disableClose: true,
+     
       data: clonedProcess  
     });
   } else {

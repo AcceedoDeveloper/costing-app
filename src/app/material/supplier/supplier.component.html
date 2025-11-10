@@ -1,73 +1,94 @@
 
-
-<div class="header">
-  <h2>Supplier List</h2>
-
-
-  <div class="filter">
-    <mat-form-field appearance="standard" class="material-filter">
-    <mat-label>Filter by Material Type</mat-label>
-    <mat-select [(value)]="selectedMaterialType" (selectionChange)="applyFilter()">
-      <mat-option value="">All</mat-option>
-      <mat-option *ngFor="let type of materialTypes" [value]="type">
-        {{ type }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="standard" class="search-box">
-    <mat-label>Search Supplier</mat-label>
-    <input
-      matInput
-      [(ngModel)]="searchTerm"
-      (input)="applyFilter()"
-      placeholder="Enter supplier name"
-    />
-  </mat-form-field>
-
+<div class="main-container">
+  <div class="header">
+    <h2>Supplier List</h2>
+    
+    <div class="filter">
+      <div class="material-filter">
+        <label for="materialType">Filter by Material Type</label>
+        <select 
+          id="materialType"
+          [(ngModel)]="selectedMaterialType" 
+          (change)="applyFilter()"
+          class="form-select"
+        >
+          <option value="">All</option>
+          <option *ngFor="let type of materialTypes" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
+    
+      <div class="search-box">
+        <label for="searchInput">Search Supplier Name & Material Name</label>
+        <div class="search-input-wrapper">
+          <input
+            id="searchInput"
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilter()"
+            placeholder="Search by supplier or material name"
+            class="form-input"
+          />
+          <span class="search-icon"></span>
+          <button
+            *ngIf="searchTerm"
+            type="button"
+            class="clear-btn"
+            aria-label="Clear search"
+            (click)="searchTerm = ''; applyFilter()"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <button mat-raised-button color="primary" id="btn-add-supplier" (click)="addSupplier()">
+      <mat-icon>add</mat-icon>
+      Add Supplier
+    </button>
   </div>
   
-  <button mat-raised-button color="primary" (click)="addSupplier()">Add Supplier</button>
-</div>
-
-
-<div class="table-container">
- 
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Material Type</th>
-        <th>Material Name</th>
-        <th>Product Cost</th>
-        <th>Address</th>
-        <th>Quality</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let supplier of paginatedSuppliers">
-  <td>{{ supplier.name }}</td>
-  <td>{{ supplier.materialType }}</td>
-  <td>{{ supplier.materialName }}</td>
-  <td>{{ supplier.ratePerKg }}</td>
-  <td>{{ supplier.address }}</td>
-  <td>{{ supplier.quantity }}</td>
-  <td class="actions">
-    <mat-icon class="icon" aria-label="Edit supplier" (click)="startEdit(supplier)">edit</mat-icon>
-    <mat-icon class="icon" aria-label="Delete supplier" (click)="deleteSupplier(supplier._id)">delete</mat-icon>
-  </td>
-</tr>
-
-    </tbody>
-  </table>
-
-  <!-- Paginator -->
-  <mat-paginator
-    [length]="suppliers.length"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[25, 50, 100]"
-    (page)="onPageChange($event)"
-    aria-label="Select page of suppliers"
-  ></mat-paginator>
+  
+  <div class="table-container">
+   
+    <table>
+      <thead>
+        <tr>
+          <th>Supplier Name</th>
+          <th>Material Type</th>
+          <th>Material Name</th>
+          <th>Product Cost</th>
+          <th>Address</th>
+          <th>Quality</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let supplier of paginatedSuppliers">
+    <td>{{ supplier.name }}</td>
+    <td>{{ supplier.materialType }}</td>
+    <td>{{ supplier.materialName }}</td>
+    <td>{{ supplier.ratePerKg }}</td>
+    <td>{{ supplier.address }}</td>
+    <td>{{ supplier.quantity }}</td>
+    <td class="actions">
+      <mat-icon class="icon" aria-label="Edit supplier" (click)="startEdit(supplier)">edit</mat-icon>
+      <mat-icon class="icon" aria-label="Delete supplier" (click)="deleteSupplier(supplier._id)">delete</mat-icon>
+    </td>
+  </tr>
+  
+      </tbody>
+    </table>
+  
+    <!-- Paginator -->
+    <mat-paginator
+      [length]="filteredSuppliers.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[25, 50, 100]"
+      (page)="onPageChange($event)"
+      aria-label="Select page of suppliers"
+    ></mat-paginator>
+  </div>
 </div>
