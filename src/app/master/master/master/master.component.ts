@@ -80,6 +80,7 @@ export class MasterComponent implements OnInit {
   openAddUserPopup() {
     this.dialog.open(AdduserComponent, {
       width: '450px',
+      disableClose: true,
     });
   }
 
@@ -87,6 +88,7 @@ export class MasterComponent implements OnInit {
     console.log('employee', user._id);
     this.dialog.open(AdduserComponent, {
       width: '450px',
+      disableClose: true,
       data: { user }
     });
   }
@@ -94,6 +96,8 @@ export class MasterComponent implements OnInit {
  deleteUser(user: Userget) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
+    height: '200px',
+    disableClose: true,
     data: {
       title: 'Delete Confirmation',
       message: `Are you sure you want to delete user "${user.UserName}"?`

@@ -53,7 +53,8 @@ export class ProcessComponent implements OnInit {
  deleteProcess(id: string) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
-    height:'auto',
+    height:'200px',
+   
     disableClose: true,
     data: {
       title: 'Confirm Delete',

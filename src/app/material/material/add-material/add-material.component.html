@@ -55,10 +55,11 @@
 
 
   <div class="button-group">
+    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+
     <button mat-raised-button color="primary" type="submit" [disabled]="materialForm.invalid">
       {{ isEditMode ? 'Update' : 'Submit' }}
     </button>
-    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
   </div>
 </form>
 
@@ -108,10 +109,11 @@
   </div>
 
   <div class="button-group">
+    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+
     <button mat-raised-button color="primary" type="submit" [disabled]="supplierMaterialForm.invalid">
       {{ isEditMode ? 'Update' : 'Submit' }}
     </button>
-    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
   </div>
 </form>
 

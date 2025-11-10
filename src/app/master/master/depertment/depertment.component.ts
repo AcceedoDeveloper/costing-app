@@ -61,6 +61,8 @@ export class DepertmentComponent implements OnInit {
   deleteDepartment(id: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '300px',
+      height:'200px',
+      disableClose: true,
       data: {
         title: 'Delete Confirmation',
         message: 'Are you sure you want to delete this department?'

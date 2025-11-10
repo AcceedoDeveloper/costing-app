@@ -102,12 +102,14 @@ materialSet.set(item.name, { name: item.name, unitCost: 0 }); // Mock value
   openAddMeterialPopup() {
     this.dialog.open(AddgradeComponent, {
       width: '50%',
+      disableClose:true,
     });
   }
 
   deleteGrade(gradeNo: string): void {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
+    disableClose:true,
     data: {
       title: 'Delete Confirmation',
       message: 'Are you sure you want to delete this grade?'

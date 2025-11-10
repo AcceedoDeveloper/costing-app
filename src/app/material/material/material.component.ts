@@ -71,6 +71,7 @@ onPageChange(event: PageEvent): void {
   openAddMeterialPopup(): void {
     this.dialog.open(AddMaterialComponent, {
       width: '500px',
+      disableClose: true,
     });
   }
 
@@ -78,6 +79,7 @@ onPageChange(event: PageEvent): void {
     console.log('Edit clicked for:', material);
     this.dialog.open(AddMaterialComponent, {
       width: '500px',
+      disableClose: true,
       data: { material, isEditMode: true }
     });
   }
@@ -85,6 +87,8 @@ onPageChange(event: PageEvent): void {
   deleteMaterial(material: Material): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '300px',
+      height:'200px',
+      disableClose: true,
       data: {
         title: 'Delete Confirmation',
         message: `Are you sure you want to delete ${material.name}?`

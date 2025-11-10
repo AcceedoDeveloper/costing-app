@@ -35,7 +35,7 @@
     <div class="box">
       
       <mat-form-field appearance="standard" class="matfiles">
-        <mat-label>User Name</mat-label>
+        <mat-label>Name</mat-label>
         <input matInput id="UserName" formControlName="UserName" placeholder="Enter user name" />
         <mat-error *ngIf="userForm.get('UserName')?.hasError('required')">
           User Name is required
@@ -43,26 +43,6 @@
       </mat-form-field>
 
      
-     
-
-
-      <mat-form-field appearance="standard" class="matfiles">
-  <mat-label>Role</mat-label>
-  <mat-select id="role" formControlName="role">
-    <mat-option *ngFor="let role of roles$ | async" [value]="role.name">
-      {{ role.name | titlecase }}
-    </mat-option>
-  </mat-select>
-  <mat-error *ngIf="userForm.get('role')?.hasError('required')">
-    Role is required
-  </mat-error>
-</mat-form-field>
-
-      
-    </div>
-
-
-     <div class="box">
       <mat-form-field appearance="standard" class="matfiles">
         <mat-label>User Name (login)</mat-label>
         <input matInput id="userName" formControlName="userName" placeholder="Enter login userName" />
@@ -70,7 +50,29 @@
           Login User Name is required
         </mat-error>
       </mat-form-field>
+     
 
+
+
+      
+    </div>
+
+
+     <div class="box">
+
+     
+
+      <mat-form-field appearance="standard" class="matfiles">
+        <mat-label>Role</mat-label>
+        <mat-select id="role" formControlName="role">
+          <mat-option *ngFor="let role of roles$ | async" [value]="role.name">
+            {{ role.name | titlecase }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="userForm.get('role')?.hasError('required')">
+          Role is required
+        </mat-error>
+      </mat-form-field>
 
       
       <mat-form-field appearance="standard" class="matfiles">
