@@ -229,4 +229,11 @@ mat-toolbar {
   padding: 16px;
   height: calc(100vh - 64px);
   overflow: auto;
+  position: relative;
+}
+
+.main-content > div {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
 }

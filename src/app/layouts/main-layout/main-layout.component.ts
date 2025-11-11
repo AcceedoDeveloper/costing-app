@@ -3,11 +3,14 @@ import { Store } from '@ngrx/store';
 import { autoLogout } from '../../auth/state/auth.actions';
 import { selectAuthState } from '../../auth/state/auth.selector';
 import { AppState } from '../../store/app.state';
+import { RouterOutlet, ActivatedRoute } from '@angular/router';
+import { slideInAnimation } from '../../animations/route-animations';
 
 @Component({
   selector: 'app-main-layout',
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css'],
+  animations: [slideInAnimation]
 })
 export class MainLayoutComponent {
   
@@ -48,6 +51,8 @@ export class MainLayoutComponent {
     localStorage.removeItem('userData');
   }
 
-
+  getRouteAnimationData() {
+    return 'routeAnimation';
+  }
 
 }

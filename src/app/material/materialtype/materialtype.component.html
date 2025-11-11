@@ -1,72 +1,108 @@
-<div class="main">
-  <!-- Form Section: top-right -->
-  <div class="sub">
-    <mat-form-field appearance="standard">
-      <mat-label>Material Type Name</mat-label>
-      <input matInput [(ngModel)]="newMaterialType" />
-    </mat-form-field>
-    <button
-      mat-raised-button
-      color="primary"
-      class="circular-button"
-      (click)="isEditMode ? updateMaterial() : addMaterial()"
-      [disabled]="newMaterialType.trim().length === 0"
-    >
-      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
-    </button>
-    <button
-      mat-button
-      color="warn"
-      *ngIf="isEditMode"
-      (click)="cancelAction()"
-    >
-      <mat-icon>cancel</mat-icon>
-      Cancel
-    </button>
+<div class="main" [@fadeIn]>
+  <!-- Header Section -->
+  <div class="page-header">
   </div>
-<!-- Table Section -->
-<div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th style="width: 80%;">Material Type</th>
-        <!-- <th>Actions</th> -->
-      </tr>
-    </thead>
+
+  <!-- Form Section: top-right -->
+  <div class="sub" [@slideInRight]>
+    <div class="form-wrapper">
+      <mat-form-field appearance="outline" class="material-type-input">
+        <mat-label>
+      
+          Material Type Name
+        </mat-label>
+        <input matInput [(ngModel)]="newMaterialType" placeholder="Enter material type name" />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        class="action-button add-button"
+        (click)="isEditMode ? updateMaterial() : addMaterial()"
+        [disabled]="newMaterialType.trim().length === 0"
+        [matTooltip]="isEditMode ? 'Save changes' : 'Add new material type'"
+      >
+        <mat-icon>{{ isEditMode ? 'save' : 'add_circle' }}</mat-icon>
+        <span>{{ isEditMode ? 'Save' : 'Add' }}</span>
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        class="action-button cancel-button"
+        *ngIf="isEditMode"
+        (click)="cancelAction()"
+        matTooltip="Cancel editing"
+      >
+        <mat-icon>close</mat-icon>
+        <span>Cancel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div class="table-container" [@fadeInUp]>
+    <div class="table-header">
+      <div class="table-title-wrapper">
+  
+        <h2 class="table-title">Material Types</h2>
+      </div>
+      <div class="table-count" *ngIf="(materialTypes$ | async)?.length">
+        <mat-icon class="count-icon">inventory</mat-icon>
+        <span>{{ (materialTypes$ | async)?.length }} {{ (materialTypes$ | async)?.length === 1 ? 'type' : 'types' }}</span>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>
+   
+          </th>
+        </tr>
+      </thead>
       <tbody>
         <tr *ngIf="(materialTypes$ | async)?.length === 0" class="no-data-row">
           <td colspan="1" class="no-data-cell">
             <div class="no-data-container">
-              <mat-icon class="no-data-icon">category</mat-icon>
+              <mat-icon class="no-data-icon">inventory_2</mat-icon>
               <p class="no-data-message">No material types found</p>
               <p class="no-data-submessage">Add a new material type using the form above</p>
             </div>
           </td>
         </tr>
-        <tr *ngFor="let material of materialTypes$ | async">
-          <td>{{ material.name }}</td>
-          <!-- <td class="actions">
-            <mat-icon aria-label="Edit material type" class="icon" (click)="startEdit(material)">edit</mat-icon>
-            <mat-icon aria-label="Delete material type" class="icon" (click)="deleteMaterialType(material._id)">delete</mat-icon>
-          </td> -->
+        <tr *ngFor="let material of materialTypes$ | async" [@slideInLeft]>
+          <td>
+            <div class="material-type-item">
+              <mat-icon class="material-icon">label</mat-icon>
+              <span class="material-name">{{ material.name }}</span>
+            </div>
+          </td>
         </tr>
       </tbody>
-  </table>
+    </table>
+  </div>
 
- 
-</div>
- <!-- Stepper positioned at the bottom right -->
-  <div class="stepper-wrapper">
-    <mat-horizontal-stepper [selectedIndex]="0" linear class="navigate-router">
-      <mat-step [completed]="false" label="Material type"></mat-step>
-      <mat-step [completed]="false" label="Material"  >
-         <ng-template matStepLabel>
-      <a [routerLink]="['/material/list']" style="text-decoration: none; color: inherit;">
-        Material
-      </a>
-    </ng-template>
+  <!-- Stepper positioned at the bottom center -->
+  <!-- <div class="stepper-wrapper" [@fadeInUp]> -->
+    <mat-horizontal-stepper  [selectedIndex]="0" linear class="navigate-router">
+      <mat-step [completed]="false">
+        <ng-template matStepLabel>
+          <div class="step-label active-step">
+            <mat-icon class="step-icon">category</mat-icon>
+            <span>Material Type</span>
+          </div>
+        </ng-template>
+      </mat-step>
+      <mat-step [completed]="false">
+        <ng-template matStepLabel>
+          <a [routerLink]="['/material/list']" class="step-link material-step-link">
+            <div class="step-label">
+              <mat-icon class="step-icon">inventory</mat-icon>
+              <span>Material</span>
+              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+            </div>
+          </a>
+        </ng-template>
       </mat-step>
     </mat-horizontal-stepper>
-  </div>
+  <!-- </div> -->
 </div>
 

@@ -11,11 +11,36 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatPaginator } from '@angular/material/paginator';
 import { DashboardService } from '../../services/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 
 @Component({
   selector: 'app-material',
   templateUrl: './material.component.html',
-  styleUrls: ['./material.component.css']
+  styleUrls: ['./material.component.css'],
+  animations: [
+    trigger('fadeInDown', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-20px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('slideInLeft', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateX(-30px)' }),
+          stagger(50, [
+            animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ]
 })
 export class MaterialComponent implements OnInit, AfterViewInit {
   selectedMaterialType: string = '';
@@ -26,8 +51,10 @@ export class MaterialComponent implements OnInit, AfterViewInit {
   expandedHistoryIndex: number | null = null;
   materials: Material[] = [];
   paginatedMaterials: Material[] = [];
-   selectedFile: File | null = null;
-
+  selectedFile: File | null = null;
+  isDownloading = false;
+  isUploading = false;
+  isLoadingData = false;
 
   pageSize = 25;
   pageIndex = 0;
@@ -40,14 +67,19 @@ export class MaterialComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     console.log('Dispatching loadMaterials action');
+    this.isLoadingData = true;
     this.store.dispatch(loadMaterials());
 
     this.store.select(getMaterials).subscribe((materials: Material[]) => {
-    this.materials = materials;
-    this.materialTypes = [...new Set(materials.map(m => m.materialType))];
-    this.applyFilter();
-    this.applyFilterMaterialbyHouseType();
-});
+      this.materials = materials;
+      this.materialTypes = [...new Set(materials.map(m => m.materialType))];
+      this.applyFilter();
+      this.applyFilterMaterialbyHouseType();
+      // Add delay for animation effect
+      setTimeout(() => {
+        this.isLoadingData = false;
+      }, 300);
+    });
 
   }
 
@@ -182,20 +214,38 @@ onFileSelected(event: any): void {
   onUpload(): void {
     if (!this.selectedFile) return;
 
+    this.isUploading = true;
+    this.isLoadingData = true;
+
     this.dhasboard.uploadExcelFile(this.selectedFile).subscribe({
       next: (res) => {
         console.log('Upload successful', res);
         this.tooster.success('File uploaded successfully');
+        // Reload materials after upload
+        this.store.dispatch(loadMaterials());
+        this.store.select(getMaterials).subscribe((materials: Material[]) => {
+          this.materials = materials;
+          this.materialTypes = [...new Set(materials.map(m => m.materialType))];
+          this.applyFilter();
+          this.applyFilterMaterialbyHouseType();
+          setTimeout(() => {
+            this.isUploading = false;
+            this.isLoadingData = false;
+          }, 500);
+        });
       },
       error: (err) => {
         console.error('Upload failed', err);
         this.tooster.error('File upload failed');
+        this.isUploading = false;
+        this.isLoadingData = false;
       }
     });
   }
 
 
   downloadExcel(): void {
+    this.isDownloading = true;
     this.dhasboard.downloadMaterialExcel().subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
@@ -207,10 +257,14 @@ onFileSelected(event: any): void {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
         this.tooster.success('File downloaded successfully');
+        setTimeout(() => {
+          this.isDownloading = false;
+        }, 1000);
       },
       error: (err) => {
         console.error('Download failed', err);
         this.tooster.error('File download failed');
+        this.isDownloading = false;
       }
     });
   }

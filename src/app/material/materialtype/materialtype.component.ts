@@ -8,10 +8,38 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import * as fromMaterialSelectors from '../store/material.selector'; 
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { trigger, transition, style, animate } from '@angular/animations';
+
 @Component({
   selector: 'app-materialtype',
   templateUrl: './materialtype.component.html',
-  styleUrls: ['./materialtype.component.css']
+  styleUrls: ['./materialtype.component.css'],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('slideInRight', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(30px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ])
+    ]),
+    trigger('slideInLeft', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateX(-20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+      ])
+    ])
+  ]
 })
 export class MaterialtypeComponent implements OnInit {
   materialTypes$!: Observable<MaterialType[]>;

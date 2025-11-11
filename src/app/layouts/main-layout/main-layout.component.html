@@ -173,6 +173,8 @@
     </ul>
   </aside>
   <main class="main-content">
-    <router-outlet></router-outlet>
+    <div [@routeAnimations]="getRouteAnimationData()">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </div>
   </main>
 </div>

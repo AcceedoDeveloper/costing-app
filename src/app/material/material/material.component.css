@@ -1,18 +1,64 @@
+.title-highlight-section {
+  /* background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+  padding: 16px 24px; */
+  border-radius: 12px 12px 0 0;
+  margin-top: 20px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); */
+  /* border-bottom: 2px solid #fdd835; */
+
+}
+
+.title-highlight-section .title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.title-highlight-section .title-icon {
+  font-size: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  color: #5b84ff;
+}
+
+.title-highlight-section h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
   flex-wrap: wrap;
-  margin: 0px 0;
-  padding: 0 0px; /* align with table cell padding */
+  margin: 0;
+  padding: 20px 24px;
+  background: white;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  gap: 20px;
+  margin-top: 0;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
-  position: relative;
-  top: 20px;
+  gap: 25px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  /* margin-bottom: 44px; */
+  margin-right: 14px;
 }
 
 .upload-file {
@@ -39,11 +85,189 @@
 }
 
 
-.material-filter{
-  margin-left: 20px;
-}
 .material-filter {
-  width: 250px;
+  width: 180px;
+  min-width: 180px;
+}
+
+.material-filter ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.material-filter ::ng-deep .mat-form-field-flex {
+  align-items: center;
+  min-height: 40px;
+}
+
+.material-filter ::ng-deep .mat-form-field-infix {
+  padding: 8px 0 !important;
+  border-top: 0;
+}
+
+::ng-deep .material-filter-panel {
+  margin-top: 0 !important;
+}
+
+.material-filter ::ng-deep .mat-select-panel {
+  max-height: 300px !important;
+}
+
+.material-filter ::ng-deep .mat-select-trigger {
+  position: relative;
+}
+
+/* Force dropdown to open downward */
+::ng-deep .cdk-overlay-pane {
+  position: fixed !important;
+}
+
+::ng-deep .cdk-overlay-pane .material-filter-panel {
+  margin-top: 0 !important;
+  transform-origin: top center !important;
+}
+
+/* Override Material's auto-positioning for this specific dropdown */
+::ng-deep .cdk-overlay-connected-position-bounding-box {
+  align-items: flex-start !important;
+}
+
+::ng-deep .cdk-overlay-pane:has(.material-filter-panel) {
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+.search-box {
+  width: 200px;
+  min-width: 200px;
+}
+
+.search-box ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.search-box ::ng-deep .mat-form-field-flex {
+  align-items: center;
+  min-height: 40px;
+}
+
+.search-box ::ng-deep .mat-form-field-infix {
+  padding: 8px 0 !important;
+  border-top: 0;
+}
+
+.filter-icon,
+.search-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin-right: 6px;
+  vertical-align: middle;
+  color: #5b84ff;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+}
+
+.radio-group mat-radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-group ::ng-deep .mat-radio-button {
+  display: flex;
+  align-items: center;
+}
+
+.radio-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  margin-right: 6px;
+  vertical-align: middle;
+  color: #5b84ff;
+}
+
+.action-btn {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 18px !important;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-transform: none;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(91, 132, 255, 0.3);
+
+}
+
+.action-btn mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 7px;
+}
+
+.action-btn:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(91, 132, 255, 0.4);
+}
+
+.action-btn:active:not([disabled]) {
+  transform: translateY(0);
+}
+
+.download-btn {
+  box-shadow: 0 2px 8px rgba(91, 132, 255, 0.3) !important;
+}
+
+.download-btn:active,
+.download-btn:focus {
+  box-shadow: 0 2px 8px rgba(91, 132, 255, 0.3) !important;
+  outline: none !important;
+}
+
+.download-btn ::ng-deep .mat-button-ripple {
+  display: none !important;
+}
+
+.download-btn ::ng-deep .mat-ripple-element {
+  display: none !important;
+}
+
+.action-btn.animating {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.action-btn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .table-container {
@@ -51,9 +275,15 @@
   max-width: 1200px;
   margin: 30px auto;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow-x: auto;
+  transition: box-shadow 0.3s ease;
+  position: relative;
+}
+
+.table-container:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .table-containr{
@@ -100,9 +330,20 @@ td.actions {
   color: #ff4081;
 }
 
-tr:hover {
-  background-color: #f9f9f9;
+tr {
+  transition: all 0.3s ease;
 }
+
+/* Alternating row colors */
+tbody tr:nth-child(odd) {
+  background-color: #eeebeb;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+
 
 mat-paginator {
   display: flex;
@@ -177,5 +418,35 @@ mat-paginator {
 .date {
   color: #666;
   font-style: italic;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 12px;
+  gap: 16px;
+}
+
+.loading-icon {
+  font-size: 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: #5b84ff;
+}
+
+.loading-overlay p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #5b84ff;
 }
 
