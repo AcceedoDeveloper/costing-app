@@ -3,12 +3,13 @@
 
   <!-- Main Content Area -->
   <div class="main-content">
-    <div class="content-header">
+    
 
-  <div class="header-controls">
+  
 
     <div class="filter-da" >
 
+      <div class="filter-cards">
         <!-- First Filter Card: Customer, Drawing, Part Name Filters -->
     <div class="filter-card">
       <mat-form-field appearance="outline" class="filter-field" [class.active]="searchFilterType !== 'none'">
@@ -44,7 +45,7 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="filter-fields">
+      <div class="filter-fields" *ngIf="dateFilterType !== 'none'">
 
         <!-- Custom Date Picker -->
       <div class="filter-field" *ngIf="dateFilterType === 'date'">
@@ -96,6 +97,8 @@
       
     </div>
 
+      </div>
+
      <!-- Add Quotation Button -->
      <div class="add-button-wrapper">
       <button mat-raised-button color="primary" class="add-but" (click)="addCustomerDetails()">
@@ -106,8 +109,8 @@
   
 
    
-  </div>
-    </div>
+
+
 
     <div class="table-container">
       <table class="data-table">

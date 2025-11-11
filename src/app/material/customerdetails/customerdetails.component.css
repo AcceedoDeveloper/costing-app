@@ -153,63 +153,58 @@ body {
   text-align: left;
 }
 
-.filter-da {
-  border-radius: 5px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-
 .header-controls {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
   margin-bottom: 0;
   position: relative;
   z-index: 2;
   flex-wrap: wrap;
+  width: 100%;
 }
 
-/* Ensure filter cards are positioned next to each other */
-.filter-da > .filter-card + .filter-card {
-  margin-left: 0;
-}
-
+/* Filter Container */
 .filter-da {
   display: flex;
-  flex-direction: row;
-  gap: 0;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+/* Filter Cards Container */
+.filter-cards {
+  display: flex;
+  gap: 12px;
   align-items: center;
   flex: 1;
   flex-wrap: wrap;
 }
 
+/* Individual Filter Card */
 .filter-card {
   display: flex;
-  gap: 4px;
+  gap: 8px;
   align-items: center;
-  padding: 5px 5px 5px 10px;
+  padding: 0;
   border-radius: 12px;
   flex-wrap: nowrap;
   position: relative;
   z-index: 10;
   flex: 0 0 auto;
   min-width: 0;
-  height: 40px;
-  padding-top: 20px;
-    margin: 25px;
+  height: 56px;
+  margin: 0;
+  align-self: center;
 }
 
-/* Remove padding on the right side of first filter card to bring cards closer */
-.filter-card:first-of-type {
-  padding-right: 5px;
-}
 
-/* Add minimal padding on the left of second filter card */
-.filter-card:last-of-type {
-  padding-left: 5px;
-}
 
+/* Filter Field Styling */
 .filter-field {
   flex: 1 1 auto;
   min-width: 180px;
@@ -218,6 +213,9 @@ body {
   opacity: 1;
   display: flex;
   align-items: center;
+  margin: 0;
+  height: 56px;
+  align-self: stretch;
 }
 
 /* Ensure week picker container aligns properly */
@@ -273,7 +271,7 @@ body {
 .week-picker-container .filter-field .mat-form-field-wrapper {
   padding-bottom: 0 !important;
   margin-bottom: 0 !important;
-  height: 44px !important;
+  height: 56px !important;
   display: flex;
   align-items: center;
 }
@@ -281,16 +279,16 @@ body {
 /* Unified height for all filter fields - make them look like normal HTML */
 .filter-field .mat-form-field,
 .week-picker-container .filter-field .mat-form-field {
-  height: 44px !important;
+  height: 56px !important;
   display: flex !important;
   align-items: center !important;
-  line-height: 44px !important;
+  line-height: 56px !important;
 }
 
 .filter-field .mat-form-field-appearance-outline,
 .week-picker-container .filter-field .mat-form-field-appearance-outline {
-  height: 44px !important;
-  line-height: 44px !important;
+  height: 56px !important;
+  line-height: 56px !important;
 }
 
 /* Make infix container compact like normal HTML input */
@@ -298,19 +296,19 @@ body {
 .week-picker-container .filter-field .mat-form-field-infix {
   padding: 0 !important;
   border-top: 0 !important;
-  height: 44px !important;
-  min-height: 44px !important;
+  height: 56px !important;
+  min-height: 56px !important;
   display: flex !important;
   align-items: center !important;
-  line-height: 44px !important;
+  line-height: 56px !important;
 }
 
 /* All inputs should have same height as normal HTML - unified styling */
 .filter-field input:not([matInput]),
 .filter-field input[matInput],
 .week-picker-container .filter-field input {
-  height: 44px !important;
-  line-height: 44px !important;
+  height: 56px !important;
+  line-height: 56px !important;
   display: flex !important;
   align-items: center !important;
   box-sizing: border-box !important;
@@ -326,8 +324,8 @@ body {
 
 .filter-field .mat-select-trigger,
 .filter-field .mat-select-value {
-  height: 44px !important;
-  line-height: 44px !important;
+  height: 56px !important;
+  line-height: 56px !important;
   display: flex !important;
   align-items: center !important;
   box-sizing: border-box !important;
@@ -337,8 +335,8 @@ body {
 }
 
 .filter-field .mat-select-trigger {
-  min-height: 44px !important;
-  height: 44px !important;
+  min-height: 56px !important;
+  height: 56px !important;
 }
 
 /* Remove Material's default spacing */
@@ -352,21 +350,21 @@ body {
 .filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
   top: 0 !important;
   bottom: 0 !important;
-  height: 44px !important;
+  height: 56px !important;
 }
 
 .filter-field .mat-form-field-appearance-outline .mat-form-field-outline-start,
 .filter-field .mat-form-field-appearance-outline .mat-form-field-outline-end,
 .filter-field .mat-form-field-appearance-outline .mat-form-field-outline-gap {
   border-width: 1px !important;
-  height: 44px !important;
+  height: 56px !important;
 }
 
 /* Label positioning - make it like normal HTML */
 .filter-field .mat-form-field-label-wrapper {
   top: 0 !important;
   padding-top: 0 !important;
-  height: 44px !important;
+  height: 56px !important;
   display: flex;
   align-items: center;
 }
@@ -394,7 +392,7 @@ body {
 .filter-field .mat-form-field-suffix,
 .week-picker-container .filter-field .mat-form-field-suffix {
   align-self: center !important;
-  height: 44px !important;
+  height: 56px !important;
   display: flex !important;
   align-items: center !important;
   margin-left: 0 !important;
@@ -404,8 +402,8 @@ body {
 /* Ensure prefix/suffix containers don't add extra spacing */
 .filter-field .mat-form-field-prefix,
 .filter-field .mat-form-field-suffix {
-  height: 44px !important;
-  line-height: 44px !important;
+  height: 56px !important;
+  line-height: 56px !important;
 }
 
 .filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
@@ -427,8 +425,8 @@ body {
 /* Force equal height for all filter pickers - normal HTML style */
 .filter-field .mat-form-field-flex,
 .week-picker-container .filter-field .mat-form-field-flex {
-  height: 44px !important;
-  min-height: 44px !important;
+  height: 56px !important;
+  min-height: 56px !important;
   display: flex !important;
   align-items: center !important;
   box-sizing: border-box !important;
@@ -442,8 +440,8 @@ body {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  height: 44px !important;
-  width: 44px !important;
+  height: 56px !important;
+  width: 56px !important;
   margin: 0 !important;
   padding: 0 !important;
   background: transparent !important;
@@ -453,9 +451,9 @@ body {
 
 .filter-field .mat-datepicker-toggle .mat-icon-button,
 .week-picker-container .filter-field .mat-datepicker-toggle .mat-icon-button {
-  width: 44px !important;
-  height: 44px !important;
-  line-height: 44px !important;
+  width: 56px !important;
+  height: 56px !important;
+  line-height: 56px !important;
   padding: 0 !important;
   display: flex !important;
   align-items: center !important;
@@ -474,13 +472,13 @@ body {
 /* Uniform border and radius for all fields */
 .filter-field .mat-form-field-outline {
   border-radius: 8px !important;
-  height: 44px !important;
+  height: 56px !important;
 }
 
 /* Native HTML input styling - match Material design */
 .filter-field .native-input {
   width: 100% !important;
-  height: 44px !important;
+  height: 56px !important;
   padding: 0 12px !important;
   border: 1px solid #d0d0d0 !important;
   border-radius: 8px !important;
@@ -517,18 +515,67 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  height: 44px;
-  min-height: 44px;
-  max-height: 44px;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
 }
 
 .filter-fields {
-border: 1px solid rgb(123, 123, 123);
-position: relative;
-    bottom: 10px;
-    margin-left: 8px;
-    border-radius: 5px;
-    height: 44px;
+  border: 1px solid rgb(123, 123, 123);
+  position: relative;
+  margin-left: 0;
+  border-radius: 5px;
+  height: 56px;
+  min-height: 52px;
+  max-height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  min-width: 180px;
+  max-width: 250px;
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  align-self: stretch;
+  margin-top: -8px !important;
+  margin-left: 5px !important;
+  
+}
+
+.filter-fields .filter-field {
+  border: none;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  
+}
+
+.filter-fields .filter-field .input-label {
+  display: none;
+}
+
+.filter-fields .native-input {
+  border: none;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  padding: 0 12px;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #333;
+  background: transparent;
+  outline: none;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+}
+
+.filter-fields .native-input:focus {
+  outline: none;
 }
 
 .filter-field:has(.native-input) .input-label {
@@ -536,7 +583,7 @@ position: relative;
 }
 
 .filter-field:has(.native-input) .native-input {
-  height: 44px;
+  height: 56px;
   margin: 0;
   padding: 0 12px;
 }
@@ -546,9 +593,9 @@ position: relative;
 .add-button-wrapper {
   display: flex;
   justify-content: flex-end;
-  padding: 0 4px;
   align-items: center;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .add-but {
@@ -590,21 +637,42 @@ position: relative;
 
 /* Responsive design for filters */
 @media (max-width: 768px) {
+  .filter-da {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .filter-cards {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
   .filter-card {
     flex-direction: column;
     gap: 12px;
-    padding: 12px 16px;
+    height: auto;
+    width: 100%;
   }
 
   .filter-field {
+    min-width: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .filter-fields {
+    width: 100%;
     min-width: 100%;
     max-width: 100%;
   }
 
   .add-button-wrapper {
     justify-content: center;
-  width: 100%;
-}
+    width: 100%;
+    margin-left: 0;
+  }
 
   .add-but {
     width: 100%;
