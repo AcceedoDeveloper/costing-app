@@ -27,14 +27,26 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Name Dropdown -->
+        <!-- Name Dropdown (Searchable) -->
         <mat-form-field appearance="standard" class="name-field">
           <mat-label>Name</mat-label>
-          <mat-select [(ngModel)]="group.selectedName" [disabled]="!group.selectedType">
-            <mat-option *ngFor="let name of group.filteredNames" [value]="name.name">
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="group.nameSearchInput"
+            [matAutocomplete]="nameAuto"
+            [disabled]="!group.selectedType"
+            (ngModelChange)="filterNames(i, $event)"
+            (blur)="group.nameSearchInput = group.selectedName || ''"
+            placeholder="Search and select name">
+          <mat-autocomplete
+            #nameAuto="matAutocomplete"
+            [displayWith]="displayNameFn"
+            (optionSelected)="onNameSelected(i, $event.option.value)">
+            <mat-option *ngFor="let name of group.filteredOptions" [value]="name.name">
               {{ name.name }}
             </mat-option>
-          </mat-select>
+          </mat-autocomplete>
         </mat-form-field>
 
         <!-- Quantity Input -->

@@ -23,8 +23,10 @@ export class AddgradeComponent implements OnInit {
     selectedName: string | null;
     quantity: number | null;
     filteredNames: any[];
+    nameSearchInput: string;
+    filteredOptions: any[];
   }[] = [
-    { selectedType: null, selectedName: null, quantity: null, filteredNames: [] }
+    { selectedType: null, selectedName: null, quantity: null, filteredNames: [], nameSearchInput: '', filteredOptions: [] }
   ];
 
   private gradeData: Grade | null = null;
@@ -54,11 +56,14 @@ export class AddgradeComponent implements OnInit {
         this.dropdowns = [];
         this.gradeData.rawMaterial.forEach(material => {
           material.materialsUsed.forEach(item => {
+            const filteredNames = this.materialMap[material.type] || [];
             this.dropdowns.push({
               selectedType: material.type,
               selectedName: item.name,
               quantity: item.quantity,
-              filteredNames: this.materialMap[material.type] || []
+              filteredNames: filteredNames,
+              nameSearchInput: item.name,
+              filteredOptions: filteredNames
             });
           });
         });
@@ -69,17 +74,55 @@ export class AddgradeComponent implements OnInit {
   onTypeChange(index: number, selectedType: string): void {
     const filtered = this.materialMap[selectedType] || [];
     this.dropdowns[index].filteredNames = filtered;
+    this.dropdowns[index].filteredOptions = filtered;
     this.dropdowns[index].selectedName = null;
     this.dropdowns[index].quantity = null;
+    this.dropdowns[index].nameSearchInput = '';
+  }
+
+  filterNames(index: number, value: string): void {
+    if (!value || value.trim() === '') {
+      this.dropdowns[index].filteredOptions = this.dropdowns[index].filteredNames;
+    } else {
+      const filterValue = value.toLowerCase();
+      this.dropdowns[index].filteredOptions = this.dropdowns[index].filteredNames.filter(name =>
+        name.name.toLowerCase().includes(filterValue)
+      );
+    }
+  }
+
+  onNameSelected(index: number, selectedName: string): void {
+    this.dropdowns[index].selectedName = selectedName;
+    this.dropdowns[index].nameSearchInput = selectedName;
+  }
+
+  displayNameFn(name: string): string {
+    return name || '';
   }
 
   addDropdown(): void {
-    this.dropdowns.push({ selectedType: null, selectedName: null, quantity: null, filteredNames: [] });
+    // Get the last row (previous row) data
+    const lastIndex = this.dropdowns.length - 1;
+    const previousRow = this.dropdowns[lastIndex];
+    
+    // Copy only the Type from previous row
+    const filteredNames = previousRow.selectedType 
+      ? (this.materialMap[previousRow.selectedType] || [])
+      : [];
+    
+    this.dropdowns.push({
+      selectedType: previousRow.selectedType,
+      selectedName: null,
+      quantity: null,
+      filteredNames: filteredNames,
+      nameSearchInput: '',
+      filteredOptions: filteredNames
+    });
   }
 
   submitGrade(): void {
     if (!this.gradeName || !this.gradeNo) {
-      alert('Please enter both Grade Name and Grade Number.');
+      // alert('Please enter both Grade Name and Grade Number.');
       return;
     }
 

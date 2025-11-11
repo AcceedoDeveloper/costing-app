@@ -60,6 +60,60 @@
   max-width: 150px;
 }
 
+/* Make the searchable type input look like a select dropdown */
+.type-field {
+  position: relative;
+}
+
+.type-field input {
+  cursor: pointer;
+  caret-color: transparent;
+  user-select: none;
+}
+
+.type-field input:focus {
+  caret-color: auto;
+  user-select: text;
+}
+
+.type-field input:not(:focus) {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Hide the input when it's empty and not focused */
+.type-field input:not(:focus):placeholder-shown {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Style to match mat-select appearance */
+.type-field .mat-form-field-infix {
+  cursor: pointer;
+}
+
+/* Add dropdown arrow indicator similar to mat-select */
+.type-field::after {
+  
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.54);
+  pointer-events: none;
+  margin-right: 15px;
+  line-height: 1;
+  z-index: 1;
+}
+
+/* Hide the arrow when input is focused */
+.type-field:focus-within::after {
+  display: none;
+}
+
 
 
 .quantity-field {
@@ -137,4 +191,58 @@
   min-width: 200px;  
   max-width: 400px;  
   width: 100%;       
+}
+
+/* Make the searchable input look like a select dropdown */
+.name-field {
+  position: relative;
+}
+
+.name-field input {
+  cursor: pointer;
+  caret-color: transparent;
+  user-select: none;
+}
+
+.name-field input:focus {
+  caret-color: auto;
+  user-select: text;
+}
+
+.name-field input:not(:focus) {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Hide the input when it's empty and not focused */
+.name-field input:not(:focus):placeholder-shown {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Style to match mat-select appearance */
+.name-field .mat-form-field-infix {
+  cursor: pointer;
+}
+
+/* Add dropdown arrow indicator similar to mat-select */
+.name-field::after {
+ 
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.54);
+  pointer-events: none;
+  margin-right: 15px;
+  line-height: 1;
+  z-index: 1;
+}
+
+/* Hide the arrow when input is focused */
+.name-field:focus-within::after {
+  display: none;
 }
