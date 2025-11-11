@@ -1,4 +1,4 @@
-<div class="app-container">
+
 
 
   <!-- Main Content Area -->
@@ -49,18 +49,17 @@
 
         <!-- Custom Date Picker -->
       <div class="filter-field" *ngIf="dateFilterType === 'date'">
-        <label for="singleDate" class="input-label">Custom Date:</label>
         <input 
           type="date" 
           id="singleDate" 
           class="native-input"
           [(ngModel)]="filters.singleDate"
           (change)="onDateChange()">
+        <label for="singleDate" class="input-label">Custom Date:</label>
       </div>
 
       <!-- Week Picker -->
       <div class="filter-field" *ngIf="dateFilterType === 'week'">
-        <label for="weekFilter" class="input-label">Week:</label>
         <input 
           type="week" 
           id="weekFilter" 
@@ -71,27 +70,28 @@
 
       <!-- Month Picker -->
       <div class="filter-field" *ngIf="dateFilterType === 'month'">
-        <label for="monthFilter" class="input-label">Month:</label>
         <input 
           type="month" 
           id="monthFilter" 
           class="native-input"
           [(ngModel)]="filters.month"
           (change)="onMonthChange()">
+        <label for="monthFilter" class="input-label">Month:</label>
       </div>
 
       <!-- Year Picker -->
       <div class="filter-field" *ngIf="dateFilterType === 'year'">
-        <label for="yearFilter" class="input-label">Year:</label>
         <input 
           type="number" 
           id="yearFilter" 
           class="native-input"
+          [class.has-value]="filters.year"
           [(ngModel)]="filters.year"
           placeholder="YYYY"
           min="2000"
           max="2100"
           (change)="onYearChange()">
+        <label for="yearFilter" class="input-label">Year:</label>
       </div>
       </div>
       
@@ -102,7 +102,7 @@
      <!-- Add Quotation Button -->
      <div class="add-button-wrapper">
       <button mat-raised-button color="primary" class="add-but" (click)="addCustomerDetails()">
-        Add Quotation
+        <mat-icon>add</mat-icon>
       </button>
     </div>
     </div>
@@ -174,4 +174,6 @@
       </mat-paginator>
     </div>
   </div>
-</div>
+
+
+

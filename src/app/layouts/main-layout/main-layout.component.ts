@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, AfterViewInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { autoLogout } from '../../auth/state/auth.actions';
 import { selectAuthState } from '../../auth/state/auth.selector';
@@ -12,7 +12,7 @@ import { slideInAnimation } from '../../animations/route-animations';
   styleUrls: ['./main-layout.component.css'],
   animations: [slideInAnimation]
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements AfterViewInit {
   
 
 
@@ -22,7 +22,24 @@ export class MainLayoutComponent {
 
   constructor(private store: Store<AppState>) {}
 
+  ngAfterViewInit(): void {
+    this.setupSubmenuPositioning();
+  }
 
+  setupSubmenuPositioning(): void {
+    const navItems = document.querySelectorAll('.nav-item.has-submenu');
+    navItems.forEach((navItem) => {
+      navItem.addEventListener('mouseenter', (e) => {
+        const item = e.currentTarget as HTMLElement;
+        const submenu = item.querySelector('.submenu') as HTMLElement;
+        if (submenu) {
+          const rect = item.getBoundingClientRect();
+          submenu.style.top = `${rect.top}px`;
+          submenu.style.left = `${rect.right + 4}px`;
+        }
+      });
+    });
+  }
  
  ngOnInit(): void {
     this.store.select(selectAuthState).subscribe((authState) => {

@@ -1,1281 +1,769 @@
-
-/* Global Styles */
-* {
-  box-sizing: border-box;
+/* Luxury Color Variables */
+:host {
+  /* Primary Colors (Luxury + Trust) */
+  --imperial-green: #0B3B2E;
+  --deep-emerald: #0F5C48;
+  
+  /* Secondary Colors (Premium Feel) */
+  --metallic-gold: #D4AF37;
+  --royal-champagne-gold: #F1D28F;
+  
+  /* Background Colors (Clean + High-End) */
+  --off-white: #F8F7F2;
+  --soft-stone-grey: #E5E3DD;
+  --premium-charcoal: #1A1A1A;
+  
+  /* Text Colors */
+  --black-pearl: #101414;
+  --luxury-grey: #3C3F3E;
+  
+  /* Accent Colors */
+  --profit-green: #1AA274;
+  --alert-red: #A63A3A;
 }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-}
 
-/* App Container */
-.app-container {
-  display: flex;
-  min-height: 100vh;
-}
 
-/* Sidebar Styles */
-.sidebar {
-  width: 280px;
-  background: linear-gradient(180deg, #3F51B5 0%, #303F9F 100%);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 0 20px 20px 0;
-  position: fixed;
-  height: 100vh;
-  z-index: 1000;
-}
-
-.sidebar-header {
-  padding: 30px 20px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.sidebar-header h3 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-}
-
-.sidebar-nav {
-  flex: 1;
-  padding: 20px 0;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 15px 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  margin: 5px 15px;
-  border-radius: 10px;
-}
-
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
-}
-
-.nav-item.active {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-  transform: translateX(5px);
-}
-
-.nav-item mat-icon {
-  margin-right: 15px;
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-}
-
-.nav-item span {
-  flex: 1;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.chevron {
-  font-size: 18px !important;
-  margin-right: 0 !important;
-  margin-left: auto !important;
-}
-
-.sub-nav {
-  background: rgba(255, 255, 255, 0.05);
-  margin: 0 15px 10px;
-  border-radius: 10px;
-  padding: 10px 0;
-}
-
-.sub-nav-item {
-  padding: 12px 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.sub-nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.sub-nav-item.active {
-  background: rgba(76, 175, 80, 0.2);
-  color: white;
-  font-weight: 500;
-}
-
-/* Main Content */
+/* Main Content Area */
 .main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.add-but{
-  padding: 8px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+  min-height: calc(100vh - 80px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* max-width: 1400px; */
+  /* margin: 0 auto; */
+  border-radius: 12px;
+  /* padding: 1.25rem; */
   transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: 10px;
+  
 }
 
-.add-but:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4) !important;
-}
-
-.content-header {
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-}
-
-.content-header h1 {
-  margin: 0 0 25px 0;
-  font-size: 32px;
-  font-weight: 700;
-  color: #2c3e50;
-  text-align: left;
-}
-
-.header-controls {
+/* Filter Section */
+.filter-da {
+  margin-bottom: 1.25rem;
   display: flex;
   flex-direction: row;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 0;
-  position: relative;
-  z-index: 2;
-  flex-wrap: wrap;
-  width: 100%;
+  gap: 1rem;
+  align-items: flex-start;
+  /* background-color: red; */
 }
 
-/* Filter Container */
-.filter-da {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-  margin-top: 30px;
-  flex-wrap: wrap;
-}
-
-/* Filter Cards Container */
 .filter-cards {
   display: flex;
-  gap: 12px;
-  align-items: center;
-  flex: 1;
-  flex-wrap: wrap;
-}
-
-/* Individual Filter Card */
-.filter-card {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 0;
-  border-radius: 12px;
+  gap: 1rem;
   flex-wrap: nowrap;
-  position: relative;
-  z-index: 10;
-  flex: 0 0 auto;
-  min-width: 0;
-  height: 56px;
-  margin: 0;
-  align-self: center;
+  align-items: flex-start;
+  flex: 1;
 }
 
-
-
-/* Filter Field Styling */
-.filter-field {
-  flex: 1 1 auto;
-  min-width: 180px;
-  max-width: 250px;
+.filter-card {
+  flex: 0 1 auto;
+  width: fit-content;
+  min-width: auto;
+  background: var(--off-white);
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(11, 59, 46, 0.04);
   transition: all 0.3s ease;
-  opacity: 1;
-  display: flex;
-  align-items: center;
-  margin: 0;
-  height: 56px;
-  align-self: stretch;
-}
-
-/* Ensure week picker container aligns properly */
-.week-picker-container {
-  display: flex;
-  align-items: center;
   position: relative;
-  flex: 1 1 auto;
-  min-width: 180px;
-  max-width: 250px;
-  z-index: 10001;
-}
-
-/* Ensure second dropdown appears immediately next to first */
-.filter-card > .filter-field:first-child + .filter-field {
-  margin-left: 0;
-}
-
-/* When only one field in card, it can expand but with max constraint */
-.filter-card > .filter-field:only-child {
-  flex: 1 1 auto;
-  max-width: 250px;
-}
-
-/* When two fields in card, they share width equally (50% each) */
-/* First field when there are 2 children */
-.filter-card > .filter-field:first-child:not(:only-child),
-.filter-card > .filter-field:nth-child(2):nth-last-child(1) {
-  flex: 1 1 calc(50% - 2px);
-  max-width: calc(50% - 2px);
-  min-width: 180px;
-}
-
-/* Week picker container should also share width when there are 2 items */
-.filter-card > .week-picker-container:first-child:not(:only-child),
-.filter-card > .week-picker-container:nth-child(2):nth-last-child(1) {
-  flex: 1 1 calc(50% - 2px);
-  max-width: calc(50% - 2px);
-  min-width: 180px;
-}
-
-/* When first field has a sibling (second field or week picker), share width */
-.filter-card > .filter-field:first-child + .filter-field,
-.filter-card > .filter-field:first-child + .week-picker-container {
-  flex: 1 1 calc(50% - 2px);
-  max-width: calc(50% - 2px);
-  min-width: 180px;
-  margin-left: 0;
-}
-
-/* Override Angular Material to make all fields look like normal HTML inputs */
-.filter-field .mat-form-field-wrapper,
-.week-picker-container .filter-field .mat-form-field-wrapper {
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-  height: 56px !important;
+  overflow: hidden;
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
-/* Unified height for all filter fields - make them look like normal HTML */
-.filter-field .mat-form-field,
-.week-picker-container .filter-field .mat-form-field {
-  height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  line-height: 56px !important;
-}
-
-.filter-field .mat-form-field-appearance-outline,
-.week-picker-container .filter-field .mat-form-field-appearance-outline {
-  height: 56px !important;
-  line-height: 56px !important;
-}
-
-/* Make infix container compact like normal HTML input */
-.filter-field .mat-form-field-infix,
-.week-picker-container .filter-field .mat-form-field-infix {
-  padding: 0 !important;
-  border-top: 0 !important;
-  height: 56px !important;
-  min-height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  line-height: 56px !important;
-}
-
-/* All inputs should have same height as normal HTML - unified styling */
-.filter-field input:not([matInput]),
-.filter-field input[matInput],
-.week-picker-container .filter-field input {
-  height: 56px !important;
-  line-height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  box-sizing: border-box !important;
-  border: none !important;
-  background: transparent !important;
-  padding: 0 12px !important;
-  margin: 0 !important;
-  width: 100% !important;
-  font-size: 14px !important;
-  color: #333 !important;
-  font-family: inherit !important;
-}
-
-.filter-field .mat-select-trigger,
-.filter-field .mat-select-value {
-  height: 56px !important;
-  line-height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  box-sizing: border-box !important;
-  padding: 0 12px !important;
-  margin: 0 !important;
-  width: 100% !important;
-}
-
-.filter-field .mat-select-trigger {
-  min-height: 56px !important;
-  height: 56px !important;
-}
-
-/* Remove Material's default spacing */
-.filter-field .mat-form-field-subscript-wrapper {
-  display: none !important;
-  margin-top: 0 !important;
-  height: 0 !important;
-}
-
-/* Make outline look like normal HTML border */
-.filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
-  top: 0 !important;
-  bottom: 0 !important;
-  height: 56px !important;
-}
-
-.filter-field .mat-form-field-appearance-outline .mat-form-field-outline-start,
-.filter-field .mat-form-field-appearance-outline .mat-form-field-outline-end,
-.filter-field .mat-form-field-appearance-outline .mat-form-field-outline-gap {
-  border-width: 1px !important;
-  height: 56px !important;
-}
-
-/* Label positioning - make it like normal HTML */
-.filter-field .mat-form-field-label-wrapper {
-  top: 0 !important;
-  padding-top: 0 !important;
-  height: 56px !important;
-  display: flex;
-  align-items: center;
-}
-
-.filter-field .mat-form-field-label {
-  top: 0 !important;
-  margin-top: 0 !important;
-  transform: translateY(0) !important;
-  position: absolute !important;
-  left: 12px !important;
-  font-size: 12px !important;
-  color: #666 !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
-/* When input has value or is focused, move label up like normal HTML placeholder */
-.filter-field .mat-form-field-label.mat-form-field-label-floating {
-  transform: translateY(-20px) scale(0.75) !important;
-  top: 0 !important;
-}
-
-/* Date picker toggle styles consolidated above */
-
-.filter-field .mat-form-field-suffix,
-.week-picker-container .filter-field .mat-form-field-suffix {
-  align-self: center !important;
-  height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  margin-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-/* Ensure prefix/suffix containers don't add extra spacing */
-.filter-field .mat-form-field-prefix,
-.filter-field .mat-form-field-suffix {
-  height: 56px !important;
-  line-height: 56px !important;
-}
-
-.filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
-  color: #d0d0d0 !important;
-  background-color: #ffffff !important;
-  border-radius: 8px !important;
-}
-
-.filter-field.active .mat-form-field-appearance-outline .mat-form-field-outline-thick {
-  color: #9c27b0 !important;
-  border-width: 2px !important;
-}
-
-.filter-field.active .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-  color: #9c27b0 !important;
-}
-
-
-/* Force equal height for all filter pickers - normal HTML style */
-.filter-field .mat-form-field-flex,
-.week-picker-container .filter-field .mat-form-field-flex {
-  height: 56px !important;
-  min-height: 56px !important;
-  display: flex !important;
-  align-items: center !important;
-  box-sizing: border-box !important;
-}
-
-/* Date picker inputs use same styles as defined above in unified input section */
-
-/* Date picker toggle - make it look like normal HTML button */
-.filter-field .mat-datepicker-toggle,
-.week-picker-container .filter-field .mat-datepicker-toggle {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 56px !important;
-  width: 56px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-}
-
-.filter-field .mat-datepicker-toggle .mat-icon-button,
-.week-picker-container .filter-field .mat-datepicker-toggle .mat-icon-button {
-  width: 56px !important;
-  height: 56px !important;
-  line-height: 56px !important;
-  padding: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.filter-field .mat-datepicker-toggle .mat-icon,
-.week-picker-container .filter-field .mat-datepicker-toggle .mat-icon {
-  font-size: 20px !important;
-  width: 20px !important;
-  height: 20px !important;
-  line-height: 20px !important;
-  color: #666 !important;
-}
-
-/* Uniform border and radius for all fields */
-.filter-field .mat-form-field-outline {
-  border-radius: 8px !important;
-  height: 56px !important;
-}
-
-/* Native HTML input styling - match Material design */
-.filter-field .native-input {
-  width: 100% !important;
-  height: 56px !important;
-  padding: 0 12px !important;
-  border: 1px solid #d0d0d0 !important;
-  border-radius: 8px !important;
-  font-size: 14px !important;
-  color: #333 !important;
-  background-color: #ffffff !important;
-  box-sizing: border-box !important;
-  outline: none !important;
-  transition: border-color 0.3s ease !important;
-  font-family: inherit !important;
-}
-
-.filter-field .native-input:focus {
-  border-color: #2196F3 !important;
-  border-width: 2px !important;
-}
-
-.filter-field .native-input:hover {
-  border-color: #999 !important;
-}
-
-/* Label styling for native inputs */
-.filter-field .input-label {
-  display: block;
-  font-size: 12px;
-  color: #666;
-  font-weight: 500;
-  margin-bottom: 4px;
-  pointer-events: none;
-}
-
-/* Ensure filter-field container with native inputs has proper height */
-.filter-field:has(.native-input) {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  height: 56px;
-  min-height: 56px;
-  max-height: 56px;
-}
-
-.filter-fields {
-  border: 1px solid rgb(123, 123, 123);
-  position: relative;
-  margin-left: 0;
-  border-radius: 5px;
-  height: 56px;
-  min-height: 52px;
-  max-height: 52px;
-  display: flex;
-  align-items: center;
-  padding: 0;
-  min-width: 180px;
-  max-width: 250px;
-  flex: 1 1 auto;
-  box-sizing: border-box;
-  align-self: stretch;
-  margin-top: -8px !important;
-  margin-left: 5px !important;
-  
-}
-
-.filter-fields .filter-field {
-  border: none;
+.filter-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
   height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  position: relative;
-  
+  background: linear-gradient(180deg, rgba(11, 59, 46, 0.4) 0%, rgba(15, 92, 72, 0.4) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.filter-fields .filter-field .input-label {
-  display: none;
-}
-
-.filter-fields .native-input {
-  border: none;
-  border-radius: 5px;
-  height: 100%;
-  width: 100%;
-  padding: 0 12px;
-  margin: 0;
-  box-sizing: border-box;
-  font-size: 14px;
-  color: #333;
-  background: transparent;
-  outline: none;
-  line-height: 1.5;
-  display: flex;
-  align-items: center;
-}
-
-.filter-fields .native-input:focus {
-  outline: none;
-}
-
-.filter-field:has(.native-input) .input-label {
-  display: none;
-}
-
-.filter-field:has(.native-input) .native-input {
-  height: 56px;
-  margin: 0;
-  padding: 0 12px;
-}
-
-
-
-.add-button-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.add-but {
-  height: 42px;
-  padding: 0 32px;
-  font-weight: 500;
-  font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  border-radius: 8px;
-}
-
-.add-but:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.filter-card:hover {
+  box-shadow: 0 4px 12px rgba(11, 59, 46, 0.08);
+  border-color: rgba(15, 92, 72, 0.4);
   transform: translateY(-1px);
 }
 
-/* Improve form field consistency */
-.header-controls .mat-form-field {
-  margin-bottom: 0;
+.filter-card:hover::before {
+  opacity: 1;
 }
 
-.header-controls .mat-form-field-appearance-outline .mat-form-field-outline {
-  color: #e0e0e0;
+/* Material Form Fields */
+.filter-field {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 200px;
+  margin: 0;
+  flex-shrink: 0;
 }
 
-.header-controls .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-  color: #2196F3;
+.filter-field:last-child {
+  margin: 0;
 }
 
-.header-controls .mat-form-field-appearance-outline .mat-form-field-label {
-  color: #666;
+::ng-deep .filter-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 
-.header-controls .mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
-  color: #2196F3;
+::ng-deep .filter-field .mat-form-field-infix {
+  padding-top: 0.5em !important;
+  padding-bottom: 0.5em !important;
+  border-top: 0.84375em solid transparent !important;
 }
 
-/* Responsive design for filters */
-@media (max-width: 768px) {
-  .filter-da {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .filter-cards {
-    flex-direction: column;
-    width: 100%;
-    gap: 12px;
-  }
-
-  .filter-card {
-    flex-direction: column;
-    gap: 12px;
-    height: auto;
-    width: 100%;
-  }
-
-  .filter-field {
-    min-width: 100%;
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .filter-fields {
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
-  }
-
-  .add-button-wrapper {
-    justify-content: center;
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .add-but {
-    width: 100%;
-  }
+::ng-deep .filter-field .mat-form-field-subscript-wrapper {
+  margin-top: 0 !important;
+  position: static !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  .filter-field {
-    min-width: 200px;
-    max-width: 300px;
-  }
+::ng-deep .filter-field .mat-form-field-underline {
+  display: none !important;
 }
 
-.date-field .mat-datepicker-toggle {
+::ng-deep .filter-field .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgba(229, 227, 221, 0.8);
+  border-width: 1px;
+}
+
+::ng-deep .filter-field.active .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgba(11, 59, 46, 0.5);
+}
+
+::ng-deep .filter-field .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: rgba(15, 92, 72, 0.6);
+  border-width: 1.5px;
+}
+
+::ng-deep .filter-field .mat-form-field-appearance-outline .mat-form-field-outline-thick:focus-visible {
+  outline: 2px solid rgba(15, 92, 72, 0.6);
+  outline-offset: 2px;
+}
+
+::ng-deep .filter-field .mat-form-field-label {
+  color: rgba(60, 63, 62, 0.7);
+  font-weight: 500;
+}
+
+::ng-deep .filter-field .mat-form-field-label.mat-focused {
+  color: rgba(11, 59, 46, 0.6);
+}
+
+::ng-deep .filter-field .mat-select-value {
+  color: var(--black-pearl);
+  font-weight: 500;
+}
+
+::ng-deep .filter-field .mat-select-arrow {
+  color: var(--luxury-grey);
+}
+
+/* Native Input Fields */
+.filter-fields {
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.date-field .mat-datepicker-toggle:hover {
-  color: #1976D2;
-}
-
-.date-field .mat-datepicker-toggle-default-icon {
-  font-size: 22px;
- 
-}
-
-/* Optional: align icon perfectly with input field */
-.mat-datepicker-toggle {
-  margin-right: 5px;
-  position: relative;
-  top: 7px;
-}
-
-.date-field ::ng-deep .mat-form-field-suffix {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Custom Week Picker Styles */
-.week-picker-container {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.calendar-icon {
-  cursor: pointer;
-  color: rgba(0, 0, 0, 0.54);
-}
-
-.calendar-icon:hover {
-  color: #1976D2;
-}
-
-.custom-week-picker {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 10000;
-  background: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-top: 8px;
-  min-width: 400px;
-  max-width: 400px;
-  padding: 16px;
-  max-height: 420px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.week-picker-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
-  background: transparent;
-}
-
-.week-picker-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.nav-button {
-  width: 32px;
-  height: 32px;
+  flex-direction: row;
+  gap: 0.75rem;
+  flex: 1;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 0;
   padding: 0;
 }
 
-.nav-button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
+.filter-fields .filter-field {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  position: relative;
 }
 
-.month-year-label {
-  font-size: 16px;
+.input-label {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(16, 20, 20, 0.6);
   font-weight: 500;
-  color: #333;
-  flex: 1;
-  text-align: center;
+  font-size: 0.875rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: var(--off-white);
+  padding: 0 0.25rem;
+  z-index: 1;
+  margin: 0;
+  letter-spacing: 0.2px;
 }
 
-.week-picker-calendar {
-  margin-bottom: 16px;
-  max-height: 320px;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
+/* Week input doesn't need label padding adjustment */
+.native-input[type="week"]:valid {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
 }
 
-.calendar-header {
-  display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 8px;
+.native-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  border-radius: 6px;
+  background: var(--off-white);
+  color: rgba(16, 20, 20, 0.9);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-.week-number-header {
-  width: 60px;
-  padding: 8px 4px;
+/* Floating label effect - label moves up when input is focused or has value */
+.native-input:focus + .input-label,
+.native-input:not(:placeholder-shown) + .input-label,
+.native-input.has-value + .input-label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: rgba(11, 59, 46, 0.7);
   font-weight: 600;
-  font-size: 13px;
-  color: #666;
-  text-align: center;
-  border-right: 1px solid #e0e0e0;
+  background: var(--off-white);
 }
 
-.days-header {
-  display: flex;
-  flex: 1;
+.native-input:focus {
+  outline: none;
+  border-color: rgba(15, 92, 72, 0.5);
+  box-shadow: 0 0 0 2px rgba(15, 92, 72, 0.08);
+  background: var(--off-white);
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
 }
 
-.day-header {
-  flex: 1;
-  padding: 8px 4px;
+/* Special handling for date, week, month inputs - they are always valid when they have a value */
+.native-input[type="date"]:focus + .input-label,
+.native-input[type="date"]:valid + .input-label,
+.native-input[type="week"]:focus + .input-label,
+.native-input[type="week"]:valid + .input-label,
+.native-input[type="month"]:focus + .input-label,
+.native-input[type="month"]:valid + .input-label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: rgba(11, 59, 46, 0.7);
   font-weight: 600;
-  font-size: 13px;
-  color: #666;
-  text-align: center;
+  background: var(--off-white);
 }
 
-.calendar-week {
+.native-input[type="date"]:valid,
+.native-input[type="week"]:valid,
+.native-input[type="month"]:valid {
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Handle number input with value */
+.native-input[type="number"]:focus + .input-label,
+.native-input[type="number"].has-value + .input-label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: rgba(11, 59, 46, 0.7);
+  font-weight: 600;
+  background: var(--off-white);
+}
+
+.native-input[type="number"].has-value {
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+.native-input:focus-visible {
+  outline: 2px solid rgba(15, 92, 72, 0.6);
+  outline-offset: 2px;
+  border-color: rgba(15, 92, 72, 0.6);
+}
+
+.native-input:hover {
+  border-color: rgba(15, 92, 72, 0.4);
+}
+
+.native-input::placeholder {
+  color: var(--luxury-grey);
+  opacity: 0.7;
+}
+
+/* Add Button Wrapper */
+.add-button-wrapper {
   display: flex;
-  cursor: pointer;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.add-but {
+  background: transparent !important;
+  color: #ff0000 !important;
+  padding: 0;
+  border: none;
+  box-shadow: none !important;
+  min-width: auto;
+  min-height: auto;
+  width: auto;
+  height: auto;
+  transition: all 0.25s ease;
+vertical-align: middle;
+margin-top: 20px;
+margin-right: 25px;
+}
+
+.add-but:hover {
+  background: transparent !important;
+  transform: none;
+  box-shadow: none !important;
+}
+
+.add-but:active {
+  transform: none;
+  box-shadow: none !important;
+}
+
+.add-but:focus-visible {
+  outline: 2px solid rgba(15, 92, 72, 0.8);
+  outline-offset: 2px;
   border-radius: 4px;
-  margin-bottom: 2px;
-  transition: background-color 0.2s;
 }
 
-.calendar-week:hover {
-  background-color: #f5f5f5;
+/* Override Material button styles */
+::ng-deep .add-but.mat-raised-button {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0;
+  min-width: auto;
+  line-height: 1;
 }
 
-.calendar-week.selected-week {
-  background-color: #e3f2fd;
+::ng-deep .add-but.mat-raised-button.mat-primary {
+  background: transparent !important;
+  color: transparent !important;
 }
 
-.week-number-cell {
-  width: 60px;
-  padding: 12px 4px;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: center;
-  border-right: 1px solid #e0e0e0;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+::ng-deep .add-but.mat-raised-button.mat-primary:hover {
+  background: transparent !important;
 }
 
-.week-number-cell.selected-week-number {
-  background-color: #1976D2;
-  color: white;
-  font-weight: 600;
+/* Style the mat-icon inside */
+::ng-deep .add-but .mat-icon {
+  color: #09936e !important;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  transition: all 0.25s ease;
 }
 
-.days-row {
-  display: flex;
-  flex: 1;
+::ng-deep .add-but:hover .mat-icon {
+  color: #0F5C48 !important;
+  transform: scale(1.1);
 }
 
-.day-cell {
-  flex: 1;
-  padding: 12px 4px;
-  text-align: center;
-  font-size: 13px;
-  color: #333;
-  cursor: pointer;
-  border-radius: 2px;
-  transition: background-color 0.2s;
-}
-
-.day-cell.other-month {
-  color: #ccc;
-}
-
-.day-cell.selected-day {
-  background-color: #1976D2;
-  color: white;
-  font-weight: 500;
-}
-
-.day-cell.today {
-  font-weight: 600;
-}
-
-.day-cell.today:not(.selected-day) {
-  color: #1976D2;
-}
-
-.week-picker-footer {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.clear-button,
-.this-week-button {
-  font-size: 13px;
-  font-weight: 500;
-  padding: 6px 16px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.clear-button {
-  color: #666;
-}
-
-.clear-button:hover {
-  background-color: #f5f5f5;
-}
-
-.this-week-button {
-  color: #1976D2;
-}
-
-.this-week-button:hover {
-  background-color: #e3f2fd;
-}
-
-.add-button {
-  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
-  color: white !important;
-  padding: 12px 24px !important;
-  border-radius: 8px !important;
-  font-weight: 600 !important;
-  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3) !important;
-  transition: all 0.3s ease !important;
-}
-
-.add-button:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4) !important;
+::ng-deep .add-but:active .mat-icon {
+  transform: scale(0.95);
 }
 
 /* Table Container */
 .table-container {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  background: var(--off-white);
+  border-radius: 10px;
   overflow: hidden;
-  overflow-x: auto;
-  border: 1px solid #e0e0e0;
-  margin-top: 20px;
+  box-shadow: 0 2px 12px rgba(11, 59, 46, 0.06);
+  margin-top: 1.25rem;
+  border: 1px solid rgba(229, 227, 221, 0.5);
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  z-index: 1;
-  isolation: isolate;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  background: var(--off-white);
+  table-layout: auto;
+  flex: 0 0 auto;
 }
 
+/* Table Header */
 .data-table thead {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%);
+  position: relative;
 }
 
-.add-but{
-  margin-left: 10px;
+.data-table thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
 }
 
-.data-table th {
-  padding: 15px 15px;
-  text-align: center;
+.data-table thead th {
+  padding: 0.55rem 0.35rem;
+  text-align: left;
+  color: var(--off-white);
   font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #434446;
-  font-size: 14px;
-  white-space: nowrap;
+  font-size: 0.7rem;
+  letter-spacing: 0.18px;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid rgba(212, 175, 55, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
-.data-table td {
-  text-align: center;
-  border-bottom: 2px solid #e9ecef;
-  vertical-align: middle;
-  color: #495057;
-  font-weight: 500;
+.data-table thead th:first-child {
+  padding-left: 0.45rem;
+  width: 4%;
+}
+
+.data-table thead th:nth-child(2) {
+  width: 12%;
+}
+
+.data-table thead th:nth-child(3),
+.data-table thead th:nth-child(4) {
+  width: 10%;
+}
+
+.data-table thead th:nth-child(5) {
+  width: 8%;
+}
+
+.data-table thead th:nth-child(6) {
+  width: 10%;
+}
+
+.data-table thead th:nth-child(7) {
+  width: 14%;
+}
+
+.data-table thead th:nth-child(8) {
+  width: 10%;
+}
+
+.data-table thead th:last-child {
+  padding-right: 0.45rem;
+  width: 12%;
+}
+
+/* Table Body */
+.data-table tbody tr {
+  border-bottom: 1px solid rgba(229, 227, 221, 0.5);
+  transition: all 0.2s ease;
+  background: var(--off-white);
 }
 
 .data-table tbody tr:hover {
-  background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  background: var(--off-white);
+  transform: scale(1.001);
+  box-shadow: 0 1px 6px rgba(11, 59, 46, 0.04);
+  border-left: 2px solid rgba(15, 92, 72, 0.4);
 }
 
+.data-table tbody tr:last-child {
+  border-bottom: none;
+}
 
-/* Combined Button Styles */
+.data-table tbody td {
+  padding: 0.55rem 0.35rem;
+  color: rgba(16, 20, 20, 0.85);
+  font-size: 0.7rem;
+  font-weight: 500;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.data-table tbody td:first-child {
+  padding-left: 0.45rem;
+  font-weight: 600;
+  color: rgba(11, 59, 46, 0.7);
+}
+
+.data-table tbody td:last-child {
+  padding-right: 0.45rem;
+}
+
+/* Download Cell */
 .download-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0.45rem 0.3rem !important;
+  max-width: 140px;
 }
 
 .combined-button {
-  display: flex;
-  border-radius: 12px;
+  display: inline-flex;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(11, 59, 46, 0.12);
   transition: all 0.3s ease;
-  cursor: pointer;
-  height: 36px;
-  min-width: 140px;
-  color: #000;
-  background-color: #1565C0;
-  margin: 6px;
+  border: 1px solid rgba(229, 227, 221, 0.5);
 }
 
 .combined-button:hover {
+  box-shadow: 0 2px 8px rgba(11, 59, 46, 0.18);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.view-section,
+.download-section {
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.63rem;
+  letter-spacing: 0.18px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  white-space: nowrap;
 }
 
 .view-section {
-  flex: 1;
-  background: #ffffff;
-  color: #333333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid #e0e0e0;
-  border-right: 1px solid #e0e0e0;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  margin: 3px;
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.85) 0%, rgba(15, 92, 72, 0.85) 100%);
+  color: var(--off-white);
 }
 
 .view-section:hover {
-  background: #f5f5f5;
-  color: #2196F3;
+  background: linear-gradient(135deg, rgba(15, 92, 72, 0.85) 0%, rgba(11, 59, 46, 0.85) 100%);
+}
+
+.view-section:focus-visible,
+.download-section:focus-visible {
+  outline: 2px solid rgba(15, 92, 72, 0.8);
+  outline-offset: 2px;
 }
 
 .download-section {
-  flex: 1;
-  background-color: #1565C0;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 16px;
-  font-size: 13px;
-  font-weight: 500;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.85) 0%, rgba(241, 210, 143, 0.85) 100%);
+  color: rgba(16, 20, 20, 0.9);
+}
+
+.download-section:hover {
+  background: linear-gradient(135deg, rgba(241, 210, 143, 0.85) 0%, rgba(212, 175, 55, 0.85) 100%);
+  color: rgba(26, 26, 26, 0.9);
+}
+
+/* Action Buttons */
+.data-table tbody td button {
+  margin: 0 0.15rem;
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
+::ng-deep .data-table tbody td .mat-icon-button {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  padding: 0;
+}
 
+::ng-deep .data-table tbody td .mat-icon-button:hover {
+  background: transparent;
+  transform: scale(1.05);
+}
 
-/* Action Cell */
-.action-cell {
+::ng-deep .data-table tbody td .mat-icon-button:focus-visible {
+  outline: 2px solid rgba(15, 92, 72, 0.8);
+  outline-offset: 2px;
+  background: rgba(15, 92, 72, 0.1);
+}
+
+::ng-deep .data-table tbody td .mat-icon-button .mat-icon {
+  color: rgba(11, 59, 46, 0.7);
+  transition: all 0.3s ease;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+::ng-deep .data-table tbody td .mat-icon-button:hover .mat-icon {
+  color: rgba(15, 92, 72, 0.8);
+}
+
+/* Delete button specific styling */
+::ng-deep .data-table tbody td button:has(.mat-icon[svgIcon*="delete"]) .mat-icon,
+::ng-deep .data-table tbody td button:last-child .mat-icon {
+  color: rgba(166, 58, 58, 0.75);
+}
+
+::ng-deep .data-table tbody td button:has(.mat-icon[svgIcon*="delete"]):hover,
+::ng-deep .data-table tbody td button:last-child:hover {
+  background: transparent;
+}
+
+::ng-deep .data-table tbody td button:has(.mat-icon[svgIcon*="delete"]):hover .mat-icon,
+::ng-deep .data-table tbody td button:last-child:hover .mat-icon {
+  color: rgba(166, 58, 58, 0.85);
+}
+
+/* Paginator */
+.custom-paginator {
+  background: rgba(229, 227, 221, 0.4);
+  border-top: 1px solid rgba(229, 227, 221, 0.5);
   display: flex;
-  gap: 5px;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  padding: 0.4rem 0.5rem;
+  min-height: 40px;
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
-.action-btn {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 8px !important;
-  transition: all 0.3s ease !important;
-}
-
-.edit-btn {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
-  color: white !important;
-}
-
-.edit-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3) !important;
-}
-
-.delete-btn {
-  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
-  color: white !important;
-}
-
-.delete-btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3) !important;
-}
-
-/* Progress Circle */
-.percentage-cell {
-  display: flex;
+::ng-deep .custom-paginator .mat-paginator-container {
   justify-content: center;
-  align-items: center;
+  min-height: 32px;
+  padding: 0;
 }
 
-.progress-circle {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+::ng-deep .custom-paginator .mat-paginator-page-size-label,
+::ng-deep .custom-paginator .mat-paginator-range-label {
+  color: rgba(16, 20, 20, 0.8);
+  font-weight: 500;
+  font-size: 0.7rem;
+  margin: 0 0.25rem;
 }
 
-.progress-ring {
-  transform: rotate(-90deg);
+::ng-deep .custom-paginator .mat-paginator-navigation-previous,
+::ng-deep .custom-paginator .mat-paginator-navigation-next,
+::ng-deep .custom-paginator .mat-paginator-navigation-first,
+::ng-deep .custom-paginator .mat-paginator-navigation-last {
+  color: rgba(11, 59, 46, 0.7);
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
 }
 
-.progress-ring-circle {
-  transition: stroke-dashoffset 0.5s ease-in-out;
+::ng-deep .custom-paginator .mat-paginator-navigation-previous:hover,
+::ng-deep .custom-paginator .mat-paginator-navigation-next:hover,
+::ng-deep .custom-paginator .mat-paginator-navigation-first:hover,
+::ng-deep .custom-paginator .mat-paginator-navigation-last:hover {
+  background: transparent;
+  color: rgba(15, 92, 72, 0.8);
 }
 
-.progress-text {
-  position: absolute;
-  font-size: 12px;
-  font-weight: 600;
-  color: #495057;
+::ng-deep .custom-paginator .mat-paginator-navigation-previous:focus-visible,
+::ng-deep .custom-paginator .mat-paginator-navigation-next:focus-visible,
+::ng-deep .custom-paginator .mat-paginator-navigation-first:focus-visible,
+::ng-deep .custom-paginator .mat-paginator-navigation-last:focus-visible {
+  outline: 2px solid rgba(15, 92, 72, 0.8);
+  outline-offset: 2px;
+  background: rgba(15, 92, 72, 0.1);
+}
+
+::ng-deep .custom-paginator .mat-select-value {
+  color: rgba(16, 20, 20, 0.8);
+  font-weight: 500;
+  font-size: 0.7rem;
+}
+
+::ng-deep .custom-paginator .mat-select-arrow {
+  color: rgba(11, 59, 46, 0.7);
+}
+
+::ng-deep .custom-paginator .mat-paginator-page-size {
+  min-width: 60px;
+}
+
+::ng-deep .custom-paginator .mat-paginator-page-size-select {
+  width: 60px;
+  margin: 0 0.25rem;
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
-  .sidebar {
-    width: 250px;
-  }
-  
+@media (max-width: 1024px) {
   .main-content {
-    margin-left: 250px;
+    padding: 1rem;
   }
-  
-  .header-controls {
+
+  .filter-cards {
     flex-direction: column;
-    align-items: stretch;
   }
-  
-  .search-section {
-    min-width: auto;
+
+  .filter-card {
+    min-width: 100%;
   }
-  
-  .date-filters {
-    justify-content: space-between;
+
+  .data-table {
+    font-size: 0.8125rem;
+  }
+
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 0.75rem 0.625rem;
   }
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    position: relative;
-    height: auto;
-    border-radius: 0;
-  }
-  
   .main-content {
-    margin-left: 0;
-    padding: 15px;
+    padding: 0.875rem;
+    border-radius: 10px;
   }
-  
-  .content-header {
-    padding: 20px;
-  }
-  
-  .content-header h1 {
-    font-size: 24px;
-    text-align: center;
-  }
-  
-  .header-controls {
-    gap: 15px;
-  }
-  
-  .date-filters {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .date-field {
-    width: 100%;
-    min-width: 150px;
-  }
-  
+
   .data-table {
-    font-size: 12px;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  
-  .data-table th,
-  .data-table td {
-    padding: 12px 8px;
+
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 0.625rem 0.5rem;
+    font-size: 0.75rem;
   }
-  
-  .download-cell {
+
+  .combined-button {
     flex-direction: column;
-    gap: 5px;
   }
-  
-  .action-cell {
-    flex-direction: column;
-    gap: 3px;
-  }
-}
 
-@media (max-width: 480px) {
-  .main-content {
-    padding: 10px;
-  }
-  
-  .content-header {
-    padding: 15px;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 8px 4px;
-    font-size: 11px;
-  }
-  
-  .view-btn,
-  .download-btn {
-    padding: 6px 12px !important;
-    font-size: 10px !important;
-  }
-  
-  .action-btn {
-    width: 30px !important;
-    height: 30px !important;
+  .view-section,
+  .download-section {
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.6875rem;
   }
 }
 
-/* Custom height for Month Date Picker */
-::ng-deep .mat-datepicker-popup {
-  max-height: 400px;
+/* Optimized Transitions - Only on interactive elements */
+button, .filter-card, .combined-button, .native-input, .data-table tbody tr {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-::ng-deep .mat-datepicker-content {
-  max-height: 400px;
-  overflow-y: auto;
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+  height: 8px;
 }
 
-/* Month picker - when startView is "year" */
-::ng-deep .mat-calendar[matCalendar] {
-  max-height: 380px;
-  overflow: hidden;
+.table-container::-webkit-scrollbar-track {
+  background: var(--soft-stone-grey);
+  border-radius: 4px;
 }
 
-::ng-deep .mat-calendar-table {
-  max-height: 300px;
+.table-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(11, 59, 46, 0.6) 0%, rgba(15, 92, 72, 0.6) 100%);
+  border-radius: 4px;
 }
 
-/* Year picker - when startView is "multi-year" */
-::ng-deep .mat-calendar[matCalendar] .mat-calendar-body {
-  max-height: 350px;
-  overflow-y: auto;
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(15, 92, 72, 0.7) 0%, rgba(11, 59, 46, 0.7) 100%);
 }
 
-::ng-deep .mat-calendar-multi-year-view {
-  max-height: 350px;
-  overflow-y: auto;
-}
-
-/* Regular date picker */
-::ng-deep .mat-datepicker-content .mat-calendar {
-  max-height: 350px;
-}
-
-/* Custom height adjustments for different picker types */
-::ng-deep .mat-datepicker-popup[cdk-overlay-pane] {
-  max-height: 400px;
-}
-
-/* Specific styling for month picker panel */
-::ng-deep .mat-calendar-month-view .mat-calendar-body-cell {
-  min-height: 40px;
-}
-
-/* Specific styling for year picker panel */
-::ng-deep .mat-calendar-multi-year-view .mat-calendar-body-cell {
-  min-height: 48px;
-}
