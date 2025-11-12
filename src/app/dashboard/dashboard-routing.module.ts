@@ -5,6 +5,7 @@ import { ReportComponent } from './report/report.component';
 import { DashComponent} from './dash/dash.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'dashh', pathMatch: 'full' },
   { path: 'dashh', component: DashboardComponent },
   { path: 'report', component: ReportComponent },
   { path: 'dash', component: DashComponent }

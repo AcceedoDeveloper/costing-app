@@ -252,26 +252,40 @@ export class DashComponent implements OnInit, AfterViewInit {
     endDateWithOneDay.setDate(endDateWithOneDay.getDate() + 1);
     const end = this.formatDate(endDateWithOneDay);
   
-    this.dashboardServices.ActualEstimationCost(start, end).subscribe((res) => {
-      this.actualEstimationCost = res.data;
-      this.filteredEstimationCost = res.data;
-  
-      // Map API data to quotations table format
-      const mappedQuotations = this.mapApiDataToQuotations(res.data);
-      this.quotationsDataSource.data = mappedQuotations;
-      
-      // Update summary counts
-      this.updateSummaryCounts(mappedQuotations);
-  
-      // Also set dataSource for compatibility
-      this.dataSource = new MatTableDataSource(this.filteredEstimationCost);
-  
-      if (this.paginator) {
-        this.dataSource.paginator = this.paginator;
-        this.quotationsDataSource.paginator = this.paginator;
+    this.dashboardServices.ActualEstimationCost(start, end).subscribe({
+      next: (res) => {
+        if (res && res.data) {
+          this.actualEstimationCost = res.data;
+          this.filteredEstimationCost = res.data;
+    
+          // Map API data to quotations table format
+          const mappedQuotations = this.mapApiDataToQuotations(res.data);
+          this.quotationsDataSource.data = mappedQuotations;
+          
+          // Update summary counts
+          this.updateSummaryCounts(mappedQuotations);
+    
+          // Also set dataSource for compatibility
+          this.dataSource = new MatTableDataSource(this.filteredEstimationCost);
+    
+          if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+            this.quotationsDataSource.paginator = this.paginator;
+          }
+    
+          console.log('Actual Estimation Cost Data:', this.actualEstimationCost);
+        } else {
+          console.warn('No data received from API');
+          this.quotationsDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching actual estimation cost:', error);
+        // Set empty data to prevent white screen
+        this.quotationsDataSource.data = [];
+        this.actualEstimationCost = [];
+        this.filteredEstimationCost = [];
       }
-  
-      console.log('Actual Estimation Cost Data:', this.actualEstimationCost);
     });
   }
 

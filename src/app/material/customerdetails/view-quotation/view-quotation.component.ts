@@ -145,14 +145,18 @@ export class ViewQuotationComponent implements OnInit {
       otherConsumables: customer.otherConsumables?.otherConsumableCost || 0,
       power1: customer.powerCost?.MeltAndOthersPower || 0,
       power2: customer.powerCost?.mouldPower || 0,
-      power3: customer.powerCost?.corePower || 0
+      power3: customer.powerCost?.corePower || 0,
+      revision : customer.revision || 0
     });
   }
 
   generateQuotationData(): void {
+
     const first = this.firstFormGroup.value;
-    
-    this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo).subscribe(
+    console.log('🚀 First Form Group Value:', first);
+    console.log('🚀 Revision Value:', this.data.revision);
+    const revision = this.data.revision;
+    this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, revision).subscribe(
       response => {
         console.log('🚀 API Success:', response);
         this.quotationData = response;
