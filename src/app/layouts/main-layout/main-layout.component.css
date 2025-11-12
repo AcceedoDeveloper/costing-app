@@ -389,6 +389,7 @@ mat-toolbar span:first-child {
 /* Main Content Area */
 .main-content {
   flex: 1;
+  background: #fafafa;
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--off-white);

@@ -21,21 +21,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {  ReactiveFormsModule } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
-
-@NgModule({
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    // other modules
-  ],
-})
-export class AppModule {}
-
-
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DifferenceGraphDialogComponent } from './dash/difference-graph-dialog.component';
 import { ChartsModule } from 'ng2-charts';
+
 @NgModule({
-  declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent,],
+  declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent, DifferenceGraphDialogComponent],
   imports: [
     MatIconModule,
     MaterialModule,
@@ -53,9 +45,9 @@ import { ChartsModule } from 'ng2-charts';
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    MatSortModule
-
-
+    MatSortModule,
+    MatButtonModule,
+    MatDialogModule
   ]
 })
 export class DashboardModule { }

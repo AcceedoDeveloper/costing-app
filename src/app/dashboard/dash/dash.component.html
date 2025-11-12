@@ -1,0 +1,123 @@
+<div class="dashboard-container">
+  <!-- Top Section: Total Quotations -->
+  <div class="quotations-section">
+    <div class="quotations-table-container">
+      <div class="table-header">
+        <h3 style="margin: 0;">Total Quotations</h3>
+        <input 
+          type="date" 
+          class="date-picker-input" 
+          [value]="getDateInputValue()" 
+          (change)="onDateInputChange($event)">
+      </div>
+
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="quotationsDataSource" class="quotations-table">
+          <!-- Customer Column -->
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef>Customer</th>
+            <td mat-cell *matCellDef="let row" class="customer-cell">{{ row.customer }}</td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+          </ng-container>
+
+          <!-- Part Name Column -->
+          <ng-container matColumnDef="partName">
+            <th mat-header-cell *matHeaderCellDef>Part Name</th>
+            <td mat-cell *matCellDef="let row">{{ row.partName }}</td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="status-badge" [ngClass]="getStatusClass(row.status)">{{ row.status }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Sent At Column -->
+          <ng-container matColumnDef="sentAt">
+            <th mat-header-cell *matHeaderCellDef>Sent At</th>
+            <td mat-cell *matCellDef="let row">{{ row.sentAt }}</td>
+          </ng-container>
+
+          <!-- Actual Cost Column -->
+          <ng-container matColumnDef="actualCost">
+            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
+            <td mat-cell *matCellDef="let row">{{ row.actualCost | number }}</td>
+          </ng-container>
+
+          <!-- Difference Column -->
+          <ng-container matColumnDef="difference">
+            <th mat-header-cell *matHeaderCellDef>Difference</th>
+            <td mat-cell *matCellDef="let row" 
+                [ngClass]="row.difference >= 0 ? 'difference-cell positive' : 'difference-cell negative'"
+                (click)="openDifferenceGraph(row)"
+                class="clickable-difference">
+              <span class="arrow" [ngClass]="row.difference >= 0 ? 'positive' : 'negative'">
+                {{ row.difference >= 0 ? '↑' : '↓' }}
+              </span> 
+              {{ row.differenceAbs | number }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator 
+          [pageSize]="pageSize" 
+          [pageSizeOptions]="[5, 10, 25, 50]" 
+          showFirstLastButtons>
+        </mat-paginator>
+      </div>
+    </div>
+
+    <!-- Total Quotations Summary Card -->
+    <div class="quotations-summary-card">
+      <div class="quotation-card">
+        <h3>Total Quotations</h3>
+        <div class="total">64</div>
+    
+        <div class="progress-bar">
+          <div class="progress-fill">
+            <div class="bar-pending"></div>
+            <div class="bar-approved"></div>
+            <div class="bar-rejected"></div>
+          </div>
+        </div>
+    
+        <div class="percentages">
+          <span>24%</span>
+          <span>35%</span>
+          <span>41%</span>
+        </div>
+    
+        <div class="status-row">
+          <div class="status-box">
+            <div class="icon pending">⏱️</div>
+            <div class="count">8</div>
+            <div class="label">Pending</div>
+          </div>
+          <div class="status-box">
+            <div class="icon approved">👁️</div>
+            <div class="count">12</div>
+            <div class="label">Approved</div>
+          </div>
+          <div class="status-box">
+            <div class="icon rejected">📅</div>
+            <div class="count">14</div>
+            <div class="label">Rejected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+

@@ -1,0 +1,120 @@
+<mat-dialog-content>
+  <div class="compare-graph-container">
+    <!-- Main Title -->
+    
+    <div class="content-wrapper">
+      <!-- Left Side: Chart -->
+      <div class="chart-section">
+        <div class="chart-subtitle">Portfolio costs</div>
+        
+        <div class="chart-wrapper">
+          <div class="y-axis">
+            <div class="y-label">{{ getYAxisLabel(0) | number:'1.0-0' }}</div>
+            <div class="y-label">{{ getYAxisLabel(1) | number:'1.0-0' }}</div>
+            <div class="y-label">{{ getYAxisLabel(2) | number:'1.0-0' }}</div>
+            <div class="y-label">{{ getYAxisLabel(3) | number:'1.0-0' }}</div>
+            <div class="y-label">0</div>
+          </div>
+          
+          <div class="chart-area">
+            <div class="grid-lines">
+              <div class="grid-line" *ngFor="let line of [0, 1, 2, 3, 4]"></div>
+            </div>
+            
+            <div class="stacked-bar-container">
+              <!-- Actual Cost Bar -->
+              <div class="stacked-bar-item">
+                <div class="stacked-bar-wrapper">
+                  <div class="bar-segment bar-actual-cost" 
+                       [style.height.%]="getSegmentHeight(actualCost)"
+                       [title]="'Actual Cost: ' + (actualCost | number:'1.0-0')">
+                    <span class="bar-value">{{ actualCost | number:'1.0-0' }}</span>
+                  </div>
+                </div>
+                <div class="x-label">Actual Cost</div>
+              </div>
+              
+              <!-- Current Cost Bar -->
+              <div class="stacked-bar-item">
+                <div class="stacked-bar-wrapper">
+                  <div class="bar-segment bar-current-cost" 
+                       [style.height.%]="getSegmentHeight(processCost)"
+                       [title]="'Current Cost: ' + (processCost | number:'1.0-0')">
+                    <span class="bar-value">{{ processCost | number:'1.0-0' }}</span>
+                  </div>
+                </div>
+                <div class="x-label">Current Cost</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Legend -->
+        <div class="legend">
+          <div class="legend-item">
+            <span class="legend-color bar-actual-cost"></span>
+            <span class="legend-text">Actual Cost</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color bar-current-cost"></span>
+            <span class="legend-text">Current Cost</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Side: Inputs and Summary -->
+      <div class="right-section">
+        <!-- Input Fields -->
+        <div class="input-section">
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Customer Name</mat-label>
+            <input matInput [(ngModel)]="customerName" readonly>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="input-field">
+            <mat-label>Part Name</mat-label>
+            <input matInput [(ngModel)]="partName" readonly>
+          </mat-form-field>
+        </div>
+        
+        <!-- Cost Summary -->
+        <div class="cost-summary">
+          <div class="summary-row">
+            <span class="summary-label">Actual Cost :</span>
+            <span class="summary-value">{{ actualCost | number:'1.0-0' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Current Cost :</span>
+            <span class="summary-value">{{ processCost | number:'1.0-0' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Different :</span>
+            <span class="summary-value" [ngClass]="difference >= 0 ? 'positive' : 'negative'">
+              {{ difference >= 0 ? '+' : '' }}{{ difference | number:'1.0-0' }}
+            </span>
+          </div>
+        </div>
+        
+        <!-- Data Summary Box -->
+        <div class="data-summary-box">
+          <div class="data-row">
+            <span class="data-label">Drawing NO :</span>
+            <span class="data-value">{{ drawingNo }}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Short Weight :</span>
+            <span class="data-value">{{ shortWeight }}</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">Melting Loss :</span>
+            <span class="data-value">{{ meltingLoss }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
+
