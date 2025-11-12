@@ -117,6 +117,7 @@ downloadQuotation(params: {
   yearNo: number;
   start: string;
   end: string;
+  revision: number;
 }) {
   const queryParams = new URLSearchParams({
     CustomerName: params.CustomerName,
@@ -125,6 +126,7 @@ downloadQuotation(params: {
     yearNo: params.yearNo.toString(),
     start: params.start,
     end: params.end,
+    revision: params.revision.toString(),
   });
 
   const url = this.configService.getCostingUrl('customer/quotation') + `?${queryParams.toString()}`;
