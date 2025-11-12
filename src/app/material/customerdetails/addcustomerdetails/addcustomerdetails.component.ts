@@ -5,7 +5,9 @@ import { getAllProcesses} from '../../store/material.selector';
 import { selectCustomers } from '../../../master/master/store/master.selector';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'; 
 import { Store, select } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
@@ -20,7 +22,7 @@ import {CastingData } from '../../../models/casting-input.model';
 import { getCostSummary } from '../../../modules/materialinput/store/casting.actions';
 import {selectProductionCost } from '../../../modules/materialinput/store/casting.selectors';
 import { CostSummary } from '../../../models/casting-input.model';
-import { addCustomerDetails } from '../../store/material.actions';
+import { addCustomerDetails, addCustomerDetailsSuccess } from '../../store/material.actions';
 import { DashboardService } from '../../../services/dashboard.service';
 import { ToastrService } from 'ngx-toastr';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -64,6 +66,8 @@ export class AddcustomerdetailsComponent implements OnInit {
   quotationData: any = null;
   quotationCalc: any = null;
   productionPower: ProductPower | null = null;
+  storedRevision: number | null = null;
+  storedCustomerId: string | null = null;
 
   selectedFileName: string = '';
 selectedFile: File | null = null;
@@ -91,7 +95,8 @@ selectedFile: File | null = null;
     private dialogRef: MatDialogRef<AddcustomerdetailsComponent>,
     private dhashboardServices: DashboardService,
     private tooster: ToastrService,
-    private processService: ProcessService
+    private processService: ProcessService,
+    private actions$: Actions
   ) {} 
 
   closeDialog() {
@@ -198,6 +203,18 @@ selectedFile: File | null = null;
 
  
 });
+
+    // Subscribe to addCustomerDetailsSuccess to capture revision
+    this.actions$.pipe(
+      ofType(addCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      if (action && action.customer) {
+        this.storedRevision = action.customer.revision || action.customer.data?.revision || null;
+        this.storedCustomerId = action.customer._id || action.customer.data?._id || null;
+        console.log('✅ Customer added successfully. Revision:', this.storedRevision, 'Customer ID:', this.storedCustomerId);
+      }
+    });
 
 
 this.secondFormGroup = this.fb.group({
@@ -454,9 +471,18 @@ this.selectedProcesses = [];
 
 }
 
-submitCostForm(): void {
+submitCostForm(revision?: number, customerId?: string): void {
+  // Use passed parameters or stored values
+  const finalRevision = revision !== undefined ? revision : this.storedRevision;
+  const finalCustomerId = customerId || this.storedCustomerId;
+  
   console.log('Submitted Cost Form:', this.costForm.value);
-  this.isSaved = true; 
+  console.log('Revision:', finalRevision);
+  console.log('Customer ID:', finalCustomerId);
+  
+  this.isSaved = true;
+  
+  // You can use finalRevision and finalCustomerId here for further processing
 }
 
 processdata(){
@@ -536,9 +562,32 @@ finalSubmit() {
 
   if(this.data?.mode === 'edit'){
     this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
+  } else {
+    // Dispatch addCustomerDetails and wait for success response
+    this.store.dispatch(addCustomerDetails({ customer: finalData }));
+    
+    // Subscribe to success action to get revision (one-time subscription)
+    this.actions$.pipe(
+      ofType(addCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      if (action && action.customer) {
+        const revision = action.customer.revision || action.customer.data?.revision || null;
+        const customerId = action.customer._id || action.customer.data?._id || null;
+        
+        // Store revision and customer ID
+        this.storedRevision = revision;
+        this.storedCustomerId = customerId;
+        
+        console.log('✅ Customer added. Revision:', revision, 'Customer ID:', customerId);
+        
+        // Call submitCostForm with revision and customerId
+        this.submitCostForm(revision, customerId);
+      }
+    });
   }
-  this.store.dispatch(addCustomerDetails({ customer: finalData }));
-   this.store.dispatch(loadCustomerDetails());
+  
+  this.store.dispatch(loadCustomerDetails());
 }
 
 toggleRow(index: number): void {
@@ -658,8 +707,9 @@ generateFinalJson(): void {
 
   console.log('✅ Final Full JSON Format:', finalData);
 
-  // ✅ Call the API here using form values
-  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo).subscribe(
+  // ✅ Call the API here using form values (use stored revision or default to 0)
+  const revisionToUse = this.storedRevision !== null ? this.storedRevision : 0;
+  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, revisionToUse).subscribe(
     response => {
       console.log('🚀 API Success:', response);
 

@@ -5,13 +5,15 @@ import { getAllProcesses} from '../../store/material.selector';
 import { selectCustomers } from '../../../master/master/store/master.selector';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'; 
 import { Store, select } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {Process } from '../../../models/process.model';
 import { getCustomerWithId } from '../../store/material.selector';
-import { updateCustomerDetails } from '../../store/material.actions';
+import { updateCustomerDetails, updateCustomerDetailsSuccess, addCustomerDetailsSuccess } from '../../store/material.actions';
 import { MatDialogRef } from '@angular/material/dialog';
 import { loadCustomerDetails } from '../../store/material.actions';
 import {CastingData } from '../../../models/casting-input.model';
@@ -53,6 +55,8 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   NoOfMouldperHeat : number = 0;
   meterialRefund : number = 0;
   isSaved = false;
+  storedRevision: number | null = null;
+  storedCustomerId: string | null = null;
 
 
    
@@ -76,7 +80,8 @@ export class UpdateCustomerDetailsComponent implements OnInit {
      @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<UpdateCustomerDetailsComponent>,
     private dhashboardServices: DashboardService ,
-    private tooster: ToastrService 
+    private tooster: ToastrService,
+    private actions$: Actions
    ) { }
 
   closeDialog() {
@@ -174,6 +179,18 @@ export class UpdateCustomerDetailsComponent implements OnInit {
 
  
 });
+
+    // Subscribe to updateCustomerDetailsSuccess and addCustomerDetailsSuccess to capture revision
+    this.actions$.pipe(
+      ofType(updateCustomerDetailsSuccess, addCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      if (action && action.customer) {
+        this.storedRevision = action.customer.revision || action.customer.data?.revision || null;
+        this.storedCustomerId = action.customer._id || action.customer.data?._id || null;
+        console.log('✅ Customer updated/added successfully. Revision:', this.storedRevision, 'Customer ID:', this.storedCustomerId);
+      }
+    });
 
 
 this.secondFormGroup = this.fb.group({
@@ -338,6 +355,14 @@ this.secondFormGroup.valueChanges.subscribe(values => {
     });
 
     this.selectedProcesses = customer.processName || [];
+    
+    // Store revision and customer ID from existing data if available
+    if (customer.revision !== undefined) {
+      this.storedRevision = customer.revision;
+    }
+    if (customer._id) {
+      this.storedCustomerId = customer._id;
+    }
   }
   }
 
@@ -416,9 +441,18 @@ submitStep2() {
 }
 
 
-submitCostForm(): void {
+submitCostForm(revision?: number, customerId?: string): void {
+  // Use passed parameters or stored values
+  const finalRevision = revision !== undefined ? revision : this.storedRevision;
+  const finalCustomerId = customerId || this.storedCustomerId;
+  
   console.log('Submitted Cost Form:', this.costForm.value);
+  console.log('Revision:', finalRevision);
+  console.log('Customer ID:', finalCustomerId);
+  
   this.isSaved = true;
+  
+  // You can use finalRevision and finalCustomerId here for further processing
 }
 
 processdata(){
@@ -496,10 +530,54 @@ finalSubmit() {
   console.log(' Final Submission JSON:', finalData);
 
   if(this.data?.mode === 'edit'){
+    // Dispatch updateCustomerDetails and wait for success response
     this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
+    
+    // Subscribe to success action to get revision (one-time subscription)
+    this.actions$.pipe(
+      ofType(updateCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      if (action && action.customer) {
+        const revision = action.customer.revision || action.customer.data?.revision || null;
+        const customerId = action.customer._id || action.customer.data?._id || null;
+        
+        // Store revision and customer ID
+        this.storedRevision = revision;
+        this.storedCustomerId = customerId;
+        
+        console.log('✅ Customer updated. Revision:', revision, 'Customer ID:', customerId);
+        
+        // Call submitCostForm with revision and customerId
+        this.submitCostForm(revision, customerId);
+      }
+    });
+  } else {
+    // Dispatch addCustomerDetails and wait for success response
+    this.store.dispatch(addCustomerDetails({ customer: finalData }));
+    
+    // Subscribe to success action to get revision (one-time subscription)
+    this.actions$.pipe(
+      ofType(addCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      if (action && action.customer) {
+        const revision = action.customer.revision || action.customer.data?.revision || null;
+        const customerId = action.customer._id || action.customer.data?._id || null;
+        
+        // Store revision and customer ID
+        this.storedRevision = revision;
+        this.storedCustomerId = customerId;
+        
+        console.log('✅ Customer added. Revision:', revision, 'Customer ID:', customerId);
+        
+        // Call submitCostForm with revision and customerId
+        this.submitCostForm(revision, customerId);
+      }
+    });
   }
-  this.store.dispatch(addCustomerDetails({ customer: finalData }));
-   this.store.dispatch(loadCustomerDetails());
+  
+  this.store.dispatch(loadCustomerDetails());
 }
 
 
@@ -581,11 +659,27 @@ generateFinalJson(): void {
 
   console.log(' Final Full JSON Format:', finalData);
     this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
+    
+    // Subscribe to success action to get revision
+    this.actions$.pipe(
+      ofType(updateCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      if (action && action.customer) {
+        const revision = action.customer.revision || action.customer.data?.revision || null;
+        const customerId = action.customer._id || action.customer.data?._id || null;
+        
+        // Store revision and customer ID
+        this.storedRevision = revision;
+        this.storedCustomerId = customerId;
+        
+        console.log('✅ Customer updated. Revision:', revision, 'Customer ID:', customerId);
+      }
+    });
 
-
- 
-
-  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo).subscribe(
+  // ✅ Call the API here using form values (use stored revision or default to 0)
+  const revisionToUse = this.storedRevision !== null ? this.storedRevision : 0;
+  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, revisionToUse).subscribe(
     response => {
       console.log('Calculation ', response);
 
