@@ -391,6 +391,9 @@ margin-right: 25px;
   display: flex;
   flex-direction: column;
   position: relative;
+  height: calc(100vh - 250px);
+  min-height: 590px;
+  padding-bottom: 56px;
 }
 
 .data-table {
@@ -399,6 +402,7 @@ margin-right: 25px;
   background: var(--off-white);
   table-layout: auto;
   flex: 0 0 auto;
+  overflow-y: auto;
 }
 
 /* Table Header */
@@ -627,7 +631,13 @@ margin-right: 25px;
   padding: 0.4rem 0.5rem;
   min-height: 40px;
   flex-shrink: 0;
-  margin-top: auto;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
 }
 
 ::ng-deep .custom-paginator .mat-paginator-container {
