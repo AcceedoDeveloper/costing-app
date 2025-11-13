@@ -434,6 +434,12 @@ get filteredCustomers() {
       }
 
       return matchesSearch && matchesDate;
+    })
+    .sort((a, b) => {
+      // Sort by updatedAt or createdAt in descending order (newest first)
+      const dateA = new Date((a as any).updatedAt || a.createdAt || 0);
+      const dateB = new Date((b as any).updatedAt || b.createdAt || 0);
+      return dateB.getTime() - dateA.getTime(); // Descending order
     });
 
   // Update total records for paginator
@@ -448,21 +454,43 @@ get filteredCustomers() {
 
 // Removed percentage-related methods - no longer displaying percentage column
 
-// Format ID with month abbreviation, date, and sequential number
+// Format ID with year, month, day, and sequential number for that date
 getFormattedId(customer: any, index: number): string {
   // Get date from updatedAt or createdAt
-  const dateStr = customer.updatedAt || customer.createdAt;
+  const dateStr = (customer as any).updatedAt || customer.createdAt;
   if (!dateStr) {
     return `${7781 + index}`;
   }
   
   const date = new Date(dateStr);
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const month = monthNames[date.getMonth()];
-  const day = date.getDate();
-  const sequentialNumber = index + 1;
+  const year = date.getFullYear().toString().slice(-2); // Last 2 digits of year (e.g., 25 for 2025)
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month 01-12
+  const day = date.getDate().toString().padStart(2, '0'); // Day 01-31
   
-  return `${month}${day}${sequentialNumber}`;
+  // Find all customers with the same date (YYMMDD)
+  const dateKey = `${year}${month}${day}`;
+  const sameDateCustomers = this.customerDetails.filter(c => {
+    const cDateStr = (c as any).updatedAt || c.createdAt;
+    if (!cDateStr) return false;
+    const cDate = new Date(cDateStr);
+    const cYear = cDate.getFullYear().toString().slice(-2);
+    const cMonth = (cDate.getMonth() + 1).toString().padStart(2, '0');
+    const cDay = cDate.getDate().toString().padStart(2, '0');
+    return `${cYear}${cMonth}${cDay}` === dateKey;
+  });
+  
+  // Sort by createdAt (or updatedAt) to get consistent ordering
+  sameDateCustomers.sort((a, b) => {
+    const aDate = new Date(a.createdAt || (a as any).updatedAt || 0);
+    const bDate = new Date(b.createdAt || (b as any).updatedAt || 0);
+    return aDate.getTime() - bDate.getTime();
+  });
+  
+  // Find the position of current customer in the same-date list
+  const sequentialNumber = sameDateCustomers.findIndex(c => c._id === customer._id) + 1;
+  const sequentialStr = sequentialNumber.toString().padStart(2, '0'); // 01, 02, 03, etc.
+  
+  return `${year}${month}${day}${sequentialStr}`;
 }
 
 onPageChange(event: PageEvent) {
