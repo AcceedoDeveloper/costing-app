@@ -69,7 +69,10 @@
     [length]="searchTerm ? paginatedCustomers.length : customers.length"
     [pageSize]="pageSize"
     [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)">
+    (page)="onPageChange($event)"
+    class="paginator"
+    >
+  
   </mat-paginator>
   
   

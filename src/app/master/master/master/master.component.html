@@ -1,7 +1,7 @@
 <div class="table-container">
   <div class="header">
     <h2>User List</h2>
-    <button mat-raised-button color="primary" (click)="openAddUserPopup()">Add User</button>
+    <button  (click)="openAddUserPopup()">Add User</button>
   </div>
 
   <table>
@@ -21,8 +21,13 @@
         <td>{{ user.department }}</td>
         <td>{{ user.role?.name || user.role }}</td>
         <td class="actions">
-          <mat-icon class="icon" (click)="openEditUserPopup(user)">edit</mat-icon>
-          <mat-icon class="icon" (click)="deleteUser(user)">delete</mat-icon>
+          <ng-container *ngIf="isAdmin(user); else actionButtons">
+            <mat-icon class="icon lock-icon" title="Admin user - actions locked">lock</mat-icon>
+          </ng-container>
+          <ng-template #actionButtons>
+            <mat-icon class="icon" (click)="openEditUserPopup(user)">edit</mat-icon>
+            <mat-icon class="icon" (click)="deleteUser(user)">delete</mat-icon>
+          </ng-template>
         </td>
       </tr>
     </tbody>
@@ -32,6 +37,8 @@
     [length]="users.length"
     [pageSize]="pageSize"
     [pageSizeOptions]="[5, 10, 20]"
-    (page)="onPageChange($event)">
+    (page)="onPageChange($event)"
+    class="paginator"
+    >
   </mat-paginator>
 </div>

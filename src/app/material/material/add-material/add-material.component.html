@@ -13,7 +13,7 @@
     <mat-form-field appearance="outline" class="half-width">
       <mat-label>Type</mat-label>
       <mat-select formControlName="type">
-        <mat-option *ngFor="let key of materialTypeKeys" [value]="key" [disabled]="isEditMode && materialForm.get('type')?.value !== key">
+        <mat-option class="select-option" *ngFor="let key of materialTypeKeys" [value]="key" [disabled]="isEditMode && materialForm.get('type')?.value !== key">
           {{ key }}
         </mat-option>
       </mat-select>
@@ -55,9 +55,9 @@
 
 
   <div class="button-group">
-    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+    <button  class="btn btn-cancel" type="button" (click)="cancel()">Cancel</button>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="materialForm.invalid">
+    <button  class="btn btn-submit" type="submit" [disabled]="materialForm.invalid">
       {{ isEditMode ? 'Update' : 'Submit' }}
     </button>
   </div>
@@ -109,9 +109,9 @@
   </div>
 
   <div class="button-group">
-    <button mat-raised-button color="warn" type="button" (click)="cancel()">Cancel</button>
+    <button class="btn btn-cancel" type="button" (click)="cancel()">Cancel</button>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="supplierMaterialForm.invalid">
+    <button class="btn btn-submit" type="submit" [disabled]="supplierMaterialForm.invalid">
       {{ isEditMode ? 'Update' : 'Submit' }}
     </button>
   </div>

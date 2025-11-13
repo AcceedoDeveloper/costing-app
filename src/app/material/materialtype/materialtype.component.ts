@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as fromMaterialSelectors from '../store/material.selector'; 
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Router, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-materialtype',
@@ -51,12 +52,37 @@ export class MaterialtypeComponent implements OnInit {
   showAddInput = false;
   newMaterialType: string = '';
   isSaving = false; // Added for optional loading state
+  isNavigating = false; // Loading state for navigation
 
-  constructor(private store: Store, private dialog: MatDialog) {}
+  constructor(private store: Store, private dialog: MatDialog, private router: Router) {}
 
 ngOnInit(): void {
   this.store.dispatch(MaterialTypeActions.loadMaterialTypes());
   this.materialTypes$ = this.store.select(fromMaterialSelectors.selectAllMaterialTypes);
+  
+  // Listen to navigation events to hide loading
+  this.router.events.subscribe(event => {
+    if (event instanceof NavigationStart) {
+      this.isNavigating = false;
+    }
+  });
+}
+
+navigateToMaterial(event: Event) {
+  event.preventDefault();
+  this.isNavigating = true;
+  
+  // Navigate after a brief delay to show loading animation
+  setTimeout(() => {
+    this.router.navigate(['/material/list']).then(() => {
+      // Keep loading visible briefly after navigation
+      setTimeout(() => {
+        this.isNavigating = false;
+      }, 200);
+    }).catch(() => {
+      this.isNavigating = false;
+    });
+  }, 800); // 0.8 seconds delay
 }
 
   addMaterial() {

@@ -44,16 +44,20 @@ export class ProcessComponent implements OnInit {
 
   openAddMaterial() {
     this.dialog.open(AddprocessComponent, {
-      width: '60%',
+      width: 'auto',
+      maxWidth: '80vw',
+      height: 'auto',
+      maxHeight: '90vh',
       disableClose: true,
-       panelClass: 'custom-dialog-container'
+      autoFocus: false,
+      panelClass: 'custom-dialog-container'
     });
   }
 
  deleteProcess(id: string) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
-    height:'200px',
+    height:'auto',
    
     disableClose: true,
     data: {
@@ -79,11 +83,12 @@ editAllMaterials(id: string): void {
     console.log('Full process object:', clonedProcess);
 
     this.dialog.open(ProcesseditComponent, {
-      width: '70%',
-      maxWidth: '900px',
+      width: 'auto',
+      maxWidth: '80vw',
+      height: 'auto',
       maxHeight: '90vh',
       disableClose: true,
-     
+      autoFocus: false,
       data: clonedProcess  
     });
   } else {

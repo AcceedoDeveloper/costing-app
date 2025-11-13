@@ -43,7 +43,6 @@ import { MaterialtypeComponent } from './materialtype/materialtype.component';
 import { ProcesseditComponent } from './process/processedit/processedit.component';
 import { AddcustomerdetailsComponent } from './customerdetails/addcustomerdetails/addcustomerdetails.component'; 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatOptionModule } from '@angular/material/core';
 import { UpdateaddcustomerdDetailsComponent } from './customerdetails/updateaddcustomerd-details/updateaddcustomerd-details.component';
 import { ProcessPowerComponent } from './process-power/process-power.component';
 import { SalaryWagesComponent } from './salary-wages/salary-wages.component';
@@ -60,7 +59,6 @@ import { ViewQuotationComponent } from './customerdetails/view-quotation/view-qu
     UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent, SalaryWagesHistoryComponent, ViewQuotationComponent],
   imports: [
     MatAutocompleteModule,
-   MatOptionModule,
     MatTooltipModule,
      MatStepperModule ,
     GradeModule,

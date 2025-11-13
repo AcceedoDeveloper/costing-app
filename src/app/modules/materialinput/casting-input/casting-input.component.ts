@@ -3,7 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { loadPowerCosts} from '../../../master/master/store/master.action';
 import {getPowerCosts } from '../../../master/master/store/master.selector';
 import { PowerCost } from '../../../models/over-head.model';
-import {updatePowerCost } from '../store/casting.actions';
+import {updatePowerCost, updatePowerCostSuccess, updateProductionCostSuccess, updateCastingFlatSummarySuccess} from '../store/casting.actions';
 import { CastingData } from '../../../models/casting-input.model';
 import { getCastingDetails} from '../store/casting.actions';
 import { selectCastingData  } from '../store/casting.selectors';
@@ -15,6 +15,7 @@ import {FlatCastingData } from '../../../models/casting-input.model';
 import { updateCastingFlatSummary } from '../store/casting.actions'; // Import the new action
 import { ProcessService } from '../../../services/process.service';
 import { ProductPower } from '../../../models/ProductionPower.model';
+import { take, filter } from 'rxjs/operators';
 
 
 @Component({
@@ -84,7 +85,10 @@ this.getPower();
 
 
 
-togglePopup(id: string): void {
+togglePopup(id: string, event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
     this.activePopupId = this.activePopupId === id ? null : id;
   }
 
@@ -92,8 +96,19 @@ togglePopup(id: string): void {
     this.activePopupId = null;
   }
 
-  @HostListener('document:click')
-  onClickOutside(): void {
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent): void {
+    if (!this.activePopupId) {
+      return;
+    }
+    const target = event.target as HTMLElement;
+    // Don't close if clicking inside popup content or on info icon
+    if (target.closest('.popup-content') || 
+        target.closest('.info-icon') ||
+        (target.tagName === 'MAT-ICON' && target.classList.contains('info-icon'))) {
+      return;
+    }
+    // Close popup when clicking outside (overlay click is handled separately in template)
     this.closePopup();
   }
 
@@ -112,11 +127,21 @@ saveCostPerUnit(item: PowerCost) {
     };
 
     this.store.dispatch(updatePowerCost({ id: item._id, powerCost: updatedPowerCost }));
-    this.store.dispatch(loadPowerCosts());
+    
+    // Wait for success action, then reload data
+    this.store.pipe(
+      select(state => state),
+      filter(() => true),
+      take(1)
+    ).subscribe(() => {
+      setTimeout(() => {
+        this.store.dispatch(loadPowerCosts());
+        this.cancelEditCostPerUnit();
+      }, 500);
+    });
+  } else {
+    this.cancelEditCostPerUnit();
   }
-  this.store.dispatch(loadPowerCosts());
-
-  this.cancelEditCostPerUnit();
 }
 
 
@@ -183,13 +208,19 @@ saveSlaray(section: string) {
   console.log('updated data:', data);
 
   this.processServices.updateSalary(id, data).subscribe({
-    next: (res) => console.log('Salary updated', res),
-    error: (err) => console.error('Error updating salary', err)
+    next: (res) => {
+      console.log('Salary updated', res);
+      // Reload data after successful update
+      setTimeout(() => {
+        this.store.dispatch(getCostSummary());
+        this.cancelEditMode(section);
+      }, 500);
+    },
+    error: (err) => {
+      console.error('Error updating salary', err);
+      this.cancelEditMode(section);
+    }
   });
-
-      this.store.dispatch(getCostSummary());
-
-  this.cancelEditMode(section);
 }
 
 saveOverHeads(section: string) {
@@ -211,13 +242,19 @@ saveOverHeads(section: string) {
   console.log('id:', id);
   console.log('updated data:', data);
   this.processServices.updateOverheads(id, data).subscribe({
-    next: (res) => console.log('Overheads updated', res),
-    error: (err) => console.error('Error updating overheads', err)
+    next: (res) => {
+      console.log('Overheads updated', res);
+      // Reload data after successful update
+      setTimeout(() => {
+        this.store.dispatch(getCostSummary());
+        this.cancelEditMode(section);
+      }, 500);
+    },
+    error: (err) => {
+      console.error('Error updating overheads', err);
+      this.cancelEditMode(section);
+    }
   });
-
-      this.store.dispatch(getCostSummary());
-
-  this.cancelEditMode(section);
 }
 
 saveChanges(section: string) {
@@ -261,7 +298,17 @@ saveChanges(section: string) {
   console.log('Dispatching full updated payload:', updatedData);
   this.store.dispatch(updateProductionCost({ id: original._id, costSummary: updatedData }));
 
-  this.cancelEditMode(section);
+  // Wait for success action, then reload data
+  this.store.pipe(
+    select(state => state),
+    filter(() => true),
+    take(1)
+  ).subscribe(() => {
+    setTimeout(() => {
+      this.store.dispatch(getCostSummary());
+      this.cancelEditMode(section);
+    }, 500);
+  });
 }
 
 
@@ -323,14 +370,22 @@ saveAllCastingChanges() {
   console.log('✅ Dispatching full update payload:', updatedCastingData);
   console.log('📦 Dispatching flat summary data:', flatData);
 
-  // Dispatch both updates
+  // Dispatch update
   this.store.dispatch(updateCastingFlatSummary({ id, data: flatData }));
-  this.store.dispatch(getCastingDetails());
 
-
-  // Reset state
-  this.editMode = {};
-  this.editableItem = null;
+  // Wait for success, then reload data
+  this.store.pipe(
+    select(state => state),
+    filter(() => true),
+    take(1)
+  ).subscribe(() => {
+    setTimeout(() => {
+      this.store.dispatch(getCastingDetails());
+      // Reset state
+      this.editMode = {};
+      this.editableItem = null;
+    }, 500);
+  });
 }
 
 
@@ -373,19 +428,20 @@ savePower() {
   const play = { MeltAndOthersPower, mouldPower, corePower };
 
   console.log('data', play);
-this.processServices.updatePowerCost(this.editablePower._id, play).subscribe({
+  this.processServices.updatePowerCost(this.editablePower._id, play).subscribe({
     next: (res) => {
       console.log('Update successful:', res);
-      this.cancelPowerEdit(); // Close or reset the edit form
+      // Reload data after successful update
+      setTimeout(() => {
+        this.getPower();
+        this.cancelPowerEdit();
+      }, 500);
     },
     error: (err) => {
       console.error('Update failed:', err);
+      this.cancelPowerEdit();
     }
   });
-  
-  this.getPower();
-this.cancelPowerEdit();
-
 }
 
 

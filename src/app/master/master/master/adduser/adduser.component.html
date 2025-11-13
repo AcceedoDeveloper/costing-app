@@ -1,8 +1,8 @@
-<div class="">
+<div class="main">
   <h2 class="text-xl font-bold ">{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
   <form [formGroup]="userForm" (ngSubmit)="submitUser()">
   
-    <div class="box">
+    <div class="field-row">
      
     
       <mat-form-field *ngIf="!isEditMode" appearance="standard" class="matfiles">
@@ -32,7 +32,7 @@
     </div>
 
     
-    <div class="box">
+    <div class="field-row">
       
       <mat-form-field appearance="standard" class="matfiles">
         <mat-label>Name</mat-label>
@@ -58,7 +58,7 @@
     </div>
 
 
-     <div class="box">
+     <div class="field-row">
 
      
 
@@ -86,9 +86,9 @@
     
 
    
-    <div class="box">
-      <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+    <div class="btn-group">
+      <button class="btn btn-cancel" type="button" (click)="cancel()">Cancel</button>
+      <button class="btn btn-submit" type="submit" [disabled]="userForm.invalid">
         {{ isEditMode ? 'Update' : 'Create' }} User
       </button>
     </div>

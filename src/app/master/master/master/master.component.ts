@@ -93,7 +93,7 @@ export class MasterComponent implements OnInit {
     });
   }
 
- deleteUser(user: Userget) {
+  deleteUser(user: Userget) {
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
     height: '200px',
@@ -111,5 +111,16 @@ export class MasterComponent implements OnInit {
     }
   });
 }
+
+  isAdmin(user: User | Userget): boolean {
+    if (!user.role) {
+      return false;
+    }
+    // Handle both string and Role object cases
+    const roleName = typeof user.role === 'string' 
+      ? user.role 
+      : (user.role as any)?.name || '';
+    return roleName?.toLowerCase() === 'admin';
+  }
 
 }

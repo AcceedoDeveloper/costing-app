@@ -47,6 +47,7 @@ export class AddSupplierComponent implements OnInit {
   });
     if (this.data) {
       this.isEditMode = true;
+      console.log('data', this.data);
       this.supplierForm.patchValue(this.data);
     }
   }

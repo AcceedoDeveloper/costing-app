@@ -78,7 +78,6 @@ export class AdduserComponent implements OnInit {
       if (this.isEditMode && this.editUserId) {
         user = {
           _id: this.editUserId,
-          UserCode: formValue.UserCode,
           UserName: formValue.UserName,
           department: formValue.department,
           role: formValue.role,

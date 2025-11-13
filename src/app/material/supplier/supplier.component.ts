@@ -67,17 +67,24 @@ export class SupplierComponent implements OnInit {
 
   addSupplier() {
     this.dialog.open(AddSupplierComponent, {
-      width: '800px',
-      height: '520px',
+      width: 'auto',
+      maxWidth: '90vw',
+      height: 'auto',
+      maxHeight: '90vh',
       disableClose: true,
+      autoFocus: false,
     });
   }
 
 startEdit(supplier: Supplier) {
+  console.log('data', supplier);
   const dialogRef = this.dialog.open(AddSupplierComponent, {
-    width: '800px',
-    height: '520px',
+    width: 'auto',
+    maxWidth: '90vw',
+    height: 'auto',
+    maxHeight: '90vh',
     disableClose: true,
+    autoFocus: false,
     data: supplier // Pass the supplier data to the form
   });
 

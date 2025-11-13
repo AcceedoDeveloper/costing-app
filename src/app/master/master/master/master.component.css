@@ -1,81 +1,577 @@
-.table-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 30px auto;
+/* Luxury Color Variables - Consistent with Design System */
+:host {
+  /* Primary Colors (Luxury + Trust) */
+  --imperial-green: #0B3B2E;
+  --deep-emerald: #0F5C48;
   
- 
- 
-  overflow-x: auto;
+  /* Secondary Colors (Premium Feel) */
+  --metallic-gold: #D4AF37;
+  --royal-champagne-gold: #F1D28F;
+  
+  /* Background Colors (Clean + High-End) */
+  --off-white: #F8F7F2;
+  --soft-stone-grey: #E5E3DD;
+  --premium-charcoal: #1A1A1A;
+  
+  /* Text Colors */
+  --black-pearl: #101414;
+  --luxury-grey: #3C3F3E;
+  
+  /* Accent Colors */
+  --profit-green: #1AA274;
+  --alert-red: #A63A3A;
+
+  /* Opacity Variants - Better maintainability */
+  --imperial-green-40: rgba(11, 59, 46, 0.4);
+  --imperial-green-60: rgba(11, 59, 46, 0.6);
+  --imperial-green-70: rgba(11, 59, 46, 0.7);
+  --imperial-green-80: rgba(11, 59, 46, 0.8);
+  --imperial-green-90: rgba(11, 59, 46, 0.9);
+  
+  --deep-emerald-60: rgba(15, 92, 72, 0.6);
+  --deep-emerald-80: rgba(15, 92, 72, 0.8);
+  --deep-emerald-90: rgba(15, 92, 72, 0.9);
+  
+  --alert-red-75: rgba(166, 58, 58, 0.75);
+  --alert-red-80: rgba(166, 58, 58, 0.8);
+  --alert-red-100: rgba(166, 58, 58, 1);
+  
+  --luxury-grey-30: rgba(60, 63, 62, 0.3);
+  --luxury-grey-50: rgba(60, 63, 62, 0.5);
+  --luxury-grey-60: rgba(60, 63, 62, 0.6);
+  --luxury-grey-70: rgba(60, 63, 62, 0.7);
+  
+  --black-pearl-70: rgba(16, 20, 20, 0.7);
+  --black-pearl-85: rgba(16, 20, 20, 0.85);
+  --black-pearl-90: rgba(16, 20, 20, 0.9);
+  
+  --soft-stone-grey-50: rgba(229, 227, 221, 0.5);
+  --soft-stone-grey-80: rgba(229, 227, 221, 0.8);
+  
+  --metallic-gold-20: rgba(212, 175, 55, 0.2);
+  --metallic-gold-40: rgba(212, 175, 55, 0.4);
 }
 
+/* Table Container */
+.table-container {
+  min-height: calc(100vh - 80px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  margin: 10px auto 0;
+  padding: 1.25rem;
+  width: 85%;
+  max-width: 85%;
+}
+
+/* Header Section */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 5px; 
-
+  margin-bottom: 1.5rem;
+  padding: 0;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--imperial-green);
   margin: 0;
-  font-size: 1.25rem; /* Match the font size from your previous styles */
-  color: #000000; /* Match the color used in your previous designs */
+  letter-spacing: 0.3px;
 }
 
+/* Add User Button */
 .header button {
-  background-color: #3f51b5;
-  color: white;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 10px 10px 0 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-th {
-  text-align: left;
-  padding: 14px 20px; /* Adjusted padding to match td for better alignment */
-  color: #5b84ff;
-  font-weight: 500;
-  border-bottom: 2px solid #5b84ff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--imperial-green-90) 0%, var(--deep-emerald-90) 100%);
+  color: var(--off-white);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px var(--imperial-green-40);
   white-space: nowrap;
 }
 
-td {
-  padding: 10px 10px;
-  border-bottom: 1px solid #ddd;
+.header button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--deep-emerald-90) 0%, var(--imperial-green-90) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--imperial-green-60);
+}
+
+.header button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px var(--imperial-green-40);
+}
+
+.header button:focus-visible {
+  outline: 2px solid var(--deep-emerald-80);
+  outline-offset: 2px;
+}
+
+.header button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Override Material button styles */
+:host ::ng-deep .header button.mat-raised-button {
+  background: linear-gradient(135deg, var(--imperial-green-90) 0%, var(--deep-emerald-90) 100%);
+  color: var(--off-white);
+}
+
+:host ::ng-deep .header button.mat-raised-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--deep-emerald-90) 0%, var(--imperial-green-90) 100%);
+}
+
+:host ::ng-deep .header button.mat-raised-button .mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  color: var(--off-white);
+}
+
+/* Table Styling */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--off-white);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px var(--imperial-green-40);
+  border: 1px solid var(--soft-stone-grey-50);
+  table-layout: auto;
+}
+
+/* Table Header */
+.table-container thead {
+  background: linear-gradient(135deg, var(--imperial-green-90) 0%, var(--deep-emerald-90) 100%);
+  position: relative;
+}
+
+.table-container thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--metallic-gold-40), transparent);
+}
+
+.table-container thead th {
+  padding: 0.75rem 0.875rem;
+  text-align: left;
+  color: var(--off-white);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.15px;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--metallic-gold-20);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+}
+
+.table-container thead th:first-child {
+  padding-left: 1rem;
+}
+
+.table-container thead th:last-child {
+  padding-right: 1rem;
+  text-align: center;
+}
+
+/* Table Body */
+.table-container tbody tr {
+  border-bottom: 1px solid var(--soft-stone-grey-50);
+  transition: all 0.2s ease;
+  background: var(--off-white);
+}
+
+.table-container tbody tr:hover {
+  background: var(--off-white);
+  transform: scale(1.001);
+  box-shadow: 0 1px 6px var(--imperial-green-40);
+  border-left: 2px solid var(--deep-emerald-60);
+}
+
+.table-container tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table-container tbody td {
+  padding: 0.75rem 0.875rem;
+  color: var(--black-pearl-85);
+  font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
   vertical-align: middle;
 }
 
-td.actions {
+.table-container tbody td:first-child {
+  padding-left: 1rem;
+  font-weight: 600;
+  color: var(--black-pearl-90);
+}
+
+.table-container tbody td:last-child {
+  padding-right: 1rem;
+  text-align: center;
+}
+
+/* Actions Column */
+.actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 0.4375rem;
+  min-height: 26px;
+  padding: 0.125rem 0;
 }
 
-.actions mat-icon.icon {
-  font-size: 25px;
-  color: #000;
+/* Icon Styling - mat-icon IS the icon element */
+.actions .icon {
   cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.3125rem;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-width: 30px;
+  min-height: 30px;
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
+  color: var(--imperial-green-70);
 }
 
-.actions mat-icon.icon:hover {
-  color: #ff4081;
+/* Override Material default styles for icon color */
+:host ::ng-deep .actions .icon.mat-icon {
+  color: var(--imperial-green-70);
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
 }
 
-tr:hover {
-  background-color: #f9f9f9;
+/* Edit Icon Hover States */
+.actions .icon:hover:not([aria-label*="Delete"]):not([aria-label*="delete"]) {
+  background: rgba(15, 92, 72, 0.12);
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 2px 6px var(--imperial-green-60);
+  border-color: var(--deep-emerald-60);
+  color: var(--deep-emerald);
 }
 
-mat-paginator {
-  display: flex;
-  justify-content: end;
- 
-  background: #fff;
+:host ::ng-deep .actions .icon:hover:not([aria-label*="Delete"]):not([aria-label*="delete"]).mat-icon {
+  color: var(--deep-emerald);
+}
+
+.actions .icon:active:not([aria-label*="Delete"]):not([aria-label*="delete"]) {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 1px 3px var(--imperial-green-40);
+}
+
+.actions .icon:focus-visible {
+  outline: 2px solid var(--deep-emerald-80);
+  outline-offset: 2px;
+  background: rgba(15, 92, 72, 0.1);
+  border-color: var(--deep-emerald-60);
+}
+
+/* Delete Icon Specific Styling - Target by click handler or add delete-icon class */
+.actions .icon:last-child,
+.actions .icon[aria-label*="Delete"],
+.actions .icon[aria-label*="delete"] {
+  color: var(--alert-red-75);
+}
+
+:host ::ng-deep .actions .icon:last-child.mat-icon,
+:host ::ng-deep .actions .icon[aria-label*="Delete"].mat-icon,
+:host ::ng-deep .actions .icon[aria-label*="delete"].mat-icon {
+  color: var(--alert-red-75);
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
+}
+
+.actions .icon:last-child:hover,
+.actions .icon[aria-label*="Delete"]:hover,
+.actions .icon[aria-label*="delete"]:hover {
+  background: rgba(166, 58, 58, 0.12);
+  border-color: var(--alert-red-80);
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 2px 6px rgba(166, 58, 58, 0.2);
+  color: var(--alert-red-100);
+}
+
+:host ::ng-deep .actions .icon:last-child:hover.mat-icon,
+:host ::ng-deep .actions .icon[aria-label*="Delete"]:hover.mat-icon,
+:host ::ng-deep .actions .icon[aria-label*="delete"]:hover.mat-icon {
+  color: var(--alert-red-100);
+}
+
+.actions .icon:last-child:active,
+.actions .icon[aria-label*="Delete"]:active,
+.actions .icon[aria-label*="delete"]:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 1px 3px rgba(166, 58, 58, 0.15);
+}
+
+.actions .icon:last-child:focus-visible,
+.actions .icon[aria-label*="Delete"]:focus-visible,
+.actions .icon[aria-label*="delete"]:focus-visible {
+  outline-color: var(--alert-red-80);
+  background: rgba(166, 58, 58, 0.1);
+  border-color: var(--alert-red-80);
+}
+
+/* Lock Icon Styling for Admin Users */
+.actions .icon.lock-icon {
+  color: var(--luxury-grey-60);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+:host ::ng-deep .actions .icon.lock-icon.mat-icon {
+  color: var(--luxury-grey-60);
+  font-size: 17px;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
+}
+
+.actions .icon.lock-icon:hover {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
+  color: var(--luxury-grey-60);
+}
+
+:host ::ng-deep .actions .icon.lock-icon:hover.mat-icon {
+  color: var(--luxury-grey-60);
+}
+
+/* Mat Paginator Styling */
+:host ::ng-deep .mat-paginator {
+  background: var(--off-white);
+  border-top: 1px solid var(--soft-stone-grey-50);
+  padding: 0.5rem 0.75rem;
   border-radius: 0 0 10px 10px;
+}
+
+:host ::ng-deep .mat-paginator-container {
+  justify-content: flex-end;
+  padding: 0;
+  min-height: 40px;
+}
+
+:host ::ng-deep .mat-paginator-page-size,
+:host ::ng-deep .mat-paginator-range-label,
+:host ::ng-deep .mat-paginator-navigation-previous,
+:host ::ng-deep .mat-paginator-navigation-next {
+  color: var(--black-pearl-85);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-paginator-page-size-select {
+  margin: 0 0.375rem;
+}
+
+:host ::ng-deep .mat-paginator-page-size-select .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+:host ::ng-deep .mat-paginator-page-size-select .mat-form-field-underline {
+  display: none;
+}
+
+:host ::ng-deep .mat-paginator-page-size-select .mat-select-value {
+  color: var(--black-pearl-85);
+  font-size: 0.75rem;
+}
+
+:host ::ng-deep .mat-paginator-navigation-previous .mat-icon,
+:host ::ng-deep .mat-paginator-navigation-next .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+:host ::ng-deep .mat-paginator-navigation-previous,
+:host ::ng-deep .mat-paginator-navigation-next {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  color: var(--imperial-green-70);
+}
+
+:host ::ng-deep .mat-paginator-navigation-previous:hover:not([disabled]),
+:host ::ng-deep .mat-paginator-navigation-next:hover:not([disabled]) {
+  background: rgba(15, 92, 72, 0.1);
+  color: var(--deep-emerald);
+}
+
+:host ::ng-deep .mat-paginator-navigation-previous[disabled],
+:host ::ng-deep .mat-paginator-navigation-next[disabled] {
+  opacity: 0.3;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .table-container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .header button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    padding: 0.875rem;
+    border-radius: 10px;
+  }
+
+  .header h2 {
+    font-size: 1.25rem;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-container table {
+    min-width: 600px;
+  }
+
+  .table-container thead th,
+  .table-container tbody td {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .table-container thead th:first-child,
+  .table-container tbody td:first-child {
+    padding-left: 0.875rem;
+  }
+
+  .table-container thead th:last-child,
+  .table-container tbody td:last-child {
+    padding-right: 0.875rem;
+  }
+
+  .actions {
+    gap: 0.375rem;
+    flex-wrap: wrap;
+  }
+
+  .actions .icon {
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0.25rem;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+
+  :host ::ng-deep .actions .icon.mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+
+  :host ::ng-deep .mat-paginator {
+    padding: 0.375rem 0.5rem;
+  }
+
+  :host ::ng-deep .mat-paginator-container {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    min-height: 36px;
+  }
+
+  :host ::ng-deep .mat-paginator-page-size,
+  :host ::ng-deep .mat-paginator-range-label {
+    font-size: 0.6875rem;
+  }
+
+  :host ::ng-deep .mat-paginator-page-size-select .mat-select-value {
+    font-size: 0.6875rem;
+  }
+
+  :host ::ng-deep .mat-paginator-navigation-previous,
+  :host ::ng-deep .mat-paginator-navigation-next {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  :host ::ng-deep .mat-paginator-navigation-previous .mat-icon,
+  :host ::ng-deep .mat-paginator-navigation-next .mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+  }
+}
+
+/* Optimized Transitions */
+button,
+.header,
+.table-container tbody tr,
+.actions .icon {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--soft-stone-grey);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--imperial-green-60) 0%, var(--deep-emerald-60) 100%);
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--deep-emerald-60) 0%, var(--imperial-green-60) 100%);
 }

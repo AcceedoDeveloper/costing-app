@@ -41,25 +41,26 @@
             <div class="field-label">Previous Cost</div>
             <div class="field-value">
               <span class="value-text">{{ item.previousCostDetails[0]?.cost }}</span>
-              <mat-icon class="info-icon" (click)="togglePopup(item._id)" (click)="$event.stopPropagation()">info</mat-icon>
-              <div *ngIf="activePopupId === item._id" class="popup-overlay" (click)="$event.stopPropagation()">
-                <div class="popup-content">
-                  <div class="popup-header">
-                    <h4>Previous Cost History</h4>
-                    <mat-icon class="close-icon" (click)="closePopup()">close</mat-icon>
-                  </div>
-                  <div class="popup-body">
-                    <div *ngFor="let detail of item.previousCostDetails" class="history-item">
-                      <span class="history-cost">Cost: {{ detail.cost }}</span>
-                      <span class="history-date">Date: {{ detail.date }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <mat-icon class="info-icon" (click)="togglePopup(item._id, $event)">info</mat-icon>
             </div>
           </div>
         </div>
       </mat-card>
+      <!-- Popup moved outside mat-card but inside *ngFor for proper centering -->
+      <div *ngIf="activePopupId === item._id" class="popup-overlay" (click)="closePopup()">
+        <div class="popup-content" (click)="$event.stopPropagation()">
+          <div class="popup-header">
+            <h4>Previous Cost History</h4>
+            <mat-icon class="close-icon" (click)="closePopup()">close</mat-icon>
+          </div>
+          <div class="popup-body">
+            <div *ngFor="let detail of item.previousCostDetails" class="history-item">
+              <span class="history-cost">Cost: {{ detail.cost }}</span>
+              <span class="history-date">Date: {{ detail.date }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
        <!-- PRODUCTION POWER -->

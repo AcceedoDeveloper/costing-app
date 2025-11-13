@@ -14,8 +14,7 @@
         <input matInput [(ngModel)]="newMaterialType" placeholder="Enter material type name" />
       </mat-form-field>
       <button
-        mat-raised-button
-        color="primary"
+       
         class="action-button add-button"
         (click)="isEditMode ? updateMaterial() : addMaterial()"
         [disabled]="newMaterialType.trim().length === 0"
@@ -25,8 +24,7 @@
         <span>{{ isEditMode ? 'Save' : 'Add' }}</span>
       </button>
       <button
-        mat-stroked-button
-        color="warn"
+     
         class="action-button cancel-button"
         *ngIf="isEditMode"
         (click)="cancelAction()"
@@ -93,11 +91,12 @@
       </mat-step>
       <mat-step [completed]="false">
         <ng-template matStepLabel>
-          <a [routerLink]="['/material/list']" class="step-link material-step-link">
+          <a (click)="navigateToMaterial($event)" [class.loading]="isNavigating" class="step-link material-step-link">
             <div class="step-label">
-              <mat-icon class="step-icon">inventory</mat-icon>
+              <mat-icon class="step-icon" *ngIf="!isNavigating">inventory</mat-icon>
+              <mat-icon class="step-icon loading-icon" *ngIf="isNavigating">sync</mat-icon>
               <span>Material</span>
-              <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+              <mat-icon class="arrow-icon" *ngIf="!isNavigating">arrow_forward</mat-icon>
             </div>
           </a>
         </ng-template>

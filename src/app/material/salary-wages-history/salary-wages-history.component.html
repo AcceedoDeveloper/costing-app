@@ -1,73 +1,95 @@
+<div class="main">
+  <!-- Salary & Wages History Section -->
+  <div class="section-container">
+    <h1 class="section-title">Salary & Wages History</h1>
 
+    <div class="table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Salary Excluding Core</th>
+            <th>Salary Core Production</th>
+            <th>Salary Process</th>
+            <th>Outsourcing Cost</th>
+            <th>Special Outsourcing</th>
+            <th>Total Outsourcing</th>
+            <th>Updated At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="paginatedSalary.length === 0" class="no-data-row">
+            <td colspan="7" class="no-data-cell">
+              <div class="no-data-container">
+                <mat-icon class="no-data-icon">account_balance_wallet</mat-icon>
+                <p class="no-data-message">No salary & wages history found</p>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let item of paginatedSalary">
+            <td>{{item.salaryExcludingCoreMaking}}</td>
+            <td>{{item.salaryForCoreProduction}}</td>
+            <td>{{item.salaryforProcess}}</td>
+            <td>{{item.outSourcingCost}}</td>
+            <td>{{item.splOutSourcingCost}}</td>
+            <td>{{item.TotalOutSourcingCost}}</td>
+            <td>{{item.updatedAt | date:'dd/MM/yyyy'}}</td>
+          </tr>
+        </tbody>
+      </table>
 
-<div>
+      <mat-paginator
+        [length]="filteredSalaryHistory.length"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="onPageChange($event)"
+        class="paginator">
+      </mat-paginator>
+    </div>
+  </div>
 
+  <!-- Overheads History Section -->
+  <div class="section-container">
+    <h1 class="section-title">Overheads History</h1>
 
-  <h1>Salary & Wages History</h1>
+    <div class="table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Repair & Maintenance</th>
+            <th>Selling/Distribution & Misc</th>
+            <th>Finance Cost</th>
+            <th>Total Overheads</th>
+            <th>Total Overheads + Finance</th>
+            <th>Updated At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="paginatedOverHeads.length === 0" class="no-data-row">
+            <td colspan="6" class="no-data-cell">
+              <div class="no-data-container">
+                <mat-icon class="no-data-icon">trending_up</mat-icon>
+                <p class="no-data-message">No overheads history found</p>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let item of paginatedOverHeads">
+            <td>{{ item.repairAndMaintenance }}</td>
+            <td>{{ item.sellingDistributionAndMiscOverHeads }}</td>
+            <td>{{ item.financeCost }}</td>
+            <td>{{ item.totalOverHeads }}</td>
+            <td>{{ item.totalOverHeadsWithFinanceCost }}</td>
+            <td>{{ item.updatedAt | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        </tbody>
+      </table>
 
-
-
-  <table cellspacing="0" cellpadding="6">
-  <thead>
-    <tr>
-      <th>Salary Excluding Core</th>
-      <th>Salary Core Production</th>
-      <th>Salary Process</th>
-      <th>Outsourcing Cost</th>
-      <th>Special Outsourcing</th>
-      <th>Total Outsourcing</th>
-      <th>Updated At</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of paginatedSalary">
-      <td>{{item.salaryExcludingCoreMaking}}</td>
-      <td>{{item.salaryForCoreProduction}}</td>
-      <td>{{item.salaryforProcess}}</td>
-      <td>{{item.outSourcingCost}}</td>
-      <td>{{item.splOutSourcingCost}}</td>
-      <td>{{item.TotalOutSourcingCost}}</td>
-      <td>{{item.updatedAt | date:'dd/MM/yyyy'}}</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-<mat-paginator
-  [length]="filteredSalaryHistory.length"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[5, 10, 20]"
-  (page)="onPageChange($event)">
-</mat-paginator>
-  
+      <mat-paginator
+        [length]="filteredOverHeadsHistory.length"
+        [pageSize]="overheadsPageSize"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="onOverheadsPageChange($event)"
+        class="paginator">
+      </mat-paginator>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-<h1>Overheads History</h1>
-
-<table  cellspacing="0" cellpadding="6">
-  <thead>
-    <tr>
-      <th>Repair & Maintenance</th>
-      <th>Selling/Distribution & Misc</th>
-      <th>Finance Cost</th>
-      <th>Total Overheads</th>
-      <th>Total Overheads + Finance</th>
-      <th>Updated At</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of filteredOverHeadsHistory">
-      <td>{{ item.repairAndMaintenance }}</td>
-      <td>{{ item.sellingDistributionAndMiscOverHeads }}</td>
-      <td>{{ item.financeCost }}</td>
-      <td>{{ item.totalOverHeads }}</td>
-      <td>{{ item.totalOverHeadsWithFinanceCost }}</td>
-      <td>{{ item.updatedAt | date:'dd/MM/yyyy' }}</td>
-    </tr>
-  </tbody>
-</table>

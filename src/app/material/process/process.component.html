@@ -52,8 +52,10 @@
               <mat-icon class="icon" (click)="toggleExpand(i)">
                 {{ expandedIndex === i ? 'expand_less' : 'expand_more' }}
               </mat-icon>
-              <mat-icon (click)="deleteProcess(process._id)" class="icon delete-icon">delete</mat-icon>
+
               <mat-icon (click)="editAllMaterials(process._id)" class="icon">edit</mat-icon>
+
+              <mat-icon (click)="deleteProcess(process._id)" class="icon delete-icon">delete</mat-icon>
             </div>
           </td>
         </tr>
@@ -77,7 +79,7 @@
                     <ng-container *ngFor="let grade of process.grade">
                       <ng-container *ngFor="let raw of grade.rawMaterial">
                         <ng-container *ngFor="let material of raw.materialsUsed">
-                          <tr>
+                          <tr id="grade-material-row" >
                             <td class="col-process">{{ raw.type }}</td>
                             <td class="col-grade">{{ material.name }}</td>
                             <td class="col-action">{{ material.quantity }}</td>
@@ -105,7 +107,7 @@
                   <tbody>
                     <ng-container *ngFor="let raw of process.rawMaterial">
                       <ng-container *ngFor="let material of raw.materialsUsed">
-                        <tr>
+                        <tr id="raw-material-row" >
                           <td class="col-process">{{ raw.type }}</td>
                           <td class="col-grade">{{ material.name }}</td>
                           <td class="col-action">{{ material.quantity }}</td>
@@ -119,6 +121,7 @@
             </div>
           </td>
         </tr>
+
       </ng-container>
     </tbody>
   </table>

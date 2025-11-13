@@ -23,6 +23,10 @@ export class SalaryWagesHistoryComponent implements OnInit {
 
   overHeadsHistory: OverHeadsHistory[] = [];
   filteredOverHeadsHistory: OverHeadsHistory[] = [];
+  paginatedOverHeads: OverHeadsHistory[] = [];
+
+  overheadsPageSize = 5;
+  overheadsPageIndex = 0;
 
   salaryStartDate: Date | null = null;
   salaryEndDate: Date | null = null;
@@ -60,11 +64,13 @@ export class SalaryWagesHistoryComponent implements OnInit {
         this.overHeadsHistory = Array.isArray(data) ? data : (data?.OverHeadsHistory || []);
         console.log('data', this.overHeadsHistory);
         this.filteredOverHeadsHistory = [...this.overHeadsHistory]; // initially full list
+        this.updatePaginatedOverHeads();
       },
       error: (err) => {
         console.error('Error fetching Overheads History:', err);
         this.overHeadsHistory = [];
         this.filteredOverHeadsHistory = [];
+        this.paginatedOverHeads = [];
       }
     });
   }
@@ -86,6 +92,8 @@ applySalaryFilter(): void {
       return (!this.overheadStartDate || date >= this.overheadStartDate) &&
              (!this.overheadEndDate || date <= this.overheadEndDate);
     });
+    this.overheadsPageIndex = 0; // reset to first page
+    this.updatePaginatedOverHeads();
   }
 
 
@@ -99,5 +107,17 @@ applySalaryFilter(): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
       this.updatePaginatedSalary();
+  }
+
+  updatePaginatedOverHeads() {
+    const startIndex = this.overheadsPageIndex * this.overheadsPageSize;
+    const endIndex = startIndex + this.overheadsPageSize;
+    this.paginatedOverHeads = this.filteredOverHeadsHistory.slice(startIndex, endIndex);
+  }
+
+  onOverheadsPageChange(event: PageEvent) {
+    this.overheadsPageIndex = event.pageIndex;
+    this.overheadsPageSize = event.pageSize;
+    this.updatePaginatedOverHeads();
   }
 }

@@ -1,7 +1,7 @@
 
 <div class="main-container">
+  <h2>Supplier List</h2>
   <div class="header">
-    <h2>Supplier List</h2>
     
     <div class="filter">
       <div class="material-filter">
@@ -44,7 +44,7 @@
       </div>
     </div>
     
-    <button mat-raised-button color="primary" id="btn-add-supplier" (click)="addSupplier()">
+    <button  id="btn-add-supplier" (click)="addSupplier()">
       <mat-icon>add</mat-icon>
       Add Supplier
     </button>
@@ -89,6 +89,7 @@
       [pageSizeOptions]="[25, 50, 100]"
       (page)="onPageChange($event)"
       aria-label="Select page of suppliers"
+      class="paginator"
     ></mat-paginator>
   </div>
 </div>
