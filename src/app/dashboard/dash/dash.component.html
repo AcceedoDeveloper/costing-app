@@ -41,7 +41,8 @@
       </div>
 
       <div class="table-wrapper">
-        <table mat-table [dataSource]="quotationsDataSource" class="quotations-table">
+        <div class="table-container">
+          <table mat-table [dataSource]="quotationsDataSource" class="quotations-table">
           <!-- Customer Column -->
           <ng-container matColumnDef="customer">
             <th mat-header-cell *matHeaderCellDef>Customer</th>
@@ -97,10 +98,11 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
+        </div>
 
         <mat-paginator 
           [pageSize]="pageSize" 
-          [pageSizeOptions]="[5, 10, 25, 50]" 
+          [hidePageSize]="true"
           showFirstLastButtons>
         </mat-paginator>
       </div>

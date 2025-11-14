@@ -149,6 +149,14 @@
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+}
+
+.table-container {
+  flex: 1;
+
 }
 
 .quotations-table {

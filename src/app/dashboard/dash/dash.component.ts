@@ -57,7 +57,7 @@ export class DashComponent implements OnInit, AfterViewInit {
   allQuotations: any[] = []; // Store all quotations for filtering
   selectedDate: Date = new Date(); // Will be set to current date in ngOnInit
   selectedMonth: string = ''; // Will store YYYY-MM format
-  pageSize = 5;
+  pageSize = 4;
   
   // Status Filter
   selectedStatus: string = 'All';
