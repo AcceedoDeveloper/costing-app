@@ -54,17 +54,29 @@ export class DashComponent implements OnInit, AfterViewInit {
   // Quotations Table
   displayedColumns: string[] = ['customer', 'email', 'partName', 'status', 'sentAt', 'actualCost', 'difference'];
   quotationsDataSource = new MatTableDataSource<any>([]);
+  allQuotations: any[] = []; // Store all quotations for filtering
   selectedDate: Date = new Date(); // Will be set to current date in ngOnInit
   pageSize = 5;
+  
+  // Status Filter
+  selectedStatus: string = 'All';
+  statusOptions: string[] = ['All', 'Pending', 'Approved', 'Rejected'];
 
   // Total Quotations Summary
-  totalQuotations = 64;
-  pendingCount = 8;
-  approvedCount = 12;
-  rejectedCount = 14;
-  pendingPercent = 24;
-  approvedPercent = 35;
-  rejectedPercent = 41;
+  totalQuotations = 0;
+  pendingCount = 0;
+  approvedCount = 0;
+  rejectedCount = 0;
+  pendingPercent = 0;
+  approvedPercent = 0;
+  rejectedPercent = 0;
+
+  // Overall Cost Data
+  totalProfit = 0;
+  totalLosses = 0;
+  profitPercent = 0;
+  lossesPercent = 0;
+  totalCostDifference = 0;
 
   // Grade View
   selectedGrade = 'All';
@@ -260,9 +272,12 @@ export class DashComponent implements OnInit, AfterViewInit {
     
           // Map API data to quotations table format
           const mappedQuotations = this.mapApiDataToQuotations(res.data);
-          this.quotationsDataSource.data = mappedQuotations;
+          this.allQuotations = mappedQuotations; // Store all quotations
           
-          // Update summary counts
+          // Apply status filter
+          this.applyStatusFilter();
+          
+          // Update summary counts (use all quotations, not filtered)
           this.updateSummaryCounts(mappedQuotations);
     
           // Also set dataSource for compatibility
@@ -276,15 +291,20 @@ export class DashComponent implements OnInit, AfterViewInit {
           console.log('Actual Estimation Cost Data:', this.actualEstimationCost);
         } else {
           console.warn('No data received from API');
+          this.allQuotations = [];
           this.quotationsDataSource.data = [];
+          this.updateSummaryCounts([]);
         }
       },
       error: (error) => {
         console.error('Error fetching actual estimation cost:', error);
         // Set empty data to prevent white screen
+        this.allQuotations = [];
         this.quotationsDataSource.data = [];
         this.actualEstimationCost = [];
         this.filteredEstimationCost = [];
+        // Reset all counts
+        this.updateSummaryCounts([]);
       }
     });
   }
@@ -338,7 +358,82 @@ export class DashComponent implements OnInit, AfterViewInit {
       this.pendingPercent = Math.round((this.pendingCount / this.totalQuotations) * 100);
       this.approvedPercent = Math.round((this.approvedCount / this.totalQuotations) * 100);
       this.rejectedPercent = Math.round((this.rejectedCount / this.totalQuotations) * 100);
+    } else {
+      // Reset to 0 when there are no quotations
+      this.pendingPercent = 0;
+      this.approvedPercent = 0;
+      this.rejectedPercent = 0;
     }
+
+    // Calculate cost data
+    this.calculateCostData(quotations);
+  }
+
+  calculateCostData(quotations: any[]): void {
+    // Calculate profit (positive differences) and losses (negative differences)
+    const profits = quotations
+      .filter(q => q.difference > 0)
+      .reduce((sum, q) => sum + Math.abs(q.difference), 0);
+    
+    const losses = quotations
+      .filter(q => q.difference < 0)
+      .reduce((sum, q) => sum + Math.abs(q.difference), 0);
+    
+    this.totalProfit = profits;
+    this.totalLosses = losses;
+    this.totalCostDifference = profits - losses;
+    
+    const totalDifference = profits + losses;
+    
+    if (totalDifference > 0) {
+      this.profitPercent = Math.round((profits / totalDifference) * 100);
+      this.lossesPercent = Math.round((losses / totalDifference) * 100);
+    } else {
+      this.profitPercent = 0;
+      this.lossesPercent = 0;
+    }
+  }
+
+  formatNumberInK(value: number): string {
+    if (value >= 1000) {
+      const kValue = value / 1000;
+      return `${kValue.toFixed(1)} `;
+    }
+    return value.toString();
+  }
+
+  getNetDifferencePercent(): number {
+    const total = this.totalProfit + this.totalLosses;
+    if (total > 0) {
+      return Math.round((Math.abs(this.totalCostDifference) / total) * 100);
+    }
+    return 0;
+  }
+
+  getAbsoluteValue(value: number): number {
+    return Math.abs(value);
+  }
+
+  applyStatusFilter(): void {
+    let filtered = this.allQuotations;
+    
+    if (this.selectedStatus !== 'All') {
+      filtered = this.allQuotations.filter(q => 
+        q.status.toLowerCase() === this.selectedStatus.toLowerCase()
+      );
+    }
+    
+    this.quotationsDataSource.data = filtered;
+    
+    // Reset paginator to first page when filter changes
+    if (this.paginator) {
+      this.paginator.firstPage();
+      this.quotationsDataSource.paginator = this.paginator;
+    }
+  }
+
+  onStatusChange(): void {
+    this.applyStatusFilter();
   }
 
   openDifferenceGraph(row: any): void {
@@ -349,7 +444,7 @@ export class DashComponent implements OnInit, AfterViewInit {
       console.log('Opening graph for item:', itemData);
       
       const dialogRef = this.dialog.open(DifferenceGraphDialogComponent, {
-        width: '1000px',
+        width: '800px',
         maxWidth: '95vw',
         data: {
           item: itemData,

@@ -1,12 +1,20 @@
-<mat-dialog-content>
+
   <div class="compare-graph-container">
     <!-- Main Title -->
+
+    <div class="main-title">
+      Portfolio costs 
+        <mat-icon mat-dialog-close  >close</mat-icon>
+     
+      
+    </div>
     
     <div class="content-wrapper">
+
       <!-- Left Side: Chart -->
       <div class="chart-section">
-        <div class="chart-subtitle">Portfolio costs</div>
         
+      
         <div class="chart-wrapper">
           <div class="y-axis">
             <div class="y-label">{{ getYAxisLabel(0) | number:'1.0-0' }}</div>
@@ -65,20 +73,18 @@
       <!-- Right Side: Inputs and Summary -->
       <div class="right-section">
         <!-- Input Fields -->
-        <div class="input-section">
-          <mat-form-field appearance="outline" class="input-field">
-            <mat-label>Customer Name</mat-label>
-            <input matInput [(ngModel)]="customerName" readonly>
-          </mat-form-field>
-          
-          <mat-form-field appearance="outline" class="input-field">
-            <mat-label>Part Name</mat-label>
-            <input matInput [(ngModel)]="partName" readonly>
-          </mat-form-field>
-        </div>
+       
         
         <!-- Cost Summary -->
         <div class="cost-summary">
+          <div class="summary-row">
+            <span class="summary-label">Customer Name:</span>
+            <span class="summary-value">{{ customerName }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Part Name:</span>
+            <span class="summary-value">{{ partName }}</span>
+          </div>
           <div class="summary-row">
             <span class="summary-label">Actual Cost :</span>
             <span class="summary-value">{{ actualCost | number:'1.0-0' }}</span>
@@ -95,26 +101,12 @@
           </div>
         </div>
         
-        <!-- Data Summary Box -->
-        <div class="data-summary-box">
-          <div class="data-row">
-            <span class="data-label">Drawing NO :</span>
-            <span class="data-value">{{ drawingNo }}</span>
-          </div>
-          <div class="data-row">
-            <span class="data-label">Short Weight :</span>
-            <span class="data-value">{{ shortWeight }}</span>
-          </div>
-          <div class="data-row">
-            <span class="data-label">Melting Loss :</span>
-            <span class="data-value">{{ meltingLoss }}</span>
-          </div>
-        </div>
+     
       </div>
     </div>
   </div>
-</mat-dialog-content>
+<!-- </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Close</button>
-</mat-dialog-actions>
+</mat-dialog-actions> -->
 

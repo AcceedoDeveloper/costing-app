@@ -30,6 +30,7 @@ export class DifferenceGraphDialogComponent implements OnInit {
   prepareGraphData(): void {
     try {
       // Extract values from the selected item
+      console.log('Data:', this.data);
       const item = this.data.item;
       
       // Parse values - handle both string and number types

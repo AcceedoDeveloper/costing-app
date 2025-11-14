@@ -153,17 +153,18 @@ export class ViewQuotationComponent implements OnInit {
   generateQuotationData(): void {
 
     const first = this.firstFormGroup.value;
-    console.log('🚀 First Form Group Value:', first);
-    console.log('🚀 Revision Value:', this.data.revision);
+    console.log(' First Form Group Value:', first);
+    console.log(' Data:', this.data);
+    console.log(' Revision Value:', this.data.revision);
     const revision = this.data.revision;
     this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, revision).subscribe(
       response => {
-        console.log('🚀 API Success:', response);
+        console.log(' API Success:', response);
         this.quotationData = response;
         this.quotationCalc = response.calculations?.[0] || {};
       },
       error => {
-        console.error('❌ API Error:', error);
+        console.error(' API Error:', error);
       }
     );
   }

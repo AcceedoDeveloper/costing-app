@@ -1,14 +1,27 @@
 <div class="dashboard-container">
   <!-- Top Section: Total Quotations -->
   <div class="quotations-section">
+
+
+    
     <div class="quotations-table-container">
       <div class="table-header">
         <h3 style="margin: 0;">Total Quotations</h3>
-        <input 
-          type="date" 
-          class="date-picker-input" 
-          [value]="getDateInputValue()" 
-          (change)="onDateInputChange($event)">
+        <div class="header-filters">
+          <select 
+            class="status-filter-select"
+            [(ngModel)]="selectedStatus" 
+            (change)="onStatusChange()">
+            <option *ngFor="let status of statusOptions" [value]="status">
+              {{ status }}
+            </option>
+          </select>
+          <input 
+            type="date" 
+            class="date-picker-input" 
+            [value]="getDateInputValue()" 
+            (change)="onDateInputChange($event)">
+        </div>
       </div>
 
       <div class="table-wrapper">
@@ -16,25 +29,25 @@
           <!-- Customer Column -->
           <ng-container matColumnDef="customer">
             <th mat-header-cell *matHeaderCellDef>Customer</th>
-            <td mat-cell *matCellDef="let row" class="customer-cell">{{ row.customer }}</td>
+            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row" class="customer-cell">{{ row.customer }}</td>
           </ng-container>
 
           <!-- Email Column -->
           <ng-container matColumnDef="email">
             <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.email }}</td>
           </ng-container>
 
           <!-- Part Name Column -->
           <ng-container matColumnDef="partName">
             <th mat-header-cell *matHeaderCellDef>Part Name</th>
-            <td mat-cell *matCellDef="let row">{{ row.partName }}</td>
+            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.partName }}</td>
           </ng-container>
 
           <!-- Status Column -->
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let row">
+            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">
               <span class="status-badge" [ngClass]="getStatusClass(row.status)">{{ row.status }}</span>
             </td>
           </ng-container>
@@ -42,13 +55,13 @@
           <!-- Sent At Column -->
           <ng-container matColumnDef="sentAt">
             <th mat-header-cell *matHeaderCellDef>Sent At</th>
-            <td mat-cell *matCellDef="let row">{{ row.sentAt }}</td>
+            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.sentAt }}</td>
           </ng-container>
 
           <!-- Actual Cost Column -->
           <ng-container matColumnDef="actualCost">
             <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
-            <td mat-cell *matCellDef="let row">{{ row.actualCost | number }}</td>
+            <td mat-cell  (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.actualCost | number }}</td>
           </ng-container>
 
           <!-- Difference Column -->
@@ -79,42 +92,77 @@
 
     <!-- Total Quotations Summary Card -->
     <div class="quotations-summary-card">
-      <div class="quotation-card">
-        <h3>Total Quotations</h3>
-        <div class="total">64</div>
+      <div class="dashboard-section">
+
+        <div class="section-title">Overall Quotation Data</div>
     
-        <div class="progress-bar">
-          <div class="progress-fill">
-            <div class="bar-pending"></div>
-            <div class="bar-approved"></div>
-            <div class="bar-rejected"></div>
-          </div>
+        <div class="quotation-container">
+    
+            <div class="q-card">
+                <h2 class="totalQuotations" >{{ totalQuotations }}</h2>
+                <p>Quotations</p>
+                <span>100%</span>
+            </div>
+    
+            <div class="q-card">
+                <h2 class="approvedCount" >{{ approvedCount }}</h2>
+                <p>Approved</p>
+                <span>{{ approvedPercent }}%</span>
+            </div>
+    
+            <div class="q-card">
+                <h2 class="pendingCount" >{{ pendingCount }}</h2>
+                <p>In Progress</p>
+                <span>{{ pendingPercent }}%</span>
+            </div>
+    
+               <div class="q-card">
+                <h2 class="rejectedCount"  >{{ rejectedCount }}</h2>
+                <p>Rejected</p>
+                <span>{{ rejectedPercent }}%</span>
+            </div>
+    
         </div>
     
-        <div class="percentages">
-          <span>24%</span>
-          <span>35%</span>
-          <span>41%</span>
-        </div>
+        <div class="section-title mt">Overall Cost Data</div>
     
-        <div class="status-row">
-          <div class="status-box">
-            <div class="icon pending">⏱️</div>
-            <div class="count">8</div>
-            <div class="label">Pending</div>
-          </div>
-          <div class="status-box">
-            <div class="icon approved">👁️</div>
-            <div class="count">12</div>
-            <div class="label">Approved</div>
-          </div>
-          <div class="status-box">
-            <div class="icon rejected">📅</div>
-            <div class="count">14</div>
-            <div class="label">Rejected</div>
-          </div>
+        <div class="cost-container">
+    
+            <div class="cost-card">
+                <p class="label">Profit</p>
+              <div class="value-row" [ngClass]="totalProfit > 0 ? 'green' : ''">
+        <span class="arrow" *ngIf="totalProfit > 0">▲</span>
+        <span class="arrow" *ngIf="totalProfit <= 0">▼</span>
+        <h2 class="value">{{ formatNumberInK(totalProfit) }}</h2>
+        <span class="percent">{{ profitPercent }}%</span>
+    </div>
+    
+            </div>
+    
+            <div class="cost-card">
+                <p class="label">Losses</p>
+                <div class="value-row" [ngClass]="totalLosses > 0 ? 'red' : ''">
+        <span class="arrow">▼</span>
+        <h2 class="value">{{ formatNumberInK(totalLosses) }}</h2>
+        <span class="percent">{{ lossesPercent }}%</span>
+    </div>
+    
+                
+            </div>
+    
+            <div class="cost-card">
+                <p class="label">Net Difference</p>
+              <div class="value-row" [ngClass]="totalCostDifference >= 0 ? 'green' : 'red'">
+        <span class="arrow" *ngIf="totalCostDifference >= 0">▲</span>
+        <span class="arrow" *ngIf="totalCostDifference < 0">▼</span>
+        <h2 class="value">{{ formatNumberInK(getAbsoluteValue(totalCostDifference)) }}</h2>
+        <span class="percent">{{ getNetDifferencePercent() }}%</span>
+    </div>
+    
+            </div>
+    
         </div>
-      </div>
+    </div>
     </div>
   </div>
 

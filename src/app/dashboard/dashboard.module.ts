@@ -19,6 +19,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import {  ReactiveFormsModule } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,6 +45,7 @@ import { ChartsModule } from 'ng2-charts';
     MatNativeDateModule,
     MatInputModule,
     MatFormFieldModule,
+    MatSelectModule,
     ReactiveFormsModule,
     MatSortModule,
     MatButtonModule,

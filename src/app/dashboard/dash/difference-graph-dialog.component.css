@@ -1,6 +1,7 @@
+
+
 .compare-graph-container {
-  min-width: 900px;
-  padding: 20px;
+  min-width: 700px;
 }
 
 .main-title {
@@ -8,19 +9,40 @@
   font-size: 24px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  padding-top: 0px;
+
+
+}
+
+
+
+
+
+.close-button {
+
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
 }
 
 .content-wrapper {
   display: flex;
   gap: 30px;
-  align-items: flex-start;
+  justify-content: center;
 }
 
 /* Chart Section */
 .chart-section {
   flex: 1;
-  max-width: 500px;
+  max-width: 400px;
 }
 
 .chart-subtitle {
@@ -200,7 +222,7 @@
 
 /* Right Section */
 .right-section {
-  min-width: 280px;
+  min-width: 240px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -216,13 +238,30 @@
   width: 100%;
 }
 
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-label {
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 24px;
+  color: #333;
+  font-weight: 400;
+}
+
 .cost-summary {
-  background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 30px;
 }
 
 .summary-row {
