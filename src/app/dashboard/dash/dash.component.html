@@ -16,11 +16,27 @@
               {{ status }}
             </option>
           </select>
-          <input 
-            type="date" 
-            class="date-picker-input" 
-            [value]="getDateInputValue()" 
-            (change)="onDateInputChange($event)">
+          <div class="month-selector-wrapper">
+            <button 
+              type="button" 
+              class="month-nav-button" 
+              (click)="navigateToPreviousMonth()"
+              title="Previous Month">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <input 
+              type="month" 
+              class="date-picker-input" 
+              [value]="getMonthInputValue()" 
+              (change)="onMonthInputChange($event)">
+            <button 
+              type="button" 
+              class="month-nav-button" 
+              (click)="navigateToNextMonth()"
+              title="Next Month">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
       </div>
 

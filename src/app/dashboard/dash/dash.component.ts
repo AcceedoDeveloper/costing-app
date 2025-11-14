@@ -56,6 +56,7 @@ export class DashComponent implements OnInit, AfterViewInit {
   quotationsDataSource = new MatTableDataSource<any>([]);
   allQuotations: any[] = []; // Store all quotations for filtering
   selectedDate: Date = new Date(); // Will be set to current date in ngOnInit
+  selectedMonth: string = ''; // Will store YYYY-MM format
   pageSize = 5;
   
   // Status Filter
@@ -110,6 +111,10 @@ export class DashComponent implements OnInit, AfterViewInit {
     this.estimationStartDate = firstDayOfMonth;
     this.estimationEndDate = today;
     this.selectedDate = today; // Set date picker to current date
+    // Initialize month selector to current month (YYYY-MM format)
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    this.selectedMonth = `${year}-${month}`;
 
     this.initializeQuotations();
     this.initializeGradeChart();
@@ -195,41 +200,77 @@ export class DashComponent implements OnInit, AfterViewInit {
     return 'status-pending';
   }
 
-  getDateInputValue(): string {
-    // Convert Date to YYYY-MM-DD format for HTML date input
-    if (!this.selectedDate) return '';
-    const date = new Date(this.selectedDate);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+  getMonthInputValue(): string {
+    // Return YYYY-MM format for HTML month input
+    return this.selectedMonth;
   }
 
-  onDateInputChange(event: any): void {
-    const selectedDateString = event.target.value;
-    if (selectedDateString) {
-      this.selectedDate = new Date(selectedDateString);
-      this.onDateChange();
+  onMonthInputChange(event: any): void {
+    const selectedMonthString = event.target.value; // Format: YYYY-MM
+    if (selectedMonthString) {
+      this.selectedMonth = selectedMonthString;
+      this.onMonthChange();
     }
   }
 
-  onDateChange(): void {
-    // When date picker changes, update the date range to the selected month
-    if (this.selectedDate) {
-      const selectedDate = new Date(this.selectedDate);
-      const firstDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-      const lastDayOfMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
+  onMonthChange(): void {
+    // When month picker changes, update the date range to the selected month
+    if (this.selectedMonth) {
+      const [year, month] = this.selectedMonth.split('-').map(Number);
+      const firstDayOfMonth = new Date(year, month - 1, 1);
+      const lastDayOfMonth = new Date(year, month, 0);
       
-      // If selected date is in the current month, use today as end date
+      // If selected month is the current month, use today as end date
       const today = new Date();
-      const isCurrentMonth = selectedDate.getMonth() === today.getMonth() && 
-                            selectedDate.getFullYear() === today.getFullYear();
+      const isCurrentMonth = month - 1 === today.getMonth() && year === today.getFullYear();
       
       this.estimationStartDate = firstDayOfMonth;
       this.estimationEndDate = isCurrentMonth ? today : lastDayOfMonth;
+      this.selectedDate = firstDayOfMonth; // Keep selectedDate in sync for compatibility
       
       // Fetch data for the selected month
       this.fetchActualEstimationCost();
+    }
+  }
+
+  navigateToPreviousMonth(): void {
+    if (this.selectedMonth) {
+      const [year, month] = this.selectedMonth.split('-').map(Number);
+      let newYear = year;
+      let newMonth = month - 1;
+      
+      if (newMonth < 1) {
+        newMonth = 12;
+        newYear = year - 1;
+      }
+      
+      this.selectedMonth = `${newYear}-${String(newMonth).padStart(2, '0')}`;
+      this.onMonthChange();
+    }
+  }
+
+  navigateToNextMonth(): void {
+    if (this.selectedMonth) {
+      const [year, month] = this.selectedMonth.split('-').map(Number);
+      let newYear = year;
+      let newMonth = month + 1;
+      
+      if (newMonth > 12) {
+        newMonth = 1;
+        newYear = year + 1;
+      }
+      
+      // Don't allow navigation to future months
+      const today = new Date();
+      const maxYear = today.getFullYear();
+      const maxMonth = today.getMonth() + 1;
+      
+      if (newYear > maxYear || (newYear === maxYear && newMonth > maxMonth)) {
+        return; // Don't navigate to future months
+      }
+      
+      this.selectedMonth = `${newYear}-${String(newMonth).padStart(2, '0')}`;
+      this.onMonthChange();
     }
   }
 
