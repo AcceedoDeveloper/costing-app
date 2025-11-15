@@ -147,6 +147,9 @@
                   </div>
       </td>
               <td >
+                <button mat-icon-button class="expand-button" (click)="toggleRow(customer._id)" [attr.aria-label]="isRowExpanded(customer._id) ? 'Collapse row' : 'Expand row'">
+                  <mat-icon>{{ isRowExpanded(customer._id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </button>
                 <button mat-icon-button  (click)="edit(customer._id)">
                   <mat-icon>edit</mat-icon>
         </button>
@@ -158,6 +161,34 @@
         {{ customer.updatedAt ? (customer.updatedAt | date:'mediumDate') : (customer.createdAt ? (customer.createdAt | date:'mediumDate') : '-') }}
       </td>
       
+    </tr>
+    <!-- Expanded Row with Nested Table -->
+    <tr *ngIf="isRowExpanded(customer._id)" class="expanded-row">
+      <td colspan="9" class="nested-table-cell">
+        <div class="nested-table-container">
+          <table class="nested-table">
+            <thead>
+              <tr>
+                <th>Process Name</th>
+                <th>Process Cost</th>
+                <th>Grade</th>
+                <th>Process Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let process of customer.processName; let j = index">
+                <td>{{ process.name || process.processName || '-' }}</td>
+                <td>{{ process.processCost | number:'1.2-2' }}</td>
+                <td>{{ process.grade?.name || process.grade || '-' }}</td>
+                <td>{{ process.processType?.name || process.processType || '-' }}</td>
+              </tr>
+              <tr *ngIf="!customer.processName || customer.processName.length === 0">
+                <td colspan="4" class="no-data">No process data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
     </tr>
   </ng-container>
 </tbody>

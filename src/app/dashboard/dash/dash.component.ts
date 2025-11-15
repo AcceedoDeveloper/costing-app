@@ -1,36 +1,10 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DashboardService } from '../../services/dashboard.service';
 import { MatPaginator } from '@angular/material/paginator';
-import { ViewChild } from '@angular/core';
-import { formatDate } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { DifferenceGraphDialogComponent } from './difference-graph-dialog.component';
-
-
-
-interface Quotation {
-  customer: string;
-  email: string;
-  partName: string;
-  status: string;
-  sentAt: string;
-  actualCost: number;
-  difference: number;
-}
-
-interface GradeLegendItem {
-  label: string;
-  value: string;
-  percent: number;
-  color: string;
-}
-
-interface RecentUpdate {
-  name: string;
-  initials: string;
-  message: string;
-}
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dash',
@@ -42,7 +16,8 @@ export class DashComponent implements OnInit, AfterViewInit {
 
   constructor(
     private dashboardServices: DashboardService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
   actualEstimationCost: any[] = [];
   filteredEstimationCost: any[] = [];
@@ -79,30 +54,26 @@ export class DashComponent implements OnInit, AfterViewInit {
   lossesPercent = 0;
   totalCostDifference = 0;
 
-  // Grade View
-  selectedGrade = 'All';
-  grades = ['All', 'SGI-NIL Cu', 'SGI-HIGH Cu', 'SGI-LOW Cu', 'GCI'];
-  gradeChart: any;
-  gradeLegend: GradeLegendItem[] = [];
-
-  // Cost Chart
-  costChart: any;
-  actualCost = 4500;
-  currentCost = 4000;
-  difference = 500;
-
-  // Part Details
-  partName = '';
-  drawingNo = 223;
-  customerName = 'Sv Industries';
-  quoteAt = '08/11/2024';
-
-  // Recent Updates
-  recentUpdates: RecentUpdate[] = [
-    { name: 'Karthik', initials: 'EK', message: 'Updated in Material' },
-    { name: 'Prabha', initials: 'JH', message: 'Updated in Grade' },
-    { name: 'Prabha', initials: 'AF', message: 'Updated in Grade' }
-  ];
+  // Dashboard Charts Data
+  selectedGrade: string = 'Grade';
+  gradeOptions: string[] = ['Grade', 'SGI-NIL Cu', 'SGI-HIGH Cu', 'SGI-LOW Cu', 'GCI'];
+  
+  gradeChartSegments: any[] = [];
+  gradeChartLegend: any[] = [];
+  gradeTotalValue: number = 0;
+  
+  costChartSegments: any[] = [];
+  costChartLegend: any[] = [];
+  
+  quotationBars: any[] = [];
+  yAxisLabels: number[] = [];
+  
+  aiPrediction: string = 'Switching to SGI-LOW Cu could reduce cost by 6% next month.';
+  
+  materialForecast: any[] = [];
+  currentMonth: string = 'Mar 2025';
+  
+  recentUpdates: any[] = [];
 
   ngOnInit(): void {
     // Initialize date range for current month
@@ -117,9 +88,11 @@ export class DashComponent implements OnInit, AfterViewInit {
     this.selectedMonth = `${year}-${month}`;
 
     this.initializeQuotations();
-    this.initializeGradeChart();
-    this.initializeCostChart();
+   
     this.fetchActualEstimationCost();
+    this.initializeDashboardCharts();
+    this.initializeMaterialForecast();
+    this.initializeRecentUpdates();
   }
 
   initializeQuotations(): void {
@@ -128,70 +101,7 @@ export class DashComponent implements OnInit, AfterViewInit {
     this.quotationsDataSource.data = [];
   }
 
-  initializeGradeChart(): void {
-    const total = 17498;
-    const data = [
-      ['SGI-NIL Cu', 6999],
-      ['SGI-HIGH Cu', 4900],
-      ['SGI-LOW Cu', 3150],
-      ['GCI', 2449]
-    ];
 
-    this.gradeChart = {
-      type: 'PieChart',
-      data: [['Grade', 'Value'], ...data],
-      options: {
-        pieHole: 0.6,
-        pieSliceText: 'none',
-        legend: 'none',
-        colors: ['#1e40af', '#a855f7', '#94a3b8', '#475569'],
-        chartArea: { left: 20, top: 20, width: '80%', height: '80%' },
-        tooltip: {
-          textStyle: { fontSize: 14 }
-        }
-      },
-      width: '100%',
-      height: 400
-    };
-
-    this.gradeLegend = [
-      { label: 'SGI-NIL Cu', value: '6.999', percent: 40, color: '#1e40af' },
-      { label: 'SGI-HIGH Cu', value: '4.900', percent: 28, color: '#a855f7' },
-      { label: 'SGI-LOW Cu', value: '3,150', percent: 18, color: '#94a3b8' },
-      { label: 'GCI', value: '2.449', percent: 14, color: '#475569' }
-    ];
-  }
-
-  initializeCostChart(): void {
-    this.costChart = {
-      type: 'BarChart',
-      data: [
-        ['Portfolio', 'OCF', 'Transaction costs'],
-        ['Demofolio 50', 0.15, 0.05],
-        ['Demofolio 100', 0.25, 0.05]
-      ],
-      options: {
-        isStacked: true,
-        legend: 'none',
-        colors: ['#a855f7', '#14b8a6'],
-        hAxis: {
-          title: 'Portfolio',
-          textStyle: { fontSize: 12 }
-        },
-        vAxis: {
-          title: 'Cost (%)',
-          minValue: 0,
-          maxValue: 0.30,
-          format: '#%',
-          textStyle: { fontSize: 12 }
-        },
-        chartArea: { left: 80, top: 20, width: '70%', height: '70%' },
-        bar: { groupWidth: '60%' }
-      },
-      width: '100%',
-      height: 300
-    };
-  }
 
   getStatusClass(status: string): string {
     const statusLower = status.toLowerCase();
@@ -273,12 +183,6 @@ export class DashComponent implements OnInit, AfterViewInit {
       this.onMonthChange();
     }
   }
-
-  onGradeChange(): void {
-    // Handle grade change logic
-    console.log('Grade changed:', this.selectedGrade);
-  }
-
 
   ngAfterViewInit(): void {
     if (this.paginator) {
@@ -499,5 +403,221 @@ export class DashComponent implements OnInit, AfterViewInit {
     } catch (error) {
       console.error('Error opening difference graph:', error);
     }
+  }
+
+  // Dashboard Charts Methods
+  initializeDashboardCharts(): void {
+    this.initializeGradeChart();
+    this.initializeCostChart();
+    this.initializeQuotationChart();
+  }
+
+  initializeGradeChart(): void {
+    // Sample data based on image description
+    const gradeData: [string, number][] = [
+      ['SGI-NIL Cu', 6999],
+      ['SGI-HIGH Cu', 4900],
+      ['SGI-LOW Cu', 3150],
+      ['GCI', 2449]
+    ];
+
+    const total = gradeData.reduce((sum, item) => sum + item[1], 0);
+    this.gradeTotalValue = total;
+
+    const colors = ['#4A90E2', '#50C878', '#FFB347', '#FF6B6B'];
+    const circumference = 2 * Math.PI * 80; // radius = 80
+    let accumulatedLength = 0;
+
+    this.gradeChartSegments = gradeData.map((item, index) => {
+      const percentage = item[1] / total;
+      const segmentLength = circumference * percentage;
+      const dashOffset = -accumulatedLength; // Negative to move backwards
+      
+      accumulatedLength += segmentLength;
+
+      return {
+        color: colors[index],
+        dashArray: `${segmentLength} ${circumference}`,
+        dashOffset: dashOffset,
+        percentage: percentage
+      };
+    });
+
+    this.gradeChartLegend = gradeData.map((item, index) => ({
+      label: item[0],
+      value: item[1],
+      percent: Math.round((item[1] / total) * 100),
+      color: colors[index]
+    }));
+  }
+
+  initializeCostChart(): void {
+    const costData: [string, number][] = [
+      ['Material', 42],
+      ['Labor', 18],
+      ['Power', 8],
+      ['Overheads', 12],
+      ['Outsourcing', 6],
+      ['Core Making', 3],
+      ['Moulding', 9]
+    ];
+
+    const colors = ['#4A90E2', '#50C878', '#FFB347', '#FF6B6B', '#9B59B6', '#E74C3C', '#3498DB'];
+    const circumference = 2 * Math.PI * 80; // radius = 80
+    let accumulatedLength = 0;
+
+    this.costChartSegments = costData.map((item, index) => {
+      const percentage = item[1] / 100; // percentages already sum to 100
+      const segmentLength = circumference * percentage;
+      const dashOffset = -accumulatedLength; // Negative to move backwards
+      
+      accumulatedLength += segmentLength;
+
+      return {
+        color: colors[index],
+        dashArray: `${segmentLength} ${circumference}`,
+        dashOffset: dashOffset,
+        percentage: percentage
+      };
+    });
+
+    this.costChartLegend = costData.map((item, index) => ({
+      label: item[0],
+      percent: item[1],
+      color: colors[index]
+    }));
+  }
+
+  initializeQuotationChart(): void {
+    const quotationData: [string, number][] = [
+      ['Jan', 0],
+      ['Feb', 65],
+      ['Mar', 57],
+      ['Apr', 52],
+      ['May', 48],
+      ['Jun', 0],
+      ['Jul', 0],
+      ['Aug', 0],
+      ['Sep', 87],
+      ['Oct', 0],
+      ['Nov', 0],
+      ['Dec', 0]
+    ];
+
+    // Determine bar colors based on value ranges
+    this.quotationBars = quotationData.map(item => {
+      let color = '#e0e0e0'; // default gray for 0
+      if (item[1] > 0 && item[1] < 50) {
+        color = '#4A90E2'; // blue for low values
+      } else if (item[1] >= 50 && item[1] < 80) {
+        color = '#50C878'; // green for medium values
+      } else if (item[1] >= 80) {
+        color = '#10b981'; // darker green for high values
+      }
+
+      return {
+        month: item[0],
+        percentage: item[1],
+        color: color
+      };
+    });
+
+    // Generate Y-axis labels (0 to 90 in steps of 10)
+    this.yAxisLabels = [];
+    for (let i = 0; i <= 90; i += 10) {
+      this.yAxisLabels.push(i);
+    }
+    this.yAxisLabels.reverse(); // Reverse so 90 is at top
+  }
+
+  onGradeChange(): void {
+    // Update chart based on selected grade
+    // This can be extended to fetch different data based on grade selection
+    this.initializeGradeChart();
+  }
+
+  initializeMaterialForecast(): void {
+    this.materialForecast = [
+      {
+        name: 'SGI-NIL Cu',
+        currentPrice: 118,
+        junePrice: 121,
+        juneChange: 2.5,
+        septPrice: 124,
+        septChange: 2.4,
+        decPrice: 127,
+        decChange: 2.4
+      },
+      {
+        name: 'SGI-HIGH Cu',
+        currentPrice: 132,
+        junePrice: 138,
+        juneChange: 4.5,
+        septPrice: 142,
+        septChange: 2.9,
+        decPrice: 147,
+        decChange: 3.2
+      },
+      {
+        name: 'SGI-LOW Cu',
+        currentPrice: 105,
+        junePrice: 107,
+        juneChange: 1.9,
+        septPrice: 109,
+        septChange: 1.8,
+        decPrice: 111,
+        decChange: 1.8
+      },
+      {
+        name: 'GCI',
+        currentPrice: 72,
+        junePrice: 73,
+        juneChange: 1.4,
+        septPrice: 74,
+        septChange: 1.3,
+        decPrice: 76,
+        decChange: 2.7
+      },
+      {
+        name: 'Aluminum',
+        currentPrice: 248,
+        junePrice: 253,
+        juneChange: 2.0,
+        septPrice: 258,
+        septChange: 2.1,
+        decPrice: 946,
+        decChange: 4.6
+      }
+    ];
+  }
+
+  initializeRecentUpdates(): void {
+    this.recentUpdates = [
+      {
+        initials: 'EK',
+        name: 'Karthik',
+        action: 'Updated in Material.',
+        color: '#4A90E2'
+      },
+      {
+        initials: 'JH',
+        name: 'Prabha',
+        action: 'Updated in Grade.',
+        color: '#9B59B6'
+      },
+      {
+        initials: 'AF',
+        name: 'Prabha',
+        action: 'Updated in Grade.',
+        color: '#4A90E2'
+      }
+    ];
+  }
+
+  navigateToSection(section: string): void {
+    // Navigate to different sections based on button click
+    console.log('Navigating to:', section);
+    // You can implement routing logic here
+    // this.router.navigate([`/${section}`]);
   }
 }
