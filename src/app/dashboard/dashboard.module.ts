@@ -24,11 +24,15 @@ import {  ReactiveFormsModule } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DifferenceGraphDialogComponent } from './dash/difference-graph-dialog.component';
+import { ReportDetailsDialogComponent } from './report/report-details-dialog/report-details-dialog.component';
 import { ChartsModule } from 'ng2-charts';
+import { ToastrModule } from 'ngx-toastr';
+import { ReportQuotationDialogComponent } from './report/report-quotation-dialog/report-quotation-dialog.component';
 
 @NgModule({
-  declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent, DifferenceGraphDialogComponent],
+  declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent, DifferenceGraphDialogComponent, ReportDetailsDialogComponent, ReportQuotationDialogComponent],
   imports: [
     MatIconModule,
     MaterialModule,
@@ -49,7 +53,9 @@ import { ChartsModule } from 'ng2-charts';
     ReactiveFormsModule,
     MatSortModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule,
+    ToastrModule
   ]
 })
 export class DashboardModule { }

@@ -1,0 +1,205 @@
+<div class="report-container">
+  <!-- Header Section -->
+  <div class="report-header">
+    <div class="header-content">
+      <div class="header-title">
+        <mat-icon class="title-icon">assessment</mat-icon>
+        <h1>Customer Details Report</h1>
+      </div>
+      <p class="header-subtitle">Comprehensive overview of all customer quotations and details</p>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card stat-card-primary">
+      <div class="stat-icon-wrapper primary">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ totalCustomers }}</div>
+        <div class="stat-label">Total Records</div>
+      </div>
+      <div class="stat-trend">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+    </div>
+
+    <div class="stat-card stat-card-success">
+      <div class="stat-icon-wrapper success">
+        <mat-icon>business</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ uniqueCustomers.size }}</div>
+        <div class="stat-label">Unique Customers</div>
+      </div>
+      <div class="stat-trend">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+    </div>
+
+    <div class="stat-card stat-card-info">
+      <div class="stat-icon-wrapper info">
+        <mat-icon>settings</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ totalProcesses }}</div>
+        <div class="stat-label">Total Processes</div>
+      </div>
+      <div class="stat-trend">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+    </div>
+
+    <div class="stat-card stat-card-warning">
+      <div class="stat-icon-wrapper warning">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ activeCustomers }}</div>
+        <div class="stat-label">Active Records</div>
+      </div>
+      <div class="stat-trend">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="search-filter">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Search by customer name, drawing number, or part name..."
+        [(ngModel)]="searchText">
+    </div>
+    <div class="status-filter">
+      <mat-icon class="filter-icon">filter_list</mat-icon>
+      <select class="status-select" [(ngModel)]="selectedStatus">
+        <option value="all">All Status</option>
+        <option value="active">Active</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+    </div>
+    <button mat-raised-button class="export-btn" (click)="exportToCSV()" matTooltip="Export to CSV">
+      <mat-icon>download</mat-icon>
+      <span>Export</span>
+    </button>
+  </div>
+
+  <!-- Customer Details Grid -->
+  <div class="customers-grid" *ngIf="filteredCustomers.length > 0; else noData">
+    <div class="customer-card" *ngFor="let customer of filteredCustomers; trackBy: trackByCustomerId">
+      <div class="card-header">
+        <div class="customer-info">
+          <div class="customer-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="customer-details">
+            <h3 class="customer-name">{{ customer.CustomerName?.name || 'N/A' }}</h3>
+            <p class="customer-id">ID: {{ customer._id?.substring(0, 8) || 'N/A' }}</p>
+          </div>
+        </div>
+        <div class="status-badge" [ngClass]="getStatusColor(customer.Status)">
+          <mat-icon>{{ getStatusIcon(customer.Status) }}</mat-icon>
+          <span>{{ customer.Status || 'N/A' }}</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="detail-row">
+          <div class="detail-item">
+            <mat-icon class="detail-icon">description</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Drawing No</span>
+              <span class="detail-value">{{ customer.drawingNo || 'N/A' }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <mat-icon class="detail-icon">category</mat-icon>
+            <div class="detail-content">
+              <span class="detail-label">Part Name</span>
+              <span class="detail-value">{{ customer.partName || 'N/A' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-section">
+          <div class="process-header">
+            <mat-icon>settings</mat-icon>
+            <span>Processes ({{ getProcessCount(customer) }})</span>
+          </div>
+          <div class="process-tags" *ngIf="customer.processName && customer.processName.length > 0">
+            <span class="process-tag" *ngFor="let process of customer.processName.slice(0, 3)">
+              {{ process?.processName || process?.name || 'N/A' }}
+            </span>
+            <span class="process-tag more" *ngIf="customer.processName.length > 3">
+              +{{ customer.processName.length - 3 }} more
+            </span>
+          </div>
+          <div class="no-processes" *ngIf="!customer.processName || customer.processName.length === 0">
+            No processes assigned
+          </div>
+        </div>
+
+        <div class="inputs-section">
+          <div class="input-badge" *ngIf="customer.Inputs?.castingInputs?.length">
+            <mat-icon>inventory</mat-icon>
+            <span>Casting</span>
+          </div>
+          <div class="input-badge" *ngIf="customer.Inputs?.mouldingInputs?.length">
+            <mat-icon>precision_manufacturing</mat-icon>
+            <span>Moulding</span>
+          </div>
+          <div class="input-badge" *ngIf="customer.Inputs?.coreInputs?.length">
+            <mat-icon>build</mat-icon>
+            <span>Core</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="footer-item">
+          <mat-icon>calendar_today</mat-icon>
+          <span>{{ customer.createdAt ? (customer.createdAt | date: 'short') : 'N/A' }}</span>
+        </div>
+        <div class="action-buttons">
+          <button mat-icon-button class="action-btn view-btn" (click)="viewDetails(customer)" matTooltip="View Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button class="action-btn quote-btn" (click)="viewQuotationsreport(customer)" matTooltip="View Quotation">
+            <mat-icon>description</mat-icon>
+          </button>
+          <button mat-icon-button class="action-btn download-btn" (click)="downloadQuotation(customer)" matTooltip="Download Quotation">
+            <mat-icon>file_download</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Data Template -->
+  <ng-template #noData>
+    <div class="no-data-container">
+      <mat-icon class="no-data-icon">inbox</mat-icon>
+      <h3>No Customer Details Found</h3>
+      <p *ngIf="searchText || selectedStatus !== 'all'">
+        Try adjusting your search or filter criteria
+      </p>
+      <p *ngIf="!searchText && selectedStatus === 'all'">
+        No customer details are available at the moment
+      </p>
+    </div>
+  </ng-template>
+</div>
+
+
+
+
+
+
+
+

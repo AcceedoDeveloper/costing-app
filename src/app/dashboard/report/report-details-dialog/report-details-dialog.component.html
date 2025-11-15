@@ -1,0 +1,115 @@
+<div class="dialog-container">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <div class="header-title">
+      <mat-icon class="header-icon">person</mat-icon>
+      <h2>Customer Details</h2>
+    </div>
+    <button mat-icon-button class="close-button" (click)="closeDialog()" matTooltip="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Dialog Content -->
+  <div class="dialog-content">
+    <!-- Customer Info Section -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>business</mat-icon>
+        <h3>Customer Information</h3>
+      </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Customer Name</span>
+          <span class="info-value">{{ customer.CustomerName?.name || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Customer ID</span>
+          <span class="info-value">{{ customer._id || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Drawing Number</span>
+          <span class="info-value">{{ customer.drawingNo || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Part Name</span>
+          <span class="info-value">{{ customer.partName || 'N/A' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Status</span>
+          <span class="status-badge" [ngClass]="getStatusColor(customer.Status)">
+            <mat-icon>{{ getStatusIcon(customer.Status) }}</mat-icon>
+            <span>{{ customer.Status || 'N/A' }}</span>
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Created At</span>
+          <span class="info-value">{{ customer.createdAt ? (customer.createdAt | date: 'medium') : 'N/A' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Processes Section -->
+    <div class="info-section" *ngIf="customer.processName && customer.processName.length > 0">
+      <div class="section-header">
+        <mat-icon>settings</mat-icon>
+        <h3>Processes ({{ getProcessCount() }})</h3>
+      </div>
+      <div class="processes-list">
+        <div class="process-item" *ngFor="let process of customer.processName; let i = index">
+          <div class="process-number">{{ i + 1 }}</div>
+          <div class="process-info">
+            <span class="process-name">{{ process?.processName || process?.name || 'N/A' }}</span>
+            <span class="process-cost" *ngIf="process?.processCost">
+              Cost: ₹{{ process.processCost | number: '1.2-2' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inputs Section -->
+    <div class="info-section">
+      <div class="section-header">
+        <mat-icon>input</mat-icon>
+        <h3>Input Types</h3>
+      </div>
+      <div class="inputs-grid">
+        <div class="input-card" *ngIf="customer.Inputs?.castingInputs?.length">
+          <mat-icon class="input-icon">inventory</mat-icon>
+          <div class="input-info">
+            <span class="input-label">Casting Inputs</span>
+            <span class="input-count">{{ customer.Inputs.castingInputs.length }} items</span>
+          </div>
+        </div>
+        <div class="input-card" *ngIf="customer.Inputs?.mouldingInputs?.length">
+          <mat-icon class="input-icon">precision_manufacturing</mat-icon>
+          <div class="input-info">
+            <span class="input-label">Moulding Inputs</span>
+            <span class="input-count">{{ customer.Inputs.mouldingInputs.length }} items</span>
+          </div>
+        </div>
+        <div class="input-card" *ngIf="customer.Inputs?.coreInputs?.length">
+          <mat-icon class="input-icon">build</mat-icon>
+          <div class="input-info">
+            <span class="input-label">Core Inputs</span>
+            <span class="input-count">{{ customer.Inputs.coreInputs.length }} items</span>
+          </div>
+        </div>
+        <div class="no-inputs" *ngIf="!customer.Inputs?.castingInputs?.length && !customer.Inputs?.mouldingInputs?.length && !customer.Inputs?.coreInputs?.length">
+          <mat-icon>info</mat-icon>
+          <span>No inputs configured</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog Actions -->
+  <div class="dialog-actions">
+    <button mat-button class="close-btn" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </div>
+</div>
+
