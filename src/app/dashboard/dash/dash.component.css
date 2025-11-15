@@ -163,22 +163,37 @@
 .quotations-table {
   width: 100%;
   table-layout: auto;
+  border-collapse: collapse;
+  font-size: 10px;
 }
 
-/* Reduce Material table cell padding */
-::ng-deep .quotations-table .mat-cell {
-  height: 24px !important;
-  padding: 1px 8px !important;
-  font-size: 10px !important;
-  line-height: 1.1 !important;
+.quotations-table thead {
+  background: #f8f9fa;
 }
 
-::ng-deep .quotations-table .mat-header-cell {
-  height: 22px !important;
-  padding: 2px 8px !important;
-  font-size: 9px !important;
-  font-weight: 600 !important;
-  line-height: 1.1 !important;
+.quotations-table th {
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 9px;
+  height: 35px;
+  line-height: 1.1;
+}
+
+.quotations-table td {
+  padding: 2px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+  height: 30px;
+  line-height: 1.1;
+  font-size: 10px;
+}
+
+.quotations-table tbody tr:hover {
+  background: #f8f9fa;
+  cursor: pointer;
 }
 
 .customer-cell {
@@ -242,6 +257,12 @@
   color: #ef4444;
 }
 
+.chart-container-flex{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
 .arrow {
   margin-right: 3px;
   font-size: 13px;
@@ -259,12 +280,46 @@
 
 .pagination-controls {
   display: flex;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
 }
 
 .pagination-controls button {
   width: 20px;
   height: 20px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #4A90E2;
+  color: #4A90E2;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-controls button mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.page-info {
+  font-size: 9px;
+  color: #666;
+  min-width: 40px;
+  text-align: center;
 }
 
 

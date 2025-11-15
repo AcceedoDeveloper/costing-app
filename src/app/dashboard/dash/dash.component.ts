@@ -33,7 +33,7 @@ export class DashComponent implements OnInit, AfterViewInit {
   allQuotations: any[] = []; // Store all quotations for filtering
   selectedDate: Date = new Date(); // Will be set to current date in ngOnInit
   selectedMonth: string = ''; // Will store YYYY-MM format
-  pageSize = 3;
+  pageSize = 5;
   
   // Status Filter
   selectedStatus: string = 'All';
@@ -264,6 +264,8 @@ export class DashComponent implements OnInit, AfterViewInit {
           console.warn('No data received from API');
           this.allQuotations = [];
           this.quotationsDataSource.data = [];
+          this.updatePagination();
+          this.currentPage = 1;
           this.updateSummaryCounts([]);
         }
       },
@@ -394,17 +396,52 @@ export class DashComponent implements OnInit, AfterViewInit {
       );
     }
     
-    this.quotationsDataSource.data = filtered;
-    
-    // Reset paginator to first page when filter changes
-    if (this.paginator) {
-      this.paginator.firstPage();
-      this.quotationsDataSource.paginator = this.paginator;
-    }
+        this.quotationsDataSource.data = filtered;
+    this.updatePagination();
+    this.currentPage = 1; // Reset to first page when filter changes
   }
 
   onStatusChange(): void {
     this.applyStatusFilter();
+  }
+
+  // Get paginated quotations for display
+  getPaginatedQuotations(): any[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.quotationsDataSource.data.slice(startIndex, endIndex);
+  }
+
+  // Current page for pagination
+  currentPage: number = 1;
+  totalPages: number = 1;
+  Math = Math; // Expose Math to template
+
+  // Update pagination info
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.quotationsDataSource.data.length / this.pageSize);
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    }
+  }
+
+  // Pagination methods
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
   }
 
   openDifferenceGraph(row: any): void {

@@ -42,69 +42,51 @@
 
       <div class="table-wrapper">
         <div class="table-container">
-          <table mat-table [dataSource]="quotationsDataSource" class="quotations-table">
-          <!-- Customer Column -->
-          <ng-container matColumnDef="customer">
-            <th mat-header-cell *matHeaderCellDef>Customer</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row" class="customer-cell">{{ row.customer }}</td>
-          </ng-container>
-
-          <!-- Email Column -->
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.email }}</td>
-          </ng-container>
-
-          <!-- Part Name Column -->
-          <ng-container matColumnDef="partName">
-            <th mat-header-cell *matHeaderCellDef>Part Name</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.partName }}</td>
-          </ng-container>
-
-          <!-- Status Column -->
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">
-              <span class="status-badge" [ngClass]="getStatusClass(row.status)">{{ row.status }}</span>
-            </td>
-          </ng-container>
-
-          <!-- Sent At Column -->
-          <ng-container matColumnDef="sentAt">
-            <th mat-header-cell *matHeaderCellDef>Sent At</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.sentAt }}</td>
-          </ng-container>
-
-          <!-- Actual Cost Column -->
-          <ng-container matColumnDef="actualCost">
-            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
-            <td mat-cell  (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.actualCost | number }}</td>
-          </ng-container>
-
-          <!-- Difference Column -->
-          <ng-container matColumnDef="difference">
-            <th mat-header-cell *matHeaderCellDef>Difference</th>
-            <td mat-cell *matCellDef="let row" 
-                [ngClass]="row.difference >= 0 ? 'difference-cell positive' : 'difference-cell negative'"
-                (click)="openDifferenceGraph(row)"
-                class="clickable-difference">
-              <span class="arrow" [ngClass]="row.difference >= 0 ? 'positive' : 'negative'">
-                {{ row.difference >= 0 ? '↑' : '↓' }}
-              </span> 
-              {{ row.differenceAbs | number }}
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+          <table class="quotations-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Part Name</th>
+                <th>Status</th>
+                <th>Sent At</th>
+                <th>Actual Cost</th>
+                <th>Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of getPaginatedQuotations()" (click)="openDifferenceGraph(row)" class="clickable-difference">
+                <td class="customer-cell">{{ row.customer }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.partName }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(row.status)">{{ row.status }}</span>
+                </td>
+                <td>{{ row.sentAt }}</td>
+                <td>{{ row.actualCost | number }}</td>
+                <td [ngClass]="row.difference >= 0 ? 'difference-cell positive' : 'difference-cell negative'">
+                  <span class="arrow" [ngClass]="row.difference >= 0 ? 'positive' : 'negative'">
+                    {{ row.difference >= 0 ? '↑' : '↓' }}
+                  </span> 
+                  {{ row.differenceAbs | number }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <mat-paginator 
-          [pageSize]="pageSize" 
-          [hidePageSize]="true"
-          showFirstLastButtons>
-        </mat-paginator>
+        <div class="pagination-info">
+          <span>Showing {{ ((currentPage - 1) * pageSize) + 1 }} - {{ Math.min(currentPage * pageSize, quotationsDataSource.data.length) }} of {{ quotationsDataSource.data.length }}</span>
+          <div class="pagination-controls">
+            <button (click)="previousPage()" [disabled]="currentPage === 1" title="Previous page">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0" title="Next page">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -219,39 +201,45 @@
           
           </div>
         </div>
-        <div class="chart-container">
-          <div class="donut-chart-wrapper">
-            <div class="donut-chart">
-              <svg class="donut-svg" viewBox="0 0 200 200">
-                <circle 
-                  *ngFor="let segment of gradeChartSegments; let i = index"
-                  class="donut-segment"
-                  [attr.data-index]="i"
-                  cx="100" 
-                  cy="100" 
-                  r="80" 
-                  fill="none" 
-                  [attr.stroke]="segment.color"
-                  stroke-width="30"
-                  [attr.stroke-dasharray]="segment.dashArray"
-                  [attr.stroke-dashoffset]="segment.dashOffset"
-                  stroke-linecap="round">
-                </circle>
-              </svg>
-              <div class="donut-center">
-                <div class="center-value-large">{{ gradeTotalValue | number }}</div>
+
+
+        <div class="chart-container-flex" >
+
+          <div class="chart-container">
+            <div class="donut-chart-wrapper">
+              <div class="donut-chart">
+                <svg class="donut-svg" viewBox="0 0 200 200">
+                  <circle 
+                    *ngFor="let segment of gradeChartSegments; let i = index"
+                    class="donut-segment"
+                    [attr.data-index]="i"
+                    cx="100" 
+                    cy="100" 
+                    r="80" 
+                    fill="none" 
+                    [attr.stroke]="segment.color"
+                    stroke-width="30"
+                    [attr.stroke-dasharray]="segment.dashArray"
+                    [attr.stroke-dashoffset]="segment.dashOffset"
+                    stroke-linecap="round">
+                  </circle>
+                </svg>
+                <div class="donut-center">
+                  <div class="center-value-large">{{ gradeTotalValue | number }}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="chart-legend">
-          <div *ngFor="let item of gradeChartLegend" class="legend-item">
-            <span class="legend-color" [style.background-color]="item.color"></span>
-            <span class="legend-label">{{ item.label }}:</span>
-            <span class="legend-value">{{ item.value | number }}</span>
-            <span class="legend-percent">({{ item.percent }}%)</span>
+          <div class="chart-legend">
+            <div *ngFor="let item of gradeChartLegend" class="legend-item">
+              <span class="legend-color" [style.background-color]="item.color"></span>
+              <span class="legend-label">{{ item.label }}:</span>
+              <span class="legend-value">{{ item.value | number }}</span>
+              <span class="legend-percent">({{ item.percent }}%)</span>
+            </div>
           </div>
         </div>
+      
       </div>
 
       <!-- Cost Contribution (Top Middle) -->
@@ -282,38 +270,42 @@
             </button>
           </div>
         </div>
-        <div class="chart-container">
-          <div class="donut-chart-wrapper">
-            <div class="donut-chart">
-              <svg class="donut-svg" viewBox="0 0 200 200">
-                <circle 
-                  *ngFor="let segment of costChartSegments; let i = index"
-                  class="donut-segment"
-                  [attr.data-index]="i"
-                  cx="100" 
-                  cy="100" 
-                  r="80" 
-                  fill="none" 
-                  [attr.stroke]="segment.color"
-                  stroke-width="30"
-                  [attr.stroke-dasharray]="segment.dashArray"
-                  [attr.stroke-dashoffset]="segment.dashOffset"
-                  stroke-linecap="round">
-                </circle>
-              </svg>
-              <div class="donut-center">
-                <div class="center-label">Cost Contribution</div>
+        <div class="chart-container-flex" >
+
+          <div class="chart-container">
+            <div class="donut-chart-wrapper">
+              <div class="donut-chart">
+                <svg class="donut-svg" viewBox="0 0 200 200">
+                  <circle 
+                    *ngFor="let segment of costChartSegments; let i = index"
+                    class="donut-segment"
+                    [attr.data-index]="i"
+                    cx="100" 
+                    cy="100" 
+                    r="80" 
+                    fill="none" 
+                    [attr.stroke]="segment.color"
+                    stroke-width="30"
+                    [attr.stroke-dasharray]="segment.dashArray"
+                    [attr.stroke-dashoffset]="segment.dashOffset"
+                    stroke-linecap="round">
+                  </circle>
+                </svg>
+                <div class="donut-center">
+                  <div class="center-label">Cost Contribution</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="chart-legend">
-          <div *ngFor="let item of costChartLegend" class="legend-item">
-            <span class="legend-color" [style.background-color]="item.color"></span>
-            <span class="legend-label">{{ item.label }}:</span>
-            <span class="legend-percent">{{ item.percent }}%</span>
+          <div class="chart-legend">
+            <div *ngFor="let item of costChartLegend" class="legend-item">
+              <span class="legend-color" [style.background-color]="item.color"></span>
+              <span class="legend-label">{{ item.label }}:</span>
+              <span class="legend-percent">{{ item.percent }}%</span>
+            </div>
           </div>
         </div>
+       
       </div>
 
       <!-- Quotation Generated Every Month (Top Right) -->
