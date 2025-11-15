@@ -50,6 +50,9 @@ filteredCustomersList: CustomerdetailsIn[] = [];
   totalRecords: number = 0;
   paginatedCustomers: CustomerdetailsIn[] = [];
 
+  // Expanded rows tracking
+  expandedRows: Set<string> = new Set<string>();
+
 
 
   constructor(private store: Store<{ materials: MaterialState }>, 
@@ -502,5 +505,18 @@ resetPagination() {
   this.pageIndex = 0;
 }
 
+// Toggle row expansion
+toggleRow(customerId: string) {
+  if (this.expandedRows.has(customerId)) {
+    this.expandedRows.delete(customerId);
+  } else {
+    this.expandedRows.add(customerId);
+  }
+}
+
+// Check if row is expanded
+isRowExpanded(customerId: string): boolean {
+  return this.expandedRows.has(customerId);
+}
 
 }

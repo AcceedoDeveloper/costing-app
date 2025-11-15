@@ -184,6 +184,212 @@
     </div>
   </div>
 
+  <!-- New Dashboard Section -->
+  <div class="dashboard-grid">
+    <!-- Top Row: Three Charts -->
+    <div class="dashboard-row">
+      <!-- Grade View (Top Left) -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3>Grade view</h3>
+          <select class="grade-select" [(ngModel)]="selectedGrade" (change)="onGradeChange()">
+            <option *ngFor="let grade of gradeOptions" [value]="grade">{{ grade }}</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <div class="donut-chart-wrapper">
+            <div class="donut-chart">
+              <svg class="donut-svg" viewBox="0 0 200 200">
+                <circle 
+                  *ngFor="let segment of gradeChartSegments; let i = index"
+                  class="donut-segment"
+                  [attr.data-index]="i"
+                  cx="100" 
+                  cy="100" 
+                  r="80" 
+                  fill="none" 
+                  [attr.stroke]="segment.color"
+                  stroke-width="30"
+                  [attr.stroke-dasharray]="segment.dashArray"
+                  [attr.stroke-dashoffset]="segment.dashOffset"
+                  stroke-linecap="round">
+                </circle>
+              </svg>
+              <div class="donut-center">
+                <div class="center-value-large">{{ gradeTotalValue | number }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div *ngFor="let item of gradeChartLegend" class="legend-item">
+            <span class="legend-color" [style.background-color]="item.color"></span>
+            <span class="legend-label">{{ item.label }}:</span>
+            <span class="legend-value">{{ item.value | number }}</span>
+            <span class="legend-percent">({{ item.percent }}%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Contribution (Top Middle) -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3>Cost Contribution</h3>
+        </div>
+        <div class="chart-container">
+          <div class="donut-chart-wrapper">
+            <div class="donut-chart">
+              <svg class="donut-svg" viewBox="0 0 200 200">
+                <circle 
+                  *ngFor="let segment of costChartSegments; let i = index"
+                  class="donut-segment"
+                  [attr.data-index]="i"
+                  cx="100" 
+                  cy="100" 
+                  r="80" 
+                  fill="none" 
+                  [attr.stroke]="segment.color"
+                  stroke-width="30"
+                  [attr.stroke-dasharray]="segment.dashArray"
+                  [attr.stroke-dashoffset]="segment.dashOffset"
+                  stroke-linecap="round">
+                </circle>
+              </svg>
+              <div class="donut-center">
+                <div class="center-label">Cost Contribution</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div *ngFor="let item of costChartLegend" class="legend-item">
+            <span class="legend-color" [style.background-color]="item.color"></span>
+            <span class="legend-label">{{ item.label }}:</span>
+            <span class="legend-percent">{{ item.percent }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quotation Generated Every Month (Top Right) -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3>Quotation Generated Every Month</h3>
+        </div>
+        <div class="chart-container">
+          <div class="bar-chart-container">
+            <div class="bar-chart">
+              <div class="bar-chart-bars">
+                <div *ngFor="let bar of quotationBars" class="bar-item">
+                  <div class="bar-wrapper">
+                    <div 
+                      class="bar" 
+                      [style.height.%]="bar.percentage"
+                      [style.background-color]="bar.color"
+                      [title]="bar.month + ': ' + bar.percentage + '%'">
+                    </div>
+                  </div>
+                  <div class="bar-label">{{ bar.month }}</div>
+                </div>
+              </div>
+              <div class="bar-chart-y-axis">
+                <div class="y-axis-label" *ngFor="let label of yAxisLabels">{{ label }}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row: AI Predictor, Material Forecast, Recent Updates -->
+    <div class="dashboard-row">
+      <!-- AI Cost Predictor (Bottom Left) -->
+      <div class="dashboard-card ai-predictor-card">
+        <div class="ai-header">
+          <mat-icon class="ai-icon">lightbulb</mat-icon>
+          <h3>AI Cost Predictor</h3>
+        </div>
+        <div class="ai-prediction">
+          <p class="prediction-text">{{ aiPrediction }}</p>
+        </div>
+        <div class="ai-buttons">
+          <button class="ai-button" (click)="navigateToSection('raw-material')">
+            <span>Raw Material</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+          <button class="ai-button" (click)="navigateToSection('process')">
+            <span>Process</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+          <button class="ai-button" (click)="navigateToSection('grade')">
+            <span>Grade</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- AI-Predicted Material Price Forecast (Bottom Middle) -->
+      <div class="dashboard-card material-forecast-card">
+        <div class="card-header">
+          <h3>AI-Predicted Material Price Forecast</h3>
+        </div>
+        <div class="table-container-forecast">
+          <table class="forecast-table">
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th>Current Price<br/>({{ currentMonth }})</th>
+                <th>Predicted<br/>June 2025</th>
+                <th>Predicted<br/>Sept 2025</th>
+                <th>Predicted<br/>Dec 2025</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let material of materialForecast">
+                <td class="material-name">{{ material.name }}</td>
+                <td>₹{{ material.currentPrice }}</td>
+                <td>
+                  ₹{{ material.junePrice }}
+                  <span class="price-change positive" *ngIf="material.juneChange > 0">+{{ material.juneChange }}%</span>
+                  <span class="price-change negative" *ngIf="material.juneChange < 0">{{ material.juneChange }}%</span>
+                </td>
+                <td>
+                  ₹{{ material.septPrice }}
+                  <span class="price-change positive" *ngIf="material.septChange > 0">+{{ material.septChange }}%</span>
+                  <span class="price-change negative" *ngIf="material.septChange < 0">{{ material.septChange }}%</span>
+                </td>
+                <td>
+                  ₹{{ material.decPrice }}
+                  <span class="price-change positive" *ngIf="material.decChange > 0">+{{ material.decChange }}%</span>
+                  <span class="price-change negative" *ngIf="material.decChange < 0">{{ material.decChange }}%</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Updates (Bottom Right) -->
+      <div class="dashboard-card recent-updates-card">
+        <div class="card-header">
+          <h3>Recent Updates</h3>
+        </div>
+        <div class="updates-list">
+          <div *ngFor="let update of recentUpdates" class="update-item">
+            <div class="update-avatar" [style.background-color]="update.color">
+              {{ update.initials }}
+            </div>
+            <div class="update-content">
+              <div class="update-name">{{ update.name }}</div>
+              <div class="update-action">{{ update.action }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      
+    </div>
+  </div>
 
 </div>
 

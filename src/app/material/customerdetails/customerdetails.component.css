@@ -622,6 +622,97 @@ margin-right: 25px;
   color: rgba(166, 58, 58, 0.85);
 }
 
+/* Expand/Collapse button styling */
+.expand-button {
+  margin-right: 0.15rem;
+}
+
+::ng-deep .data-table tbody td .expand-button .mat-icon {
+  color: rgba(11, 59, 46, 0.7);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .data-table tbody td .expand-button:hover .mat-icon {
+  color: rgba(15, 92, 72, 0.9);
+  transform: scale(1.1);
+}
+
+/* Expanded Row Styling */
+.expanded-row {
+  background: rgba(248, 247, 242, 0.5) !important;
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2) !important;
+}
+
+.expanded-row:hover {
+  background: rgba(248, 247, 242, 0.7) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+}
+
+.nested-table-cell {
+  padding: 1rem !important;
+  background: rgba(229, 227, 221, 0.3);
+  border-top: 1px solid rgba(15, 92, 72, 0.15);
+  color: black;
+}
+
+.nested-table-container {
+  padding: 0.75rem;
+  background: var(--off-white);
+  border-radius: 8px;
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  box-shadow: 0 2px 6px rgba(11, 59, 46, 0.04);
+}
+
+.nested-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--off-white);
+}
+
+.nested-table thead {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.75) 0%, rgba(15, 92, 72, 0.75) 100%);
+}
+
+.nested-table thead th {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  color: black;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.15px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.nested-table tbody tr {
+  border-bottom: 1px solid rgba(229, 227, 221, 0.4);
+  transition: background-color 0.2s ease;
+}
+
+.nested-table tbody tr:hover {
+  background: rgba(229, 227, 221, 0.3);
+}
+
+.nested-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.nested-table tbody td {
+  padding: 0.625rem 0.75rem;
+  color: rgba(16, 20, 20, 0.85);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.nested-table tbody td.no-data {
+  text-align: center;
+  color: rgba(60, 63, 62, 0.6);
+  font-style: italic;
+  padding: 1rem;
+}
+
 /* Paginator */
 .custom-paginator {
   background: rgba(229, 227, 221, 0.4);
