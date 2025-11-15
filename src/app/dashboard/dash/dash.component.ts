@@ -637,6 +637,20 @@ export class DashComponent implements OnInit, AfterViewInit {
     this.fetchChartData();
   }
 
+  // Get label for chart data source
+  getChartDataSourceLabel(): string {
+    switch (this.chartDataSource) {
+      case 'rawMaterial':
+        return 'Raw Material';
+      case 'process':
+        return 'Process';
+      case 'grade':
+        return 'Grade';
+      default:
+        return 'Grade';
+    }
+  }
+
   // Handle chart limit change (High / Low)
   onChartDataLimitChange(limit: string): void {
     this.chartDataLimit = limit;
@@ -1025,5 +1039,40 @@ export class DashComponent implements OnInit, AfterViewInit {
     // Convert MM-YYYY to YYYY-MM
     const [month, year] = this.costContributionSelectedMonth.split('-');
     return `${year}-${month}`;
+  }
+
+  // Navigate cost contribution month (previous/next)
+  navigateCostContributionMonth(direction: number): void {
+    if (!this.costContributionSelectedMonth) {
+      const today = new Date();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      this.costContributionSelectedMonth = `${month}-${year}`;
+    }
+
+    const [month, year] = this.costContributionSelectedMonth.split('-');
+    const currentDate = new Date(parseInt(year), parseInt(month) - 1, 1);
+    currentDate.setMonth(currentDate.getMonth() + direction);
+    
+    const newMonth = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const newYear = currentDate.getFullYear();
+    this.costContributionSelectedMonth = `${newMonth}-${newYear}`;
+    
+    this.getCostContribution(this.costContributionSelectedMonth);
+  }
+
+  // Check if cost contribution selected month is current month
+  isCostContributionCurrentMonth(): boolean {
+    if (!this.costContributionSelectedMonth) {
+      return true;
+    }
+    
+    const today = new Date();
+    const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+    const currentYear = today.getFullYear();
+    const [selectedMonth, selectedYear] = this.costContributionSelectedMonth.split('-');
+    
+    return parseInt(selectedMonth) === parseInt(currentMonth) && 
+           parseInt(selectedYear) === currentYear;
   }
 }

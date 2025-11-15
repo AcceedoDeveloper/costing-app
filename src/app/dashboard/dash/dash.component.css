@@ -1,6 +1,7 @@
 .dashboard-container {
   min-height: 100vh;
-  padding: 8px;
+  padding: 4px;
+  font-size: 0.85rem;
 }
 
 /* Quotations Section */
@@ -35,12 +36,12 @@
 }
 
 .status-filter-select {
-  width: 130px;
-  height: 28px;
-  padding: 4px 8px;
+  width: 110px;
+  height: 24px;
+  padding: 3px 6px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 10px;
   font-family: inherit;
   background-color: #fff;
   cursor: pointer;
@@ -77,7 +78,7 @@
 
 .table-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: #333;
 }
 
@@ -91,11 +92,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   padding: 0;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 3px;
   background-color: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -117,18 +118,18 @@
 }
 
 .month-nav-button mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
 }
 
 .date-picker-input {
-  height: 28px;
-  padding: 4px 8px;
+  height: 24px;
+  padding: 3px 6px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 10px;
   font-family: inherit;
   background-color: #fff;
   cursor: pointer;
@@ -147,11 +148,11 @@
 
 .table-wrapper {
   border: 1px solid #e0e0e0;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 220px;
+  min-height: 180px;
 }
 
 .table-container {
@@ -165,15 +166,19 @@
 }
 
 /* Reduce Material table cell padding */
-::ng-deep .quotations-table .mat-cell,
-::ng-deep .quotations-table .mat-header-cell {
-  padding: 6px 10px !important;
-  font-size: 12px !important;
+::ng-deep .quotations-table .mat-cell {
+  height: 24px !important;
+  padding: 1px 8px !important;
+  font-size: 10px !important;
+  line-height: 1.1 !important;
 }
 
 ::ng-deep .quotations-table .mat-header-cell {
-  font-size: 11px !important;
+  height: 22px !important;
+  padding: 2px 8px !important;
+  font-size: 9px !important;
   font-weight: 600 !important;
+  line-height: 1.1 !important;
 }
 
 .customer-cell {
@@ -185,9 +190,9 @@
 }
 
 .status-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 10px;
   font-weight: 500;
   display: inline-block;
 }
@@ -238,18 +243,18 @@
 }
 
 .arrow {
-  margin-right: 4px;
-  font-size: 16px;
+  margin-right: 3px;
+  font-size: 13px;
 }
 
 .pagination-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 10px;
+  padding: 3px 8px;
   background-color: #f8f9fa;
   border-top: 1px solid #e0e0e0;
-  font-size: 11px;
+  font-size: 9px;
 }
 
 .pagination-controls {
@@ -258,8 +263,8 @@
 }
 
 .pagination-controls button {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 
@@ -307,7 +312,7 @@
 }
 
 .q-card h2 {
-  font-size: 24px;
+  font-size: 18px;
   margin: 0;
   font-weight: 600;
   text-align: center;
@@ -315,13 +320,13 @@
 
 .q-card p {
   margin: 1px 0;
-  font-size: 11px;
+  font-size: 9px;
   color: #555;
   text-align: center;
 }
 
 .q-card span {
-  font-size: 11px;
+  font-size: 9px;
   color: #363434;
   margin-left: 30%;
 }
@@ -350,7 +355,7 @@
 }
 
 .cost-card .value {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   margin-bottom: 1px;
 }
@@ -369,15 +374,15 @@
 }
 
 .value-row .value {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   margin: 0;
 }
 
 .value-row .percent {
   position: relative;
-  top: 4px;
-  font-size: 12px;
+  top: 3px;
+  font-size: 10px;
   font-weight: 600;
 }
 
@@ -405,10 +410,10 @@
 
 /* Dashboard Grid Styles */
 .dashboard-grid {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
 .dashboard-row {
@@ -424,9 +429,9 @@
 
 .dashboard-card {
   background: white;
-  border-radius: 6px;
-  padding: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
 }
@@ -440,7 +445,7 @@
 
 .card-header h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   color: #333;
 }
@@ -452,10 +457,10 @@
 }
 
 .grade-select {
-  padding: 4px 10px;
+  padding: 3px 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 10px;
   background-color: #fff;
   cursor: pointer;
 }
@@ -466,16 +471,16 @@
 }
 
 .limit-button {
-  padding: 4px 12px;
+  padding: 3px 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 11px;
+  border-radius: 3px;
+  font-size: 9px;
   font-weight: 500;
   background-color: #fff;
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 50px;
+  min-width: 42px;
 }
 
 .limit-button:hover {
@@ -499,12 +504,63 @@
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
+.cost-contribution-month-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cost-contribution-nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.cost-contribution-nav-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #4A90E2;
+  color: #4A90E2;
+}
+
+.cost-contribution-nav-button:active:not(:disabled) {
+  background: #e9ecef;
+  transform: scale(0.95);
+}
+
+.cost-contribution-nav-button:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.cost-contribution-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.cost-contribution-nav-button mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+}
+
 .cost-contribution-month-filter {
-  height: 28px;
-  padding: 4px 8px;
+  height: 24px;
+  padding: 3px 6px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 10px;
   font-family: inherit;
   background-color: #fff;
   cursor: pointer;
@@ -522,16 +578,16 @@
 }
 
 .quotation-count-year-filter {
-  height: 28px;
-  padding: 4px 8px;
+  height: 24px;
+  padding: 3px 6px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: 3px;
+  font-size: 10px;
   font-family: inherit;
   background-color: #fff;
   cursor: pointer;
   transition: border-color 0.2s ease;
-  width: 80px;
+  width: 70px;
 }
 
 .quotation-count-year-filter:hover {
@@ -564,8 +620,8 @@
 
 .donut-chart {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 160px;
+  height: 160px;
   margin: 0 auto;
 }
 
@@ -600,36 +656,36 @@
 }
 
 .center-value-large {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   color: #333;
   line-height: 1.2;
 }
 
 .center-label {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
   color: #666;
   text-align: center;
 }
 
 .chart-legend {
-  margin-top: 15px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 6px;
+  font-size: 10px;
 }
 
 .legend-color {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 2px;
   display: inline-block;
 }
@@ -685,49 +741,49 @@
 .ai-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .ai-icon {
   color: #FFB347;
-  font-size: 28px;
-  width: 28px;
-  height: 28px;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
 }
 
 .ai-prediction {
-  margin-bottom: 20px;
-  padding: 15px;
+  margin-bottom: 12px;
+  padding: 10px;
   background: #fff;
-  border-radius: 8px;
-  border-left: 4px solid #4A90E2;
+  border-radius: 5px;
+  border-left: 3px solid #4A90E2;
 }
 
 .prediction-text {
   margin: 0;
-  font-size: 14px;
+  font-size: 11px;
   color: #333;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .ai-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .ai-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 8px 12px;
   background: #fff;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 14px;
+  font-size: 11px;
   color: #333;
 }
 
@@ -738,9 +794,9 @@
 }
 
 .ai-button mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
   color: #4A90E2;
 }
 
@@ -757,7 +813,7 @@
 .forecast-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 10px;
 }
 
 .forecast-table thead {
@@ -765,16 +821,16 @@
 }
 
 .forecast-table th {
-  padding: 12px 8px;
+  padding: 8px 6px;
   text-align: left;
   font-weight: 600;
   color: #333;
   border-bottom: 2px solid #e0e0e0;
-  font-size: 12px;
+  font-size: 9px;
 }
 
 .forecast-table td {
-  padding: 12px 8px;
+  padding: 8px 6px;
   border-bottom: 1px solid #f0f0f0;
   color: #555;
 }
@@ -790,8 +846,8 @@
 
 .price-change {
   display: block;
-  font-size: 11px;
-  margin-top: 4px;
+  font-size: 9px;
+  margin-top: 3px;
 }
 
 .price-change.positive {
@@ -804,7 +860,6 @@
 
 /* Recent Updates */
 .recent-updates-card {
-  max-height: 350px;
   display: flex;
   flex-direction: column;
 }
@@ -826,11 +881,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 3px;
   background: white;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -861,22 +916,22 @@
 }
 
 .date-nav-button mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  line-height: 18px;
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
 }
 
 .recent-updates-date-filter {
-  padding: 4px 8px;
+  padding: 3px 6px;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 11px;
+  border-radius: 3px;
+  font-size: 9px;
   cursor: pointer;
   background: white;
   color: #333;
   transition: border-color 0.2s ease;
-  width: 120px;
+  width: 100px;
 }
 
 .recent-updates-date-filter:hover {
@@ -892,16 +947,16 @@
 .updates-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 8px;
-  max-height: calc(5 * 50px + 4 * 10px); /* 5 items (50px each) + 4 gaps (10px each) = 290px */
+  gap: 8px;
+  margin-top: 6px;
+  max-height: calc(5 * 40px + 4 * 8px); /* 5 items (40px each) + 4 gaps (8px each) = 232px */
   overflow-y: hidden;
   position: relative;
 }
 
 .updates-list.scrollable {
   overflow-y: auto;
-  max-height: calc(5 * 50px + 4 * 10px); /* Show 5 items statically, then scroll for more */
+  max-height: calc(5 * 40px + 4 * 8px); /* Show 5 items statically, then scroll for more */
 }
 
 /* Custom scrollbar for updates list */
@@ -926,9 +981,9 @@
 .update-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px;
-  border-radius: 6px;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 4px;
   transition: background 0.2s ease;
 }
 
@@ -937,15 +992,15 @@
 }
 
 .update-avatar {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 10px;
   flex-shrink: 0;
 }
 
@@ -955,18 +1010,18 @@
 
 .update-name {
   font-weight: 600;
-  font-size: 12px;
+  font-size: 10px;
   color: #333;
   margin-bottom: 1px;
 }
 
 .update-action {
-  font-size: 11px;
+  font-size: 9px;
   color: #666;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .action-text {
@@ -975,7 +1030,7 @@
 
 .action-time {
   color: #999;
-  font-size: 10px;
+  font-size: 8px;
   white-space: nowrap;
   margin-left: auto;
 }
@@ -995,25 +1050,25 @@
 /* Responsive Design */
 @media (max-width: 1400px) {
   .dashboard-row {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
   
-  .dashboard-row:last-child {
+  /* .dashboard-row:last-child {
     grid-template-columns: 1fr;
-  }
+  } */
 }
 
 /* Bar Chart Styles */
 .bar-chart-container {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 8px;
 }
 
 .bar-chart {
   display: flex;
   height: 100%;
-  min-height: 250px;
+  min-height: 200px;
 }
 
 .bar-chart-bars {
@@ -1060,8 +1115,8 @@
 }
 
 .bar-label {
-  margin-top: 8px;
-  font-size: 11px;
+  margin-top: 6px;
+  font-size: 9px;
   color: #666;
   text-align: center;
   white-space: nowrap;
@@ -1071,13 +1126,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 40px;
-  padding-bottom: 20px;
-  padding-right: 5px;
+  width: 32px;
+  padding-bottom: 16px;
+  padding-right: 4px;
 }
 
 .y-axis-label {
-  font-size: 11px;
+  font-size: 9px;
   color: #999;
   text-align: right;
   line-height: 1;

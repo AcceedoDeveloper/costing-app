@@ -191,7 +191,7 @@
       <!-- Grade View (Top Left) -->
       <div class="dashboard-card">
         <div class="card-header">
-          <h3>Grade view</h3>
+          <h3>{{ getChartDataSourceLabel() }} View</h3>
           <div class="chart-controls-wrapper">
             <div class="limit-buttons">
               <button 
@@ -258,12 +258,29 @@
       <div class="dashboard-card">
         <div class="card-header">
           <h3>Cost Contribution</h3>
-          <input 
-            type="month" 
-            [value]="getCostContributionMonthValue()"
-            (change)="onCostContributionMonthChange($event)"
-            class="cost-contribution-month-filter"
-            title="Select month to filter cost contribution">
+          <div class="cost-contribution-month-wrapper">
+            <button 
+              type="button"
+              class="cost-contribution-nav-button"
+              (click)="navigateCostContributionMonth(-1)"
+              title="Previous month">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <input 
+              type="month" 
+              [value]="getCostContributionMonthValue()"
+              (change)="onCostContributionMonthChange($event)"
+              class="cost-contribution-month-filter"
+              title="Select month to filter cost contribution">
+            <button 
+              type="button"
+              class="cost-contribution-nav-button"
+              (click)="navigateCostContributionMonth(1)"
+              [disabled]="isCostContributionCurrentMonth()"
+              title="Next month">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
         <div class="chart-container">
           <div class="donut-chart-wrapper">
@@ -343,8 +360,8 @@
       <!-- Combined AI Cost Predictor and Material Forecast -->
       <div class="dashboard-card combined-ai-card">
         <div class="combined-ai-content">
-          <!-- AI Cost Predictor Section -->
-          <div class="ai-predictor-section">
+          AI Cost Predictor Section
+          <!-- <div class="ai-predictor-section">
             <div class="ai-header">
               <mat-icon class="ai-icon">lightbulb</mat-icon>
               <h3>AI Cost Predictor</h3>
@@ -366,10 +383,10 @@
                 <mat-icon>arrow_forward</mat-icon>
               </button>
             </div>
-          </div>
+          </div> -->
 
           <!-- AI-Predicted Material Price Forecast Section -->
-          <div class="material-forecast-section">
+          <!-- <div class="material-forecast-section">
             <div class="card-header">
               <h3>AI-Predicted Material Price Forecast</h3>
             </div>
@@ -407,7 +424,7 @@
                 </tbody>
               </table>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
