@@ -1,13 +1,13 @@
 .dashboard-container {
   min-height: 100vh;
-  padding: 20px;
+  padding: 8px;
 }
 
 /* Quotations Section */
 .quotations-section {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  gap: 8px;
 }
 
 .quotations-table-container {
@@ -22,25 +22,25 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  min-height: 35px;
-  margin: 10px;
+  gap: 6px;
+  min-height: 28px;
+  margin: 6px;
 }
 
 .header-filters {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .status-filter-select {
-  width: 180px;
-  height: 35px;
-  padding: 8px 12px;
+  width: 130px;
+  height: 28px;
+  padding: 4px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   font-family: inherit;
   background-color: #fff;
   cursor: pointer;
@@ -84,15 +84,15 @@
 .month-selector-wrapper {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
 }
 
 .month-nav-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
-  height: 35px;
+  width: 26px;
+  height: 26px;
   padding: 0;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -117,18 +117,18 @@
 }
 
 .month-nav-button mat-icon {
-  font-size: 20px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
 }
 
 .date-picker-input {
-  height: 35px;
-  padding: 8px 12px;
+  height: 28px;
+  padding: 4px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   font-family: inherit;
   background-color: #fff;
   cursor: pointer;
@@ -151,7 +151,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 300px;
+  min-height: 220px;
 }
 
 .table-container {
@@ -162,6 +162,18 @@
 .quotations-table {
   width: 100%;
   table-layout: auto;
+}
+
+/* Reduce Material table cell padding */
+::ng-deep .quotations-table .mat-cell,
+::ng-deep .quotations-table .mat-header-cell {
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+}
+
+::ng-deep .quotations-table .mat-header-cell {
+  font-size: 11px !important;
+  font-weight: 600 !important;
 }
 
 .customer-cell {
@@ -234,20 +246,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 15px;
+  padding: 4px 10px;
   background-color: #f8f9fa;
   border-top: 1px solid #e0e0e0;
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .pagination-controls {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 .pagination-controls button {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
 }
 
 
@@ -255,61 +267,61 @@
 .dashboard-section {
   width: 100%;
   max-width: 900px;
-  padding: 20px;
+  padding: 8px;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 6px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 8px;
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   color: #333;
 }
 
 .mt {
-  margin-top: 25px;
+  margin-top: 12px;
 }
 
 .quotation-container, .cost-container {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .q-card, .cost-card {
   flex: 1;
   background: #f9f9f9;
-  padding: 7px;
-  border-radius: 10px;
+  padding: 5px;
+  border-radius: 6px;
   text-align: left;
   box-shadow: 2px 7px 5px rgb(0 0 0 / 22%);
   color: #444;
 }
 
 .q-card h2 {
-  font-size: 35px;
+  font-size: 24px;
   margin: 0;
   font-weight: 600;
   text-align: center;
 }
 
 .q-card p {
-  margin: 3px 0;
-  font-size: 14px;
+  margin: 1px 0;
+  font-size: 11px;
   color: #555;
   text-align: center;
 }
 
 .q-card span {
-  font-size: 14px;
+  font-size: 11px;
   color: #363434;
   margin-left: 30%;
 }
@@ -332,27 +344,27 @@
 }
 /* Cost Cards */
 .cost-card .label {
-  font-size: 14px;
+  font-size: 11px;
   color: #444;
-  margin-bottom: 3px;
+  margin-bottom: 1px;
 }
 
 .cost-card .value {
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
-  margin-bottom: 3px;
+  margin-bottom: 1px;
 }
 
 
 .value-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 5px;
+  gap: 4px;
+  margin-bottom: 2px;
 }
 
 .value-row .arrow {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -402,13 +414,18 @@
 .dashboard-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 8px;
+}
+
+/* Bottom row with combined AI card - adjust grid for 2 columns */
+.dashboard-row:last-of-type {
+  grid-template-columns: 2fr 1fr;
 }
 
 .dashboard-card {
   background: white;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 6px;
+  padding: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
@@ -418,28 +435,116 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 
 .card-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   color: #333;
 }
 
+.chart-controls-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .grade-select {
-  padding: 6px 12px;
+  padding: 4px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   background-color: #fff;
   cursor: pointer;
 }
 
+.limit-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.limit-button {
+  padding: 4px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 50px;
+}
+
+.limit-button:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.limit-button.active {
+  background-color: #4A90E2;
+  color: #fff;
+  border-color: #4A90E2;
+}
+
+.limit-button.active:hover {
+  background-color: #3b7bc8;
+  border-color: #3b7bc8;
+}
+
+.limit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.cost-contribution-month-filter {
+  height: 28px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.cost-contribution-month-filter:hover {
+  border-color: #999;
+}
+
+.cost-contribution-month-filter:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.quotation-count-year-filter {
+  height: 28px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  width: 80px;
+}
+
+.quotation-count-year-filter:hover {
+  border-color: #999;
+}
+
+.quotation-count-year-filter:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
 .chart-container {
-  flex: 1;
-  min-height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -448,6 +553,7 @@
 
 /* Donut Chart Styles */
 .donut-chart-wrapper {
+  margin-top: 5%;
   width: 100%;
   height: 100%;
   display: flex;
@@ -547,6 +653,33 @@
 /* AI Predictor Card */
 .ai-predictor-card {
   background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+}
+
+/* Combined AI Card */
+.combined-ai-card {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.combined-ai-content {
+  display: flex;
+  gap: 0;
+  height: 100%;
+}
+
+.ai-predictor-section {
+  flex: 1;
+  padding-right: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.material-forecast-section {
+  flex: 1;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
 }
 
 .ai-header {
@@ -671,22 +804,131 @@
 
 /* Recent Updates */
 .recent-updates-card {
-  max-height: 400px;
+  max-height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-updates-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.date-filter-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.date-nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.date-nav-button:hover {
+  background: #f8f9fa;
+  border-color: #4A90E2;
+  color: #4A90E2;
+}
+
+.date-nav-button:active {
+  background: #e9ecef;
+  transform: scale(0.95);
+}
+
+.date-nav-button:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.date-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.date-nav-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+.recent-updates-date-filter {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  background: white;
+  color: #333;
+  transition: border-color 0.2s ease;
+  width: 120px;
+}
+
+.recent-updates-date-filter:hover {
+  border-color: #4A90E2;
+}
+
+.recent-updates-date-filter:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
 }
 
 .updates-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 8px;
+  max-height: calc(5 * 50px + 4 * 10px); /* 5 items (50px each) + 4 gaps (10px each) = 290px */
+  overflow-y: hidden;
+  position: relative;
+}
+
+.updates-list.scrollable {
+  overflow-y: auto;
+  max-height: calc(5 * 50px + 4 * 10px); /* Show 5 items statically, then scroll for more */
+}
+
+/* Custom scrollbar for updates list */
+.updates-list.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.updates-list.scrollable::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.updates-list.scrollable::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.updates-list.scrollable::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .update-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
   transition: background 0.2s ease;
 }
 
@@ -695,15 +937,15 @@
 }
 
 .update-avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 
@@ -713,14 +955,41 @@
 
 .update-name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
   color: #333;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .update-action {
-  font-size: 12px;
+  font-size: 11px;
   color: #666;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-text {
+  flex: 1;
+}
+
+.action-time {
+  color: #999;
+  font-size: 10px;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.no-updates {
+  text-align: center;
+  padding: 20px 15px;
+  color: #999;
+  font-size: 12px;
+}
+
+.no-updates p {
+  margin: 0;
+  font-style: italic;
 }
 
 /* Responsive Design */
