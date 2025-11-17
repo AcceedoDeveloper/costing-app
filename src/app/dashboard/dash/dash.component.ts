@@ -74,9 +74,13 @@ export class DashComponent implements OnInit, AfterViewInit {
   gradeChartSegments: any[] = [];
   gradeChartLegend: any[] = [];
   gradeTotalValue: number = 0;
+  hoveredGradeSegment: number | null = null;
+  clickedGradeSegment: number | null = null;
   
   costChartSegments: any[] = [];
   costChartLegend: any[] = [];
+  hoveredCostSegment: number | null = null;
+  clickedCostSegment: number | null = null;
   costContributionData: any = null; // Store cost contribution API data
   costContributionSelectedMonth: string = ''; // Selected month for cost contribution filter
   
@@ -452,7 +456,7 @@ export class DashComponent implements OnInit, AfterViewInit {
       console.log('Opening graph for item:', itemData);
       
       const dialogRef = this.dialog.open(DifferenceGraphDialogComponent, {
-        width: '800px',
+        width: '600px',
         maxWidth: '95vw',
         data: {
           item: itemData,
@@ -510,7 +514,9 @@ export class DashComponent implements OnInit, AfterViewInit {
         color: colors[index % colors.length],
         dashArray: `${segmentLength} ${circumference}`,
         dashOffset: dashOffset,
-        percentage: percentage
+        percentage: percentage,
+        label: item[0], // Store the label/name
+        value: item[1]
       };
     });
 
@@ -582,7 +588,9 @@ export class DashComponent implements OnInit, AfterViewInit {
         color: colors[index],
         dashArray: `${segmentLength} ${circumference}`,
         dashOffset: dashOffset,
-        percentage: percentage
+        percentage: percentage,
+        label: item[0], // Store the label/name
+        value: item[1]
       };
     });
 
@@ -1028,6 +1036,24 @@ export class DashComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Navigate quotation count year (previous/next)
+  navigateQuotationCountYear(direction: number): void {
+    const newYear = this.quotationCountSelectedYear + direction;
+    const currentYear = new Date().getFullYear();
+    
+    // Don't allow navigation to future years
+    if (newYear <= currentYear && newYear >= 2000) {
+      this.quotationCountSelectedYear = newYear;
+      this.getQuotationCount(newYear);
+    }
+  }
+
+  // Check if quotation count selected year is current year
+  isQuotationCountCurrentYear(): boolean {
+    const currentYear = new Date().getFullYear();
+    return this.quotationCountSelectedYear >= currentYear;
+  }
+
 
   getCostContribution(month?: string){
     const selectedMonth = month || this.costContributionSelectedMonth || 
@@ -1111,5 +1137,59 @@ export class DashComponent implements OnInit, AfterViewInit {
     
     return parseInt(selectedMonth) === parseInt(currentMonth) && 
            parseInt(selectedYear) === currentYear;
+  }
+
+  // Grade Chart hover and click handlers
+  onGradeSegmentHover(index: number): void {
+    this.hoveredGradeSegment = index;
+  }
+
+  onGradeSegmentLeave(): void {
+    this.hoveredGradeSegment = null;
+  }
+
+  onGradeSegmentClick(index: number): void {
+    this.clickedGradeSegment = this.clickedGradeSegment === index ? null : index;
+  }
+
+  // Cost Chart hover and click handlers
+  onCostSegmentHover(index: number): void {
+    this.hoveredCostSegment = index;
+  }
+
+  onCostSegmentLeave(): void {
+    this.hoveredCostSegment = null;
+  }
+
+  onCostSegmentClick(index: number): void {
+    this.clickedCostSegment = this.clickedCostSegment === index ? null : index;
+  }
+
+  // Get displayed name for grade chart center
+  getGradeChartCenterName(): string {
+    const activeIndex = this.clickedGradeSegment !== null ? this.clickedGradeSegment : this.hoveredGradeSegment;
+    if (activeIndex !== null && this.gradeChartSegments[activeIndex]) {
+      return this.gradeChartSegments[activeIndex].label;
+    }
+    return '';
+  }
+
+  // Get displayed name for cost chart center
+  getCostChartCenterName(): string {
+    const activeIndex = this.clickedCostSegment !== null ? this.clickedCostSegment : this.hoveredCostSegment;
+    if (activeIndex !== null && this.costChartSegments[activeIndex]) {
+      return this.costChartSegments[activeIndex].label;
+    }
+    return '';
+  }
+
+  // Check if grade segment is active (hovered or clicked)
+  isGradeSegmentActive(index: number): boolean {
+    return this.hoveredGradeSegment === index || this.clickedGradeSegment === index;
+  }
+
+  // Check if cost segment is active (hovered or clicked)
+  isCostSegmentActive(index: number): boolean {
+    return this.hoveredCostSegment === index || this.clickedCostSegment === index;
   }
 }

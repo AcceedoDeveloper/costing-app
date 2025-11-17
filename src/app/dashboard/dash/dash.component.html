@@ -212,6 +212,7 @@
                   <circle 
                     *ngFor="let segment of gradeChartSegments; let i = index"
                     class="donut-segment"
+                    [class.active]="isGradeSegmentActive(i)"
                     [attr.data-index]="i"
                     cx="100" 
                     cy="100" 
@@ -221,11 +222,17 @@
                     stroke-width="30"
                     [attr.stroke-dasharray]="segment.dashArray"
                     [attr.stroke-dashoffset]="segment.dashOffset"
-                    stroke-linecap="round">
+                    stroke-linecap="round"
+                    (mouseenter)="onGradeSegmentHover(i)"
+                    (mouseleave)="onGradeSegmentLeave()"
+                    (click)="onGradeSegmentClick(i)"
+                    [title]="segment.label"
+                    style="cursor: pointer;">
                   </circle>
                 </svg>
                 <div class="donut-center">
-                  <div class="center-value-large">{{ gradeTotalValue | number }}</div>
+                  <div class="center-value-large" *ngIf="!getGradeChartCenterName()">{{ gradeTotalValue | number }}</div>
+                  <div class="center-label" *ngIf="getGradeChartCenterName()">{{ getGradeChartCenterName() }}</div>
                 </div>
               </div>
             </div>
@@ -233,7 +240,7 @@
           <div class="chart-legend">
             <div *ngFor="let item of gradeChartLegend" class="legend-item">
               <span class="legend-color" [style.background-color]="item.color"></span>
-              <span class="legend-label">{{ item.label }}:</span>
+              <span class="legend-label" [title]="item.label">{{ item.label }}:</span>
               <span class="legend-value">{{ item.value | number }}</span>
               <span class="legend-percent">({{ item.percent }}%)</span>
             </div>
@@ -279,6 +286,7 @@
                   <circle 
                     *ngFor="let segment of costChartSegments; let i = index"
                     class="donut-segment"
+                    [class.active]="isCostSegmentActive(i)"
                     [attr.data-index]="i"
                     cx="100" 
                     cy="100" 
@@ -288,11 +296,17 @@
                     stroke-width="30"
                     [attr.stroke-dasharray]="segment.dashArray"
                     [attr.stroke-dashoffset]="segment.dashOffset"
-                    stroke-linecap="round">
+                    stroke-linecap="round"
+                    (mouseenter)="onCostSegmentHover(i)"
+                    (mouseleave)="onCostSegmentLeave()"
+                    (click)="onCostSegmentClick(i)"
+                    [title]="segment.label"
+                    style="cursor: pointer;">
                   </circle>
                 </svg>
                 <div class="donut-center">
-                  <div class="center-label">Cost Contribution</div>
+                  <div class="center-label" *ngIf="!getCostChartCenterName()">Cost Contribution</div>
+                  <div class="center-label" *ngIf="getCostChartCenterName()">{{ getCostChartCenterName() }}</div>
                 </div>
               </div>
             </div>
@@ -300,7 +314,7 @@
           <div class="chart-legend">
             <div *ngFor="let item of costChartLegend" class="legend-item">
               <span class="legend-color" [style.background-color]="item.color"></span>
-              <span class="legend-label">{{ item.label }}:</span>
+              <span class="legend-label" [title]="item.label">{{ item.label }}:</span>
               <span class="legend-percent">{{ item.percent }}%</span>
             </div>
           </div>
@@ -312,15 +326,32 @@
       <div class="dashboard-card">
         <div class="card-header">
           <h3>Quotation Generated Every Month</h3>
-          <input 
-            type="number" 
-            [value]="quotationCountSelectedYear"
-            (change)="onQuotationCountYearChange($event)"
-            class="quotation-count-year-filter"
-            min="2000"
-            max="2100"
-            placeholder="YYYY"
-            title="Select year to filter quotation count">
+          <div class="quotation-count-year-wrapper">
+            <button 
+              type="button"
+              class="quotation-count-nav-button"
+              (click)="navigateQuotationCountYear(-1)"
+              title="Previous year">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <input 
+              type="number" 
+              [value]="quotationCountSelectedYear"
+              (change)="onQuotationCountYearChange($event)"
+              class="quotation-count-year-filter"
+              min="2000"
+              max="2100"
+              placeholder="YYYY"
+              title="Select year to filter quotation count">
+            <button 
+              type="button"
+              class="quotation-count-nav-button"
+              (click)="navigateQuotationCountYear(1)"
+              [disabled]="isQuotationCountCurrentYear()"
+              title="Next year">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
         <div class="chart-container">
           <div class="bar-chart-container">

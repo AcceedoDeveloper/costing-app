@@ -512,7 +512,7 @@
 }
 
 .grade-select {
-  padding: 3px 8px;
+  padding: 5px 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
   font-size: 10px;
@@ -526,7 +526,6 @@
 }
 
 .limit-button {
-  padding: 3px 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
   font-size: 9px;
@@ -632,6 +631,57 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
+.quotation-count-year-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.quotation-count-nav-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.quotation-count-nav-button:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #4A90E2;
+  color: #4A90E2;
+}
+
+.quotation-count-nav-button:active:not(:disabled) {
+  background: #e9ecef;
+  transform: scale(0.95);
+}
+
+.quotation-count-nav-button:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.quotation-count-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.quotation-count-nav-button mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+}
+
 .quotation-count-year-filter {
   height: 24px;
   padding: 3px 6px;
@@ -691,13 +741,20 @@
 }
 
 .donut-segment {
-  transition: stroke-width 0.3s ease;
+  transition: all 0.3s ease;
   stroke-linecap: round;
+  cursor: pointer;
 }
 
 .donut-segment:hover {
   stroke-width: 35;
-  cursor: pointer;
+  opacity: 0.9;
+}
+
+.donut-segment.active {
+  stroke-width: 35;
+  opacity: 0.9;
+  filter: brightness(1.1);
 }
 
 .donut-center {
@@ -722,6 +779,17 @@
   font-weight: 600;
   color: #666;
   text-align: center;
+  max-width: 120px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 4px;
+}
+
+.donut-center .center-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+  transition: all 0.3s ease;
 }
 
 .chart-legend {
@@ -748,7 +816,12 @@
 .legend-label {
   font-weight: 500;
   color: #555;
-  min-width: 120px;
+  min-width: 150px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .legend-value {
