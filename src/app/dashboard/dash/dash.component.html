@@ -226,13 +226,16 @@
                     (mouseenter)="onGradeSegmentHover(i)"
                     (mouseleave)="onGradeSegmentLeave()"
                     (click)="onGradeSegmentClick(i)"
-                    [title]="segment.label"
+                    [title]="segment.label + ': ' + (segment.value | number) + ' (' + (gradeChartLegend[i]?.percent || 0) + '%)'"
                     style="cursor: pointer;">
                   </circle>
                 </svg>
                 <div class="donut-center">
                   <div class="center-value-large" *ngIf="!getGradeChartCenterName()">{{ gradeTotalValue | number }}</div>
-                  <div class="center-label" *ngIf="getGradeChartCenterName()">{{ getGradeChartCenterName() }}</div>
+                  <div *ngIf="getGradeChartCenterName()" class="center-hover-content">
+                    <div class="center-value-small" [autoFontSize]="getGradeChartCenterName()">{{ getGradeChartCenterName() }}</div>
+                    <div class="center-value-small">{{ getGradeChartCenterValue() }}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -300,13 +303,16 @@
                     (mouseenter)="onCostSegmentHover(i)"
                     (mouseleave)="onCostSegmentLeave()"
                     (click)="onCostSegmentClick(i)"
-                    [title]="segment.label"
+                    [title]="segment.label + ': ' + (costChartLegend[i]?.percent || 0) + '%'"
                     style="cursor: pointer;">
                   </circle>
                 </svg>
                 <div class="donut-center">
                   <div class="center-label" *ngIf="!getCostChartCenterName()">Cost Contribution</div>
-                  <div class="center-label" *ngIf="getCostChartCenterName()">{{ getCostChartCenterName() }}</div>
+                  <div *ngIf="getCostChartCenterName()" class="center-hover-content">
+                    <div class="center-value-small">{{ getCostChartCenterName() }}</div>
+                    <div class="center-value-small">{{ getCostChartCenterValue() }}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -357,13 +363,19 @@
           <div class="bar-chart-container">
             <div class="bar-chart">
               <div class="bar-chart-bars">
-                <div *ngFor="let bar of quotationBars" class="bar-item">
+                <div *ngFor="let bar of quotationBars; let i = index" class="bar-item">
                   <div class="bar-wrapper">
                     <div 
                       class="bar" 
+                      [class.hovered]="hoveredQuotationBar === i"
                       [style.height.%]="bar.percentage"
                       [style.background-color]="bar.color"
+                      (mouseenter)="onQuotationBarHover(i)"
+                      (mouseleave)="onQuotationBarLeave()"
                       [title]="bar.month + ': ' + bar.count + ' quotations'">
+                      <div class="bar-hover-value" *ngIf="hoveredQuotationBar === i">
+                        {{ bar.count }}
+                      </div>
                     </div>
                   </div>
                   <div class="bar-label">{{ bar.month }}</div>

@@ -88,6 +88,7 @@ export class DashComponent implements OnInit, AfterViewInit {
   yAxisLabels: number[] = [];
   quotationCountData: any = null; // Store quotation count API data
   quotationCountSelectedYear: number = new Date().getFullYear(); // Selected year for quotation count filter
+  hoveredQuotationBar: number | null = null; // Track hovered bar index
   
   aiPrediction: string = 'Switching to SGI-LOW Cu could reduce cost by 6% next month.';
   
@@ -1174,11 +1175,51 @@ export class DashComponent implements OnInit, AfterViewInit {
     return '';
   }
 
+  // Get displayed value for grade chart center
+  getGradeChartCenterValue(): string {
+    const activeIndex = this.clickedGradeSegment !== null ? this.clickedGradeSegment : this.hoveredGradeSegment;
+    if (activeIndex !== null && this.gradeChartSegments[activeIndex]) {
+      const segment = this.gradeChartSegments[activeIndex];
+      const value = segment.value || 0;
+      const percent = this.gradeChartLegend[activeIndex]?.percent || 0;
+      return `${value.toLocaleString()} (${percent}%)`;
+    }
+    return '';
+  }
+
   // Get displayed name for cost chart center
   getCostChartCenterName(): string {
     const activeIndex = this.clickedCostSegment !== null ? this.clickedCostSegment : this.hoveredCostSegment;
     if (activeIndex !== null && this.costChartSegments[activeIndex]) {
       return this.costChartSegments[activeIndex].label;
+    }
+    return '';
+  }
+
+  // Get displayed value for cost chart center
+  getCostChartCenterValue(): string {
+    const activeIndex = this.clickedCostSegment !== null ? this.clickedCostSegment : this.hoveredCostSegment;
+    if (activeIndex !== null && this.costChartSegments[activeIndex]) {
+      const percent = this.costChartLegend[activeIndex]?.percent || 0;
+      return `${percent}%`;
+    }
+    return '';
+  }
+
+  // Quotation bar hover handlers
+  onQuotationBarHover(index: number): void {
+    this.hoveredQuotationBar = index;
+  }
+
+  onQuotationBarLeave(): void {
+    this.hoveredQuotationBar = null;
+  }
+
+  // Get hovered quotation bar value
+  getHoveredQuotationValue(): string {
+    if (this.hoveredQuotationBar !== null && this.quotationBars[this.hoveredQuotationBar]) {
+      const bar = this.quotationBars[this.hoveredQuotationBar];
+      return `${bar.count} quotations`;
     }
     return '';
   }
