@@ -145,6 +145,10 @@
 {
   "name":"updateProductionPowerCost",
   "url":"updateProductionPowerCost"
+},
+{
+  "name": "getCustomerDetails",
+  "url": "getCustomerDetails"
 }
 
 

@@ -38,35 +38,120 @@
       </div>
     </div>
 
-    <div class="stat-card stat-card-info">
-      <div class="stat-icon-wrapper info">
-        <mat-icon>settings</mat-icon>
+  
+
+    <div class="stat-card stat-card-success" 
+         [class.stat-card-active]="selectedStatFilter === 'completed'"
+         (click)="filterByStat('completed')"
+         [style.cursor]="'pointer'">
+      <div class="stat-icon-wrapper success">
+        <mat-icon>done_all</mat-icon>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ totalProcesses }}</div>
-        <div class="stat-label">Total Processes</div>
+        <div class="stat-value">{{ completedCustomers }}</div>
+        <div class="stat-label">Completed</div>
       </div>
       <div class="stat-trend">
         <mat-icon>trending_up</mat-icon>
       </div>
     </div>
 
-    <div class="stat-card stat-card-warning">
+    <div class="stat-card stat-card-warning"
+         [class.stat-card-active]="selectedStatFilter === 'pending'"
+         (click)="filterByStat('pending')"
+         [style.cursor]="'pointer'">
       <div class="stat-icon-wrapper warning">
-        <mat-icon>check_circle</mat-icon>
+        <mat-icon>schedule</mat-icon>
       </div>
       <div class="stat-content">
-        <div class="stat-value">{{ activeCustomers }}</div>
-        <div class="stat-label">Active Records</div>
+        <div class="stat-value">{{ pendingCustomers }}</div>
+        <div class="stat-label">Pending</div>
       </div>
       <div class="stat-trend">
         <mat-icon>trending_up</mat-icon>
       </div>
     </div>
+
+    <div class="stat-card stat-card-info"
+         [class.stat-card-active]="selectedStatFilter === 'modified'"
+         (click)="filterByStat('modified')"
+         [style.cursor]="'pointer'">
+      <div class="stat-icon-wrapper info">
+        <mat-icon>edit</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ modifiedCustomers }}</div>
+        <div class="stat-label">Modified</div>
+      </div>
+      <div class="stat-trend">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+    </div>
+
+    
   </div>
 
   <!-- Filters Section -->
   <div class="filters-section">
+    <!-- Date Filter Section -->
+    <div class="date-filter-group">
+      <div class="date-filter-type">
+        <mat-icon class="date-icon">calendar_today</mat-icon>
+        <select class="date-type-select" [(ngModel)]="dateFilterType" (ngModelChange)="onDateFilterTypeChange()">
+          <option value="custom">Custom Range</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="year">This Year</option>
+        </select>
+      </div>
+      <div class="date-range-inputs" *ngIf="dateFilterType === 'custom'">
+        <input 
+          type="date" 
+          class="date-input" 
+          [(ngModel)]="startDate"
+          placeholder="Start Date">
+        <span class="date-separator">to</span>
+        <input 
+          type="date" 
+          class="date-input" 
+          [(ngModel)]="endDate"
+          placeholder="End Date">
+      </div>
+      <div class="date-range-inputs" *ngIf="dateFilterType === 'week'">
+        <input 
+          type="week" 
+          class="date-input" 
+          [(ngModel)]="selectedWeek"
+          placeholder="Select Week">
+      </div>
+      <div class="date-range-inputs" *ngIf="dateFilterType === 'month'">
+        <input 
+          type="month" 
+          class="date-input" 
+          [(ngModel)]="selectedMonth"
+          placeholder="Select Month">
+      </div>
+      <div class="date-range-inputs" *ngIf="dateFilterType === 'year'">
+        <input 
+          type="number" 
+          class="date-input year-input" 
+          [(ngModel)]="selectedYear"
+          [placeholder]="'Year (e.g., ' + currentYear + ')'"
+          min="2000"
+          max="2100">
+      </div>
+      <div class="filter-actions">
+        <button class="apply-filter-btn" (click)="applyFilter()" matTooltip="Apply Filters">
+          <mat-icon>check</mat-icon>
+          <span>Apply</span>
+        </button>
+        <button class="clear-filter-btn" (click)="clearFilter()" matTooltip="Clear All Filters">
+          <mat-icon>clear</mat-icon>
+          <span>Clear</span>
+        </button>
+      </div>
+    </div>
+
     <div class="search-filter">
       <mat-icon class="search-icon">search</mat-icon>
       <input 
@@ -75,7 +160,7 @@
         placeholder="Search by customer name, drawing number, or part name..."
         [(ngModel)]="searchText">
     </div>
-    <div class="status-filter">
+    <!-- <div class="status-filter">
       <mat-icon class="filter-icon">filter_list</mat-icon>
       <select class="status-select" [(ngModel)]="selectedStatus">
         <option value="all">All Status</option>
@@ -83,8 +168,8 @@
         <option value="pending">Pending</option>
         <option value="completed">Completed</option>
       </select>
-    </div>
-    <button mat-raised-button class="export-btn" (click)="exportToCSV()" matTooltip="Export to CSV">
+    </div> -->
+    <button  class="export-btn" (click)="exportToCSV()" matTooltip="Export to CSV">
       <mat-icon>download</mat-icon>
       <span>Export</span>
     </button>

@@ -1,9 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { loadCustomerDetails } from '../../material/store/material.actions';
-import { MaterialState } from '../../material/store/material.reducer';
-import { getCustomerDetails } from '../../material/store/material.selector';
+import { Subscription } from 'rxjs';
 import { CustomerdetailsIn } from '../../models/Customer-details.model';
 import { MatDialog } from '@angular/material/dialog';
 import { ReportDetailsDialogComponent } from './report-details-dialog/report-details-dialog.component';
@@ -12,6 +8,7 @@ import { PowerService } from '../../services/power.service';
 import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from '../../services/dashboard.service';
 import { ReportQuotationDialogComponent } from './report-quotation-dialog/report-quotation-dialog.component';
+import { ReportsService } from '../../services/reports.service';
 
 @Component({
   selector: 'app-report',
@@ -19,48 +16,115 @@ import { ReportQuotationDialogComponent } from './report-quotation-dialog/report
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit, OnDestroy {
-  customerDetails$: Observable<CustomerdetailsIn[]>;
   customerDetails: CustomerdetailsIn[] = [];
   private subscription: Subscription = new Subscription();
+  loading: boolean = false;
 
   // Statistics
   totalCustomers: number = 0;
   totalProcesses: number = 0;
-  activeCustomers: number = 0;
+  completedCustomers: number = 0;
+  pendingCustomers: number = 0;
+  modifiedCustomers: number = 0;
   uniqueCustomers: Set<string> = new Set();
 
   // Filter properties
   searchText: string = '';
   selectedStatus: string = 'all';
+  selectedStatFilter: string = ''; // 'completed', 'pending', 'modified', or ''
+  
+  // Date filter properties
+  dateFilterType: string = 'custom';
+  startDate: string = '';
+  endDate: string = '';
+  selectedWeek: string = '';
+  selectedMonth: string = '';
+  selectedYear: string = '';
+  currentYear: number = new Date().getFullYear();
 
+  // Pagination
+  currentPage: number = 1;
+  pageLimit: number = 10;
+  totalRecords: number = 0;
 
   constructor(
-    private store: Store<{ materials: MaterialState }>,
+    private reportsService: ReportsService,
     private dialog: MatDialog,
     private powerService: PowerService,
     private toastr: ToastrService,
     private dashboardService: DashboardService
-  ) {
-    this.customerDetails$ = this.store.select(getCustomerDetails);
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(loadCustomerDetails());
-    
-    const sub = this.customerDetails$.subscribe((data: CustomerdetailsIn[]) => {
-      this.customerDetails = data || [];
-      this.calculateStatistics();
-    });
-    this.subscription.add(sub);
+    // Initialize default year value
+    if (!this.selectedYear) {
+      this.selectedYear = new Date().getFullYear().toString();
+    }
+    this.loadCustomerDetails();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
+  loadCustomerDetails(): void {
+    this.loading = true;
+    
+    // Prepare date parameters
+    let startDateParam = '';
+    let endDateParam = '';
+
+    if (this.dateFilterType === 'custom') {
+      startDateParam = this.startDate || '';
+      endDateParam = this.endDate || '';
+    } else {
+      const dateRange = this.getDateRange(this.dateFilterType);
+      startDateParam = dateRange.start.toISOString().split('T')[0];
+      endDateParam = dateRange.end.toISOString().split('T')[0];
+    }
+
+    // Only proceed if we have valid date parameters or custom range
+    if (this.dateFilterType !== 'custom' && !startDateParam && !endDateParam) {
+      this.loading = false;
+      return;
+    }
+
+    const params = {
+      customerName: '',
+      partName: '',
+      drawingNo: '',
+      revision: '',
+      StartDate: startDateParam,
+      EndDate: endDateParam,
+      page: this.currentPage,
+      limit: this.pageLimit
+    };
+
+    const sub = this.reportsService.getCustomerDetails(params).subscribe({
+      next: (response) => {
+        this.customerDetails = response.data || [];
+        this.totalRecords = response.total || this.customerDetails.length;
+        this.calculateStatistics();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading customer details:', error);
+        this.toastr.error('Failed to load customer details', 'Error');
+        this.customerDetails = [];
+        this.calculateStatistics();
+        this.loading = false;
+      }
+    });
+
+    this.subscription.add(sub);
+  }
+
   calculateStatistics(): void {
     this.totalCustomers = this.customerDetails.length;
     this.uniqueCustomers.clear();
+    this.completedCustomers = 0;
+    this.pendingCustomers = 0;
+    this.modifiedCustomers = 0;
     
     this.customerDetails.forEach(customer => {
       if (customer.CustomerName?.name) {
@@ -69,8 +133,21 @@ export class ReportComponent implements OnInit, OnDestroy {
       if (customer.processName && Array.isArray(customer.processName)) {
         this.totalProcesses += customer.processName.length;
       }
-      if (customer.Status === 'active' || customer.Status === 'Active') {
-        this.activeCustomers++;
+      
+      const status = customer.Status?.toLowerCase() || '';
+      if (status === 'completed') {
+        this.completedCustomers++;
+      } else if (status === 'pending') {
+        this.pendingCustomers++;
+      }
+      
+      // Check if record has been modified (has updatedAt and it's different from createdAt)
+      if (customer.updatedAt && customer.createdAt) {
+        const createdAt = new Date(customer.createdAt);
+        const updatedAt = new Date(customer.updatedAt);
+        if (updatedAt.getTime() !== createdAt.getTime()) {
+          this.modifiedCustomers++;
+        }
       }
     });
   }
@@ -95,6 +172,30 @@ export class ReportComponent implements OnInit, OnDestroy {
       );
     }
 
+    // Stat filter (from clicking stat cards)
+    if (this.selectedStatFilter) {
+      filtered = filtered.filter(customer => {
+        switch (this.selectedStatFilter) {
+          case 'completed':
+            return customer.Status?.toLowerCase() === 'completed';
+          case 'pending':
+            return customer.Status?.toLowerCase() === 'pending';
+          case 'modified':
+            if (customer.updatedAt && customer.createdAt) {
+              const createdAt = new Date(customer.createdAt);
+              const updatedAt = new Date(customer.updatedAt);
+              return updatedAt.getTime() !== createdAt.getTime();
+            }
+            return false;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Note: Date filtering is now handled server-side via ReportsService
+    // Client-side filtering removed to avoid double filtering
+
     return filtered;
   }
 
@@ -102,6 +203,118 @@ export class ReportComponent implements OnInit, OnDestroy {
     return customer.processName && Array.isArray(customer.processName) 
       ? customer.processName.length 
       : 0;
+  }
+
+  getProcessNames(customer: CustomerdetailsIn): string {
+    if (!customer.processName || !Array.isArray(customer.processName) || customer.processName.length === 0) {
+      return 'No processes';
+    }
+    
+    const processNames = customer.processName
+      .map(process => process?.processName || process?.name || 'N/A')
+      .filter(name => name !== 'N/A');
+    
+    return processNames.length > 0 ? processNames.join(', ') : 'No processes';
+  }
+
+  getProcessDetails(customer: CustomerdetailsIn): string {
+    if (!customer.processName || !Array.isArray(customer.processName) || customer.processName.length === 0) {
+      return 'No process details';
+    }
+
+    const details = customer.processName.map((process, index) => {
+      const processName = process?.processName || process?.name || `Process ${index + 1}`;
+      const materials: string[] = [];
+      
+      // Extract raw materials
+      if (process?.rawMaterial && Array.isArray(process.rawMaterial)) {
+        process.rawMaterial.forEach((rm: any) => {
+          if (rm?.materialsUsed && Array.isArray(rm.materialsUsed)) {
+            rm.materialsUsed.forEach((mat: any) => {
+              const matInfo = `${mat?.name || 'N/A'} (Qty: ${mat?.quantity || 0}, Cost: ${mat?.totalCost || 0})`;
+              materials.push(`${rm?.type || 'Unknown'}: ${matInfo}`);
+            });
+          }
+        });
+      }
+
+      // Get type costs
+      const typeCosts = process?.typeCosts || {};
+      const alloyCost = typeCosts?.AlloyTotalCost || process?.totalRawAlloyCost || 0;
+      const baseMetalCost = typeCosts?.['Base MetaTotalCost'] || typeCosts?.BaseMetaTotalCost || process?.totalRawMetalCost || 0;
+      const sandCost = process?.totalRawSandCost || 0;
+      const powerCost = typeCosts?.totalPowerCost || 0;
+      const processCost = typeCosts?.totalProcessCost || process?.processCost || 0;
+
+      const costSummary = `Alloy: ${alloyCost}, Base Metal: ${baseMetalCost}, Sand: ${sandCost}, Power: ${powerCost}, Process: ${processCost}`;
+      
+      return `${processName} | Materials: ${materials.length > 0 ? materials.join('; ') : 'None'} | Costs: ${costSummary}`;
+    });
+
+    return details.join(' || ');
+  }
+
+  getTotalProcessCosts(customer: CustomerdetailsIn): string {
+    if (!customer.processName || !Array.isArray(customer.processName) || customer.processName.length === 0) {
+      return '0,0,0,0,0';
+    }
+
+    let totalAlloy = 0;
+    let totalBaseMetal = 0;
+    let totalSand = 0;
+    let totalPower = 0;
+    let totalProcess = 0;
+
+    customer.processName.forEach((process: any) => {
+      const typeCosts = process?.typeCosts || {};
+      totalAlloy += typeCosts?.AlloyTotalCost || process?.totalRawAlloyCost || 0;
+      totalBaseMetal += typeCosts?.['Base MetaTotalCost'] || typeCosts?.BaseMetaTotalCost || process?.totalRawMetalCost || 0;
+      totalSand += process?.totalRawSandCost || 0;
+      totalPower += typeCosts?.totalPowerCost || 0;
+      totalProcess += typeCosts?.totalProcessCost || process?.processCost || 0;
+    });
+
+    return `${totalAlloy},${totalBaseMetal},${totalSand},${totalPower},${totalProcess}`;
+  }
+
+  getMaterialsSummary(customer: CustomerdetailsIn): string {
+    if (!customer.processName || !Array.isArray(customer.processName) || customer.processName.length === 0) {
+      return 'No materials';
+    }
+
+    const materialMap = new Map<string, { quantity: number; totalCost: number }>();
+
+    customer.processName.forEach((process: any) => {
+      if (process?.rawMaterial && Array.isArray(process.rawMaterial)) {
+        process.rawMaterial.forEach((rm: any) => {
+          if (rm?.materialsUsed && Array.isArray(rm.materialsUsed)) {
+            rm.materialsUsed.forEach((mat: any) => {
+              const matName = mat?.name || 'Unknown';
+              const quantity = mat?.quantity || 0;
+              const cost = mat?.totalCost || 0;
+              
+              if (materialMap.has(matName)) {
+                const existing = materialMap.get(matName)!;
+                existing.quantity += quantity;
+                existing.totalCost += cost;
+              } else {
+                materialMap.set(matName, { quantity, totalCost: cost });
+              }
+            });
+          }
+        });
+      }
+    });
+
+    if (materialMap.size === 0) {
+      return 'No materials';
+    }
+
+    const summary = Array.from(materialMap.entries())
+      .map(([name, data]) => `${name} (Qty: ${data.quantity}, Cost: ${data.totalCost})`)
+      .join('; ');
+
+    return summary;
   }
 
   getStatusColor(status: string): string {
@@ -193,15 +406,42 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   exportToCSV(): void {
-    const headers = ['Customer Name', 'Drawing No', 'Part Name', 'Status', 'Processes', 'Created At'];
-    const rows = this.filteredCustomers.map(customer => [
-      customer.CustomerName?.name || 'N/A',
-      customer.drawingNo || 'N/A',
-      customer.partName || 'N/A',
-      customer.Status || 'N/A',
-      this.getProcessCount(customer).toString(),
-      customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A'
-    ]);
+    const headers = [
+      'Customer Name', 
+      'Drawing No', 
+      'Part Name', 
+      'Status', 
+      'Process Count', 
+      'Process Names', 
+      'Process Details',
+      'Materials Summary',
+      'Total Alloy Cost',
+      'Total Base Metal Cost',
+      'Total Sand Cost',
+      'Total Power Cost',
+      'Total Process Cost',
+      'Created At'
+    ];
+    
+    const rows = this.filteredCustomers.map(customer => {
+      const costs = this.getTotalProcessCosts(customer).split(',');
+      return [
+        customer.CustomerName?.name || 'N/A',
+        customer.drawingNo || 'N/A',
+        customer.partName || 'N/A',
+        customer.Status || 'N/A',
+        this.getProcessCount(customer).toString(),
+        this.getProcessNames(customer),
+        this.getProcessDetails(customer),
+        this.getMaterialsSummary(customer),
+        costs[0] || '0',
+        costs[1] || '0',
+        costs[2] || '0',
+        costs[3] || '0',
+        costs[4] || '0',
+        customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A'
+      ];
+    });
 
     const csvContent = [
       headers.join(','),
@@ -229,5 +469,169 @@ export class ReportComponent implements OnInit, OnDestroy {
       autoFocus: false,
       disableClose: false
     });
+  }
+
+  // Date filter methods
+  getDateRange(filterType: string): { start: Date; end: Date } {
+    let start: Date;
+    let end: Date = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    switch (filterType) {
+      case 'week':
+        if (this.selectedWeek) {
+          // Parse week input (format: YYYY-Www)
+          const [year, week] = this.selectedWeek.split('-W').map(Number);
+          // Calculate the date for the first day of the week (Monday)
+          const simple = new Date(year, 0, 1 + (week - 1) * 7);
+          const dow = simple.getDay();
+          const ISOweekStart = simple;
+          if (dow <= 4) {
+            ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+          } else {
+            ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+          }
+          start = new Date(ISOweekStart);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(start);
+          end.setDate(start.getDate() + 6);
+          end.setHours(23, 59, 59, 999);
+        } else {
+          // Default to current week (Monday to Sunday)
+          const now = new Date();
+          start = new Date(now);
+          const dayOfWeek = now.getDay();
+          const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust to Monday
+          start.setDate(diff);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(start);
+          end.setDate(start.getDate() + 6);
+          end.setHours(23, 59, 59, 999);
+        }
+        break;
+
+      case 'month':
+        if (this.selectedMonth) {
+          // Parse month input (format: YYYY-MM)
+          const [year, month] = this.selectedMonth.split('-').map(Number);
+          start = new Date(year, month - 1, 1);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(year, month, 0); // Last day of the month
+          end.setHours(23, 59, 59, 999);
+        } else {
+          // Default to current month
+          const now = new Date();
+          start = new Date(now.getFullYear(), now.getMonth(), 1);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+          end.setHours(23, 59, 59, 999);
+        }
+        break;
+
+      case 'year':
+        if (this.selectedYear) {
+          const year = parseInt(this.selectedYear);
+          start = new Date(year, 0, 1);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(year, 11, 31);
+          end.setHours(23, 59, 59, 999);
+        } else {
+          // Default to current year
+          const now = new Date();
+          start = new Date(now.getFullYear(), 0, 1);
+          start.setHours(0, 0, 0, 0);
+          end = new Date(now.getFullYear(), 11, 31);
+          end.setHours(23, 59, 59, 999);
+        }
+        break;
+
+      default:
+        start = new Date(0);
+        end = new Date();
+    }
+
+    return { start, end };
+  }
+
+  getDateFilterDisplay(): string {
+    switch (this.dateFilterType) {
+      case 'week':
+        if (this.selectedWeek) {
+          const dateRange = this.getDateRange('week');
+          return `${dateRange.start.toLocaleDateString()} - ${dateRange.end.toLocaleDateString()}`;
+        }
+        return 'Select a week';
+      
+      case 'month':
+        if (this.selectedMonth) {
+          const dateRange = this.getDateRange('month');
+          return dateRange.start.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        }
+        return 'Select a month';
+      
+      case 'year':
+        if (this.selectedYear) {
+          return `Year: ${this.selectedYear}`;
+        }
+        return 'Select a year';
+      
+      default:
+        return '';
+    }
+  }
+
+  onDateFilterTypeChange(): void {
+    // Clear dates when switching filter types
+    if (this.dateFilterType === 'custom') {
+      this.selectedWeek = '';
+      this.selectedMonth = '';
+      this.selectedYear = '';
+    } else {
+      this.startDate = '';
+      this.endDate = '';
+      // Set default values if empty
+      if (this.dateFilterType === 'week' && !this.selectedWeek) {
+        // Set to current week (ISO week format)
+        const now = new Date();
+        const year = now.getFullYear();
+        const oneJan = new Date(year, 0, 1);
+        const numberOfDays = Math.floor((now.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+        const week = Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+        this.selectedWeek = `${year}-W${week.toString().padStart(2, '0')}`;
+      } else if (this.dateFilterType === 'month' && !this.selectedMonth) {
+        const now = new Date();
+        this.selectedMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+      } else if (this.dateFilterType === 'year' && !this.selectedYear) {
+        this.selectedYear = new Date().getFullYear().toString();
+      }
+    }
+  }
+
+  applyFilter(): void {
+    this.currentPage = 1;
+    this.loadCustomerDetails();
+  }
+
+  clearFilter(): void {
+    this.dateFilterType = 'custom';
+    this.startDate = '';
+    this.endDate = '';
+    this.selectedWeek = '';
+    this.selectedMonth = '';
+    this.selectedYear = '';
+    this.searchText = '';
+    this.selectedStatus = 'all';
+    this.selectedStatFilter = '';
+    this.currentPage = 1;
+    this.loadCustomerDetails();
+  }
+
+  filterByStat(statType: string): void {
+    // Toggle: if clicking the same stat, deselect it
+    if (this.selectedStatFilter === statType) {
+      this.selectedStatFilter = '';
+    } else {
+      this.selectedStatFilter = statType;
+    }
   }
 }

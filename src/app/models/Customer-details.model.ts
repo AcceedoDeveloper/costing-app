@@ -123,6 +123,7 @@ export interface CustomerdetailsIn {
   };
   Status: string;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 

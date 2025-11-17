@@ -115,6 +115,16 @@
   box-shadow: 0 4px 12px rgba(11, 59, 46, 0.12);
 }
 
+.stat-card-active {
+  border: 2px solid var(--imperial-green);
+  box-shadow: 0 4px 16px rgba(11, 59, 46, 0.2);
+  transform: translateY(-2px);
+}
+
+.stat-card-active::before {
+  width: 5px;
+}
+
 .stat-card-primary {
   --card-color: var(--imperial-green);
 }
@@ -203,6 +213,103 @@
   flex-wrap: wrap;
 }
 
+/* Date Filter Group */
+.date-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--soft-stone-grey);
+  min-width: 280px;
+  flex-wrap: wrap;
+}
+
+.date-filter-type {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.date-icon {
+  color: var(--luxury-grey);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.date-type-select {
+  border: none;
+  padding: 0 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--black-pearl);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  min-width: 120px;
+}
+
+.date-range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.date-input {
+  padding: 8px 10px;
+  border: 1.5px solid var(--soft-stone-grey);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--black-pearl);
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 130px;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--imperial-green);
+  box-shadow: 0 0 0 3px rgba(11, 59, 46, 0.1);
+}
+
+.year-input {
+  min-width: 100px;
+  max-width: 120px;
+}
+
+.year-input::-webkit-inner-spin-button,
+.year-input::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.date-separator {
+  font-size: 11px;
+  color: var(--luxury-grey);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  margin-left: auto;
+}
+
+.date-display-text {
+  font-size: 12px;
+  color: var(--luxury-grey);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .search-filter {
   flex: 1;
   min-width: 250px;
@@ -269,12 +376,12 @@
   background: linear-gradient(135deg, var(--imperial-green) 0%, var(--deep-emerald) 100%);
   color: white;
   border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 13px;
+  padding: 6px 10px;
+  font-size: 11px;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   box-shadow: 0 2px 4px rgba(11, 59, 46, 0.2);
   transition: all 0.2s ease;
 }
@@ -285,9 +392,61 @@
 }
 
 .export-btn mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 0 8px;
+}
+
+.apply-filter-btn,
+.clear-filter-btn {
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.apply-filter-btn {
+  background: linear-gradient(135deg, var(--imperial-green) 0%, var(--deep-emerald) 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.2);
+}
+
+.apply-filter-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(11, 59, 46, 0.3);
+}
+
+.clear-filter-btn {
+  background: white;
+  color: var(--luxury-grey);
+  border: 1.5px solid var(--soft-stone-grey);
+}
+
+.clear-filter-btn:hover {
+  background: var(--off-white);
+  border-color: var(--luxury-grey);
+}
+
+.apply-filter-btn mat-icon,
+.clear-filter-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 
 /* Customers Grid */
@@ -637,6 +796,38 @@
   .filters-section {
     flex-direction: column;
     gap: 8px;
+  }
+
+  .date-filter-group {
+    min-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .date-filter-type {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .date-range-inputs {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 0;
+    padding: 0;
+  }
+
+  .date-input {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .date-display {
+    margin-left: 0;
+    padding: 0;
+    margin-top: 8px;
   }
 
   .search-filter {
