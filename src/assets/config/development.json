@@ -150,7 +150,19 @@
   "name": "getCustomerDetails",
   "url": "getCustomerDetails"
 }
-
+,
+{
+  "name":"getOverall/usage",
+  "url":"getOverall/usage"
+},
+{
+  "name":"getQuotationCount",
+  "url":"getQuotationCount"
+},
+{
+  "name":"getCostContribution",
+  "url":"getCostContribution"
+}
 
 
 

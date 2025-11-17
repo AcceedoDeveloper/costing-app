@@ -42,69 +42,51 @@
 
       <div class="table-wrapper">
         <div class="table-container">
-          <table mat-table [dataSource]="quotationsDataSource" class="quotations-table">
-          <!-- Customer Column -->
-          <ng-container matColumnDef="customer">
-            <th mat-header-cell *matHeaderCellDef>Customer</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row" class="customer-cell">{{ row.customer }}</td>
-          </ng-container>
-
-          <!-- Email Column -->
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.email }}</td>
-          </ng-container>
-
-          <!-- Part Name Column -->
-          <ng-container matColumnDef="partName">
-            <th mat-header-cell *matHeaderCellDef>Part Name</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.partName }}</td>
-          </ng-container>
-
-          <!-- Status Column -->
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">
-              <span class="status-badge" [ngClass]="getStatusClass(row.status)">{{ row.status }}</span>
-            </td>
-          </ng-container>
-
-          <!-- Sent At Column -->
-          <ng-container matColumnDef="sentAt">
-            <th mat-header-cell *matHeaderCellDef>Sent At</th>
-            <td mat-cell (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.sentAt }}</td>
-          </ng-container>
-
-          <!-- Actual Cost Column -->
-          <ng-container matColumnDef="actualCost">
-            <th mat-header-cell *matHeaderCellDef>Actual Cost</th>
-            <td mat-cell  (click)="openDifferenceGraph(row)" class="clickable-difference" *matCellDef="let row">{{ row.actualCost | number }}</td>
-          </ng-container>
-
-          <!-- Difference Column -->
-          <ng-container matColumnDef="difference">
-            <th mat-header-cell *matHeaderCellDef>Difference</th>
-            <td mat-cell *matCellDef="let row" 
-                [ngClass]="row.difference >= 0 ? 'difference-cell positive' : 'difference-cell negative'"
-                (click)="openDifferenceGraph(row)"
-                class="clickable-difference">
-              <span class="arrow" [ngClass]="row.difference >= 0 ? 'positive' : 'negative'">
-                {{ row.difference >= 0 ? '↑' : '↓' }}
-              </span> 
-              {{ row.differenceAbs | number }}
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+          <table class="quotations-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Part Name</th>
+                <th>Status</th>
+                <th>Sent At</th>
+                <th>Actual Cost</th>
+                <th>Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of getPaginatedQuotations()" (click)="openDifferenceGraph(row)" class="clickable-difference">
+                <td class="customer-cell">{{ row.customer }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row.partName }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="getStatusClass(row.status)">{{ row.status }}</span>
+                </td>
+                <td>{{ row.sentAt }}</td>
+                <td>{{ row.actualCost | number }}</td>
+                <td [ngClass]="row.difference >= 0 ? 'difference-cell positive' : 'difference-cell negative'">
+                  <span class="arrow" [ngClass]="row.difference >= 0 ? 'positive' : 'negative'">
+                    {{ row.difference >= 0 ? '↑' : '↓' }}
+                  </span> 
+                  {{ row.differenceAbs | number }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <mat-paginator 
-          [pageSize]="pageSize" 
-          [hidePageSize]="true"
-          showFirstLastButtons>
-        </mat-paginator>
+        <div class="pagination-info">
+          <span>Showing {{ ((currentPage - 1) * pageSize) + 1 }} - {{ Math.min(currentPage * pageSize, quotationsDataSource.data.length) }} of {{ quotationsDataSource.data.length }}</span>
+          <div class="pagination-controls">
+            <button (click)="previousPage()" [disabled]="currentPage === 1" title="Previous page">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span class="page-info">{{ currentPage }} / {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages || totalPages === 0" title="Next page">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -191,108 +173,216 @@
       <!-- Grade View (Top Left) -->
       <div class="dashboard-card">
         <div class="card-header">
-          <h3>Grade view</h3>
-          <select class="grade-select" [(ngModel)]="selectedGrade" (change)="onGradeChange()">
-            <option *ngFor="let grade of gradeOptions" [value]="grade">{{ grade }}</option>
-          </select>
+          <h3>{{ getChartDataSourceLabel() }} View</h3>
+          <div class="chart-controls-wrapper">
+            <div class="limit-buttons">
+              <button 
+                type="button"
+                class="limit-button"
+                [class.active]="chartDataLimit === 'high'"
+                (click)="onChartDataLimitChange('high')"
+                title="Show highest values">
+                High
+              </button>
+              <button 
+                type="button"
+                class="limit-button"
+                [class.active]="chartDataLimit === 'low'"
+                (click)="onChartDataLimitChange('low')"
+                title="Show lowest values">
+                Low
+              </button>
+            </div>
+            <select class="grade-select" [(ngModel)]="chartDataSource" (change)="onChartDataSourceChange()">
+              <option value="rawMaterial">Raw Material</option>
+              <option value="process">Process</option>
+              <option value="grade">Grade</option>
+            </select>
+          
+          </div>
         </div>
-        <div class="chart-container">
-          <div class="donut-chart-wrapper">
-            <div class="donut-chart">
-              <svg class="donut-svg" viewBox="0 0 200 200">
-                <circle 
-                  *ngFor="let segment of gradeChartSegments; let i = index"
-                  class="donut-segment"
-                  [attr.data-index]="i"
-                  cx="100" 
-                  cy="100" 
-                  r="80" 
-                  fill="none" 
-                  [attr.stroke]="segment.color"
-                  stroke-width="30"
-                  [attr.stroke-dasharray]="segment.dashArray"
-                  [attr.stroke-dashoffset]="segment.dashOffset"
-                  stroke-linecap="round">
-                </circle>
-              </svg>
-              <div class="donut-center">
-                <div class="center-value-large">{{ gradeTotalValue | number }}</div>
+
+
+        <div class="chart-container-flex" >
+
+          <div class="chart-container">
+            <div class="donut-chart-wrapper">
+              <div class="donut-chart">
+                <svg class="donut-svg" viewBox="0 0 200 200">
+                  <circle 
+                    *ngFor="let segment of gradeChartSegments; let i = index"
+                    class="donut-segment"
+                    [class.active]="isGradeSegmentActive(i)"
+                    [attr.data-index]="i"
+                    cx="100" 
+                    cy="100" 
+                    r="80" 
+                    fill="none" 
+                    [attr.stroke]="segment.color"
+                    stroke-width="30"
+                    [attr.stroke-dasharray]="segment.dashArray"
+                    [attr.stroke-dashoffset]="segment.dashOffset"
+                    stroke-linecap="round"
+                    (mouseenter)="onGradeSegmentHover(i)"
+                    (mouseleave)="onGradeSegmentLeave()"
+                    (click)="onGradeSegmentClick(i)"
+                    [title]="segment.label + ': ' + (segment.value | number) + ' (' + (gradeChartLegend[i]?.percent || 0) + '%)'"
+                    style="cursor: pointer;">
+                  </circle>
+                </svg>
+                <div class="donut-center">
+                  <div class="center-value-large" *ngIf="!getGradeChartCenterName()">{{ gradeTotalValue | number }}</div>
+                  <div *ngIf="getGradeChartCenterName()" class="center-hover-content">
+                    <div class="center-value-small" [autoFontSize]="getGradeChartCenterName()">{{ getGradeChartCenterName() }}</div>
+                    <div class="center-value-small">{{ getGradeChartCenterValue() }}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="chart-legend">
-          <div *ngFor="let item of gradeChartLegend" class="legend-item">
-            <span class="legend-color" [style.background-color]="item.color"></span>
-            <span class="legend-label">{{ item.label }}:</span>
-            <span class="legend-value">{{ item.value | number }}</span>
-            <span class="legend-percent">({{ item.percent }}%)</span>
+          <div class="chart-legend">
+            <div *ngFor="let item of gradeChartLegend" class="legend-item">
+              <span class="legend-color" [style.background-color]="item.color"></span>
+              <span class="legend-label" [title]="item.label">{{ item.label }}:</span>
+              <span class="legend-value">{{ item.value | number }}</span>
+              <span class="legend-percent">({{ item.percent }}%)</span>
+            </div>
           </div>
         </div>
+      
       </div>
 
       <!-- Cost Contribution (Top Middle) -->
       <div class="dashboard-card">
         <div class="card-header">
           <h3>Cost Contribution</h3>
+          <div class="cost-contribution-month-wrapper">
+            <button 
+              type="button"
+              class="cost-contribution-nav-button"
+              (click)="navigateCostContributionMonth(-1)"
+              title="Previous month">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <input 
+              type="month" 
+              [value]="getCostContributionMonthValue()"
+              (change)="onCostContributionMonthChange($event)"
+              class="cost-contribution-month-filter"
+              title="Select month to filter cost contribution">
+            <button 
+              type="button"
+              class="cost-contribution-nav-button"
+              (click)="navigateCostContributionMonth(1)"
+              [disabled]="isCostContributionCurrentMonth()"
+              title="Next month">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="chart-container">
-          <div class="donut-chart-wrapper">
-            <div class="donut-chart">
-              <svg class="donut-svg" viewBox="0 0 200 200">
-                <circle 
-                  *ngFor="let segment of costChartSegments; let i = index"
-                  class="donut-segment"
-                  [attr.data-index]="i"
-                  cx="100" 
-                  cy="100" 
-                  r="80" 
-                  fill="none" 
-                  [attr.stroke]="segment.color"
-                  stroke-width="30"
-                  [attr.stroke-dasharray]="segment.dashArray"
-                  [attr.stroke-dashoffset]="segment.dashOffset"
-                  stroke-linecap="round">
-                </circle>
-              </svg>
-              <div class="donut-center">
-                <div class="center-label">Cost Contribution</div>
+        <div class="chart-container-flex" >
+
+          <div class="chart-container">
+            <div class="donut-chart-wrapper">
+              <div class="donut-chart">
+                <svg class="donut-svg" viewBox="0 0 200 200">
+                  <circle 
+                    *ngFor="let segment of costChartSegments; let i = index"
+                    class="donut-segment"
+                    [class.active]="isCostSegmentActive(i)"
+                    [attr.data-index]="i"
+                    cx="100" 
+                    cy="100" 
+                    r="80" 
+                    fill="none" 
+                    [attr.stroke]="segment.color"
+                    stroke-width="30"
+                    [attr.stroke-dasharray]="segment.dashArray"
+                    [attr.stroke-dashoffset]="segment.dashOffset"
+                    stroke-linecap="round"
+                    (mouseenter)="onCostSegmentHover(i)"
+                    (mouseleave)="onCostSegmentLeave()"
+                    (click)="onCostSegmentClick(i)"
+                    [title]="segment.label + ': ' + (costChartLegend[i]?.percent || 0) + '%'"
+                    style="cursor: pointer;">
+                  </circle>
+                </svg>
+                <div class="donut-center">
+                  <div class="center-label" *ngIf="!getCostChartCenterName()">Cost Contribution</div>
+                  <div *ngIf="getCostChartCenterName()" class="center-hover-content">
+                    <div class="center-value-small">{{ getCostChartCenterName() }}</div>
+                    <div class="center-value-small">{{ getCostChartCenterValue() }}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="chart-legend">
-          <div *ngFor="let item of costChartLegend" class="legend-item">
-            <span class="legend-color" [style.background-color]="item.color"></span>
-            <span class="legend-label">{{ item.label }}:</span>
-            <span class="legend-percent">{{ item.percent }}%</span>
+          <div class="chart-legend">
+            <div *ngFor="let item of costChartLegend" class="legend-item">
+              <span class="legend-color" [style.background-color]="item.color"></span>
+              <span class="legend-label" [title]="item.label">{{ item.label }}:</span>
+              <span class="legend-percent">{{ item.percent }}%</span>
+            </div>
           </div>
         </div>
+       
       </div>
 
       <!-- Quotation Generated Every Month (Top Right) -->
       <div class="dashboard-card">
         <div class="card-header">
           <h3>Quotation Generated Every Month</h3>
+          <div class="quotation-count-year-wrapper">
+            <button 
+              type="button"
+              class="quotation-count-nav-button"
+              (click)="navigateQuotationCountYear(-1)"
+              title="Previous year">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <input 
+              type="number" 
+              [value]="quotationCountSelectedYear"
+              (change)="onQuotationCountYearChange($event)"
+              class="quotation-count-year-filter"
+              min="2000"
+              max="2100"
+              placeholder="YYYY"
+              title="Select year to filter quotation count">
+            <button 
+              type="button"
+              class="quotation-count-nav-button"
+              (click)="navigateQuotationCountYear(1)"
+              [disabled]="isQuotationCountCurrentYear()"
+              title="Next year">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
         <div class="chart-container">
           <div class="bar-chart-container">
             <div class="bar-chart">
               <div class="bar-chart-bars">
-                <div *ngFor="let bar of quotationBars" class="bar-item">
+                <div *ngFor="let bar of quotationBars; let i = index" class="bar-item">
                   <div class="bar-wrapper">
                     <div 
                       class="bar" 
+                      [class.hovered]="hoveredQuotationBar === i"
                       [style.height.%]="bar.percentage"
                       [style.background-color]="bar.color"
-                      [title]="bar.month + ': ' + bar.percentage + '%'">
+                      (mouseenter)="onQuotationBarHover(i)"
+                      (mouseleave)="onQuotationBarLeave()"
+                      [title]="bar.month + ': ' + bar.count + ' quotations'">
+                      <div class="bar-hover-value" *ngIf="hoveredQuotationBar === i">
+                        {{ bar.count }}
+                      </div>
                     </div>
                   </div>
                   <div class="bar-label">{{ bar.month }}</div>
                 </div>
               </div>
               <div class="bar-chart-y-axis">
-                <div class="y-axis-label" *ngFor="let label of yAxisLabels">{{ label }}%</div>
+                <div class="y-axis-label" *ngFor="let label of yAxisLabels">{{ label }}</div>
               </div>
             </div>
           </div>
@@ -300,71 +390,76 @@
       </div>
     </div>
 
-    <!-- Bottom Row: AI Predictor, Material Forecast, Recent Updates -->
+    <!-- Bottom Row: Combined AI Predictor & Material Forecast, Recent Updates -->
     <div class="dashboard-row">
-      <!-- AI Cost Predictor (Bottom Left) -->
-      <div class="dashboard-card ai-predictor-card">
-        <div class="ai-header">
-          <mat-icon class="ai-icon">lightbulb</mat-icon>
-          <h3>AI Cost Predictor</h3>
-        </div>
-        <div class="ai-prediction">
-          <p class="prediction-text">{{ aiPrediction }}</p>
-        </div>
-        <div class="ai-buttons">
-          <button class="ai-button" (click)="navigateToSection('raw-material')">
-            <span>Raw Material</span>
-            <mat-icon>arrow_forward</mat-icon>
-          </button>
-          <button class="ai-button" (click)="navigateToSection('process')">
-            <span>Process</span>
-            <mat-icon>arrow_forward</mat-icon>
-          </button>
-          <button class="ai-button" (click)="navigateToSection('grade')">
-            <span>Grade</span>
-            <mat-icon>arrow_forward</mat-icon>
-          </button>
-        </div>
-      </div>
+      <!-- Combined AI Cost Predictor and Material Forecast -->
+      <div class="dashboard-card combined-ai-card">
+        <div class="combined-ai-content">
+          AI Cost Predictor Section
+          <!-- <div class="ai-predictor-section">
+            <div class="ai-header">
+              <mat-icon class="ai-icon">lightbulb</mat-icon>
+              <h3>AI Cost Predictor</h3>
+            </div>
+            <div class="ai-prediction">
+              <p class="prediction-text">{{ aiPrediction }}</p>
+            </div>
+            <div class="ai-buttons">
+              <button class="ai-button" (click)="navigateToSection('raw-material')">
+                <span>Raw Material</span>
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+              <button class="ai-button" (click)="navigateToSection('process')">
+                <span>Process</span>
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+              <button class="ai-button" (click)="navigateToSection('grade')">
+                <span>Grade</span>
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div> -->
 
-      <!-- AI-Predicted Material Price Forecast (Bottom Middle) -->
-      <div class="dashboard-card material-forecast-card">
-        <div class="card-header">
-          <h3>AI-Predicted Material Price Forecast</h3>
-        </div>
-        <div class="table-container-forecast">
-          <table class="forecast-table">
-            <thead>
-              <tr>
-                <th>Material</th>
-                <th>Current Price<br/>({{ currentMonth }})</th>
-                <th>Predicted<br/>June 2025</th>
-                <th>Predicted<br/>Sept 2025</th>
-                <th>Predicted<br/>Dec 2025</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let material of materialForecast">
-                <td class="material-name">{{ material.name }}</td>
-                <td>₹{{ material.currentPrice }}</td>
-                <td>
-                  ₹{{ material.junePrice }}
-                  <span class="price-change positive" *ngIf="material.juneChange > 0">+{{ material.juneChange }}%</span>
-                  <span class="price-change negative" *ngIf="material.juneChange < 0">{{ material.juneChange }}%</span>
-                </td>
-                <td>
-                  ₹{{ material.septPrice }}
-                  <span class="price-change positive" *ngIf="material.septChange > 0">+{{ material.septChange }}%</span>
-                  <span class="price-change negative" *ngIf="material.septChange < 0">{{ material.septChange }}%</span>
-                </td>
-                <td>
-                  ₹{{ material.decPrice }}
-                  <span class="price-change positive" *ngIf="material.decChange > 0">+{{ material.decChange }}%</span>
-                  <span class="price-change negative" *ngIf="material.decChange < 0">{{ material.decChange }}%</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <!-- AI-Predicted Material Price Forecast Section -->
+          <!-- <div class="material-forecast-section">
+            <div class="card-header">
+              <h3>AI-Predicted Material Price Forecast</h3>
+            </div>
+            <div class="table-container-forecast">
+              <table class="forecast-table">
+                <thead>
+                  <tr>
+                    <th>Material</th>
+                    <th>Current Price<br/>({{ currentMonth }})</th>
+                    <th>Predicted<br/>June 2025</th>
+                    <th>Predicted<br/>Sept 2025</th>
+                    <th>Predicted<br/>Dec 2025</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let material of materialForecast">
+                    <td class="material-name">{{ material.name }}</td>
+                    <td>₹{{ material.currentPrice }}</td>
+                    <td>
+                      ₹{{ material.junePrice }}
+                      <span class="price-change positive" *ngIf="material.juneChange > 0">+{{ material.juneChange }}%</span>
+                      <span class="price-change negative" *ngIf="material.juneChange < 0">{{ material.juneChange }}%</span>
+                    </td>
+                    <td>
+                      ₹{{ material.septPrice }}
+                      <span class="price-change positive" *ngIf="material.septChange > 0">+{{ material.septChange }}%</span>
+                      <span class="price-change negative" *ngIf="material.septChange < 0">{{ material.septChange }}%</span>
+                    </td>
+                    <td>
+                      ₹{{ material.decPrice }}
+                      <span class="price-change positive" *ngIf="material.decChange > 0">+{{ material.decChange }}%</span>
+                      <span class="price-change negative" *ngIf="material.decChange < 0">{{ material.decChange }}%</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div> -->
         </div>
       </div>
 
@@ -372,16 +467,46 @@
       <div class="dashboard-card recent-updates-card">
         <div class="card-header">
           <h3>Recent Updates</h3>
+          <div class="date-filter-wrapper">
+            <button 
+              type="button" 
+              class="date-nav-button" 
+              (click)="navigateDate(-1)"
+              title="Previous day"
+              aria-label="Previous day">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <input 
+              type="date" 
+              [value]="getRecentUpdatesDateValue()"
+              (change)="onRecentUpdatesDateChange($event)"
+              class="recent-updates-date-filter"
+              title="Select date to filter updates">
+            <button 
+              type="button" 
+              class="date-nav-button" 
+              (click)="navigateDate(1)"
+              title="Next day"
+              aria-label="Next day">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
         </div>
-        <div class="updates-list">
+        <div class="updates-list" [class.scrollable]="recentUpdates.length > 5">
           <div *ngFor="let update of recentUpdates" class="update-item">
             <div class="update-avatar" [style.background-color]="update.color">
               {{ update.initials }}
             </div>
             <div class="update-content">
               <div class="update-name">{{ update.name }}</div>
-              <div class="update-action">{{ update.action }}</div>
+              <div class="update-action">
+                <span class="action-text">{{ update.action }}</span>
+                <span class="action-time" *ngIf="update.time">{{ update.time }}</span>
+              </div>
             </div>
+          </div>
+          <div *ngIf="recentUpdates.length === 0" class="no-updates">
+            <p>No recent updates for this date</p>
           </div>
         </div>
       </div>

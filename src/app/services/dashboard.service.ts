@@ -91,4 +91,30 @@ downloadMaterialExcel(): Observable<Blob> {
 }
 
 
+materialUsage(limit: string = 'high') : Observable<any>{
+  const baseUrl = this.config.getCostingUrl('getOverall/usage');
+  return this.http.get<any>(`${baseUrl}?rawMaterial=true&limit=${limit}`);
+}
+
+gradeUsage(limit: string = 'high') : Observable<any>{
+  const baseUrl = this.config.getCostingUrl('getOverall/usage');
+  return this.http.get<any>(`${baseUrl}?grade=true&limit=${limit}`);
+}
+
+getProcessUsage(limit: string = 'high') : Observable<any>{
+  const baseUrl = this.config.getCostingUrl('getOverall/usage');
+  return this.http.get<any>(`${baseUrl}?process=true&limit=${limit}`);
+}
+
+
+getQuotationCount(year: number) : Observable<any>{
+  const baseUrl = this.config.getCostingUrl('getQuotationCount');
+  return this.http.get<any>(`${baseUrl}?year=${year}`);
+}
+
+
+getCostContribution(month: string) : Observable<any>{
+  const baseUrl = this.config.getCostingUrl('getCostContribution');
+  return this.http.get<any>(`${baseUrl}?month=${month}`);
+}
 }
