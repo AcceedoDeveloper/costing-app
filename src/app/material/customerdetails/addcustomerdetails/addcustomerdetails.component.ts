@@ -67,6 +67,7 @@ export class AddcustomerdetailsComponent implements OnInit {
   quotationCalc: any = null;
   productionPower: ProductPower | null = null;
   storedRevision: number | null = null;
+  ID : string | null = null;
   storedCustomerId: string | null = null;
 
   selectedFileName: string = '';
@@ -211,6 +212,8 @@ selectedFile: File | null = null;
     ).subscribe((action: any) => {
       if (action && action.customer) {
         this.storedRevision = action.customer.revision || action.customer.data?.revision || null;
+        this.ID = action.customer.ID || action.customer.data?.ID || null;
+
         this.storedCustomerId = action.customer._id || action.customer.data?._id || null;
         console.log('✅ Customer added successfully. Revision:', this.storedRevision, 'Customer ID:', this.storedCustomerId);
       }
@@ -471,18 +474,25 @@ this.selectedProcesses = [];
 
 }
 
-submitCostForm(revision?: number, customerId?: string): void {
+submitCostForm(revision?: number, customerId?: string, id?: string): void {
   // Use passed parameters or stored values
   const finalRevision = revision !== undefined ? revision : this.storedRevision;
+  const ID = id !== undefined ? id : this.ID;
+
   const finalCustomerId = customerId || this.storedCustomerId;
   
   console.log('Submitted Cost Form:', this.costForm.value);
   console.log('Revision:', finalRevision);
   console.log('Customer ID:', finalCustomerId);
+  console.log('ID ', ID);
   
-  this.isSaved = true;
   
   // You can use finalRevision and finalCustomerId here for further processing
+}
+
+button(){
+  this.isSaved = true;
+
 }
 
 processdata(){
@@ -572,17 +582,19 @@ finalSubmit() {
       take(1)
     ).subscribe((action: any) => {
       if (action && action.customer) {
+        const iD = action.customer.ID || action.customer.data?.ID || null;
         const revision = action.customer.revision || action.customer.data?.revision || null;
         const customerId = action.customer._id || action.customer.data?._id || null;
         
         // Store revision and customer ID
         this.storedRevision = revision;
         this.storedCustomerId = customerId;
+        this.ID = iD;
         
         console.log('✅ Customer added. Revision:', revision, 'Customer ID:', customerId);
         
         // Call submitCostForm with revision and customerId
-        this.submitCostForm(revision, customerId);
+        this.submitCostForm(revision, customerId, iD);
       }
     });
   }
@@ -709,7 +721,8 @@ generateFinalJson(): void {
 
   // ✅ Call the API here using form values (use stored revision or default to 0)
   const revisionToUse = this.storedRevision !== null ? this.storedRevision : 0;
-  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, revisionToUse).subscribe(
+  const customID = this.ID !== null ? this.ID : '';
+  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, customID).subscribe(
     response => {
       console.log('🚀 API Success:', response);
 
