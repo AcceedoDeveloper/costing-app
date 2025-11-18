@@ -162,7 +162,7 @@ downloadQuotation(customer: any) {
   const customerName = customer?.CustomerName?.name || '';
   const drawingNo = customer?.drawingNo || '';
   const partName = customer?.partName || '';
-  const revision = customer?.revision || 0;
+  const ID = customer?.ID || 0;
   // 📅 Get current year, start of month, and end of month
   const now = new Date();
   const yearNo = now.getFullYear();
@@ -173,7 +173,7 @@ downloadQuotation(customer: any) {
     CustomerName: customerName,
     drawingNo: drawingNo,
     partName: partName,
-    revision: revision,
+    ID: ID,
     yearNo: yearNo,
     start: start,
     end: end

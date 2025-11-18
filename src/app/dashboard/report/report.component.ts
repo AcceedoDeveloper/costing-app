@@ -93,7 +93,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       customerName: '',
       partName: '',
       drawingNo: '',
-      revision: '',
+      ID: '',
       StartDate: startDateParam,
       EndDate: endDateParam,
       page: this.currentPage,
@@ -225,6 +225,8 @@ export class ReportComponent implements OnInit, OnDestroy {
     const details = customer.processName.map((process, index) => {
       const processName = process?.processName || process?.name || `Process ${index + 1}`;
       const materials: string[] = [];
+      
+
       
       // Extract raw materials
       if (process?.rawMaterial && Array.isArray(process.rawMaterial)) {
@@ -373,7 +375,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     const customerName = customer?.CustomerName?.name || '';
     const drawingNo = customer?.drawingNo || '';
     const partName = customer?.partName || '';
-    const revision = (customer as any)?.revision || 0;
+    const ID = (customer as any)?.ID || 0;
     
     const now = new Date();
     const yearNo = now.getFullYear();
@@ -384,7 +386,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       CustomerName: customerName,
       drawingNo: drawingNo,
       partName: partName,
-      revision: revision,
+      ID: ID,
       yearNo: yearNo,
       start: start,
       end: end

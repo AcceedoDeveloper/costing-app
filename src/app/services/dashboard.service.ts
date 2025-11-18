@@ -17,9 +17,9 @@ export class DashboardService {
 
 
 
-getQuoteData(customer: string, drawing: string, part: string, revision: number): Observable<any> {
+getQuoteData(customer: string, drawing: string, part: string, ID: number): Observable<any> {
   const baseUrl = this.config.getCostingUrl('getQuotationData');
-  const url = `${baseUrl}/${customer}/${drawing}/${part}/${revision}`;
+  const url = `${baseUrl}?CustomerName=${customer}&drawingNo=${drawing}&partName=${part}&ID=${ID}`;
   console.log('📝 Quotation URL:', url);
 
   return this.http.get<any>(url);

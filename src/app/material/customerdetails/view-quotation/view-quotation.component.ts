@@ -146,7 +146,7 @@ export class ViewQuotationComponent implements OnInit {
       power1: customer.powerCost?.MeltAndOthersPower || 0,
       power2: customer.powerCost?.mouldPower || 0,
       power3: customer.powerCost?.corePower || 0,
-      revision : customer.revision || 0
+      ID : customer.ID || 0
     });
   }
 
@@ -155,9 +155,9 @@ export class ViewQuotationComponent implements OnInit {
     const first = this.firstFormGroup.value;
     console.log(' First Form Group Value:', first);
     console.log(' Data:', this.data);
-    console.log(' Revision Value:', this.data.revision);
-    const revision = this.data.revision;
-    this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, revision).subscribe(
+    console.log(' ID Value:', this.data.ID);
+    const ID = this.data.ID;
+    this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, ID).subscribe(
       response => {
         console.log(' API Success:', response);
         this.quotationData = response;
