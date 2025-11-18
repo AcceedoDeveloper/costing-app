@@ -184,8 +184,8 @@
             <mat-icon>person</mat-icon>
           </div>
           <div class="customer-details">
-            <h3 class="customer-name">{{ customer.CustomerName?.name || 'N/A' }}</h3>
-            <p class="customer-id">ID: {{ customer._id?.substring(0, 8) || 'N/A' }}</p>
+            <h3 class="customer-name" [matTooltip]="customer.CustomerName?.name || 'N/A'">{{ getTruncatedCustomerName(customer) }}</h3>
+            <p class="customer-id">ID: {{ customer.ID?.substring(0, 8) || 'N/A' }}</p>
           </div>
         </div>
         <div class="status-badge" [ngClass]="getStatusColor(customer.Status)">

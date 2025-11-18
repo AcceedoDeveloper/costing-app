@@ -35,8 +35,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   
   // Date filter properties
   dateFilterType: string = 'custom';
-  startDate: string = '';
-  endDate: string = '';
+  startDate: string = new Date().toISOString().split('T')[0];
+  endDate: string = new Date().toISOString().split('T')[0];
   selectedWeek: string = '';
   selectedMonth: string = '';
   selectedYear: string = '';
@@ -347,6 +347,18 @@ export class ReportComponent implements OnInit, OnDestroy {
     }
   }
 
+  getTruncatedCustomerName(customer: CustomerdetailsIn, maxWords: number = 3): string {
+    const name = customer?.CustomerName?.name || 'N/A';
+    if (name === 'N/A') return name;
+    
+    const words = name.trim().split(/\s+/);
+    if (words.length <= maxWords) {
+      return name;
+    }
+    
+    return words.slice(0, maxWords).join(' ') + '...';
+  }
+
   trackByCustomerId(index: number, customer: CustomerdetailsIn): string {
     return customer._id || index.toString();
   }
@@ -616,8 +628,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   clearFilter(): void {
     this.dateFilterType = 'custom';
-    this.startDate = '';
-    this.endDate = '';
+    this.startDate = new Date().toISOString().split('T')[0];
+    this.endDate = new Date().toISOString().split('T')[0];
     this.selectedWeek = '';
     this.selectedMonth = '';
     this.selectedYear = '';
