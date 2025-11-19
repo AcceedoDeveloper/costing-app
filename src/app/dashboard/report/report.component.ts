@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from '../../services/dashboard.service';
 import { ReportQuotationDialogComponent } from './report-quotation-dialog/report-quotation-dialog.component';
 import { ReportsService } from '../../services/reports.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-report',
@@ -46,6 +47,9 @@ export class ReportComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   pageLimit: number = 10;
   totalRecords: number = 0;
+
+  // View mode
+  viewMode: 'grid' | 'table' = 'grid';
 
   constructor(
     private reportsService: ReportsService,
@@ -347,7 +351,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTruncatedCustomerName(customer: CustomerdetailsIn, maxWords: number = 3): string {
+  getTruncatedCustomerName(customer: CustomerdetailsIn, maxWords: number = 2): string {
     const name = customer?.CustomerName?.name || 'N/A';
     if (name === 'N/A') return name;
     
@@ -647,5 +651,20 @@ export class ReportComponent implements OnInit, OnDestroy {
     } else {
       this.selectedStatFilter = statType;
     }
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.currentPage = event.pageIndex + 1; // MatPaginator uses 0-based index
+    this.pageLimit = event.pageSize;
+    this.loadCustomerDetails();
+  }
+
+  // View mode methods
+  switchToTableView(): void {
+    this.viewMode = 'table';
+  }
+
+  switchToGridView(): void {
+    this.viewMode = 'grid';
   }
 }
