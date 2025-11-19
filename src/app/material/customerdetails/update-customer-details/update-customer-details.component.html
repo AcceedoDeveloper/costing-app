@@ -560,7 +560,7 @@
     <div class="stepper-button-wrapper">
             <button mat-raised-button  color="warn" (click)="generateFinalJson()" >Save</button>
       <button mat-raised-button color="accent" (click)="createNewRevision()" (click)=" generateFinalJson()" >New Revision</button>
-      <button mat-raised-button matStepperNext color="primary"    >View Quote</button>
+      <button mat-raised-button matStepperNext color="primary" [disabled]="!isSaved"  >View Quote</button>
     </div>
   </form>
 </mat-step>

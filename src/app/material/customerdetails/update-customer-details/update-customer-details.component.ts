@@ -623,6 +623,7 @@ generateFinalJson(): void {
   const first = this.firstFormGroup.value;
   const second = this.secondFormGroup.value;
   const cost = this.costForm.value;
+  this.isSaved = true;
 
   const fullProcessData = this.getFullUpdatedProcessData();
 const revisionValue = this.getCurrentRevisionNumber();
@@ -890,19 +891,129 @@ submitForm() {
 // }
 
 createNewRevision(revision?: number, customerId?: string, id?: string): void {
-  // Use passed parameters or stored values
-  const finalRevision = revision !== undefined ? revision : this.storedRevision;
-  const ID = id || this.ID;
 
-  const finalCustomerId = customerId || this.storedCustomerId;
-  
-  console.log('Submitted Cost Form:', this.costForm.value);
-  console.log('Revision:', (finalRevision || 0) + 1);
-  console.log('Customer ID:', finalCustomerId);
-  
+  // Use passed parameters or stored values
+  this.revisionCount = this.revisionCount + 1;
+  console.log('Revision Count:', this.revisionCount);
+  this.generateFinalJsonForNewRevision();
   this.isSaved = true;
   
-  // You can use finalRevision and finalCustomerId here for further processing
+}
+
+generateFinalJsonForNewRevision(): void {
+  const first = this.firstFormGroup.value;
+  const second = this.secondFormGroup.value;
+  const cost = this.costForm.value;
+  this.isSaved = true;
+
+  const fullProcessData = this.getFullUpdatedProcessData();
+const revisionValue = this.getCurrentRevisionNumber();
+
+  const finalData = {
+    CustomerName: first.customerName,
+    drawingNo: first.drawing,
+    partName: first.partNo,
+    processName: fullProcessData,
+
+    castingInputs: first.CastingInput || false,
+    ...(first.CastingInput && {
+      CastingWeight: second.CastingWeight,
+      Cavities: second.Cavities,
+      PouringWeight: second.PouringWeight
+    }),
+
+    mouldingInputs: first.MouldingInput || false,
+    ...(first.MouldingInput && {
+      MouldingWeight: second.MouldingWeight,
+      BakeMoulding: second.BakeMoulding
+    }),
+
+    coreInputs: first.CoreInput || false,
+    ...(first.CoreInput && {
+      CoreWeight: second.CoreWeight,
+      CoresPerMould: second.CoresPerMould,
+      CoreCavities: second.CoreCavities,
+      ShootingPerShift: second.ShootingPerShift,
+      CoreSand: second.CoreSand
+    }),
+
+    // Cost
+    salaryforProcess: cost.salaryforProcess,
+    salaryExcludingCoreMaking: cost.salaryExcludingCoreMaking,
+    salaryForCoreProduction: cost.salaryForCoreProduction,
+    outSourcingCost: cost.outSourcingCost,
+    splOutSourcingCost: cost.splOutSourcingCost,
+
+    repairAndMaintenance: cost.repairAndMaintenance,
+    sellingDistributionAndMiscOverHeads: cost.sellingDistributionAndMiscOverHeads,
+    financeCost: cost.financeCost,
+
+    paymentCreditPeriod: cost.paymentCreditPeriod,
+    bankInterest: cost.bankInterest,
+
+    profit: cost.profit,
+    rejection: cost.rejection,
+
+    heatTreatment: cost.heatTreatment,
+    postProcess: cost.postProcess,
+    packingAndTransport: cost.packingAndTransport,
+    NozzleShotBlasting: cost.NozzleShotBlasting,
+    highPressureCleaning: cost.highPressureCleaning,
+    otherConsumableCost: cost.otherConsumables,
+    Status: 'Completed',
+
+    powerCost: {
+    MeltAndOthersPower: cost.power1,
+    mouldPower: cost.power2,
+    corePower: cost.power3
+},
+revision: revisionValue
+
+  };
+
+  console.log(' Final Full JSON Format:', finalData);
+    this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
+    
+    // Subscribe to success action to get revision
+    this.actions$.pipe(
+      ofType(updateCustomerDetailsSuccess),
+      take(1)
+    ).subscribe((action: any) => {
+      console.log('action:', action);
+      if (action && action.customer) {
+        const revision = action.customer.revision || action.customer.data?.revision || null;
+        const customerId = action.customer._id || action.customer.data?._id || null;
+        
+        // Store revision and customer ID
+        this.storedRevision = revision;
+        this.storedCustomerId = customerId;
+        
+        console.log('✅ Customer updated. Revision:', revision, 'Customer ID:', customerId);
+      }
+    });
+
+// ✅ Call the API here using form values (use revision array length)
+  const custID = this.ID !== null ? this.ID : '';
+console.log('📊 Revision array length:', revisionValue);
+
+this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, custID, revisionValue).subscribe(
+    response => {
+      console.log('Calculation ', response);
+
+      this.quotationData = response;
+      this.quotationCalc = response.calculations?.[0] || {};
+    },
+    error => {
+      console.error('API Error:', error);
+    }
+  );
+
+if (this.pendingRevisionIncrement) {
+  this.revisionCount = revisionValue;
+  this.storedRevision = revisionValue;
+  this.pendingRevisionIncrement = false;
+  this.hasUserEdits = false;
+}
 }
 
 private getCurrentRevisionNumber(): number {
