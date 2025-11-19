@@ -401,7 +401,7 @@ updateCustomerDetails$ = createEffect(() =>
   this.actions$.pipe(
     ofType(updateCustomerDetails),
     mergeMap(action =>
-      this.materialTypeService.updateCustomerDetails(action.id, action.customer).pipe(
+      this.materialTypeService.updateCustomerDetails(action.id,  action.customer).pipe(
         map((updatedCustomer: CustomerProcess) => {
           return updateCustomerDetailsSuccess({ customer: updatedCustomer });
         }),

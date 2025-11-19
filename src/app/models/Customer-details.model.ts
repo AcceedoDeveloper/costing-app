@@ -106,6 +106,21 @@ export interface CustomerProcess {
 
 
 
+export interface Revision {
+  processName: any[];
+  castingInputs?: any;
+  coreInputs?: any;
+  mouldingInputs?: any;
+  SalaryAndWages?: any;
+  OverHeads?: any;
+  CommercialTerms?: any;
+  Margin?: any;
+  AnticipatedRejection?: any;
+  totalProcessCost?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface CustomerdetailsIn {
   _id: string;
   CustomerName: {
@@ -121,6 +136,8 @@ export interface CustomerdetailsIn {
     coreInputs: string[];
     mouldingInputs: string[];
   };
+  Revision?: Revision[]; // Array of revisions
+  OverallTotalCost?: number;
   Status: string;
   createdAt?: string;
   updatedAt?: string;

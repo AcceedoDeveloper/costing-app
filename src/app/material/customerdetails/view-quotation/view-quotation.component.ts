@@ -157,7 +157,17 @@ export class ViewQuotationComponent implements OnInit {
     console.log(' Data:', this.data);
     console.log(' ID Value:', this.data.ID);
     const ID = this.data.ID;
-    this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, ID).subscribe(
+    // Get revision array length from data
+    let revisionCount = 0;
+    if (this.data.customer?.revision && Array.isArray(this.data.customer.revision)) {
+      revisionCount = this.data.customer.revision.length;
+    } else if (this.data.revision && Array.isArray(this.data.revision)) {
+      revisionCount = this.data.revision.length;
+    }
+    
+    console.log('📊 Revision array length:', revisionCount);
+    
+    this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, ID, revisionCount).subscribe(
       response => {
         console.log(' API Success:', response);
         this.quotationData = response;

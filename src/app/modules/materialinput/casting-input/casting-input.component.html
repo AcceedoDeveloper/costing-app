@@ -1,11 +1,32 @@
 <div class="production-cost-container">
   <header class="page-header">
     <h1 class="page-title">Production Cost Settings</h1>
+    <div class="section-navigation">
+      <mat-form-field appearance="outline" class="section-select">
+        <mat-label>Filter by Section</mat-label>
+        <mat-select [(value)]="selectedSection">
+          <mat-option value="">All Sections</mat-option>
+          <mat-option value="power-cost">Power Cost</mat-option>
+          <mat-option value="production-power">Production Power Details</mat-option>
+          <mat-option value="moulding-input">Moulding Input</mat-option>
+          <mat-option value="casting-input">Casting Input</mat-option>
+          <mat-option value="salary-wages">Salary & Wages</mat-option>
+          <mat-option value="overheads">Overheads</mat-option>
+          <mat-option value="commercial-terms">Commercial Terms</mat-option>
+          <mat-option value="profit-margin">Profit Margin</mat-option>
+          <mat-option value="anticipated-rejection">Anticipated Rejection</mat-option>
+          <mat-option value="core-input">Core Input</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </header>
 
   <div class="content-wrapper">
     <!-- POWER COST INPUT -->
-    <div *ngFor="let item of powerCosts" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'power-cost'">
+      <div *ngFor="let item of powerCosts; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'power-cost' : null">
       <mat-card class="cost-card power-cost-card">
         <div class="card-header">
           <h3 class="card-title">Power Cost</h3>
@@ -61,10 +82,13 @@
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </ng-container>
 
        <!-- PRODUCTION POWER -->
-       <div *ngIf="productionPower" class="section-wrapper">
+       <div *ngIf="productionPower && (selectedSection === '' || selectedSection === 'production-power')" 
+            class="section-wrapper" 
+            id="production-power">
         <mat-card class="cost-card power-card">
           <div class="card-header">
             <h3 class="card-title">Production Power Details</h3>
@@ -123,7 +147,10 @@
       </div>
 
      <!-- MOULDING INPUT -->
-     <div *ngFor="let item of castingData" class="section-wrapper">
+     <ng-container *ngIf="selectedSection === '' || selectedSection === 'moulding-input'">
+       <div *ngFor="let item of castingData; let first = first" 
+            class="section-wrapper" 
+            [id]="first ? 'moulding-input' : null">
       <mat-card class="cost-card moulding-card">
         <div class="card-header">
           <h3 class="card-title">Moulding Input</h3>
@@ -177,10 +204,14 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
     
     <!-- CASTING INPUT -->
-    <div *ngFor="let item of castingData" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'casting-input'">
+      <div *ngFor="let item of castingData; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'casting-input' : null">
       <mat-card class="cost-card casting-card">
         <div class="card-header">
           <h3 class="card-title">Casting Input</h3>
@@ -282,7 +313,8 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
 
 
    
@@ -294,7 +326,10 @@
 
 
     <!-- SALARY AND WAGES -->
-    <div *ngFor="let item of costsummary" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'salary-wages'">
+      <div *ngFor="let item of costsummary; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'salary-wages' : null">
       <mat-card class="cost-card salary-card">
         <div class="card-header">
           <h3 class="card-title">Salary & Wages</h3>
@@ -386,11 +421,15 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
 
 
     <!-- OVERHEADS -->
-    <div *ngFor="let item of costsummary" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'overheads'">
+      <div *ngFor="let item of costsummary; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'overheads' : null">
       <mat-card class="cost-card overhead-card">
         <div class="card-header">
           <h3 class="card-title">Overheads</h3>
@@ -470,13 +509,17 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
 
    
 
 
     <!-- COMMERCIAL TERMS -->
-    <div *ngFor="let item of costsummary" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'commercial-terms'">
+      <div *ngFor="let item of costsummary; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'commercial-terms' : null">
       <mat-card class="cost-card terms-card">
         <div class="card-header">
           <h3 class="card-title">Commercial Terms</h3>
@@ -520,12 +563,16 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
 
 
 
     <!-- PROFIT MARGIN -->
-    <div *ngFor="let item of costsummary" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'profit-margin'">
+      <div *ngFor="let item of costsummary; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'profit-margin' : null">
       <mat-card class="cost-card margin-card">
         <div class="card-header">
           <h3 class="card-title">Profit Margin</h3>
@@ -557,12 +604,16 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
 
 
 
     <!-- ANTICIPATED REJECTION -->
-    <div *ngFor="let item of costsummary" class="section-wrapper">
+    <ng-container *ngIf="selectedSection === '' || selectedSection === 'anticipated-rejection'">
+      <div *ngFor="let item of costsummary; let first = first" 
+           class="section-wrapper" 
+           [id]="first ? 'anticipated-rejection' : null">
       <mat-card class="cost-card rejection-card">
         <div class="card-header">
           <h3 class="card-title">Anticipated Rejection</h3>
@@ -594,12 +645,16 @@
           </ng-template>
         </div>
       </mat-card>
-    </div>
+      </div>
+    </ng-container>
 
 
 
  <!-- CORE INPUT -->
- <div *ngFor="let item of castingData" class="section-wrapper">
+ <ng-container *ngIf="selectedSection === '' || selectedSection === 'core-input'">
+   <div *ngFor="let item of castingData; let first = first" 
+        class="section-wrapper" 
+        [id]="first ? 'core-input' : null">
   <mat-card class="cost-card core-card">
     <div class="card-header">
       <h3 class="card-title">Core Input</h3>
@@ -677,7 +732,8 @@
       </ng-template>
     </div>
   </mat-card>
-</div>
+  </div>
+</ng-container>
 
 
  

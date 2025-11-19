@@ -136,8 +136,8 @@
               <td>{{ customer.CustomerName?.name || '-' }}</td>
               <td>{{ customer.drawingNo || '-' }}</td>
               <td>{{ customer.partName || '-' }}</td>
-              <td>{{ customer.processName?.length || 0 }} Process</td>
-              <td>{{ customer.OverallTotalCost | number:'1.2-2' }}</td>
+              <td>{{ customer.processName?.length || getLatestRevision(customer)?.processName?.length || 0 }} Process</td>
+              <td>{{ (customer.OverallTotalCost || getRevisionTotalCost(getLatestRevision(customer))) | number:'1.2-2' }}</td>
                 <td class="download-cell">
                   <div class="combined-button">
                     <div class="view-section" (click)="viewQuotation(customer)">
@@ -149,9 +149,9 @@
                   </div>
       </td>
               <td >
-                <!-- <button mat-icon-button class="expand-button" (click)="toggleRow(customer._id)" [attr.aria-label]="isRowExpanded(customer._id) ? 'Collapse row' : 'Expand row'">
+                <button mat-icon-button class="expand-button" (click)="toggleRow(customer._id)" [attr.aria-label]="isRowExpanded(customer._id) ? 'Collapse row' : 'Expand row'">
                   <mat-icon>{{ isRowExpanded(customer._id) ? 'expand_less' : 'expand_more' }}</mat-icon>
-                </button> -->
+                </button>
                 <button mat-icon-button  (click)="edit(customer._id)">
                   <mat-icon>edit</mat-icon>
         </button>
@@ -168,7 +168,19 @@
     <tr *ngIf="isRowExpanded(customer._id)" class="expanded-row">
       <td colspan="9" class="nested-table-cell">
         <div class="nested-table-container">
-          <table class="nested-table">
+          <!-- Revision Toggle Button -->
+          <div *ngIf="getAllRevisions(customer).length > 0" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="margin: 0; color: var(--imperial-green); font-size: 0.875rem; font-weight: 600;">
+              Revisions: {{ getAllRevisions(customer).length }}
+            </h4>
+            <button mat-button (click)="toggleRevision(customer._id)" style="color: var(--deep-emerald); font-size: 0.75rem;">
+              <mat-icon>{{ isRevisionExpanded(customer._id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              {{ isRevisionExpanded(customer._id) ? 'Hide Revisions' : 'Show Revisions' }}
+            </button>
+          </div>
+
+          <!-- Process Table -->
+          <table class="nested-table" style="margin-bottom: 1rem;">
             <thead>
               <tr>
                 <th>Process Name</th>
@@ -178,17 +190,83 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let process of customer.processName; let j = index">
+              <tr *ngFor="let process of (getLatestRevision(customer)?.processName || customer.processName); let j = index">
                 <td>{{ process.name || process.processName || '-' }}</td>
                 <td>{{ process.processCost | number:'1.2-2' }}</td>
                 <td>{{ process.grade?.name || process.grade || '-' }}</td>
                 <td>{{ process.processType?.name || process.processType || '-' }}</td>
               </tr>
-              <tr *ngIf="!customer.processName || customer.processName.length === 0">
+              <tr *ngIf="(!getLatestRevision(customer)?.processName && !customer.processName) || (getLatestRevision(customer)?.processName?.length === 0 && customer.processName?.length === 0)">
                 <td colspan="4" class="no-data">No process data available</td>
               </tr>
             </tbody>
           </table>
+
+          <!-- Revision Details -->
+          <div *ngIf="isRevisionExpanded(customer._id) && getAllRevisions(customer).length > 0">
+            <h4 style="color: var(--imperial-green); font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem;">Revision Cost Details</h4>
+            <div *ngFor="let revision of getAllRevisions(customer); let revIndex = index" 
+                 style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(229, 227, 221, 0.2); border-radius: 8px; border-left: 3px solid var(--deep-emerald);">
+              <h5 style="margin: 0 0 0.75rem 0; color: var(--deep-emerald); font-size: 0.8125rem; font-weight: 600;">
+                Revision {{ revIndex + 1 }} 
+                <span style="font-size: 0.75rem; color: var(--luxury-grey); font-weight: 400; margin-left: 0.5rem;">
+                  ({{ revision.createdAt ? (revision.createdAt | date:'short') : 'N/A' }})
+                </span>
+              </h5>
+              
+              <!-- Revision Process Costs -->
+              <div style="margin-bottom: 0.75rem;">
+                <strong style="font-size: 0.75rem; color: var(--black-pearl);">Total Process Cost:</strong>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: var(--imperial-green); margin-left: 0.5rem;">
+                  {{ getRevisionTotalCost(revision) | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <!-- Salary & Wages -->
+              <div *ngIf="revision.SalaryAndWages" style="margin-bottom: 0.5rem;">
+                <strong style="font-size: 0.75rem; color: var(--black-pearl);">Salary & Wages:</strong>
+                <span style="font-size: 0.75rem; color: var(--luxury-grey); margin-left: 0.5rem;">
+                  Process: {{ revision.SalaryAndWages.salaryforProcess | number:'1.2-2' }},
+                  Excluding Core: {{ revision.SalaryAndWages.salaryExcludingCoreMaking | number:'1.2-2' }},
+                  Core Production: {{ revision.SalaryAndWages.salaryForCoreProduction | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <!-- Overheads -->
+              <div *ngIf="revision.OverHeads" style="margin-bottom: 0.5rem;">
+                <strong style="font-size: 0.75rem; color: var(--black-pearl);">Overheads:</strong>
+                <span style="font-size: 0.75rem; color: var(--luxury-grey); margin-left: 0.5rem;">
+                  Total: {{ revision.OverHeads.totalOverHeads | number:'1.2-2' }},
+                  With Finance: {{ revision.OverHeads.totalOverHeadsWithFinanceCost | number:'1.2-2' }}
+                </span>
+              </div>
+
+              <!-- Commercial Terms -->
+              <div *ngIf="revision.CommercialTerms" style="margin-bottom: 0.5rem;">
+                <strong style="font-size: 0.75rem; color: var(--black-pearl);">Commercial Terms:</strong>
+                <span style="font-size: 0.75rem; color: var(--luxury-grey); margin-left: 0.5rem;">
+                  Credit Period: {{ revision.CommercialTerms.paymentCreditPeriod }} days,
+                  Bank Interest: {{ revision.CommercialTerms.bankInterest }}%
+                </span>
+              </div>
+
+              <!-- Margin & Rejection -->
+              <div style="display: flex; gap: 1rem;">
+                <div *ngIf="revision.Margin">
+                  <strong style="font-size: 0.75rem; color: var(--black-pearl);">Profit:</strong>
+                  <span style="font-size: 0.75rem; color: var(--profit-green); margin-left: 0.25rem; font-weight: 600;">
+                    {{ revision.Margin.profit }}%
+                  </span>
+                </div>
+                <div *ngIf="revision.AnticipatedRejection">
+                  <strong style="font-size: 0.75rem; color: var(--black-pearl);">Rejection:</strong>
+                  <span style="font-size: 0.75rem; color: var(--alert-red); margin-left: 0.25rem; font-weight: 600;">
+                    {{ revision.AnticipatedRejection.rejection }}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </td>
     </tr>

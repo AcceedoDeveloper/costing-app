@@ -58,6 +58,12 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   storedRevision: number | null = null;
   ID : string | null = null;
   storedCustomerId: string | null = null;
+  storedRevisionData: any = null;
+  revisionCount: number = 0;
+  showRevisionDetails: boolean = false;
+  hasUserEdits: boolean = false;
+  isApplyingRevision: boolean = false;
+  pendingRevisionIncrement: boolean = false;
 
 
    
@@ -131,6 +137,11 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   power2: [0],
   power3: [0]
   });
+  this.costForm.valueChanges.subscribe(() => {
+    if (!this.isApplyingRevision) {
+      this.hasUserEdits = true;
+    }
+  });
     this.store.dispatch(loadCustomers());
     this.store.dispatch(loadProcesses());
    
@@ -190,6 +201,7 @@ export class UpdateCustomerDetailsComponent implements OnInit {
         this.storedRevision = action.customer.revision || action.customer.data?.revision || null;
         this.ID = action.customer.ID || action.customer.data?.ID || null;
         this.storedCustomerId = action.customer._id || action.customer.data?._id || null;
+        this.setRevisionData(action.customer);
         console.log('✅ Customer updated/added successfully. Revision:', this.storedRevision, 'Customer ID:', this.storedCustomerId);
       }
     });
@@ -261,43 +273,20 @@ if (this.data?.mode === 'edit' && this.data.customerData) {
     const customer = JSON.parse(JSON.stringify(this.data.customerData));
 
     this.editId = customer._id; 
+    this.customerId = customer._id || this.customerId;
+    const initialId = customer.ID || customer.data?.ID || customer._id || null;
+    if (initialId) {
+      this.ID = initialId;
+    }
 
-
-   this.selectedProcesses = customer.processName.map((p) => {
-  const process = { ...p };
-
-  if (process.grade?.length > 0) {
-    process.grade = process.grade.map((inner) =>
-      inner.map((g) => ({
-        ...g,
-        rawMaterial: g.rawMaterial.map((rm) => ({
-          ...rm,
-          materialsUsed: rm.materialsUsed.map((m) => ({
-            ...m,
-            updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
-            updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
-          })),
-        })),
-      }))
-    );
-  } else {
-    process.rawMaterial = process.rawMaterial.map((rm) => ({
-      ...rm,
-      materialsUsed: rm.materialsUsed.map((m) => ({
-        ...m,
-        updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
-        updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
-      })),
-    }));
-  }
-
-  return process;
-});
-
-
+    this.selectedProcesses = this.cloneProcesses(customer.processName || []);
 
 this.secondFormGroup.valueChanges.subscribe(values => {
   const { CastingWeight = 0, Cavities = 0, PouringWeight = 1 } = values;
+
+  if (!this.isApplyingRevision) {
+    this.hasUserEdits = true;
+  }
 
   if (PouringWeight === 0) {
     this.castingWeightKg = 0;
@@ -336,9 +325,10 @@ this.secondFormGroup.valueChanges.subscribe(values => {
     });
 
     this.thirdFormGroup.patchValue({
-      selectedProcesses: customer.processName
+      selectedProcesses: this.selectedProcesses
     });
 
+    this.isApplyingRevision = true;
     this.costForm.patchValue({
       salaryforProcess: customer.SalaryAndWages?.salaryforProcess || 0,
       salaryExcludingCoreMaking: customer.SalaryAndWages?.salaryExcludingCoreMaking || 0,
@@ -363,10 +353,12 @@ this.secondFormGroup.valueChanges.subscribe(values => {
       power3 : customer.powerCost?.corePower || 0,
 
     });
+    this.isApplyingRevision = false;
 
     this.selectedProcesses = customer.processName || [];
     
     // Store revision and customer ID from existing data if available
+    this.setRevisionData(customer);
     if (customer.revision !== undefined) {
       this.storedRevision = customer.revision;
     }
@@ -424,6 +416,7 @@ submitStep2() {
   const selectedInputs = this.firstFormGroup.value;
   const flatFields: any = {};
 
+  this.hasUserEdits = true;
 
   if (selectedInputs.CastingInput) {
     flatFields['castingInputs'] = true;
@@ -432,13 +425,11 @@ submitStep2() {
     flatFields['PouringWeight'] = this.secondFormGroup.value.PouringWeight;
   }
 
-
   if (selectedInputs.MouldingInput) {
     flatFields['mouldingInputs'] = true;
     flatFields['MouldingWeight'] = this.secondFormGroup.value.MouldingWeight;
     flatFields['BakeMoulding'] = this.secondFormGroup.value.BakeMoulding;
   }
-
   
   if (selectedInputs.CoreInput) {
     flatFields['coreInputs'] = true;
@@ -454,27 +445,29 @@ submitStep2() {
 }
 
 
-submitCostForm(revision?: number, customerId?: string, id?: string): void {
-  // Use passed parameters or stored values
-  const finalRevision = revision !== undefined ? revision : this.storedRevision;
-  const ID = id || this.ID;
+// submitCostForm(revision?: number, customerId?: string, id?: string): void {
+//   // Use passed parameters or stored values
+//   const finalRevision = revision !== undefined ? revision : this.storedRevision;
+//   const ID = id || this.ID;
 
-  const finalCustomerId = customerId || this.storedCustomerId;
+//   const finalCustomerId = customerId || this.storedCustomerId;
   
-  console.log('Submitted Cost Form:', this.costForm.value);
-  console.log('Revision:', finalRevision);
-  console.log('Customer ID:', finalCustomerId);
+//   console.log('Submitted Cost Form:', this.costForm.value);
+//   console.log('Revision:', finalRevision);
+//   console.log('Customer ID:', finalCustomerId);
   
-  this.isSaved = true;
+//   this.isSaved = true;
   
-  // You can use finalRevision and finalCustomerId here for further processing
-}
+//   // You can use finalRevision and finalCustomerId here for further processing
+// }
 
 processdata(){
-  const selectedProcessObjects = this.thirdFormGroup.value.selectedProcesses;
-  const processType = selectedProcessObjects.map((p: any) => p.processName);
+  const selectedProcessObjects = this.thirdFormGroup.value.selectedProcesses || [];
+  const processType = selectedProcessObjects.map((p: any) => p.processName || p.name);
 
   console.log('processType:', processType);
+  this.selectedProcesses = this.cloneProcesses(selectedProcessObjects);
+  console.log('✅ Stored selectedProcesses:', this.selectedProcesses);
 
 }
 
@@ -483,10 +476,13 @@ finalSubmit() {
   const first = this.firstFormGroup.value;
   const second = this.secondFormGroup.value;
   const cost = this.costForm.value;
-  const processList = this.thirdFormGroup.value.selectedProcesses || [];
+  const processList = this.selectedProcesses.length > 0 
+    ? this.selectedProcesses 
+    : (this.thirdFormGroup.value.selectedProcesses || []);
+  const revisionValue = this.getCurrentRevisionNumber();
 
   // Extract process names
-  const processName = processList.map((p: any) => p.processName);
+  const processName = processList.map((p: any) => p.processName || p.name);
 
   // Build final JSON object
   const finalData = {
@@ -539,7 +535,8 @@ finalSubmit() {
     packingAndTransport: cost.packingAndTransport,
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
-    otherConsumables: cost.otherConsumables  
+    otherConsumables: cost.otherConsumables,
+    revision: revisionValue  
   };
 
   console.log(' Final Submission JSON:', finalData);
@@ -556,15 +553,24 @@ finalSubmit() {
       if (action && action.customer) {
         const revision = action.customer.revision || action.customer.data?.revision || null;
         const customerId = action.customer._id || action.customer.data?._id || null;
+        const responseId = action.customer.ID || action.customer.data?.ID || null;
         
-        // Store revision and customer ID
-        this.storedRevision = revision;
-        this.storedCustomerId = customerId;
+        // Store revision and customer ID only when provided
+        if (revision !== null && revision !== undefined) {
+          this.storedRevision = revision;
+        }
+        if (customerId) {
+          this.storedCustomerId = customerId;
+        }
+        if (responseId) {
+          this.ID = responseId;
+        } else if (!this.ID && customerId) {
+          this.ID = customerId;
+        }
         
         console.log('✅ Customer updated. Revision:', revision, 'Customer ID:', customerId);
         
         // Call submitCostForm with revision and customerId
-        this.submitCostForm(revision, customerId);
       }
     });
   } else {
@@ -582,13 +588,21 @@ finalSubmit() {
         const customerId = action.customer._id || action.customer.data?._id || null;
         
         // Store revision and customer ID
-        this.storedRevision = revision;
-        this.storedCustomerId = customerId;
+        if (revision !== null && revision !== undefined) {
+          this.storedRevision = revision;
+        }
+        if (customerId) {
+          this.storedCustomerId = customerId;
+        }
+        if (ID) {
+          this.ID = ID;
+        } else if (!this.ID && customerId) {
+          this.ID = customerId;
+        }
         
         console.log('✅ Customer added. Revision:', revision, 'Customer ID:', customerId);
         
         // Call submitCostForm with revision and customerId
-        this.submitCostForm(revision, customerId, ID);
       }
     });
   }
@@ -611,6 +625,7 @@ generateFinalJson(): void {
   const cost = this.costForm.value;
 
   const fullProcessData = this.getFullUpdatedProcessData();
+const revisionValue = this.getCurrentRevisionNumber();
 
   const finalData = {
     CustomerName: first.customerName,
@@ -669,7 +684,8 @@ generateFinalJson(): void {
     MeltAndOthersPower: cost.power1,
     mouldPower: cost.power2,
     corePower: cost.power3
-  }
+},
+revision: revisionValue
 
   };
 
@@ -681,6 +697,7 @@ generateFinalJson(): void {
       ofType(updateCustomerDetailsSuccess),
       take(1)
     ).subscribe((action: any) => {
+      console.log('action:', action);
       if (action && action.customer) {
         const revision = action.customer.revision || action.customer.data?.revision || null;
         const customerId = action.customer._id || action.customer.data?._id || null;
@@ -693,11 +710,11 @@ generateFinalJson(): void {
       }
     });
 
-  // ✅ Call the API here using form values (use stored revision or default to 0)
-  const revisionToUse = this.storedRevision !== null ? this.storedRevision : 0;
+// ✅ Call the API here using form values (use revision array length)
   const custID = this.ID !== null ? this.ID : '';
+console.log('📊 Revision array length:', revisionValue);
 
-  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, custID).subscribe(
+this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, custID, revisionValue).subscribe(
     response => {
       console.log('Calculation ', response);
 
@@ -708,6 +725,13 @@ generateFinalJson(): void {
       console.error('API Error:', error);
     }
   );
+
+if (this.pendingRevisionIncrement) {
+  this.revisionCount = revisionValue;
+  this.storedRevision = revisionValue;
+  this.pendingRevisionIncrement = false;
+  this.hasUserEdits = false;
+}
 }
 
 
@@ -787,82 +811,312 @@ submitForm() {
 }
 
 
-generateFinalJsonFromLoadedData(): void {
-  if (!this.customer) {
-    console.error(' No customer data available');
+// generateFinalJsonFromLoadedData(): void {
+//   const d = this.data?.customerData || this.customer?.[0];
+//   if (!d) {
+//     console.error(' No customer data available');
+//     return;
+//   }
+//   const fullProcessData = this.getFullUpdatedProcessData();
+// const revisionValue = this.getCurrentRevisionNumber();
+//    const finalData: any = {
+//     CustomerName: d.CustomerName?.name  ?? '',  
+//     drawingNo: d.drawingNo ?? '',
+//     partName: d.partName ?? '',
+//     processName: fullProcessData,
+
+//     castingInputs: !!d.castingInputs,
+//     ...(d.castingInputs && {
+//       CastingWeight: d.castingInputs?.CastingWeight ?? 0,
+//       Cavities: d.castingInputs?.Cavities ?? 0,
+//       PouringWeight: d.castingInputs?.PouringWeight ?? 0
+//     }),
+
+//     mouldingInputs: !!d.mouldingInputs,
+//     ...(d.mouldingInputs && {
+//       MouldingWeight: d.mouldingInputs?.MouldingWeight ?? 0,
+//       BakeMoulding: d.mouldingInputs?.BakeMoulding ?? 0
+//     }),
+
+//     coreInputs: !!d.coreInputs,
+//     ...(d.coreInputs && {
+//       CoreWeight: d.coreInputs?.CoreWeight ?? 0,
+//       CoresPerMould: d.coreInputs?.CoresPerMould ?? 0,
+//       CoreCavities: d.coreInputs?.CoreCavities ?? 0,
+//       ShootingPerShift: d.coreInputs?.ShootingPerShift ?? 0,
+//       CoreSand: d.coreInputs?.CoreSand ?? 0
+//     }),
+
+//     // Salary & Wages
+//     salaryforProcess: d.SalaryAndWages?.salaryforProcess ?? 0,
+//     salaryExcludingCoreMaking: d.SalaryAndWages?.salaryExcludingCoreMaking ?? 0,
+//     salaryForCoreProduction: d.SalaryAndWages?.salaryForCoreProduction ?? 0,
+//     outSourcingCost: d.SalaryAndWages?.outSourcingCost ?? 0,
+//     splOutSourcingCost: d.SalaryAndWages?.splOutSourcingCost ?? 0,
+
+//     // Overheads
+//     repairAndMaintenance: d.OverHeads?.repairAndMaintenance ?? 0,
+//     sellingDistributionAndMiscOverHeads: d.OverHeads?.sellingDistributionAndMiscOverHeads ?? 0,
+//     financeCost: d.OverHeads?.financeCost ?? 0,
+
+//     // Commercial Terms
+//     paymentCreditPeriod: d.CommercialTerms?.paymentCreditPeriod ?? 0,
+//     bankInterest: d.CommercialTerms?.bankInterest ?? 0,
+
+//     // Margin & Rejection
+//     profit: d.Margin?.profit ?? 0,
+//     rejection: d.AnticipatedRejection?.rejection ?? 0,
+
+//     // UltraSonicWashing
+//     heatTreatment: d.UltraSonicWashing?.heatTreatment ?? 0,
+//     postProcess: d.UltraSonicWashing?.postProcess ?? 0,
+//     packingAndTransport: d.UltraSonicWashing?.packingAndTransport ?? 0,
+//     NozzleShotBlasting: d.UltraSonicWashing?.NozzleShotBlasting ?? 0,
+
+//     // Special Process
+//   highPressureCleaning: d.specialProcess?.highPressureCleaning ?? 0,
+//   revision: revisionValue
+//   };
+  
+
+//   console.log(' Final JSON from Loaded Data:', finalData);
+
+//   if (this.pendingRevisionIncrement) {
+//     this.revisionCount = revisionValue;
+//     this.storedRevision = revisionValue;
+//     this.pendingRevisionIncrement = false;
+//     this.hasUserEdits = false;
+//   }
+// }
+
+createNewRevision(revision?: number, customerId?: string, id?: string): void {
+  // Use passed parameters or stored values
+  const finalRevision = revision !== undefined ? revision : this.storedRevision;
+  const ID = id || this.ID;
+
+  const finalCustomerId = customerId || this.storedCustomerId;
+  
+  console.log('Submitted Cost Form:', this.costForm.value);
+  console.log('Revision:', (finalRevision || 0) + 1);
+  console.log('Customer ID:', finalCustomerId);
+  
+  this.isSaved = true;
+  
+  // You can use finalRevision and finalCustomerId here for further processing
+}
+
+private getCurrentRevisionNumber(): number {
+  let base = this.revisionCount || 0;
+
+  if (!base && Array.isArray(this.data?.customerData?.revision)) {
+    base = this.data.customerData.revision.length;
+  }
+
+  if (!base && typeof this.storedRevision === 'number') {
+    base = this.storedRevision;
+  }
+
+  if (!base && Array.isArray(this.storedRevisionData?.processName)) {
+    base = 1;
+  }
+
+  if (this.pendingRevisionIncrement) {
+    return base + 1;
+  }
+
+  return base;
+}
+
+getRevisionTotalCost(revision: any): number {
+  if (revision?.totalProcessCost) {
+    return revision.totalProcessCost;
+  }
+  if (revision?.processName && Array.isArray(revision.processName)) {
+    return revision.processName.reduce((sum: number, process: any) => {
+      return sum + (process.processCost || 0);
+    }, 0);
+  }
+  return 0;
+}
+
+toggleRevisionDetails(): void {
+  this.showRevisionDetails = !this.showRevisionDetails;
+}
+
+onStepChange(event: any): void {
+  if (event.selectedIndex === 3) {
+    this.refreshRevisionData();
+  }
+}
+
+refreshRevisionData(): void {
+  if (this.hasUserEdits) {
     return;
   }
 
-  const d = this.customer[0];
-  const fullProcessData = this.getFullUpdatedProcessData();
-   const finalData: any = {
-    CustomerName: d.CustomerName?.name  ?? '',  
-    drawingNo: d.drawingNo ?? '',
-    partName: d.partName ?? '',
-    processName: fullProcessData,
-
-    castingInputs: !!d.castingInputs,
-    ...(d.castingInputs && {
-      CastingWeight: d.castingInputs?.CastingWeight ?? 0,
-      Cavities: d.castingInputs?.Cavities ?? 0,
-      PouringWeight: d.castingInputs?.PouringWeight ?? 0
-    }),
-
-    mouldingInputs: !!d.mouldingInputs,
-    ...(d.mouldingInputs && {
-      MouldingWeight: d.mouldingInputs?.MouldingWeight ?? 0,
-      BakeMoulding: d.mouldingInputs?.BakeMoulding ?? 0
-    }),
-
-    coreInputs: !!d.coreInputs,
-    ...(d.coreInputs && {
-      CoreWeight: d.coreInputs?.CoreWeight ?? 0,
-      CoresPerMould: d.coreInputs?.CoresPerMould ?? 0,
-      CoreCavities: d.coreInputs?.CoreCavities ?? 0,
-      ShootingPerShift: d.coreInputs?.ShootingPerShift ?? 0,
-      CoreSand: d.coreInputs?.CoreSand ?? 0
-    }),
-
-    // Salary & Wages
-    salaryforProcess: d.SalaryAndWages?.salaryforProcess ?? 0,
-    salaryExcludingCoreMaking: d.SalaryAndWages?.salaryExcludingCoreMaking ?? 0,
-    salaryForCoreProduction: d.SalaryAndWages?.salaryForCoreProduction ?? 0,
-    outSourcingCost: d.SalaryAndWages?.outSourcingCost ?? 0,
-    splOutSourcingCost: d.SalaryAndWages?.splOutSourcingCost ?? 0,
-
-    // Overheads
-    repairAndMaintenance: d.OverHeads?.repairAndMaintenance ?? 0,
-    sellingDistributionAndMiscOverHeads: d.OverHeads?.sellingDistributionAndMiscOverHeads ?? 0,
-    financeCost: d.OverHeads?.financeCost ?? 0,
-
-    // Commercial Terms
-    paymentCreditPeriod: d.CommercialTerms?.paymentCreditPeriod ?? 0,
-    bankInterest: d.CommercialTerms?.bankInterest ?? 0,
-
-    // Margin & Rejection
-    profit: d.Margin?.profit ?? 0,
-    rejection: d.AnticipatedRejection?.rejection ?? 0,
-
-    // UltraSonicWashing
-    heatTreatment: d.UltraSonicWashing?.heatTreatment ?? 0,
-    postProcess: d.UltraSonicWashing?.postProcess ?? 0,
-    packingAndTransport: d.UltraSonicWashing?.packingAndTransport ?? 0,
-    NozzleShotBlasting: d.UltraSonicWashing?.NozzleShotBlasting ?? 0,
-
-    // Special Process
-    highPressureCleaning: d.specialProcess?.highPressureCleaning ?? 0
-  };
-  
-
-  console.log(' Final JSON from Loaded Data:', finalData);
-
-
-
-  
+  if (this.data?.customerData) {
+    this.setRevisionData(this.data.customerData);
+  } else if (this.storedCustomerId) {
+    this.store.select(getCustomerWithId).pipe(take(1)).subscribe((state) => {
+      if (state?.customer) {
+        this.setRevisionData(state.customer);
+      }
+    });
+  }
 }
 
+private setRevisionData(customer: any): void {
+  const revisionArray = customer?.revision || customer?.Revision;
+  if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
+    this.revisionCount = revisionArray.length;
+    this.storedRevisionData = revisionArray[revisionArray.length - 1];
+    this.applyRevisionData(this.storedRevisionData);
+  } else {
+    this.revisionCount = Array.isArray(revisionArray) ? revisionArray.length : Number(revisionArray || 0);
+    this.storedRevisionData = null;
+  }
+}
 
+private applyRevisionData(revision: any): void {
+  if (!revision) {
+    return;
+  }
 
+  const castingInputs = revision.castingInputs;
+  const mouldingInputs = revision.mouldingInputs;
+  const coreInputs = revision.coreInputs;
 
+  if (castingInputs) {
+    this.firstFormGroup.patchValue({ CastingInput: true });
+    this.secondFormGroup.patchValue({
+      CastingWeight: castingInputs.CastingWeight || 0,
+      Cavities: castingInputs.Cavities || 0,
+      PouringWeight: castingInputs.PouringWeight || 0
+    });
+  }
+
+  if (mouldingInputs) {
+    this.firstFormGroup.patchValue({ MouldingInput: true });
+    this.secondFormGroup.patchValue({
+      MouldingWeight: mouldingInputs.MouldingWeight || 0,
+      BakeMoulding: mouldingInputs.BakeMoulding || 0
+    });
+  }
+
+  if (coreInputs) {
+    this.firstFormGroup.patchValue({ CoreInput: true });
+    this.secondFormGroup.patchValue({
+      CoreWeight: coreInputs.CoreWeight || 0,
+      CoresPerMould: coreInputs.CoresPerMould || 0,
+      CoreCavities: coreInputs.CoreCavities || 0,
+      ShootingPerShift: coreInputs.ShootingPerShift || 0,
+      CoreSand: coreInputs.CoreSand || 0
+    });
+  }
+
+  if (revision.SalaryAndWages) {
+    const salary = revision.SalaryAndWages;
+    this.costForm.patchValue({
+      salaryforProcess: salary.salaryforProcess || 0,
+      salaryExcludingCoreMaking: salary.salaryExcludingCoreMaking || 0,
+      salaryForCoreProduction: salary.salaryForCoreProduction || 0,
+      outSourcingCost: salary.outSourcingCost || 0,
+      splOutSourcingCost: salary.splOutSourcingCost || 0
+    });
+  }
+
+  if (revision.OverHeads) {
+    const overHeads = revision.OverHeads;
+    this.costForm.patchValue({
+      repairAndMaintenance: overHeads.repairAndMaintenance || 0,
+      sellingDistributionAndMiscOverHeads: overHeads.sellingDistributionAndMiscOverHeads || 0,
+      financeCost: overHeads.financeCost || 0
+    });
+  }
+
+  if (revision.CommercialTerms) {
+    const commercial = revision.CommercialTerms;
+    this.costForm.patchValue({
+      paymentCreditPeriod: commercial.paymentCreditPeriod || 0,
+      bankInterest: commercial.bankInterest || 0
+    });
+  }
+
+  if (revision.Margin) {
+    this.costForm.patchValue({ profit: revision.Margin.profit || 0 });
+  }
+
+  if (revision.AnticipatedRejection) {
+    this.costForm.patchValue({ rejection: revision.AnticipatedRejection.rejection || 0 });
+  }
+
+  if (revision.UltraSonicWashing) {
+    const ultra = revision.UltraSonicWashing;
+    this.costForm.patchValue({
+      heatTreatment: ultra.heatTreatment || 0,
+      postProcess: ultra.postProcess || 0,
+      packingAndTransport: ultra.packingAndTransport || 0,
+      NozzleShotBlasting: ultra.NozzleShotBlasting || 0
+    });
+  }
+
+  if (revision.specialProcess) {
+    this.costForm.patchValue({
+      highPressureCleaning: revision.specialProcess.highPressureCleaning || 0
+    });
+  }
+
+  if (revision.otherConsumables) {
+    this.costForm.patchValue({
+      otherConsumables: revision.otherConsumables.otherConsumableCost || 0
+    });
+  }
+
+  if (revision.powerCost) {
+    this.costForm.patchValue({
+      power1: revision.powerCost.MeltAndOthersPower || 0,
+      power2: revision.powerCost.mouldPower || 0,
+      power3: revision.powerCost.corePower || 0
+    });
+  }
+
+  if (revision.processName && Array.isArray(revision.processName)) {
+    this.selectedProcesses = this.cloneProcesses(revision.processName);
+    this.thirdFormGroup.patchValue({ selectedProcesses: this.selectedProcesses });
+  }
+}
+
+private cloneProcesses(processes: any[]): any[] {
+  return (processes || []).map((p) => {
+    const process = { ...p };
+
+    if (process.grade?.length > 0) {
+      process.grade = process.grade.map((inner: any[]) =>
+        inner.map((g: any) => ({
+          ...g,
+          rawMaterial: g.rawMaterial.map((rm: any) => ({
+            ...rm,
+            materialsUsed: rm.materialsUsed.map((m: any) => ({
+              ...m,
+              updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
+              updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
+            })),
+          })),
+        }))
+      );
+    } else if (process.rawMaterial?.length > 0) {
+      process.rawMaterial = process.rawMaterial.map((rm: any) => ({
+        ...rm,
+        materialsUsed: rm.materialsUsed.map((m: any) => ({
+          ...m,
+          updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
+          updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
+        })),
+      }));
+    }
+
+    return process;
+  });
+}
 
 }

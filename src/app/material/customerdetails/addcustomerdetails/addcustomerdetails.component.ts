@@ -67,8 +67,10 @@ export class AddcustomerdetailsComponent implements OnInit {
   quotationCalc: any = null;
   productionPower: ProductPower | null = null;
   storedRevision: number | null = null;
+  storedRevisionData: any = null; // Store full revision data
   ID : string | null = null;
   storedCustomerId: string | null = null;
+  showRevisionDetails: boolean = false;
 
   selectedFileName: string = '';
 selectedFile: File | null = null;
@@ -213,8 +215,15 @@ selectedFile: File | null = null;
       if (action && action.customer) {
         this.storedRevision = action.customer.revision || action.customer.data?.revision || null;
         this.ID = action.customer.ID || action.customer.data?.ID || null;
-
         this.storedCustomerId = action.customer._id || action.customer.data?._id || null;
+        
+        // Store full revision data if available
+        const revisionArray = action.customer.revision || action.customer.Revision || action.customer.data?.revision || action.customer.data?.Revision;
+        if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
+          this.storedRevisionData = revisionArray[revisionArray.length - 1];
+          console.log('✅ Stored Revision Data:', this.storedRevisionData);
+        }
+        
         console.log('✅ Customer added successfully. Revision:', this.storedRevision, 'Customer ID:', this.storedCustomerId);
       }
     });
@@ -474,7 +483,7 @@ this.selectedProcesses = [];
 
 }
 
-submitCostForm(revision?: number, customerId?: string, id?: string): void {
+submitCostForm(revision?: any, customerId?: string, id?: string): void {
   // Use passed parameters or stored values
   const finalRevision = revision !== undefined ? revision : this.storedRevision;
   const ID = id !== undefined ? id : this.ID;
@@ -486,6 +495,15 @@ submitCostForm(revision?: number, customerId?: string, id?: string): void {
   console.log('Customer ID:', finalCustomerId);
   console.log('ID ', ID);
   
+  // If revision is an array, extract the latest revision data
+  if (Array.isArray(finalRevision) && finalRevision.length > 0) {
+    this.storedRevisionData = finalRevision[finalRevision.length - 1];
+    console.log('✅ Extracted Revision Data from array:', this.storedRevisionData);
+  } else if (finalRevision && typeof finalRevision === 'object' && !Array.isArray(finalRevision)) {
+    // If it's already an object, use it directly
+    this.storedRevisionData = finalRevision;
+    console.log('✅ Using Revision Data object:', this.storedRevisionData);
+  }
   
   // You can use finalRevision and finalCustomerId here for further processing
 }
@@ -497,11 +515,46 @@ button(){
 
 processdata(){
   const selectedProcessObjects = this.thirdFormGroup.value.selectedProcesses;
-  const processType = selectedProcessObjects.map((p: any) => p.processName);
+  const processType = selectedProcessObjects?.map((p: any) => p.processName) || [];
 
   console.log('processType:', processType);
-  this.selectedProcesses = [];
-
+  // Don't clear selectedProcesses - preserve them for later use
+  // Store the selected processes for later use
+  if (selectedProcessObjects && selectedProcessObjects.length > 0) {
+    this.selectedProcesses = selectedProcessObjects.map((process: any) => {
+      const updatedProcess = { ...process };
+      
+      // Clone with editable fields
+      if (updatedProcess.grade?.length > 0) {
+        const clonedGrade = updatedProcess.grade.map((innerArray: any[]) =>
+          innerArray.map((g: any) => ({
+            ...g,
+            rawMaterial: g.rawMaterial.map((rm: any) => ({
+              ...rm,
+              materialsUsed: rm.materialsUsed.map((mat: any) => ({
+                ...mat,
+                updatedQuantity: mat.updatedQuantity ?? mat.quantity,
+                updatedUnitCost: mat.updatedUnitCost ?? mat.unitCost
+              }))
+            }))
+          }))
+        );
+        updatedProcess.grade = clonedGrade;
+      } else if (updatedProcess.rawMaterial?.length > 0) {
+        updatedProcess.rawMaterial = updatedProcess.rawMaterial.map((rm: any) => ({
+          ...rm,
+          materialsUsed: rm.materialsUsed.map((mat: any) => ({
+            ...mat,
+            updatedQuantity: mat.updatedQuantity ?? mat.quantity,
+            updatedUnitCost: mat.updatedUnitCost ?? mat.unitCost
+          }))
+        }));
+      }
+      
+      return updatedProcess;
+    });
+    console.log('✅ Stored selectedProcesses:', this.selectedProcesses);
+  }
 }
 
 
@@ -509,10 +562,14 @@ finalSubmit() {
   const first = this.firstFormGroup.value;
   const second = this.secondFormGroup.value;
   const cost = this.costForm.value;
-  const processList = this.thirdFormGroup.value.selectedProcesses || [];
+  
+  // Use selectedProcesses if available, otherwise use form value
+  const processList = this.selectedProcesses.length > 0 
+    ? this.selectedProcesses 
+    : (this.thirdFormGroup.value.selectedProcesses || []);
 
   // Extract process names
-  const processName = processList.map((p: any) => p.processName);
+  const processName = processList.map((p: any) => p.processName || p.name);
 
   // Build final JSON object
   const finalData = {
@@ -565,7 +622,8 @@ finalSubmit() {
     packingAndTransport: cost.packingAndTransport,
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
-    otherConsumables: cost.otherConsumables  
+    otherConsumables: cost.otherConsumables  ,
+    revision: 1
   };
 
   console.log('📦 Final Submission JSON:', finalData);
@@ -591,10 +649,17 @@ finalSubmit() {
         this.storedCustomerId = customerId;
         this.ID = iD;
         
+        // Store full revision data if available
+        const revisionArray = action.customer.revision || action.customer.Revision || action.customer.data?.revision || action.customer.data?.Revision;
+        if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
+          this.storedRevisionData = revisionArray[revisionArray.length - 1];
+          console.log('✅ Stored Revision Data:', this.storedRevisionData);
+        }
+        
         console.log('✅ Customer added. Revision:', revision, 'Customer ID:', customerId);
         
-        // Call submitCostForm with revision and customerId
-        this.submitCostForm(revision, customerId, iD);
+        // Call submitCostForm with revision array and customerId
+        this.submitCostForm(revisionArray, customerId, iD);
       }
     });
   }
@@ -613,7 +678,27 @@ logUpdatedData(): void {
 
 
 getFullUpdatedProcessData(): any[] {
-  return this.thirdFormGroup.value.selectedProcesses.map((process: any) => {
+  // Priority: 1. storedRevisionData, 2. selectedProcesses array, 3. thirdFormGroup value
+  let processesToUse: any[] = [];
+  
+  if (this.storedRevisionData?.processName && Array.isArray(this.storedRevisionData.processName) && this.storedRevisionData.processName.length > 0) {
+    // Use revision data if available
+    processesToUse = this.storedRevisionData.processName;
+    console.log('✅ Using processes from storedRevisionData:', processesToUse);
+  } else if (this.selectedProcesses && this.selectedProcesses.length > 0) {
+    // Use selectedProcesses array
+    processesToUse = this.selectedProcesses;
+    console.log('✅ Using processes from selectedProcesses:', processesToUse);
+  } else if (this.thirdFormGroup.value.selectedProcesses && Array.isArray(this.thirdFormGroup.value.selectedProcesses) && this.thirdFormGroup.value.selectedProcesses.length > 0) {
+    // Use form value as fallback
+    processesToUse = this.thirdFormGroup.value.selectedProcesses;
+    console.log('✅ Using processes from thirdFormGroup:', processesToUse);
+  } else {
+    console.warn('⚠️ No processes found in any source');
+    return [];
+  }
+
+  return processesToUse.map((process: any) => {
     const updated = { ...process };
 
     if (updated.grade?.length > 0) {
@@ -705,38 +790,49 @@ generateFinalJson(): void {
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumableCost: cost.otherConsumables,
-    Status: 'Completed',
+    Status: 'pending',
     // power1: cost.power1,
     // power2: cost.power2,
     // power3: cost.power3,
     powerCost: {
     MeltAndOthersPower: cost.power1,
     mouldPower: cost.power2,
-    corePower: cost.power3
-  }
+    corePower: cost.power3,
+  },
+  revision: 1
 
   };
 
   console.log('✅ Final Full JSON Format:', finalData);
 
-  // ✅ Call the API here using form values (use stored revision or default to 0)
-  const revisionToUse = this.storedRevision !== null ? this.storedRevision : 0;
+  // ✅ Call the API here using form values (use revision array length)
   const customID = this.ID !== null ? this.ID : '';
-  this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, customID).subscribe(
-    response => {
-      console.log('🚀 API Success:', response);
-
-      this.quotationData = response;
-      this.quotationCalc = response.calculations?.[0] || {};
-    },
-    error => {
-      console.error('❌ API Error:', error);
+  
+  // Get revision count from store (revision array length)
+  this.store.select(getCustomerWithId).pipe(take(1)).subscribe((state) => {
+    let revisionCount = 0;
+    if (state?.customer?.revision && Array.isArray(state.customer.revision)) {
+      revisionCount = state.customer.revision.length;
     }
-  );
+    
+    console.log('📊 Revision array length:', revisionCount);
+    
+      this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.partNo, customID, revisionCount).subscribe(
+        response => {
+          console.log('🚀 API Success:', response);
+
+          this.quotationData = response;
+          this.quotationCalc = response.calculations?.[0] || {};
+        },
+        error => {
+          console.error('❌ API Error:', error);
+        }
+      );
+    });
 
    if (this.customerId) {
     console.log('✅ Final Payload:', finalData);
-    this.store.dispatch(updateCustomerDetails({ id: this.customerId, customer: finalData }));
+    this.store.dispatch(updateCustomerDetails({ id: this.customerId,  customer: finalData }));
     this.store.dispatch(loadCustomerDetails());
   } else {
     console.error('❌ No customer ID found to update');
@@ -782,7 +878,49 @@ getPowerCostData(): void {
   );
 }
 
+// Get revision total process cost
+getRevisionTotalCost(revision: any): number {
+  if (revision?.totalProcessCost) {
+    return revision.totalProcessCost;
+  }
+  // Calculate from processName if totalProcessCost is not available
+  if (revision?.processName && Array.isArray(revision.processName)) {
+    return revision.processName.reduce((sum: number, process: any) => {
+      return sum + (process.processCost || 0);
+    }, 0);
+  }
+  return 0;
+}
 
+// Toggle revision details display
+toggleRevisionDetails(): void {
+  this.showRevisionDetails = !this.showRevisionDetails;
+}
+
+// Handle step change to refresh revision data when Review Cost step is accessed
+onStepChange(event: any): void {
+  // When Review Cost step (step 3, index 3) is accessed, try to get latest revision data
+  if (event.selectedIndex === 3 && this.storedCustomerId) {
+    // Try to get revision data from store if not already stored
+    this.refreshRevisionData();
+  }
+}
+
+// Refresh revision data from store
+refreshRevisionData(): void {
+  this.store.select(getCustomerWithId).pipe(take(1)).subscribe((state) => {
+    if (state?.customer) {
+      const customer = state.customer;
+      const revisionArray = customer.revision || customer.Revision;
+      
+      if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
+        this.storedRevisionData = revisionArray[revisionArray.length - 1];
+        this.ID = customer.ID;
+        console.log('✅ Refreshed Revision Data on step change:', this.storedRevisionData);
+      }
+    }
+  });
+}
 
 }
 

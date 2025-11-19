@@ -56,6 +56,9 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
 
   // Expanded rows tracking
   expandedRows: Set<string> = new Set<string>();
+  
+  // Revision tracking
+  expandedRevisions: Set<string> = new Set<string>();
 
   constructor(
     private store: Store<{ materials: MaterialState }>, 
@@ -574,6 +577,50 @@ toggleRow(customerId: string) {
 // Check if row is expanded
 isRowExpanded(customerId: string): boolean {
   return this.expandedRows.has(customerId);
+}
+
+// Get latest revision for a customer
+getLatestRevision(customer: any): any {
+  if (customer?.Revision && customer.Revision.length > 0) {
+    return customer.Revision[customer.Revision.length - 1];
+  }
+  return null;
+}
+
+// Get revision total process cost
+getRevisionTotalCost(revision: any): number {
+  if (revision?.totalProcessCost) {
+    return revision.totalProcessCost;
+  }
+  // Calculate from processName if totalProcessCost is not available
+  if (revision?.processName && Array.isArray(revision.processName)) {
+    return revision.processName.reduce((sum: number, process: any) => {
+      return sum + (process.processCost || 0);
+    }, 0);
+  }
+  return 0;
+}
+
+// Get all revisions for a customer
+getAllRevisions(customer: any): any[] {
+  if (customer?.Revision && Array.isArray(customer.Revision)) {
+    return customer.Revision;
+  }
+  return [];
+}
+
+// Toggle revision expansion
+toggleRevision(customerId: string): void {
+  if (this.expandedRevisions.has(customerId)) {
+    this.expandedRevisions.delete(customerId);
+  } else {
+    this.expandedRevisions.add(customerId);
+  }
+}
+
+// Check if revision is expanded
+isRevisionExpanded(customerId: string): boolean {
+  return this.expandedRevisions.has(customerId);
 }
 
 }

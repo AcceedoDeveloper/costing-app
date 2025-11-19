@@ -37,9 +37,11 @@ editableCostPerUnit: number | null = null;
  editMode: { [key: string]: boolean } = {};
 editableItem: any = null;
 
-productionPower!: ProductPower;
+  productionPower!: ProductPower;
 
 editablePower: any = {};
+
+selectedSection: string = '';
 
 
 
@@ -443,6 +445,7 @@ savePower() {
     }
   });
 }
+
 
 
 

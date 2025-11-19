@@ -67,6 +67,12 @@
   margin-bottom: 1.25rem;
   padding-bottom: 0.875rem;
   border-bottom: 2px solid var(--soft-stone-grey-50);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
 }
 
 .page-title {
@@ -75,6 +81,91 @@
   color: var(--imperial-green);
   margin: 0;
   letter-spacing: 0.3px;
+}
+
+/* Section Navigation */
+.section-navigation {
+  display: flex !important;
+  align-items: center;
+  min-width: 250px;
+  flex-shrink: 0;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+:host ::ng-deep .section-select {
+  width: 100%;
+  min-width: 250px;
+}
+
+:host ::ng-deep .section-select .mat-form-field-wrapper {
+  padding-bottom: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .section-select .mat-form-field-infix {
+  padding: 0.5rem 0.75rem;
+  border-top: none;
+  width: 100%;
+}
+
+:host ::ng-deep .section-select .mat-form-field {
+  width: 100% !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+:host ::ng-deep .section-select .mat-form-field-label {
+  color: var(--luxury-grey-70);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .section-select .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: var(--soft-stone-grey-50);
+}
+
+:host ::ng-deep .section-select .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: var(--deep-emerald-80);
+}
+
+:host ::ng-deep .section-select .mat-select-value {
+  color: var(--black-pearl-90);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+:host ::ng-deep .section-select .mat-select-arrow {
+  color: var(--luxury-grey-60);
+}
+
+:host ::ng-deep .section-select .mat-select-panel {
+  background: var(--off-white);
+  border: 1px solid var(--soft-stone-grey-50);
+  box-shadow: 0 4px 16px var(--imperial-green-40);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+:host ::ng-deep .section-select .mat-option {
+  color: var(--black-pearl-90);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.625rem 1rem;
+  min-height: 40px;
+}
+
+:host ::ng-deep .section-select .mat-option:hover:not(.mat-option-disabled),
+:host ::ng-deep .section-select .mat-option.mat-active {
+  background: rgba(15, 92, 72, 0.08);
+  color: var(--deep-emerald);
+}
+
+:host ::ng-deep .section-select .mat-option.mat-selected:not(.mat-option-disabled) {
+  background: rgba(15, 92, 72, 0.12);
+  color: var(--imperial-green);
+  font-weight: 600;
 }
 
 /* Content Wrapper */
@@ -88,6 +179,7 @@
 .section-wrapper {
   width: 100%;
   min-width: 0;
+  scroll-margin-top: 120px; /* Add scroll margin for better positioning */
 }
 
 /* Cost Card - Base Styles */
@@ -771,10 +863,21 @@
   .page-header {
     margin-bottom: 1.25rem;
     padding-bottom: 0.875rem;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .page-title {
     font-size: 1.25rem;
+  }
+
+  .section-navigation {
+    width: 100%;
+    min-width: auto;
+  }
+
+  :host ::ng-deep .section-select {
+    width: 100%;
   }
 
   .content-wrapper {

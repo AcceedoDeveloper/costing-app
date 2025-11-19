@@ -45,8 +45,7 @@
               Materials
             </ng-container>
           </td>
-          <td class="" >{{ process.processCost
-}}</td>
+          <td>{{ process.processCost | number:'1.2-2' }}</td>
           <td class="col-action">
             <div class="actions">
               <mat-icon class="icon" (click)="toggleExpand(i)">

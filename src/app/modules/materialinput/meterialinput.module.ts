@@ -7,6 +7,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 import { MeterialtypeRoutingModule } from './meterialinput-routing.module';
 import { CastingInputComponent } from './casting-input/casting-input.component';
@@ -28,6 +30,8 @@ import { MasterModule} from '../../master/master/master.module';
     MatTableModule,
     MatCardModule,
     MatToolbarModule,
+    MatFormFieldModule,
+    MatSelectModule,
     CommonModule,
     MeterialtypeRoutingModule,
     StoreModule.forFeature('casting', castingReducer),
