@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { loadCustomerDetails } from '../store/material.actions'; 
 import { MaterialState } from '../store/material.reducer';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { getCustomerDetails } from '../store/material.selector'; 
 import { MatDialog } from '@angular/material/dialog';
 import { AddcustomerdetailsComponent} from './addcustomerdetails/addcustomerdetails.component';
@@ -15,17 +15,20 @@ import {UpdateCustomerDetailsComponent } from './update-customer-details/update-
 import { ToastrService } from 'ngx-toastr';
 import { ViewQuotationComponent } from './view-quotation/view-quotation.component';
 import { PageEvent } from '@angular/material/paginator';
+import { ReportsService } from '../../services/reports.service';
 
 @Component({
   selector: 'app-customerdetails',
   templateUrl: './customerdetails.component.html',
   styleUrls: ['./customerdetails.component.css']
 })
-export class CustomerdetailsComponent implements OnInit {
+export class CustomerdetailsComponent implements OnInit, OnDestroy {
   selectedCustomerDetails$: Observable<any>;
   customerDetails : CustomerdetailsIn[] = [];
   searchText: string = '';
-filteredCustomersList: CustomerdetailsIn[] = [];
+  filteredCustomersList: CustomerdetailsIn[] = [];
+  private subscription: Subscription = new Subscription();
+  loading: boolean = false;
 
   // Search Filter properties
   searchFilterType: string = 'none'; // 'none', 'customerName', 'drawingNo', 'partNo'
@@ -33,7 +36,7 @@ filteredCustomersList: CustomerdetailsIn[] = [];
   searchFilterOptions: string[] = [];
 
   // Date Filter properties
-  dateFilterType: string = 'none'; // 'none', 'date', 'week', 'month', 'year'
+  dateFilterType: string = 'date'; // 'none', 'date', 'week', 'month', 'year'
   
   // Native HTML input filters
   filters: any = {
@@ -46,49 +49,133 @@ filteredCustomersList: CustomerdetailsIn[] = [];
   // Pagination properties
   pageSize: number = 10;
   pageIndex: number = 0;
-  pageSizeOptions: number[] = [ 10, 25, 50, 100];
+  currentPage: number = 1;
+  pageSizeOptions: number[] = [10, 25, 50, 100];
   totalRecords: number = 0;
   paginatedCustomers: CustomerdetailsIn[] = [];
 
   // Expanded rows tracking
   expandedRows: Set<string> = new Set<string>();
 
-
-
-  constructor(private store: Store<{ materials: MaterialState }>, 
+  constructor(
+    private store: Store<{ materials: MaterialState }>, 
     private dialog : MatDialog,
     private power: PowerService,
     private tooster: ToastrService,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private reportsService: ReportsService
+  ) {}
 
   ngOnInit(): void {
-  this.store.dispatch(loadCustomerDetails());
-
-  this.selectedCustomerDetails$ = this.store.select(getCustomerDetails);
-
-this.selectedCustomerDetails$.subscribe((data: CustomerdetailsIn[]) => {
-  this.customerDetails = data;
-  console.log('Customer Details:', this.customerDetails);
-  // Update search filter options when data changes
-  if (this.searchFilterType !== 'none') {
-    this.updateSearchFilterOptions();
+    // Initialize filters with current date values
+    this.initializeDateFilters();
+    this.loadCustomerDetails();
   }
-});
 
+  // Initialize date filters with current date
+  initializeDateFilters(): void {
+    const now = new Date();
+    this.filters.singleDate = now.toISOString().split('T')[0];
+    this.filters.week = this.getCurrentWeek();
+    this.filters.month = now.toISOString().slice(0, 7);
+    this.filters.year = now.getFullYear();
+  }
 
+  // Get current week in ISO format (YYYY-Www)
+  getCurrentWeek(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const oneJan = new Date(year, 0, 1);
+    const numberOfDays = Math.floor((now.getTime() - oneJan.getTime()) / (24 * 60 * 60 * 1000));
+    const week = Math.ceil((numberOfDays + oneJan.getDay() + 1) / 7);
+    return `${year}-W${week.toString().padStart(2, '0')}`;
+  }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
-}
+  loadCustomerDetails(): void {
+    this.loading = true;
+    
+    // Prepare API parameters
+    const params: any = {
+      customerName: '',
+      partName: '',
+      drawingNo: '',
+      revision: '',
+      StartDate: '',
+      EndDate: '',
+      page: this.currentPage,
+      limit: this.pageSize
+    };
+
+    // Add search filters
+    if (this.searchFilterType === 'customerName' && this.selectedSearchValue) {
+      params.customerName = this.selectedSearchValue;
+    } else if (this.searchFilterType === 'drawingNo' && this.selectedSearchValue) {
+      params.drawingNo = this.selectedSearchValue;
+    } else if (this.searchFilterType === 'partNo' && this.selectedSearchValue) {
+      params.partName = this.selectedSearchValue;
+    }
+
+    // Add date filters
+    if (this.dateFilterType === 'date' && this.filters.singleDate) {
+      const date = new Date(this.filters.singleDate);
+      const dateStr = date.toISOString().split('T')[0];
+      params.StartDate = dateStr;
+      params.EndDate = dateStr;
+    } else if (this.dateFilterType === 'week' && this.filters.week) {
+      const [year, week] = this.filters.week.split('-W').map(Number);
+      const weekStart = this.getWeekStartDate(year, week);
+      const weekEnd = this.getWeekEndDate(year, week);
+      params.StartDate = weekStart.toISOString().split('T')[0];
+      params.EndDate = weekEnd.toISOString().split('T')[0];
+    } else if (this.dateFilterType === 'month' && this.filters.month) {
+      const [year, month] = this.filters.month.split('-').map(Number);
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0);
+      params.StartDate = startDate.toISOString().split('T')[0];
+      params.EndDate = endDate.toISOString().split('T')[0];
+    } else if (this.dateFilterType === 'year' && this.filters.year) {
+      const year = Number(this.filters.year);
+      params.StartDate = `${year}-01-01`;
+      params.EndDate = `${year}-12-31`;
+    }
+
+    const sub = this.reportsService.getCustomerDetails(params).subscribe({
+      next: (response) => {
+        this.customerDetails = response.data || [];
+        this.totalRecords = response.total || this.customerDetails.length;
+        this.loading = false;
+        console.log('Customer Details:', this.customerDetails);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading customer details:', error);
+        this.tooster.error('Failed to load customer details', 'Error');
+        this.customerDetails = [];
+        this.totalRecords = 0;
+        this.loading = false;
+        this.cdr.detectChanges();
+      }
+    });
+
+    this.subscription.add(sub);
+  }
 
 addCustomerDetails() {
-   this.dialog.open(AddcustomerdetailsComponent, {
+   const dialogRef = this.dialog.open(AddcustomerdetailsComponent, {
     width: '100%',
     height: '650px',
     autoFocus: false,
     disableClose: true
   });
 
-  
+  // Reload data after dialog closes
+  dialogRef.afterClosed().subscribe(() => {
+    this.loadCustomerDetails();
+  });
 }
 
 
@@ -111,6 +198,10 @@ delete(id: string) {
   dialogRef.afterClosed().subscribe(result => {
     if (result === 'confirm') {
       this.store.dispatch(deleteCustomer({ id }));
+      // Reload data after deletion
+      setTimeout(() => {
+        this.loadCustomerDetails();
+      }, 500);
     }
   });
 }
@@ -130,7 +221,7 @@ edit(id: string) {
   const customer = this.customerDetails.find(c => c._id === id);
 
   if (customer) {
-    this.dialog.open(UpdateCustomerDetailsComponent, {
+    const dialogRef = this.dialog.open(UpdateCustomerDetailsComponent, {
       width: '100%',
       height: '650px',
       data: {
@@ -140,7 +231,12 @@ edit(id: string) {
       autoFocus: false,
       disableClose: true
     });
-    this.store.dispatch(loadCustomerDetails());
+    
+    // Reload data after dialog closes
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadCustomerDetails();
+    });
+    
     console.log('Editing Customer:', customer);
   } else {
     console.warn('Customer not found for editing:', id);
@@ -188,7 +284,9 @@ downloadQuotation(customer: any) {
 }
 
 applyDateFilter() {
+  this.currentPage = 1;
   this.pageIndex = 0; // Reset to first page when filter changes
+  this.loadCustomerDetails();
 }
 
 // Removed - no longer using Material date pickers
@@ -200,32 +298,58 @@ onSearchFilterTypeChange() {
   this.applyDateFilter();
 }
 
-// Update search filter options based on selected type
+// Update search filter options based on selected type - fetch from API
 updateSearchFilterOptions() {
   this.searchFilterOptions = [];
   
-  if (this.searchFilterType === 'none' || !this.customerDetails.length) {
+  if (this.searchFilterType === 'none') {
     return;
   }
 
-  const uniqueValues = new Set<string>();
+  // Fetch all records from API (without pagination) to get all unique values
+  const params: any = {
+    customerName: '',
+    partName: '',
+    drawingNo: '',
+    revision: '',
+    StartDate: '',
+    EndDate: '',
+    page: 1,
+    limit: 10000 // Large limit to get all records for filter options
+  };
 
-  this.customerDetails.forEach(customer => {
-    if (this.searchFilterType === 'customerName' && customer.CustomerName?.name) {
-      uniqueValues.add(customer.CustomerName.name);
-    } else if (this.searchFilterType === 'drawingNo' && customer.drawingNo) {
-      uniqueValues.add(customer.drawingNo);
-    } else if (this.searchFilterType === 'partNo' && customer.partName) {
-      uniqueValues.add(customer.partName);
+  const sub = this.reportsService.getCustomerDetails(params).subscribe({
+    next: (response) => {
+      const allCustomers = response.data || [];
+      const uniqueValues = new Set<string>();
+
+      allCustomers.forEach(customer => {
+        if (this.searchFilterType === 'customerName' && customer.CustomerName?.name) {
+          uniqueValues.add(customer.CustomerName.name);
+        } else if (this.searchFilterType === 'drawingNo' && customer.drawingNo) {
+          uniqueValues.add(customer.drawingNo);
+        } else if (this.searchFilterType === 'partNo' && customer.partName) {
+          uniqueValues.add(customer.partName);
+        }
+      });
+
+      this.searchFilterOptions = Array.from(uniqueValues).sort();
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error loading filter options:', error);
+      this.tooster.error('Failed to load filter options', 'Error');
     }
   });
 
-  this.searchFilterOptions = Array.from(uniqueValues).sort();
+  this.subscription.add(sub);
 }
 
 // Handle search value change
 onSearchValueChange() {
-  this.applyDateFilter();
+  this.currentPage = 1;
+  this.pageIndex = 0;
+  this.loadCustomerDetails();
 }
 
 // Get search filter label
@@ -240,11 +364,33 @@ getSearchFilterLabel(): string {
 
 // Handle filter type change
 onFilterTypeChange() {
-  // Reset all filter values when filter type changes
-  this.filters.singleDate = '';
-  this.filters.week = '';
-  this.filters.month = '';
-  this.filters.year = null;
+  // Initialize the selected filter type with current date values
+  const now = new Date();
+  
+  if (this.dateFilterType === 'date') {
+    this.filters.singleDate = now.toISOString().split('T')[0];
+  } else if (this.dateFilterType === 'week') {
+    this.filters.week = this.getCurrentWeek();
+  } else if (this.dateFilterType === 'month') {
+    this.filters.month = now.toISOString().slice(0, 7);
+  } else if (this.dateFilterType === 'year') {
+    this.filters.year = now.getFullYear();
+  }
+  
+  // Reset other filter values
+  if (this.dateFilterType !== 'date') {
+    this.filters.singleDate = '';
+  }
+  if (this.dateFilterType !== 'week') {
+    this.filters.week = '';
+  }
+  if (this.dateFilterType !== 'month') {
+    this.filters.month = '';
+  }
+  if (this.dateFilterType !== 'year') {
+    this.filters.year = null;
+  }
+  
   this.applyDateFilter();
 }
 
@@ -348,111 +494,20 @@ getYearEndDate(year: number): Date {
 }
 
 get filteredCustomers() {
+  // Since filtering is now done server-side, just return the customerDetails
+  // Client-side search text filtering can still be applied if needed
   const search = this.searchText.toLowerCase().trim();
-
-  // Get search filter value
-  const searchFilterValue = this.selectedSearchValue ? this.selectedSearchValue.toLowerCase().trim() : '';
-
-  // Calculate date range based on filter type using native inputs
-  let startDate: Date | null = null;
-  let endDate: Date | null = null;
-
-  if (this.dateFilterType === 'date' && this.filters.singleDate) {
-    // Single date filter
-    const date = new Date(this.filters.singleDate);
-    startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    endDate.setHours(23, 59, 59, 999);
-  } else if (this.dateFilterType === 'week' && this.filters.week) {
-    // Week filter (format: YYYY-Www)
-    const [year, week] = this.filters.week.split('-W').map(Number);
-    const weekStart = this.getWeekStartDate(year, week);
-    const weekEnd = this.getWeekEndDate(year, week);
-    startDate = weekStart;
-    endDate = weekEnd;
-  } else if (this.dateFilterType === 'month' && this.filters.month) {
-    // Month filter (format: YYYY-MM)
-    const [year, month] = this.filters.month.split('-').map(Number);
-    startDate = new Date(year, month - 1, 1);
-    endDate = new Date(year, month, 0);
-    endDate.setHours(23, 59, 59, 999);
-  } else if (this.dateFilterType === 'year' && this.filters.year) {
-    // Year filter
-    const year = Number(this.filters.year);
-    startDate = new Date(year, 0, 1);
-    endDate = new Date(year, 11, 31);
-    endDate.setHours(23, 59, 59, 999);
-  }
-
-  const filtered = this.customerDetails
-    .filter(c => !!c.CustomerName)  // remove null CustomerName
-    .filter(c => {
+  
+  if (search) {
+    return this.customerDetails.filter(c => {
       const customerName = c.CustomerName?.name?.toLowerCase() || '';
       const drawingNo = c.drawingNo?.toLowerCase() || '';
       const partName = c.partName?.toLowerCase() || '';
-      const createdDate = new Date(c.createdAt || '');
-
-      // Filter by search text (if still used)
-      let matchesSearch = true;
-      if (search) {
-        matchesSearch =
-        customerName.includes(search) ||
-        drawingNo.includes(search) ||
-        partName.includes(search);
-      }
-
-      // Filter by selected search filter value
-      if (this.searchFilterType !== 'none' && searchFilterValue) {
-        let matchesFilter = false;
-        
-        if (this.searchFilterType === 'customerName') {
-          matchesFilter = customerName === searchFilterValue;
-        } else if (this.searchFilterType === 'drawingNo') {
-          matchesFilter = drawingNo === searchFilterValue;
-        } else if (this.searchFilterType === 'partNo') {
-          matchesFilter = partName === searchFilterValue;
-        }
-        
-        if (!matchesFilter) {
-          return false;
-        }
-      }
-
-      // Filter by date range if date filter is active
-      let matchesDate = true;
-      if (startDate && endDate) {
-        const start = new Date(startDate);
-        start.setHours(0, 0, 0, 0);
-        const end = new Date(endDate);
-        end.setHours(23, 59, 59, 999);
-        matchesDate = createdDate >= start && createdDate <= end;
-      } else if (startDate) {
-        const start = new Date(startDate);
-        start.setHours(0, 0, 0, 0);
-        matchesDate = createdDate >= start;
-      } else if (endDate) {
-        const end = new Date(endDate);
-        end.setHours(23, 59, 59, 999);
-        matchesDate = createdDate <= end;
-      }
-
-      return matchesSearch && matchesDate;
-    })
-    .sort((a, b) => {
-      // Sort by updatedAt or createdAt in descending order (newest first)
-      const dateA = new Date((a as any).updatedAt || a.createdAt || 0);
-      const dateB = new Date((b as any).updatedAt || b.createdAt || 0);
-      return dateB.getTime() - dateA.getTime(); // Descending order
+      return customerName.includes(search) || drawingNo.includes(search) || partName.includes(search);
     });
-
-  // Update total records for paginator
-  this.totalRecords = filtered.length;
+  }
   
-  // Apply pagination
-  const startIndex = this.pageIndex * this.pageSize;
-  const endIndex = startIndex + this.pageSize;
-  
-  return filtered.slice(startIndex, endIndex);
+  return this.customerDetails;
 }
 
 // Removed percentage-related methods - no longer displaying percentage column
@@ -498,7 +553,9 @@ getFormattedId(customer: any, index: number): string {
 
 onPageChange(event: PageEvent) {
   this.pageIndex = event.pageIndex;
+  this.currentPage = event.pageIndex + 1; // API uses 1-based page numbers
   this.pageSize = event.pageSize;
+  this.loadCustomerDetails();
 }
 
 resetPagination() {

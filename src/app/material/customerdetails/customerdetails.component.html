@@ -66,6 +66,7 @@
           class="native-input"
           [(ngModel)]="filters.week"
           (change)="onWeekChange()">
+        <label for="weekFilter" class="input-label">Week:</label>
       </div>
 
       <!-- Month Picker -->
@@ -93,6 +94,7 @@
           (change)="onYearChange()">
         <label for="yearFilter" class="input-label">Year:</label>
       </div>
+      
       </div>
       
     </div>
@@ -198,6 +200,7 @@
       <mat-paginator 
         [length]="totalRecords"
         [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
         [pageSizeOptions]="pageSizeOptions"
         [showFirstLastButtons]="true"
         (page)="onPageChange($event)"
