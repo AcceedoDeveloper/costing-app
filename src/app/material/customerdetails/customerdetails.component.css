@@ -868,3 +868,53 @@ button, .filter-card, .combined-button, .native-input, .data-table tbody tr {
   background: linear-gradient(180deg, rgba(15, 92, 72, 0.7) 0%, rgba(11, 59, 46, 0.7) 100%);
 }
 
+/* Status Field Styling */
+.status-field {
+  width: 100%;
+  min-width: 140px;
+  margin: 0;
+}
+
+.status-field ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.status-field ::ng-deep .mat-form-field-infix {
+  border-top: 0;
+  padding: 0.5rem 0;
+}
+
+.status-field ::ng-deep .mat-select-trigger {
+  font-size: 0.875rem;
+  color: var(--black-pearl);
+}
+
+.status-field ::ng-deep .mat-form-field-underline {
+  display: none;
+}
+
+.status-field ::ng-deep .mat-form-field-outline {
+  border-radius: 4px;
+}
+
+/* Status-specific colors */
+.status-field ::ng-deep .mat-select-value-text {
+  font-weight: 500;
+}
+
+.status-field[data-status="pending"] ::ng-deep .mat-select-value-text {
+  color: var(--luxury-grey);
+}
+
+.status-field[data-status="e-mail sent"] ::ng-deep .mat-select-value-text {
+  color: var(--metallic-gold);
+}
+
+.status-field[data-status="approved"] ::ng-deep .mat-select-value-text {
+  color: var(--profit-green);
+}
+
+.status-field[data-status="rejected"] ::ng-deep .mat-select-value-text {
+  color: var(--alert-red);
+}
+

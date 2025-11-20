@@ -69,4 +69,11 @@ export class ReportsService {
       })
     );
   }
+
+  updateStatus(id: string, customerData: any): Observable<any> {
+    console.log('Updating status for customer:', id);
+    console.log('Sending data:', customerData);
+    const baseUrl = this.config.getCostingUrl('updateCustomerD');
+    return this.http.patch(`${baseUrl}/${id}`, customerData);
+  }
 }

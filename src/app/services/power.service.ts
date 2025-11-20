@@ -110,31 +110,36 @@ getOverHesdsMap(startDate: string, endDate: string, yearNo: number): Observable<
   }
 
 
-downloadQuotation(params: {
-  CustomerName: string;
-  drawingNo: string;
-  partName: string;
-  yearNo: number;
-  start: string;
-  end: string;
-  ID: number;
-}) {
-  const queryParams = new URLSearchParams({
-    CustomerName: params.CustomerName,
-    drawingNo: params.drawingNo,
-    partName: params.partName,
-    yearNo: params.yearNo.toString(),
-    start: params.start,
-    end: params.end,
-    ID: params.ID.toString(),
-  });
-
-  const url = this.configService.getCostingUrl('customer/quotation') + `?${queryParams.toString()}`;
-  console.log('Download URL:', url); 
-
-  return this.http.get(url, { responseType: 'blob' });
-}
-
+  downloadQuotation(params: {
+    CustomerName: string;
+    drawingNo: string;
+    partName: string;
+    yearNo: number;
+    start: string;
+    end: string;
+    ID: number;
+    revision: number | string;
+  }) {
+  
+    const queryParams = new URLSearchParams({
+      CustomerName: params.CustomerName,
+      drawingNo: params.drawingNo,
+      partName: params.partName,
+      yearNo: params.yearNo.toString(),
+      start: params.start,
+      end: params.end,
+      ID: params.ID.toString(),
+      revision: params.revision.toString()   // ✅ IMPORTANT FIX
+    });
+  
+    const url = this.configService.getCostingUrl('customer/quotation') 
+                + `?${queryParams.toString()}`;
+  
+    console.log('Download URL:', url);
+  
+    return this.http.get(url, { responseType: 'blob' });
+  }
+  
 
 
 

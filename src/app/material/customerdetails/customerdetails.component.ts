@@ -262,11 +262,13 @@ downloadQuotation(customer: any) {
   const drawingNo = customer?.drawingNo || '';
   const partName = customer?.partName || '';
   const ID = customer?.ID || 0;
-  // 📅 Get current year, start of month, and end of month
+
   const now = new Date();
   const yearNo = now.getFullYear();
-  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0]; // 1st of month
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0]; // last day
+  const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+
+  const revisionCount = customer?.revision?.length || 0;
 
   this.power.downloadQuotation({
     CustomerName: customerName,
@@ -275,16 +277,24 @@ downloadQuotation(customer: any) {
     ID: ID,
     yearNo: yearNo,
     start: start,
-    end: end
-  }).subscribe(blob => {
-    const downloadURL = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = downloadURL;
-    link.download = `${customerName}_quotation.xlsx`;
-    link.click();
-     this.tooster.success('Quotation downloaded successfully!', 'Success');
+    end: end,
+    revision: revisionCount   // ✅ critical
+  }).subscribe({
+    next: blob => {
+      const downloadURL = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = `${customerName}_quotation.xlsx`;
+      link.click();
+      this.tooster.success('Quotation downloaded successfully!', 'Success');
+    },
+    error: err => {
+      console.error("Download Failed:", err);
+      this.tooster.error('Failed to download quotation!', 'Error');
+    }
   });
 }
+
 
 applyDateFilter() {
   this.currentPage = 1;
@@ -581,8 +591,9 @@ isRowExpanded(customerId: string): boolean {
 
 // Get latest revision for a customer
 getLatestRevision(customer: any): any {
-  if (customer?.Revision && customer.Revision.length > 0) {
-    return customer.Revision[customer.Revision.length - 1];
+  const revisionArray = customer?.Revision || customer?.revision;
+  if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
+    return revisionArray[revisionArray.length - 1];
   }
   return null;
 }
@@ -603,8 +614,9 @@ getRevisionTotalCost(revision: any): number {
 
 // Get all revisions for a customer
 getAllRevisions(customer: any): any[] {
-  if (customer?.Revision && Array.isArray(customer.Revision)) {
-    return customer.Revision;
+  const revisionArray = customer?.Revision || customer?.revision;
+  if (revisionArray && Array.isArray(revisionArray)) {
+    return revisionArray;
   }
   return [];
 }
@@ -621,6 +633,108 @@ toggleRevision(customerId: string): void {
 // Check if revision is expanded
 isRevisionExpanded(customerId: string): boolean {
   return this.expandedRevisions.has(customerId);
+}
+
+// Get process count for a customer (from processName or latest revision)
+getProcessCount(customer: any): number {
+  if (customer?.processName && Array.isArray(customer.processName) && customer.processName.length > 0) {
+    return customer.processName.length;
+  }
+  const latestRevision = this.getLatestRevision(customer);
+  if (latestRevision?.processName && Array.isArray(latestRevision.processName) && latestRevision.processName.length > 0) {
+    return latestRevision.processName.length;
+  }
+  return 0;
+}
+
+// Get status with default value "pending"
+getStatus(customer: any): string {
+  // Check if Status is in the root level or in the latest revision
+  if (customer?.Status) {
+    return customer.Status;
+  }
+  const latestRevision = this.getLatestRevision(customer);
+  if (latestRevision?.Status) {
+    return latestRevision.Status;
+  }
+  return 'pending';
+}
+
+// Build customer data object in the expected format for API
+buildCustomerUpdateData(customer: any, newStatus: string): any {
+  // Get CustomerName as string
+  const customerName = customer?.CustomerName?.name || customer?.CustomerName || '';
+  
+  // Get processName array - check root level first, then revision
+  let processNameArray: any[] = [];
+  if (customer?.processName && Array.isArray(customer.processName) && customer.processName.length > 0) {
+    processNameArray = customer.processName;
+  } else {
+    const latestRevision = this.getLatestRevision(customer);
+    if (latestRevision?.processName && Array.isArray(latestRevision.processName) && latestRevision.processName.length > 0) {
+      processNameArray = latestRevision.processName;
+    }
+  }
+
+  // Get revision number - use revision array length or existing revision number
+  let revisionNumber = 1;
+  if (customer?.revision && Array.isArray(customer.revision)) {
+    revisionNumber = customer.revision.length;
+  } else if (customer?.revision && typeof customer.revision === 'number') {
+    revisionNumber = customer.revision;
+  }
+
+  // Build the update data object in the expected format
+  const updateData: any = {
+    CustomerName: customerName,
+    drawingNo: customer?.drawingNo || '',
+    partName: customer?.partName || '',
+    processName: processNameArray,
+    Status: newStatus,
+    revision: revisionNumber
+  };
+
+  return updateData;
+}
+
+// Handle status change
+onStatusChange(customerId: string, newStatus: string): void {
+  const customer = this.customerDetails.find(c => c._id === customerId);
+  
+  if (!customer) {
+    this.tooster.error('Customer not found', 'Error');
+    return;
+  }
+
+  // Build the complete customer data object in the expected format
+  const updateData = this.buildCustomerUpdateData(customer, newStatus);
+  
+  console.log('Updating customer with data:', updateData);
+
+  const sub = this.reportsService.updateStatus(customerId, updateData).subscribe({
+    next: (response) => {
+      // Update the local customer data
+      if (customer) {
+        customer.Status = newStatus;
+        // Also update in revision if it exists
+        const latestRevision = this.getLatestRevision(customer);
+        if (latestRevision) {
+          latestRevision.Status = newStatus;
+        }
+      }
+      this.tooster.success('Status updated successfully!', 'Success');
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.error('Error updating status:', error);
+      console.error('Error details:', error.error);
+      this.tooster.error('Failed to update status', 'Error');
+      // Revert the change in UI by triggering change detection
+      this.cdr.detectChanges();
+    }
+  });
+
+  this.subscription.add(sub);
 }
 
 }

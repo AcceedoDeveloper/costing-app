@@ -387,41 +387,42 @@ export class ReportComponent implements OnInit, OnDestroy {
     });
   }
 
-  downloadQuotation(customer: CustomerdetailsIn): void {
-    const customerName = customer?.CustomerName?.name || '';
-    const drawingNo = customer?.drawingNo || '';
-    const partName = customer?.partName || '';
-    const ID = (customer as any)?.ID || 0;
+  // downloadQuotation(customer: CustomerdetailsIn): void {
+  //   const customerName = customer?.CustomerName?.name || '';
+  //   const drawingNo = customer?.drawingNo || '';
+  //   const partName = customer?.partName || '';
+  //   const ID = (customer as any)?.ID || 0;
     
-    const now = new Date();
-    const yearNo = now.getFullYear();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
-
-    this.powerService.downloadQuotation({
-      CustomerName: customerName,
-      drawingNo: drawingNo,
-      partName: partName,
-      ID: ID,
-      yearNo: yearNo,
-      start: start,
-      end: end
-    }).subscribe({
-      next: (blob) => {
-        const downloadURL = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = downloadURL;
-        link.download = `${customerName}_quotation.xlsx`;
-        link.click();
-        window.URL.revokeObjectURL(downloadURL);
-        this.toastr.success('Quotation downloaded successfully!', 'Success');
-      },
-      error: (error) => {
-        this.toastr.error('Failed to download quotation', 'Error');
-        console.error('Download error:', error);
-      }
-    });
-  }
+  //   const now = new Date();
+  //   const yearNo = now.getFullYear();
+  //   const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  //   const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+  //   const revision = customer?.Revision || customer?.revision;
+  //   this.powerService.downloadQuotation({
+  //     CustomerName: customerName,
+  //     drawingNo: drawingNo,
+  //     partName: partName,
+  //     ID: ID,
+  //     yearNo: yearNo,
+  //     start: start,
+  //     end: end,
+  //     revision: revision
+  //   }).subscribe({
+  //     next: (blob) => {
+  //       const downloadURL = window.URL.createObjectURL(blob);
+  //       const link = document.createElement('a');
+  //       link.href = downloadURL;
+  //       link.download = `${customerName}_quotation.xlsx`;
+  //       link.click();
+  //       window.URL.revokeObjectURL(downloadURL);
+  //       this.toastr.success('Quotation downloaded successfully!', 'Success');
+  //     },
+  //     error: (error) => {
+  //       this.toastr.error('Failed to download quotation', 'Error');
+  //       console.error('Download error:', error);
+  //     }
+  //   });
+  // }
 
   exportToCSV(): void {
     const headers = [
