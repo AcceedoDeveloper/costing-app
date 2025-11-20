@@ -27,15 +27,21 @@ export class ReportQuotationDialogComponent implements OnInit {
   }
 
   loadQuotationData(): void {
+    console.log('Data:', this.data);
     const customer = this.data.customer;
     const customerName = customer?.CustomerName?.name || '';
     const drawingNo = customer?.drawingNo || '';
     const partName = customer?.partName || '';
-    // Handle ID as either string or number (database might store it as string like "25111801")
-    const customerID = (customer as any)?.ID;
-    const ID = customerID ? (typeof customerID === 'string' ? parseInt(customerID, 10) : customerID) : 0;
+    const customerID = (customer as any)?.ID || '';
+    const revisionCount = (customer as any)?.revision?.length || 0;
 
-    this.dashboardService.getQuoteData(customerName, drawingNo, partName, ID).subscribe({
+    if (!customerName || !drawingNo || !partName || !customerID) {
+      this.toastr.error('Missing customer information for quotation', 'Error');
+      return;
+    }
+
+    console.log('Revision Count:', revisionCount);
+    this.dashboardService.getQuoteData(customerName, drawingNo, partName, customerID, revisionCount).subscribe({
       next: (response) => {
         console.log('Quotation data loaded:', response);
         this.quotationData = response;

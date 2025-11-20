@@ -368,6 +368,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   viewDetails(customer: CustomerdetailsIn): void {
+    console.log('Customer:', customer);
     this.dialog.open(ReportDetailsDialogComponent, {
       width: '700px',
       maxWidth: '90vw',
@@ -378,6 +379,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   viewQuotation(customer: CustomerdetailsIn): void {
+    console.log('Customer:', customer);
     this.dialog.open(ViewQuotationComponent, {
       width: '100%',
       height: '650px',
@@ -423,6 +425,44 @@ export class ReportComponent implements OnInit, OnDestroy {
   //     }
   //   });
   // }
+
+  downloadQuotation(customer: any) {
+    const customerName = customer?.CustomerName?.name || '';
+    const drawingNo = customer?.drawingNo || '';
+    const partName = customer?.partName || '';
+    const ID = customer?.ID || 0;
+  
+    const now = new Date();
+    const yearNo = now.getFullYear();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+  
+    const revisionCount = customer?.revision?.length || 0;
+  
+    this.powerService.downloadQuotation({
+      CustomerName: customerName,
+      drawingNo: drawingNo,
+      partName: partName,
+      ID: ID,
+      yearNo: yearNo,
+      start: start,
+      end: end,
+      revision: revisionCount   // ✅ critical
+    }).subscribe({
+      next: blob => {
+        const downloadURL = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadURL;
+        link.download = `${customerName}_quotation.xlsx`;
+        link.click();
+        this.toastr.success('Quotation downloaded successfully!', 'Success');
+      },
+      error: err => {
+        console.error("Download Failed:", err);
+        this.toastr.error('Failed to download quotation!', 'Error');
+      }
+    });
+  }
 
   exportToCSV(): void {
     const headers = [
