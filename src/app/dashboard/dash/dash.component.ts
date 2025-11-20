@@ -37,14 +37,16 @@ export class DashComponent implements OnInit, AfterViewInit {
   
   // Status Filter
   selectedStatus: string = 'All';
-  statusOptions: string[] = ['All', 'Pending', 'Approved', 'Rejected'];
+  statusOptions: string[] = ['All', 'Pending', 'E-mail Sent', 'Approved', 'Rejected'];
 
   // Total Quotations Summary
   totalQuotations = 0;
   pendingCount = 0;
+  emailSentCount = 0;
   approvedCount = 0;
   rejectedCount = 0;
   pendingPercent = 0;
+  emailSentPercent = 0;
   approvedPercent = 0;
   rejectedPercent = 0;
 
@@ -138,6 +140,7 @@ export class DashComponent implements OnInit, AfterViewInit {
     const statusLower = status.toLowerCase();
     if (statusLower === 'approved') return 'status-approved';
     if (statusLower === 'rejected') return 'status-rejected';
+    if (statusLower === 'e-mail sent' || statusLower === 'email sent') return 'status-email-sent';
     return 'status-pending';
   }
 
@@ -295,8 +298,23 @@ export class DashComponent implements OnInit, AfterViewInit {
       const actualCost = parseFloat(item.actualCost) || 0;
       const difference = parseFloat(item.difference) || 0;
       
-      // Set all status as Pending for now - can be updated in future
-      const status = 'Pending';
+      // Get status from server data, with mapping for common values
+      let status = item.status || 'Pending';
+      const statusLower = status.toLowerCase();
+      
+      // Map server status values to expected status values
+      if (statusLower === 'completed' || statusLower === 'done' || statusLower === 'approved') {
+        status = 'Approved';
+      } else if (statusLower === 'rejected' || statusLower === 'declined') {
+        status = 'Rejected';
+      } else if (statusLower === 'e-mail sent' || statusLower === 'email sent' || statusLower === 'emailsent') {
+        status = 'E-mail Sent';
+      } else if (statusLower === 'pending' || statusLower === 'in progress') {
+        status = 'Pending';
+      } else {
+        // Default to Pending if status doesn't match known values
+        status = 'Pending';
+      }
 
       return {
         customer: customerName,
@@ -329,16 +347,19 @@ export class DashComponent implements OnInit, AfterViewInit {
   updateSummaryCounts(quotations: any[]): void {
     this.totalQuotations = quotations.length;
     this.pendingCount = quotations.filter(q => q.status === 'Pending').length;
+    this.emailSentCount = quotations.filter(q => q.status === 'E-mail Sent').length;
     this.approvedCount = quotations.filter(q => q.status === 'Approved').length;
     this.rejectedCount = quotations.filter(q => q.status === 'Rejected').length;
     
     if (this.totalQuotations > 0) {
       this.pendingPercent = Math.round((this.pendingCount / this.totalQuotations) * 100);
+      this.emailSentPercent = Math.round((this.emailSentCount / this.totalQuotations) * 100);
       this.approvedPercent = Math.round((this.approvedCount / this.totalQuotations) * 100);
       this.rejectedPercent = Math.round((this.rejectedCount / this.totalQuotations) * 100);
     } else {
       // Reset to 0 when there are no quotations
       this.pendingPercent = 0;
+      this.emailSentPercent = 0;
       this.approvedPercent = 0;
       this.rejectedPercent = 0;
     }
