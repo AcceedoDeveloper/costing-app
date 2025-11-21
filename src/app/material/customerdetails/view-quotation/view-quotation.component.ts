@@ -25,6 +25,11 @@ export class ViewQuotationComponent implements OnInit {
   quotationData: any = null;
   quotationCalc: any = null;
   today = new Date();
+  
+  // Revision management
+  allRevisions: any[] = [];
+  selectedRevisionIndex: number = -1;
+  selectedRevision: any = null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -33,11 +38,50 @@ export class ViewQuotationComponent implements OnInit {
     private dashboardService: DashboardService
   ) {
     this.initializeForms();
+    this.initializeRevisions();
   }
 
   ngOnInit(): void {
-    this.populateFormsWithData();
+    this.loadSelectedRevision();
+  }
+
+  // Initialize revisions from customer data
+  initializeRevisions(): void {
+    const customer = this.data;
+    const revisionArray = customer?.revision || customer?.Revision;
+    
+    if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
+      this.allRevisions = revisionArray;
+      // Default to last revision (index = length - 1)
+      this.selectedRevisionIndex = revisionArray.length - 1;
+      this.selectedRevision = revisionArray[this.selectedRevisionIndex];
+    } else {
+      // No revisions, use root customer data
+      this.allRevisions = [];
+      this.selectedRevisionIndex = -1;
+      this.selectedRevision = null;
+    }
+  }
+
+  // Load data for selected revision
+  loadSelectedRevision(): void {
+    if (this.selectedRevisionIndex >= 0 && this.selectedRevision) {
+      // Use revision data
+      this.populateFormsWithRevisionData(this.selectedRevision);
+    } else {
+      // Use root customer data
+      this.populateFormsWithData();
+    }
     this.generateQuotationData();
+  }
+
+  // Handle revision selection
+  onRevisionSelect(revisionIndex: number): void {
+    if (revisionIndex >= 0 && revisionIndex < this.allRevisions.length) {
+      this.selectedRevisionIndex = revisionIndex;
+      this.selectedRevision = this.allRevisions[revisionIndex];
+      this.loadSelectedRevision();
+    }
   }
 
   initializeForms(): void {
@@ -95,6 +139,7 @@ export class ViewQuotationComponent implements OnInit {
     });
   }
 
+  // Populate forms with root customer data
   populateFormsWithData(): void {
     const customer = this.data;
     
@@ -150,22 +195,81 @@ export class ViewQuotationComponent implements OnInit {
     });
   }
 
-  generateQuotationData(): void {
+  // Populate forms with revision data
+  populateFormsWithRevisionData(revision: any): void {
+    const customer = this.data;
+    
+    // Use revision data, fallback to root customer data if not available in revision
+    this.firstFormGroup.patchValue({
+      customerName: customer.CustomerName?.name || '',
+      partNo: customer.partName || '',
+      drawing: customer.drawingNo || '',
+      CastingInput: !!(revision.castingInputs || customer.castingInputs),
+      MouldingInput: !!(revision.mouldingInputs || customer.mouldingInputs),
+      CoreInput: !!(revision.coreInputs || customer.coreInputs)
+    });
 
+    this.secondFormGroup.patchValue({
+      CastingWeight: revision.castingInputs?.CastingWeight || customer.castingInputs?.CastingWeight || 0,
+      Cavities: revision.castingInputs?.Cavities || customer.castingInputs?.Cavities || 0,
+      PouringWeight: revision.castingInputs?.PouringWeight || customer.castingInputs?.PouringWeight || 0,
+      MouldingWeight: revision.mouldingInputs?.MouldingWeight || customer.mouldingInputs?.MouldingWeight || 0,
+      BakeMoulding: revision.mouldingInputs?.BakeMoulding || customer.mouldingInputs?.BakeMoulding || 0,
+      CoreWeight: revision.coreInputs?.CoreWeight || customer.coreInputs?.CoreWeight || 0,
+      CoresPerMould: revision.coreInputs?.CoresPerMould || customer.coreInputs?.CoresPerMould || 0,
+      CoreCavities: revision.coreInputs?.CoreCavities || customer.coreInputs?.CoreCavities || 0,
+      ShootingPerShift: revision.coreInputs?.ShootingPerShift || customer.coreInputs?.ShootingPerShift || 0,
+      CoreSand: revision.coreInputs?.CoreSand || customer.coreInputs?.CoreSand || 0
+    });
+
+    this.thirdFormGroup.patchValue({
+      selectedProcesses: revision.processName || customer.processName || []
+    });
+
+    this.costForm.patchValue({
+      salaryforProcess: revision.SalaryAndWages?.salaryforProcess || customer.SalaryAndWages?.salaryforProcess || 0,
+      salaryExcludingCoreMaking: revision.SalaryAndWages?.salaryExcludingCoreMaking || customer.SalaryAndWages?.salaryExcludingCoreMaking || 0,
+      salaryForCoreProduction: revision.SalaryAndWages?.salaryForCoreProduction || customer.SalaryAndWages?.salaryForCoreProduction || 0,
+      outSourcingCost: revision.SalaryAndWages?.outSourcingCost || customer.SalaryAndWages?.outSourcingCost || 0,
+      splOutSourcingCost: revision.SalaryAndWages?.splOutSourcingCost || customer.SalaryAndWages?.splOutSourcingCost || 0,
+      repairAndMaintenance: revision.OverHeads?.repairAndMaintenance || customer.OverHeads?.repairAndMaintenance || 0,
+      sellingDistributionAndMiscOverHeads: revision.OverHeads?.sellingDistributionAndMiscOverHeads || customer.OverHeads?.sellingDistributionAndMiscOverHeads || 0,
+      financeCost: revision.OverHeads?.financeCost || customer.OverHeads?.financeCost || 0,
+      paymentCreditPeriod: revision.CommercialTerms?.paymentCreditPeriod || customer.CommercialTerms?.paymentCreditPeriod || 0,
+      bankInterest: revision.CommercialTerms?.bankInterest || customer.CommercialTerms?.bankInterest || 0,
+      profit: revision.Margin?.profit || customer.Margin?.profit || 0,
+      rejection: revision.AnticipatedRejection?.rejection || customer.AnticipatedRejection?.rejection || 0,
+      heatTreatment: revision.UltraSonicWashing?.heatTreatment || customer.UltraSonicWashing?.heatTreatment || 0,
+      postProcess: revision.UltraSonicWashing?.postProcess || customer.UltraSonicWashing?.postProcess || 0,
+      packingAndTransport: revision.UltraSonicWashing?.packingAndTransport || customer.UltraSonicWashing?.packingAndTransport || 0,
+      NozzleShotBlasting: revision.UltraSonicWashing?.NozzleShotBlasting || customer.UltraSonicWashing?.NozzleShotBlasting || 0,
+      highPressureCleaning: revision.UltraSonicWashing?.highPressureCleaning || customer.UltraSonicWashing?.highPressureCleaning || 0,
+      otherConsumables: revision.otherConsumables?.otherConsumableCost || customer.otherConsumables?.otherConsumableCost || 0,
+      power1: revision.powerCost?.MeltAndOthersPower || customer.powerCost?.MeltAndOthersPower || 0,
+      power2: revision.powerCost?.mouldPower || customer.powerCost?.mouldPower || 0,
+      power3: revision.powerCost?.corePower || customer.powerCost?.corePower || 0,
+      ID: customer.ID || 0
+    });
+  }
+
+  generateQuotationData(): void {
     const first = this.firstFormGroup.value;
     console.log(' First Form Group Value:', first);
     console.log(' Data:', this.data);
     console.log(' ID Value:', this.data.ID);
     const ID = this.data.ID;
-    // Get revision array length from data
-    let revisionCount = 0;
-    if (this.data.customer?.revision && Array.isArray(this.data.customer.revision)) {
-      revisionCount = this.data.customer.revision.length;
-    } else if (this.data.revision && Array.isArray(this.data.revision)) {
-      revisionCount = this.data.revision.length;
+    
+    // Use selected revision index + 1 (since API expects 1-based revision number)
+    // If no revision selected, use total revision count (for latest)
+    let revisionCount = this.selectedRevisionIndex + 1;
+    if (revisionCount <= 0) {
+      // Fallback: get total revision count
+      const revisionArray = this.data?.revision || this.data?.Revision;
+      revisionCount = (revisionArray && Array.isArray(revisionArray)) ? revisionArray.length : 0;
     }
     
-    console.log('📊 Revision array length:', revisionCount);
+    console.log('📊 Selected Revision Index:', this.selectedRevisionIndex);
+    console.log('📊 Revision Count for API:', revisionCount);
     
     this.dashboardService.getQuoteData(first.customerName, first.drawing, first.partNo, ID, revisionCount).subscribe(
       response => {

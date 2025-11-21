@@ -123,11 +123,14 @@
         <th>Drawing No</th>
         <th>Part No</th>
         <th>No of Process</th>
+        <th>Revision Count</th>
         <th>Overall Cost</th>
-        <th>Status</th>
         <th>Download</th>
         <th>Action</th>
         <th>Updated At Time</th>
+        <th>Status</th>
+       
+
       </tr>
     </thead>
     <tbody>
@@ -138,19 +141,9 @@
               <td>{{ customer.drawingNo || '-' }}</td>
               <td>{{ customer.partName || '-' }}</td>
               <td>{{ getProcessCount(customer) }} Process</td>
+              <td>{{ getAllRevisions(customer).length }}</td>
               <td>{{ (customer.OverallTotalCost || getRevisionTotalCost(getLatestRevision(customer))) | number:'1.2-2' }}</td>
-              <td>
-                <mat-form-field appearance="outline" class="status-field">
-                  <mat-select 
-                    [value]="getStatus(customer)" 
-                    (selectionChange)="onStatusChange(customer._id, $event.value)">
-                    <mat-option value="pending">Pending</mat-option>
-                    <mat-option value="e-mail sent">E-mail Sent</mat-option>
-                    <mat-option value="approved">Approved</mat-option>
-                    <mat-option value="rejected">Rejected</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </td>
+           
                 <td class="download-cell">
                   <div class="combined-button">
                     <div class="view-section" (click)="viewQuotation(customer)">
@@ -161,25 +154,36 @@
                     </div>
                   </div>
       </td>
-              <td >
-                <!-- <button mat-icon-button class="expand-button" (click)="toggleRow(customer._id)" [attr.aria-label]="isRowExpanded(customer._id) ? 'Collapse row' : 'Expand row'">
-                  <mat-icon>{{ isRowExpanded(customer._id) ? 'expand_less' : 'expand_more' }}</mat-icon>
-                </button> -->
-                <button mat-icon-button  (click)="edit(customer._id)">
-                  <mat-icon>edit</mat-icon>
-        </button>
-                <button mat-icon-button  (click)="delete(customer._id)">
-                  <mat-icon>delete</mat-icon>
-        </button>
+              <td class="action-cell">
+                <div class="action-buttons-container">
+                  <button mat-icon-button (click)="edit(customer._id)" title="Edit">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="delete(customer._id)" title="Delete">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
       </td>
       <td>
         {{ customer.updatedAt ? (customer.updatedAt | date:'mediumDate') : (customer.createdAt ? (customer.createdAt | date:'mediumDate') : '-') }}
+      </td>
+      <td>
+        <mat-form-field appearance="outline" class="status-field">
+          <mat-select 
+            [value]="getStatus(customer)" 
+            (selectionChange)="onStatusChange(customer._id, $event.value)">
+            <mat-option value="pending">Pending</mat-option>
+            <mat-option value="e-mail sent">E-mail Sent</mat-option>
+            <mat-option value="approved">Approved</mat-option>
+            <mat-option value="rejected">Rejected</mat-option>
+          </mat-select>
+        </mat-form-field>
       </td>
       
     </tr>
     <!-- Expanded Row with Nested Table -->
     <tr *ngIf="isRowExpanded(customer._id)" class="expanded-row">
-      <td colspan="10" class="nested-table-cell">
+      <td colspan="11" class="nested-table-cell">
         <div class="nested-table-container">
           <!-- Revision Toggle Button -->
           <div *ngIf="getAllRevisions(customer).length > 0" style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">

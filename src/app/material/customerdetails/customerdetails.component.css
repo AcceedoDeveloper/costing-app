@@ -440,14 +440,22 @@ margin-right: 25px;
 }
 
 .data-table thead th:nth-child(6) {
-  width: 10%;
+  width: 8%;
 }
 
 .data-table thead th:nth-child(7) {
-  width: 14%;
+  width: 10%;
 }
 
 .data-table thead th:nth-child(8) {
+  width: 14%;
+}
+
+.data-table thead th:nth-child(9) {
+  width: 10%;
+}
+
+.data-table thead th:nth-child(10) {
   width: 10%;
 }
 
@@ -551,33 +559,49 @@ margin-right: 25px;
   color: rgba(26, 26, 26, 0.9);
 }
 
-/* Action Buttons */
-.data-table tbody td button {
-  margin: 0 0.15rem;
-  transition: all 0.3s ease;
+/* Action Cell */
+.action-cell {
+  padding: 0.45rem 0.3rem !important;
+  white-space: nowrap;
 }
 
-::ng-deep .data-table tbody td .mat-icon-button {
+.action-buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  flex-wrap: nowrap;
+}
+
+/* Action Buttons */
+.action-buttons-container button {
+  margin: 0;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+::ng-deep .action-buttons-container .mat-icon-button {
   width: 28px;
   height: 28px;
   line-height: 28px;
   border-radius: 4px;
   transition: all 0.3s ease;
   padding: 0;
+  margin: 0;
 }
 
-::ng-deep .data-table tbody td .mat-icon-button:hover {
-  background: transparent;
+::ng-deep .action-buttons-container .mat-icon-button:hover {
+  background: rgba(15, 92, 72, 0.1);
   transform: scale(1.05);
 }
 
-::ng-deep .data-table tbody td .mat-icon-button:focus-visible {
+::ng-deep .action-buttons-container .mat-icon-button:focus-visible {
   outline: 2px solid rgba(15, 92, 72, 0.8);
   outline-offset: 2px;
   background: rgba(15, 92, 72, 0.1);
 }
 
-::ng-deep .data-table tbody td .mat-icon-button .mat-icon {
+::ng-deep .action-buttons-container .mat-icon-button .mat-icon {
   color: rgba(11, 59, 46, 0.7);
   transition: all 0.3s ease;
   font-size: 16px;
@@ -585,23 +609,23 @@ margin-right: 25px;
   height: 16px;
 }
 
-::ng-deep .data-table tbody td .mat-icon-button:hover .mat-icon {
+::ng-deep .action-buttons-container .mat-icon-button:hover .mat-icon {
   color: rgba(15, 92, 72, 0.8);
 }
 
 /* Delete button specific styling */
-::ng-deep .data-table tbody td button:has(.mat-icon[svgIcon*="delete"]) .mat-icon,
-::ng-deep .data-table tbody td button:last-child .mat-icon {
+::ng-deep .action-buttons-container button:has(.mat-icon[svgIcon*="delete"]) .mat-icon,
+::ng-deep .action-buttons-container button:last-child .mat-icon {
   color: rgba(166, 58, 58, 0.75);
 }
 
-::ng-deep .data-table tbody td button:has(.mat-icon[svgIcon*="delete"]):hover,
-::ng-deep .data-table tbody td button:last-child:hover {
-  background: transparent;
+::ng-deep .action-buttons-container button:has(.mat-icon[svgIcon*="delete"]):hover,
+::ng-deep .action-buttons-container button:last-child:hover {
+  background: rgba(166, 58, 58, 0.1);
 }
 
-::ng-deep .data-table tbody td button:has(.mat-icon[svgIcon*="delete"]):hover .mat-icon,
-::ng-deep .data-table tbody td button:last-child:hover .mat-icon {
+::ng-deep .action-buttons-container button:has(.mat-icon[svgIcon*="delete"]):hover .mat-icon,
+::ng-deep .action-buttons-container button:last-child:hover .mat-icon {
   color: rgba(166, 58, 58, 0.85);
 }
 

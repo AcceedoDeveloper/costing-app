@@ -2,6 +2,26 @@
   View Quotation
 </h5>
 
+<!-- Revision Selector -->
+<div class="revision-selector-container" *ngIf="allRevisions.length > 0">
+  <div class="revision-selector-header">
+    <span class="revision-label">Select Revision:</span>
+    <div class="revision-buttons">
+      <button 
+        *ngFor="let revision of allRevisions; let i = index"
+        mat-raised-button
+        [class.selected]="selectedRevisionIndex === i"
+        [color]="selectedRevisionIndex === i ? 'primary' : 'basic'"
+        (click)="onRevisionSelect(i)"
+        class="revision-button">
+        Revision {{ i + 1 }}
+        <span class="revision-date" *ngIf="revision.createdAt">
+          ({{ revision.createdAt | date:'shortDate' }})
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <mat-horizontal-stepper [linear]="false" #stepper>
     <mat-step>
