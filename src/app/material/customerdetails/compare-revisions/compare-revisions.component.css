@@ -1,10 +1,20 @@
+/* Luxury Color Variables */
+:host {
+  --imperial-green: #0B3B2E;
+  --deep-emerald: #0F5C48;
+  --off-white: #F8F7F2;
+  --soft-stone-grey: #E5E3DD;
+  --black-pearl: #101414;
+  --luxury-grey: #3C3F3E;
+}
+
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px 16px 24px;
-  border-bottom: 1px solid #e0e0e0;
-  background: white;
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2);
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.05) 0%, rgba(15, 92, 72, 0.05) 100%);
   border-radius: 8px 8px 0 0;
 }
 
@@ -12,14 +22,14 @@
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--imperial-green);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .dialog-header h5 .material-icons {
-  color: #2196F3;
+  color: var(--deep-emerald);
   font-size: 24px;
 }
 
@@ -38,40 +48,43 @@
   padding: 24px;
   max-height: 80vh;
   overflow-y: auto;
-  background: #f5f5f5;
+  background: rgba(248, 247, 242, 0.3);
 }
 
 .customer-info-header {
-  background: white;
+  background: var(--off-white);
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.1);
+  border-left: 3px solid var(--imperial-green);
 }
 
 .customer-info-header h4 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: var(--imperial-green);
   font-size: 18px;
+  font-weight: 600;
 }
 
 .customer-info-header p {
   margin: 0;
-  color: #666;
+  color: var(--luxury-grey);
   font-size: 14px;
 }
 
 .revision-selection {
-  background: white;
+  background: var(--off-white);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.1);
+  border: 1px solid rgba(229, 227, 221, 0.6);
 }
 
 .revision-selection h5 {
   margin: 0 0 16px 0;
-  color: #333;
+  color: var(--imperial-green);
   font-size: 16px;
   font-weight: 600;
 }
@@ -92,13 +105,14 @@
 
 .revision-select-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(11, 59, 46, 0.15);
+  border-color: rgba(15, 92, 72, 0.4);
 }
 
 .revision-select-btn.selected {
-  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%) !important;
-  color: white !important;
-  box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3);
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  color: var(--off-white) !important;
+  box-shadow: 0 2px 6px rgba(11, 59, 46, 0.3);
 }
 
 .revision-date {
@@ -121,54 +135,79 @@
 }
 
 .comparison-section {
-  background: white;
+  background: var(--off-white);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.1);
+  border: 1px solid rgba(229, 227, 221, 0.6);
 }
 
 .section-title {
   margin: 0 0 16px 0;
-  color: #2196F3;
+  color: var(--deep-emerald);
   font-size: 18px;
   font-weight: 600;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2);
   padding-bottom: 8px;
 }
 
 .comparison-table-wrapper {
   overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
+  position: relative;
 }
 
 .comparison-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 800px;
+  table-layout: fixed;
+}
+
+/* Set fixed column widths for better scrolling */
+.comparison-table th.label-col,
+.comparison-table td.label-col {
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+}
+
+.comparison-table th.data-col,
+.comparison-table td.data-col {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .comparison-table thead {
-  background: #f5f5f5;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%);
 }
 
 .comparison-table th {
   padding: 12px 16px;
   text-align: left;
   font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #e0e0e0;
+  color: var(--off-white);
+  border-bottom: 2px solid rgba(212, 175, 55, 0.2);
   font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .comparison-table th.label-col {
-  background: #fafafa;
+  background: rgba(248, 247, 242, 0.3);
   width: 30%;
   min-width: 200px;
+  color: var(--black-pearl);
 }
 
 .comparison-table th.data-col {
-  background: #e3f2fd;
+  background: transparent;
   text-align: center;
   width: calc(70% / var(--num-columns, 2));
+  color: var(--off-white);
 }
 
 .comparison-table td {
@@ -178,14 +217,14 @@
 }
 
 .comparison-table td.label-col {
-  background: #fafafa;
+  background: rgba(248, 247, 242, 0.3);
   font-weight: 500;
-  color: #555;
+  color: var(--black-pearl);
 }
 
 .comparison-table td.data-col {
   text-align: center;
-  background: white;
+  background: var(--off-white);
   transition: background-color 0.2s ease;
 }
 
@@ -212,6 +251,9 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  padding: 4px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .cost-value {
@@ -220,11 +262,32 @@
 }
 
 .material-info {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #666;
   text-align: left;
   width: 100%;
   margin-top: 4px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.material-info::-webkit-scrollbar {
+  width: 4px;
+}
+
+.material-info::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.material-info::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+.material-info::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .material-item {
@@ -258,16 +321,16 @@
 }
 
 .comparison-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--soft-stone-grey);
   border-radius: 4px;
 }
 
 .comparison-container::-webkit-scrollbar-thumb {
-  background: #888;
+  background: linear-gradient(180deg, rgba(11, 59, 46, 0.6) 0%, rgba(15, 92, 72, 0.6) 100%);
   border-radius: 4px;
 }
 
 .comparison-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: linear-gradient(180deg, rgba(15, 92, 72, 0.7) 0%, rgba(11, 59, 46, 0.7) 100%);
 }
 

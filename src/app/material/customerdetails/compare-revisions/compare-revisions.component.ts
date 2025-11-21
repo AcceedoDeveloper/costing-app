@@ -23,8 +23,16 @@ export class CompareRevisionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Auto-select last 2 revisions if available
-    if (this.allRevisions.length >= 2) {
+    // If revisions are pre-selected (from customer data), use those
+    // Otherwise auto-select last 2 revisions if available
+    if (this.data?.preSelectedRevisions && Array.isArray(this.data.preSelectedRevisions) && this.data.preSelectedRevisions.length > 0) {
+      // Map pre-selected revisions to indices
+      const preSelected = this.data.preSelectedRevisions;
+      this.selectedRevisions = preSelected.map((rev: any, idx: number) => {
+        const index = this.allRevisions.findIndex(r => r === rev);
+        return index >= 0 ? index : idx;
+      }).filter((idx: number) => idx >= 0 && idx < this.allRevisions.length);
+    } else if (this.allRevisions.length >= 2) {
       this.selectedRevisions = [this.allRevisions.length - 2, this.allRevisions.length - 1];
     } else if (this.allRevisions.length === 1) {
       this.selectedRevisions = [0];

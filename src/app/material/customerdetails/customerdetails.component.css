@@ -721,6 +721,85 @@ margin-right: 25px;
   background: transparent !important;
 }
 
+/* Column width specifications for nested table */
+.nested-table thead th:nth-child(1) {
+  /* Revision column */
+  width: 8%;
+  min-width: 100px;
+}
+
+.nested-table thead th:nth-child(2) {
+  /* Total Process Cost */
+  width: 8%;
+  min-width: 130px;
+}
+
+.nested-table thead th:nth-child(3) {
+  /* Subtotal Metal */
+  width: 8%;
+  min-width: 130px;
+}
+
+.nested-table thead th:nth-child(4) {
+  /* Sub Total Labour */
+  width: 8%;
+  min-width: 130px;
+}
+
+.nested-table thead th:nth-child(5) {
+  /* Process Name */
+  width: 8%;
+  min-width: 150px;
+}
+
+.nested-table thead th:nth-child(6) {
+  /* Additional Sub Total Labour column */
+  width: 25%;
+  min-width: 130px;
+}
+
+.nested-table thead th:nth-child(7) {
+  /* Inputs */
+  width: 25%;
+  min-width: 120px;
+}
+
+/* Apply same widths to table body cells */
+.nested-table tbody td:nth-child(1) {
+  width: 8%;
+  min-width: 100px;
+}
+
+.nested-table tbody td:nth-child(2) {
+  width: 8%;
+  min-width: 100px;
+}
+
+.nested-table tbody td:nth-child(3) {
+  width: 8%;
+  min-width: 100px;
+}
+
+.nested-table tbody td:nth-child(4) {
+  width: 8%;
+  min-width: 100px;
+}
+
+.nested-table tbody td:nth-child(5) {
+  width: 8%;
+  min-width: 100px;
+}
+
+.nested-table tbody td:nth-child(6) {
+  width: 20%;
+  min-width: 150px;
+}
+
+.nested-table tbody td:nth-child(7) {
+  width: 25%;
+  min-width: 150px;
+}
+
 .nested-table tbody tr {
   border-bottom: 1px solid rgba(229, 227, 221, 0.4);
   transition: background-color 0.2s ease;
@@ -748,15 +827,116 @@ margin-right: 25px;
   padding: 1rem;
 }
 
+/* Revision Number Badge */
+.revision-number-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%);
+  color: var(--off-white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 3px rgba(11, 59, 46, 0.2);
+  margin-bottom: 0.25rem;
+}
+
+.revision-date-text {
+  font-size: 0.7rem;
+  color: rgba(60, 63, 62, 0.6);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Process Names List */
+.process-names-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.process-name-item {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(16, 20, 20, 0.85);
+  padding: 0.25rem 0.5rem;
+  background: rgba(248, 247, 242, 0.6);
+  border-radius: 4px;
+  border: 1px solid rgba(229, 227, 221, 0.5);
+}
+
+.no-process {
+  font-size: 0.75rem;
+  color: rgba(60, 63, 62, 0.5);
+  font-style: italic;
+}
+
+/* Inputs Container */
+.inputs-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.input-badge.casting {
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.15) 0%, rgba(25, 118, 210, 0.15) 100%);
+  color: rgba(25, 118, 210, 0.9);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.input-badge.moulding {
+  background: linear-gradient(135deg, rgba(156, 39, 176, 0.15) 0%, rgba(123, 31, 162, 0.15) 100%);
+  color: rgba(123, 31, 162, 0.9);
+  border: 1px solid rgba(156, 39, 176, 0.3);
+}
+
+.input-badge.core {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.15) 0%, rgba(245, 124, 0, 0.15) 100%);
+  color: rgba(245, 124, 0, 0.9);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.input-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+
+.no-inputs {
+  font-size: 0.75rem;
+  color: rgba(60, 63, 62, 0.5);
+  font-style: italic;
+}
+
 /* Details Header */
 .details-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.5rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
   border-bottom: 2px solid rgba(15, 92, 72, 0.2);
 }
 
@@ -913,9 +1093,120 @@ margin-right: 25px;
 /* Revision Selector in Details Header */
 .revision-selector {
   display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.revision-checkboxes-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 60%;
+  padding: 10px;
+
+  height:50px;
+}
+
+.revision-checkboxes-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.revision-checkboxes-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--imperial-green);
+  white-space: nowrap;
+}
+
+.revision-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.revision-checkbox-label {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
+  cursor: pointer;
+  padding: 0.375rem 0.625rem;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.revision-checkbox-label:hover {
+  border-color: rgba(15, 92, 72, 0.4);
+  background: rgba(248, 247, 242, 0.8);
+  box-shadow: 0 1px 3px rgba(11, 59, 46, 0.1);
+}
+
+.revision-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--imperial-green);
+}
+
+.revision-checkbox-text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(16, 20, 20, 0.85);
+}
+
+.revision-date-small {
+  font-size: 0.65rem;
+  color: rgba(60, 63, 62, 0.6);
+  margin-left: 0.25rem;
+}
+
+.compare-revisions-btn {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  color: var(--off-white) !important;
+  border: none;
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.2);
+}
+
+.compare-revisions-btn:not(.disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(11, 59, 46, 0.3);
+  background: linear-gradient(135deg, rgba(15, 92, 72, 0.9) 0%, rgba(11, 59, 46, 0.9) 100%) !important;
+}
+
+.compare-revisions-btn:not(.disabled):active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(11, 59, 46, 0.2);
+}
+
+.compare-revisions-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(11, 59, 46, 0.3) !important;
+}
+
+.compare-revisions-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  margin-right: 0.5rem;
+  color: var(--off-white) !important;
 }
 
 .revision-buttons {
@@ -941,40 +1232,6 @@ margin-right: 25px;
   color: var(--off-white) !important;
   box-shadow: 0 2px 6px rgba(11, 59, 46, 0.2);
 }
-
-/* Revision Selector in Details Header */
-.revision-selector {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.revision-buttons {
-  display: flex;
-  gap: 0.25rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.revision-btn {
-  transition: all 0.2s ease;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-.revision-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.15);
-}
-
-.revision-btn.selected-revision {
-  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
-  color: var(--off-white) !important;
-  box-shadow: 0 2px 6px rgba(11, 59, 46, 0.2);
-}
-
-
 
 /* Responsive Design */
 @media (max-width: 1024px) {

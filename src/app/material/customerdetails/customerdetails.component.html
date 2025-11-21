@@ -1,146 +1,245 @@
 
 
-
   <!-- Main Content Area -->
+
   <div class="main-content">
+
     
 
+
+
   
+
+
 
     <div class="filter-da" >
 
       <div class="filter-cards">
+
         <!-- First Filter Card: Customer, Drawing, Part Name Filters -->
+
     <div class="filter-card">
+
       <mat-form-field appearance="outline" class="filter-field" [class.active]="searchFilterType !== 'none'">
+
         <mat-label>Filter By:</mat-label>
+
         <mat-select [(ngModel)]="searchFilterType" (selectionChange)="onSearchFilterTypeChange()">
+
           <mat-option value="none">None</mat-option>
+
           <mat-option value="customerName">Customer Name</mat-option>
+
           <mat-option value="drawingNo">Drawing No</mat-option>
+
           <mat-option value="partNo">Part No</mat-option>
+
         </mat-select>
+
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="filter-field" *ngIf="searchFilterType !== 'none'">
+
         <mat-label>{{ getSearchFilterLabel() }}:</mat-label>
+
         <mat-select [(ngModel)]="selectedSearchValue" (selectionChange)="onSearchValueChange()">
+
           <mat-option *ngFor="let option of searchFilterOptions" [value]="option">
+
             {{ option }}
+
           </mat-option>
+
         </mat-select>
+
       </mat-form-field>
+
     </div>
 
     <!-- Second Filter Card: Date Filters -->
+
     <div class="filter-card">
+
       <mat-form-field appearance="outline" class="filter-field" [class.active]="dateFilterType !== 'none'">
+
         <mat-label>Date Filter By:</mat-label>
+
         <mat-select [(ngModel)]="dateFilterType" (selectionChange)="onFilterTypeChange()">
+
           <mat-option value="none">None</mat-option>
+
           <mat-option value="date">Date</mat-option>
+
           <mat-option value="week">Week</mat-option>
+
           <mat-option value="month">Month</mat-option>
+
           <mat-option value="year">Year</mat-option>
+
         </mat-select>
+
       </mat-form-field>
 
       <div class="filter-fields" *ngIf="dateFilterType !== 'none'">
 
         <!-- Custom Date Picker -->
+
       <div class="filter-field" *ngIf="dateFilterType === 'date'">
+
         <input 
+
           type="date" 
+
           id="singleDate" 
+
           class="native-input"
+
           [(ngModel)]="filters.singleDate"
+
           (change)="onDateChange()">
+
         <label for="singleDate" class="input-label">Custom Date:</label>
+
       </div>
 
       <!-- Week Picker -->
+
       <div class="filter-field" *ngIf="dateFilterType === 'week'">
+
         <input 
+
           type="week" 
+
           id="weekFilter" 
+
           class="native-input"
+
           [(ngModel)]="filters.week"
+
           (change)="onWeekChange()">
+
         <label for="weekFilter" class="input-label">Week:</label>
+
       </div>
 
       <!-- Month Picker -->
+
       <div class="filter-field" *ngIf="dateFilterType === 'month'">
+
         <input 
+
           type="month" 
+
           id="monthFilter" 
+
           class="native-input"
+
           [(ngModel)]="filters.month"
+
           (change)="onMonthChange()">
+
         <label for="monthFilter" class="input-label">Month:</label>
+
       </div>
 
       <!-- Year Picker -->
+
       <div class="filter-field" *ngIf="dateFilterType === 'year'">
+
         <input 
+
           type="number" 
+
           id="yearFilter" 
+
           class="native-input"
+
           [class.has-value]="filters.year"
+
           [(ngModel)]="filters.year"
+
           placeholder="YYYY"
+
           min="2000"
+
           max="2100"
+
           (change)="onYearChange()">
+
         <label for="yearFilter" class="input-label">Year:</label>
+
       </div>
-      
+
       </div>
-      
+
     </div>
 
       </div>
 
-     <!-- Add Quotation Button -->
-     <div class="add-button-wrapper">
-      <button mat-raised-button color="primary" class="add-but" (click)="addCustomerDetails()">
-        <mat-icon>add</mat-icon>
-      </button>
-    </div>
-    </div>
-  
+      <!-- Add Quotation Button -->
 
-   
+      <div class="add-button-wrapper">
 
+       <button mat-raised-button color="primary" class="add-but" (click)="addCustomerDetails()">
 
+         <mat-icon>add</mat-icon>
+
+       </button>
+
+     </div>
+
+     </div>
 
     <div class="table-container">
+
       <table class="data-table">
+
     <thead>
+
       <tr>
+
             <th>ID</th>
+
         <th>Customer Name</th>
+
         <th>Drawing No</th>
+
         <th>Part No</th>
+
         <th>No of Process</th>
+
         <th>Revision Count</th>
+
         <th>Overall Cost</th>
+
         <th>Download</th>
+
         <th>Action</th>
+
         <th>Updated At Time</th>
+
         <th>Status</th>
-       
 
       </tr>
+
     </thead>
+
     <tbody>
+
           <ng-container *ngFor="let customer of filteredCustomers; let i = index">
+
             <tr>
+
               <td>{{ customer.ID || 0 }}</td>
+
               <td>{{ customer.CustomerName?.name || '-' }}</td>
+
               <td>{{ customer.drawingNo || '-' }}</td>
+
               <td>{{ customer.partName || '-' }}</td>
+
               <td>{{ getProcessCount(customer) }} Process</td>
+
               <td>
                 <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                   <span>{{ getAllRevisions(customer).length }}</span>
@@ -156,120 +255,294 @@
                 </div>
               </td>
               <td>{{ (customer.OverallTotalCost || getRevisionTotalCost(getLatestRevision(customer))) | number:'1.2-2' }}</td>
-           
+
                 <td class="download-cell">
+
                   <div class="combined-button">
+
                     <div class="view-section" (click)="viewQuotation(customer)">
+
                       <span>View</span>
+
                     </div>
+
                     <div class="download-section" (click)="downloadQuotation(customer)">
+
                       <span>Download</span>
+
                     </div>
+
                   </div>
+
       </td>
+
               <td class="action-cell">
+
                 <div class="action-buttons-container">
+
                   <button mat-icon-button (click)="toggleRow(customer._id)" title="View Details">
+
                     <mat-icon>{{ isRowExpanded(customer._id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+
                   </button>
+
                   <button mat-icon-button (click)="edit(customer._id)" title="Edit">
+
                     <mat-icon>edit</mat-icon>
+
                   </button>
+
                   <button mat-icon-button (click)="delete(customer._id)" title="Delete">
+
                     <mat-icon>delete</mat-icon>
+
                   </button>
+
                 </div>
+
       </td>
+
       <td>
+
         {{ customer.updatedAt ? (customer.updatedAt | date:'mediumDate') : (customer.createdAt ? (customer.createdAt | date:'mediumDate') : '-') }}
+
       </td>
+
       <td>
+
         <mat-form-field appearance="outline" class="status-field">
+
           <mat-select 
+
             [value]="getStatus(customer)" 
+
             (selectionChange)="onStatusChange(customer._id, $event.value)">
+
             <mat-option value="pending">Pending</mat-option>
+
             <mat-option value="e-mail sent">E-mail Sent</mat-option>
+
             <mat-option value="approved">Approved</mat-option>
+
             <mat-option value="rejected">Rejected</mat-option>
+
           </mat-select>
+
         </mat-form-field>
+
       </td>
-      
+
     </tr>
+
     <!-- Expanded Row with Nested Table -->
+
     <tr *ngIf="isRowExpanded(customer._id)" class="expanded-row">
+
       <td colspan="11" class="nested-table-cell">
+
         <div class="nested-table-container">
+
           <!-- Customer Details Header -->
+
           <div class="details-header">
-            <div style="flex: 1;">
-              <h4 class="details-title">Process Details</h4>
-            </div>
+
+            <h4 class="details-title"> Details</h4>
 
             <div class="revision-selector">
-              <span class="customer-info">{{ customer.CustomerName?.name || '-' }} - {{ customer.drawingNo || '-' }}</span>
-
+              <!-- Revision Checkboxes -->
+              <div *ngIf="getAllRevisions(customer).length > 0" class="revision-checkboxes-container">
+                <div class="revision-checkboxes-wrapper">
+                  <div class="revision-checkboxes">
+                    <label *ngFor="let revision of getAllRevisions(customer); let i = index" class="revision-checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        [checked]="isRevisionSelectedForComparison(customer._id, i)"
+                        (change)="toggleRevisionForComparison(customer._id, i)"
+                        class="revision-checkbox">
+                      <span class="revision-checkbox-text">
+                        Rev {{ i + 1 }}
+                        <span *ngIf="revision.createdAt" class="revision-date-small">
+                          ({{ revision.createdAt | date:'shortDate' }})
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <button 
+                  mat-raised-button 
+                  color="primary"
+                  [disabled]="getSelectedRevisionsCount(customer._id) < 2"
+                  (click)="openCompareWithSelectedRevisions(customer)"
+                  class="compare-revisions-btn"
+                  [class.disabled]="getSelectedRevisionsCount(customer._id) < 2">
+                  <mat-icon>compare_arrows</mat-icon>
+                  Compare Revisions ({{ getSelectedRevisionsCount(customer._id) }})
+                </button>
+              </div>
             </div>
-         
           </div>
 
-          <!-- Process Details Table -->
+          <!-- Revisions Table -->
           <div class="details-section">
+
             <table class="nested-table">
+
               <thead>
+
                 <tr>
+
+                  <th>Revision</th>
+                  <th>Total Process Cost</th>
+                  <th>Subtotal Metal</th>
+                  <th>Sub Total Labour</th>
+                  <th>Sub Total Power</th>
+
                   <th>Process Name</th>
-                  <th>Process Cost</th>
-                  <th>Material</th>
+                  <th>Inputs</th>
                 </tr>
+
               </thead>
+
               <tbody>
-                <tr *ngFor="let process of (getSelectedRevision(customer)?.processName || customer.processName); let j = index">
-                  <td>{{ process.name || process.processName || '-' }}</td>
-                  <td>{{ process.processCost | number:'1.2-2' }}</td>
+
+                <!-- Show all revisions -->
+                <ng-container *ngIf="getAllRevisions(customer).length > 0">
+                  <tr *ngFor="let revision of getAllRevisions(customer); let i = index">
+                    <td>
+                      <div class="revision-number-badge">Rev {{ i + 1 }}</div>
+                      <div *ngIf="revision.createdAt" class="revision-date-text">
+                        {{ revision.createdAt | date:'shortDate' }}
+                      </div>
+                    </td>
+                    <td>
+                      {{ (revision.totalProcessCost || 0) | number:'1.2-2' }}
+                    </td>
+                    <td>
+                      {{ getSubtotalMetal(customer) | number:'1.2-2' }}
+                    </td>
+                    <td>
+                      {{ getSubtotalLabour(customer) | number:'1.2-2' }}
+                    </td>
+                    <td>
+                      {{ getSubtotalPower(customer) | number:'1.2-2' }}
+                    </td>
+                    <td>
+                      <div class="process-names-list" *ngIf="revision.processName && revision.processName.length > 0">
+                        <div *ngFor="let process of revision.processName; let last = last" class="process-name-item">
+                          {{ process.name || process.processName || '-' }}
+                          <span *ngIf="!last">, </span>
+                        </div>
+                      </div>
+                      <div *ngIf="!revision.processName || revision.processName.length === 0" class="no-process">
+                        -
+                      </div>
+                    </td>
+                   
+                    <td>
+                      <div class="inputs-container">
+                        <div class="input-badge casting" *ngIf="revision.castingInputs || customer.castingInputs">
+                          <mat-icon class="input-icon">settings</mat-icon>
+                          <span>Casting</span>
+                        </div>
+                        <div class="input-badge moulding" *ngIf="revision.mouldingInputs || customer.mouldingInputs">
+                          <mat-icon class="input-icon">build</mat-icon>
+                          <span>Moulding</span>
+                        </div>
+                        <div class="input-badge core" *ngIf="revision.coreInputs || customer.coreInputs">
+                          <mat-icon class="input-icon">category</mat-icon>
+                          <span>Core</span>
+                        </div>
+                        <div *ngIf="!revision.castingInputs && !customer.castingInputs && !revision.mouldingInputs && !customer.mouldingInputs && !revision.coreInputs && !customer.coreInputs" class="no-inputs">
+                          -
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+                <!-- Fallback if no revisions, show root customer data -->
+                <tr *ngIf="getAllRevisions(customer).length === 0">
                   <td>
-                    <div *ngIf="getProcessMaterials(process).length > 0" >
-                      <div *ngFor="let rm of getProcessMaterials(process)" style="font-size: 0.75rem;">
-                        <strong style="color: var(--imperial-green);">{{ rm.type || 'N/A' }}:</strong>
-                        <span *ngIf="rm.materialsUsed && rm.materialsUsed.length > 0" style="margin-left: 0.25rem;">
-                          <span *ngFor="let mat of rm.materialsUsed; let last = last">
-                            {{ mat.name || 'N/A' }} 
-                            <span *ngIf="mat.quantity">(Qty: {{ mat.quantity }})</span>
-                            <span *ngIf="!last">, </span>
-                          </span>
-                        </span>
-                        <span *ngIf="!rm.materialsUsed || rm.materialsUsed.length === 0">-</span>
+                    <div class="revision-number-badge">Initial</div>
+                  </td>
+                  <td>
+                    {{ (customer.totalProcessCost || 0) | number:'1.2-2' }}
+                  </td>
+                  <td>
+                    {{ getSubtotalMetal(customer) | number:'1.2-2' }}
+                  </td>
+                  <td>
+                    {{ getSubtotalLabour(customer) | number:'1.2-2' }}
+                  </td>
+                  <td>
+                    {{ getSubtotalPower(customer) | number:'1.2-2' }}
+                  </td>
+                  <td>
+                    <div class="process-names-list" *ngIf="customer.processName && customer.processName.length > 0">
+                      <div *ngFor="let process of customer.processName; let last = last" class="process-name-item">
+                        {{ process.name || process.processName || '-' }}
+                        <span *ngIf="!last">, </span>
                       </div>
                     </div>
-                    <span *ngIf="getProcessMaterials(process).length === 0">-</span>
+                    <div *ngIf="!customer.processName || customer.processName.length === 0" class="no-process">
+                      -
+                    </div>
                   </td>
-                </tr>
-                <tr *ngIf="(!getSelectedRevision(customer)?.processName && !customer.processName) || (getSelectedRevision(customer)?.processName?.length === 0 && customer.processName?.length === 0)">
-                  <td colspan="3" class="no-data">No process data available</td>
+                  <td>
+                    <div class="inputs-container">
+                      <div class="input-badge casting" *ngIf="customer.castingInputs">
+                        <mat-icon class="input-icon">settings</mat-icon>
+                        <span>Casting</span>
+                      </div>
+                      <div class="input-badge moulding" *ngIf="customer.mouldingInputs">
+                        <mat-icon class="input-icon">build</mat-icon>
+                        <span>Moulding</span>
+                      </div>
+                      <div class="input-badge core" *ngIf="customer.coreInputs">
+                        <mat-icon class="input-icon">category</mat-icon>
+                        <span>Core</span>
+                      </div>
+                      <div *ngIf="!customer.castingInputs && !customer.mouldingInputs && !customer.coreInputs" class="no-inputs">
+                        -
+                      </div>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
+
         </div>
+
       </td>
+
     </tr>
+
   </ng-container>
+
 </tbody>
+
       </table>
-      
+
       <!-- Paginator -->
+
       <mat-paginator 
+
         [length]="totalRecords"
+
         [pageSize]="pageSize"
+
         [pageIndex]="pageIndex"
+
         [pageSizeOptions]="pageSizeOptions"
+
         [showFirstLastButtons]="true"
+
         (page)="onPageChange($event)"
+
         class="custom-paginator">
+
       </mat-paginator>
+
     </div>
+
   </div>
-
-
-

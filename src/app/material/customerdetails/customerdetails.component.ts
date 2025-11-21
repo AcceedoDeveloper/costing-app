@@ -63,6 +63,9 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
   
   // Selected revision for each customer (for nested table view)
   selectedRevisionForCustomer: { [customerId: string]: number } = {}; // -1 means latest, 0+ means specific revision index
+  
+  // Selected revisions for comparison (multiple checkboxes)
+  selectedRevisionsForComparison: { [customerId: string]: number[] } = {}; // Array of selected revision indices
 
   constructor(
     private store: Store<{ materials: MaterialState }>, 
@@ -676,6 +679,36 @@ getProcessCount(customer: any): number {
   return 0;
 }
 
+// Get Subtotal Metal from quotationData
+getSubtotalMetal(customer: any): number {
+  const calc = customer?.quotationData?.calculations?.[0];
+  if (calc?.subtotalMetalTotalCost) {
+    return calc.subtotalMetalTotalCost;
+  }
+  if (calc?.subtotalMetalperkg && customer?.castingInputs?.CastingWeight) {
+    return calc.subtotalMetalperkg * customer.castingInputs.CastingWeight;
+  }
+  return 0;
+}
+
+// Get Sub Total Labour from quotationData
+getSubtotalLabour(customer: any): number {
+  const calc = customer?.quotationData?.calculations?.[0];
+  if (calc?.subtotalLabourTotalCost) {
+    return calc.subtotalLabourTotalCost;
+  }
+  return 0;
+}
+
+// Get Sub Total Power from quotationData
+getSubtotalPower(customer: any): number {
+  const calc = customer?.quotationData?.calculations?.[0];
+  if (calc?.subtotalPowerTotalCost) {
+    return calc.subtotalPowerTotalCost;
+  }
+  return 0;
+}
+
 // Get grade name from nested grade structure
 getGradeName(process: any): string {
   // Check if grade is a simple string or object
@@ -785,6 +818,64 @@ getSelectedRevisionIndex(customer: any): number {
   
   // Default to latest (last index)
   return allRevisions.length > 0 ? allRevisions.length - 1 : -1;
+}
+
+// Toggle revision selection for comparison
+toggleRevisionForComparison(customerId: string, revisionIndex: number): void {
+  if (!this.selectedRevisionsForComparison[customerId]) {
+    this.selectedRevisionsForComparison[customerId] = [];
+  }
+  
+  const index = this.selectedRevisionsForComparison[customerId].indexOf(revisionIndex);
+  if (index > -1) {
+    this.selectedRevisionsForComparison[customerId].splice(index, 1);
+  } else {
+    this.selectedRevisionsForComparison[customerId].push(revisionIndex);
+    this.selectedRevisionsForComparison[customerId].sort(); // Keep sorted
+  }
+}
+
+// Check if revision is selected for comparison
+isRevisionSelectedForComparison(customerId: string, revisionIndex: number): boolean {
+  return this.selectedRevisionsForComparison[customerId]?.includes(revisionIndex) || false;
+}
+
+// Get count of selected revisions for comparison
+getSelectedRevisionsCount(customerId: string): number {
+  return this.selectedRevisionsForComparison[customerId]?.length || 0;
+}
+
+// Open compare dialog with selected revisions
+openCompareWithSelectedRevisions(customer: any): void {
+  const customerId = customer._id;
+  const selectedIndices = this.selectedRevisionsForComparison[customerId] || [];
+  
+  if (selectedIndices.length < 2) {
+    this.tooster.warning('Please select at least 2 revisions to compare', 'Warning');
+    return;
+  }
+  
+  // Get selected revision objects
+  const allRevisions = this.getAllRevisions(customer);
+  const selectedRevisions = selectedIndices.map(idx => allRevisions[idx]).filter(r => r !== undefined);
+  
+  // Create a modified customer object with only selected revisions
+  const customerWithSelectedRevisions = {
+    ...customer,
+    revision: selectedRevisions
+  };
+  
+  this.dialog.open(CompareRevisionsComponent, {
+    width: '95%',
+    maxWidth: '1400px',
+    height: '85vh',
+    data: { 
+      customer: customerWithSelectedRevisions,
+      preSelectedRevisions: selectedRevisions
+    },
+    autoFocus: false,
+    disableClose: false
+  });
 }
 
 // Build customer data object in the expected format for API
