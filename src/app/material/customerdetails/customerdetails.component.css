@@ -752,7 +752,9 @@ margin-right: 25px;
 .details-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
   border-bottom: 2px solid rgba(15, 92, 72, 0.2);
@@ -853,7 +855,6 @@ margin-right: 25px;
 }
 
 .nested-table-container .nested-table tbody td:last-child {
-  text-align: right;
   font-weight: 600;
   color: var(--imperial-green) !important;
 }
@@ -907,6 +908,70 @@ margin-right: 25px;
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 2px solid rgba(15, 92, 72, 0.2);
+}
+
+/* Revision Selector in Details Header */
+.revision-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.revision-buttons {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.revision-btn {
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.revision-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.15);
+}
+
+.revision-btn.selected-revision {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  color: var(--off-white) !important;
+  box-shadow: 0 2px 6px rgba(11, 59, 46, 0.2);
+}
+
+/* Revision Selector in Details Header */
+.revision-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.revision-buttons {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.revision-btn {
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.revision-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.15);
+}
+
+.revision-btn.selected-revision {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  color: var(--off-white) !important;
+  box-shadow: 0 2px 6px rgba(11, 59, 46, 0.2);
 }
 
 

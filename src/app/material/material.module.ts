@@ -50,13 +50,14 @@ import { AddSalaryWagesComponent } from './salary-wages/add-salary-wages/add-sal
 import { UpdateCustomerDetailsComponent } from './customerdetails/update-customer-details/update-customer-details.component';
 import { SalaryWagesHistoryComponent } from './salary-wages-history/salary-wages-history.component';
 import { ViewQuotationComponent } from './customerdetails/view-quotation/view-quotation.component';
+import { CompareRevisionsComponent } from './customerdetails/compare-revisions/compare-revisions.component';
 
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent, 
     SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, 
     ProcessComponent, AddprocessComponent, MaterialtypeComponent, 
     ProcesseditComponent, AddcustomerdetailsComponent, 
-    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent, SalaryWagesHistoryComponent, ViewQuotationComponent],
+    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent, SalaryWagesHistoryComponent, ViewQuotationComponent, CompareRevisionsComponent],
   imports: [
     MatAutocompleteModule,
     MatTooltipModule,

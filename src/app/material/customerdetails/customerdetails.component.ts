@@ -14,6 +14,7 @@ import { PowerService } from '../../services/power.service';
 import {UpdateCustomerDetailsComponent } from './update-customer-details/update-customer-details.component';
 import { ToastrService } from 'ngx-toastr';
 import { ViewQuotationComponent } from './view-quotation/view-quotation.component';
+import { CompareRevisionsComponent } from './compare-revisions/compare-revisions.component';
 import { PageEvent } from '@angular/material/paginator';
 import { ReportsService } from '../../services/reports.service';
 
@@ -59,6 +60,9 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
   
   // Revision tracking
   expandedRevisions: Set<string> = new Set<string>();
+  
+  // Selected revision for each customer (for nested table view)
+  selectedRevisionForCustomer: { [customerId: string]: number } = {}; // -1 means latest, 0+ means specific revision index
 
   constructor(
     private store: Store<{ materials: MaterialState }>, 
@@ -252,6 +256,22 @@ viewQuotation(customer: any) {
     width: '100%',
     height: '650px',
     data: customer,
+    autoFocus: false,
+    disableClose: false
+  });
+}
+
+compareRevisions(customer: any) {
+  if (this.getAllRevisions(customer).length < 2) {
+    this.tooster.warning('At least 2 revisions are required for comparison', 'Warning');
+    return;
+  }
+  
+  this.dialog.open(CompareRevisionsComponent, {
+    width: '95%',
+    maxWidth: '1400px',
+    height: '85vh',
+    data: { customer: customer },
     autoFocus: false,
     disableClose: false
   });
@@ -581,6 +601,15 @@ toggleRow(customerId: string) {
     this.expandedRows.delete(customerId);
   } else {
     this.expandedRows.add(customerId);
+    // Initialize selected revision to latest when row is expanded
+    const customer = this.customerDetails.find(c => c._id === customerId);
+    if (customer) {
+      const allRevisions = this.getAllRevisions(customer);
+      if (allRevisions.length > 0 && this.selectedRevisionForCustomer[customerId] === undefined) {
+        // Set to latest revision (last index)
+        this.selectedRevisionForCustomer[customerId] = allRevisions.length - 1;
+      }
+    }
   }
 }
 
@@ -723,6 +752,39 @@ getStatus(customer: any): string {
     return latestRevision.Status;
   }
   return 'pending';
+}
+
+// Get selected revision for a customer (or latest if none selected)
+getSelectedRevision(customer: any): any {
+  const customerId = customer._id;
+  const revisionIndex = this.selectedRevisionForCustomer[customerId];
+  const allRevisions = this.getAllRevisions(customer);
+  
+  if (revisionIndex !== undefined && revisionIndex >= 0 && revisionIndex < allRevisions.length) {
+    return allRevisions[revisionIndex];
+  }
+  
+  // Default to latest revision
+  return this.getLatestRevision(customer) || null;
+}
+
+// Select a revision for a customer
+selectRevisionForCustomer(customerId: string, revisionIndex: number): void {
+  this.selectedRevisionForCustomer[customerId] = revisionIndex;
+}
+
+// Get selected revision index for a customer
+getSelectedRevisionIndex(customer: any): number {
+  const customerId = customer._id;
+  const revisionIndex = this.selectedRevisionForCustomer[customerId];
+  const allRevisions = this.getAllRevisions(customer);
+  
+  if (revisionIndex !== undefined && revisionIndex >= 0 && revisionIndex < allRevisions.length) {
+    return revisionIndex;
+  }
+  
+  // Default to latest (last index)
+  return allRevisions.length > 0 ? allRevisions.length - 1 : -1;
 }
 
 // Build customer data object in the expected format for API

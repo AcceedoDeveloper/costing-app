@@ -1,0 +1,264 @@
+<div class="dialog-header">
+  <h5>
+    <span class="material-icons">compare_arrows</span>
+    Compare Revisions
+  </h5>
+  <button mat-icon-button class="close-button" (click)="closeDialog()" matTooltip="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="comparison-container">
+  <!-- Customer Info -->
+  <div class="customer-info-header">
+    <h4>{{ customer.CustomerName?.name || '-' }}</h4>
+    <p>{{ customer.drawingNo || '-' }} - {{ customer.partName || '-' }}</p>
+  </div>
+
+  <!-- Revision Selection -->
+  <div class="revision-selection">
+    <h5>Select Revisions to Compare (Max 4):</h5>
+    <div class="revision-buttons">
+      <button 
+        *ngFor="let revision of allRevisions; let i = index"
+        mat-raised-button
+        [class.selected]="isRevisionSelected(i)"
+        [color]="isRevisionSelected(i) ? 'primary' : 'basic'"
+        (click)="toggleRevisionSelection(i)"
+        class="revision-select-btn">
+        Revision {{ i + 1 }}
+        <span *ngIf="revision.createdAt" class="revision-date">
+          ({{ revision.createdAt | date:'shortDate' }})
+        </span>
+      </button>
+    </div>
+    <p *ngIf="selectedRevisions.length === 0" class="warning-text">
+      Please select at least one revision to compare
+    </p>
+  </div>
+
+  <!-- Comparison Table -->
+  <div *ngIf="comparisonData.length > 0" class="comparison-content">
+    
+    <!-- Process Details Comparison -->
+    <div class="comparison-section">
+      <h5 class="section-title">Process Details</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Process Name</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">
+                Rev {{ comp.revisionNumber }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="comparisonData.length > 0 && getProcesses(comparisonData[0].revision).length > 0">
+              <tr *ngFor="let process of getProcesses(comparisonData[0].revision); let i = index">
+                <td class="label-col">{{ process.name || process.processName || '-' }}</td>
+                <td *ngFor="let comp of comparisonData" 
+                    [class.different]="comparisonData.length > 1 && i < getProcesses(comp.revision).length && areDifferent(
+                      getProcesses(comparisonData[0].revision)[i]?.processCost || 0,
+                      getProcesses(comp.revision)[i]?.processCost || 0
+                    )"
+                    class="data-col">
+                  <div class="value-cell" *ngIf="i < getProcesses(comp.revision).length">
+                    <div class="cost-value">₹ {{ (getProcesses(comp.revision)[i]?.processCost || 0) | number:'1.2-2' }}</div>
+                    <div class="material-info" *ngIf="getProcessMaterials(getProcesses(comp.revision)[i]).length > 0">
+                      <div *ngFor="let rm of getProcessMaterials(getProcesses(comp.revision)[i])" class="material-item">
+                        <strong>{{ rm.type }}:</strong>
+                        <span *ngFor="let mat of (rm.materialsUsed || []); let last = last">
+                          {{ mat.name }}<span *ngIf="mat.quantity"> ({{ mat.quantity }})</span><span *ngIf="!last">, </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="i >= getProcesses(comp.revision).length" class="value-cell">
+                    <span style="color: #999; font-style: italic;">N/A</span>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="comparisonData.length === 0 || getProcesses(comparisonData[0].revision).length === 0">
+              <td [attr.colspan]="comparisonData.length + 1" class="no-data">No process data available</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Salary and Wages Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0].revision?.SalaryAndWages">
+      <h5 class="section-title">Salary and Wages</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="label-col">Salary for Process</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.SalaryAndWages?.salaryforProcess, 'SalaryAndWages.salaryforProcess')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.SalaryAndWages?.salaryforProcess || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr>
+              <td class="label-col">Salary Excluding Core Making</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.SalaryAndWages?.salaryExcludingCoreMaking, 'SalaryAndWages.salaryExcludingCoreMaking')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.SalaryAndWages?.salaryExcludingCoreMaking || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr>
+              <td class="label-col">Salary for Core Production</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.SalaryAndWages?.salaryForCoreProduction, 'SalaryAndWages.salaryForCoreProduction')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.SalaryAndWages?.salaryForCoreProduction || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.SalaryAndWages?.outSourcingCost">
+              <td class="label-col">Outsourcing Cost</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.SalaryAndWages?.outSourcingCost, 'SalaryAndWages.outSourcingCost')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.SalaryAndWages?.outSourcingCost || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.SalaryAndWages?.splOutSourcingCost">
+              <td class="label-col">Special Outsourcing Cost</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.SalaryAndWages?.splOutSourcingCost, 'SalaryAndWages.splOutSourcingCost')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.SalaryAndWages?.splOutSourcingCost || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Overheads Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0].revision?.OverHeads">
+      <h5 class="section-title">Overheads</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0].revision?.OverHeads?.totalOverHeads">
+              <td class="label-col">Total Overheads</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.OverHeads?.totalOverHeads, 'OverHeads.totalOverHeads')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.OverHeads?.totalOverHeads || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.OverHeads?.repairAndMaintenance">
+              <td class="label-col">Repair and Maintenance</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.OverHeads?.repairAndMaintenance, 'OverHeads.repairAndMaintenance')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.OverHeads?.repairAndMaintenance || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.OverHeads?.sellingDistributionAndMiscOverHeads">
+              <td class="label-col">Selling, Distribution & Misc Overheads</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.OverHeads?.sellingDistributionAndMiscOverHeads, 'OverHeads.sellingDistributionAndMiscOverHeads')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.OverHeads?.sellingDistributionAndMiscOverHeads || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.OverHeads?.financeCost">
+              <td class="label-col">Finance Cost</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.OverHeads?.financeCost, 'OverHeads.financeCost')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.OverHeads?.financeCost || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Commercial Terms Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0].revision?.CommercialTerms">
+      <h5 class="section-title">Commercial Terms</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0].revision?.CommercialTerms?.paymentCreditPeriod">
+              <td class="label-col">Payment Credit Period (Days)</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.CommercialTerms?.paymentCreditPeriod, 'CommercialTerms.paymentCreditPeriod')"
+                  class="data-col">
+                {{ comp.revision?.CommercialTerms?.paymentCreditPeriod || '-' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.CommercialTerms?.bankInterest">
+              <td class="label-col">Bank Interest (%)</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.CommercialTerms?.bankInterest, 'CommercialTerms.bankInterest')"
+                  class="data-col">
+                {{ comp.revision?.CommercialTerms?.bankInterest || '-' }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Margin & Rejection Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0].revision?.Margin || comparisonData[0].revision?.AnticipatedRejection">
+      <h5 class="section-title">Margin & Rejection</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0].revision?.Margin?.profit">
+              <td class="label-col">Profit (%)</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.Margin?.profit, 'Margin.profit')"
+                  class="data-col">
+                {{ comp.revision?.Margin?.profit || '-' }}%
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.AnticipatedRejection?.rejection">
+              <td class="label-col">Anticipated Rejection (%)</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.AnticipatedRejection?.rejection, 'AnticipatedRejection.rejection')"
+                  class="data-col">
+                {{ comp.revision?.AnticipatedRejection?.rejection || '-' }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

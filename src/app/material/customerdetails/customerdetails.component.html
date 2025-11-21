@@ -141,7 +141,20 @@
               <td>{{ customer.drawingNo || '-' }}</td>
               <td>{{ customer.partName || '-' }}</td>
               <td>{{ getProcessCount(customer) }} Process</td>
-              <td>{{ getAllRevisions(customer).length }}</td>
+              <td>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                  <span>{{ getAllRevisions(customer).length }}</span>
+                  <button 
+                    *ngIf="getAllRevisions(customer).length > 1"
+                    mat-icon-button 
+                    color="accent" 
+                    (click)="compareRevisions(customer)"
+                    style="width: 32px; height: 32px; line-height: 32px;"
+                    matTooltip="Compare Revisions">
+                    <mat-icon style="font-size: 18px; height: 18px; width: 18px; line-height: 18px;">compare_arrows</mat-icon>
+                  </button>
+                </div>
+              </td>
               <td>{{ (customer.OverallTotalCost || getRevisionTotalCost(getLatestRevision(customer))) | number:'1.2-2' }}</td>
            
                 <td class="download-cell">
@@ -190,13 +203,19 @@
         <div class="nested-table-container">
           <!-- Customer Details Header -->
           <div class="details-header">
-            <h4 class="details-title">Customer Details</h4>
-            <span class="customer-info">{{ customer.CustomerName?.name || '-' }} - {{ customer.drawingNo || '-' }}</span>
+            <div style="flex: 1;">
+              <h4 class="details-title">Process Details</h4>
+            </div>
+
+            <div class="revision-selector">
+              <span class="customer-info">{{ customer.CustomerName?.name || '-' }} - {{ customer.drawingNo || '-' }}</span>
+
+            </div>
+         
           </div>
 
           <!-- Process Details Table -->
           <div class="details-section">
-            <h5 class="section-title">Process Details</h5>
             <table class="nested-table">
               <thead>
                 <tr>
@@ -206,11 +225,11 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let process of (getLatestRevision(customer)?.processName || customer.processName); let j = index">
+                <tr *ngFor="let process of (getSelectedRevision(customer)?.processName || customer.processName); let j = index">
                   <td>{{ process.name || process.processName || '-' }}</td>
                   <td>{{ process.processCost | number:'1.2-2' }}</td>
                   <td>
-                    <div *ngIf="getProcessMaterials(process).length > 0" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <div *ngIf="getProcessMaterials(process).length > 0" >
                       <div *ngFor="let rm of getProcessMaterials(process)" style="font-size: 0.75rem;">
                         <strong style="color: var(--imperial-green);">{{ rm.type || 'N/A' }}:</strong>
                         <span *ngIf="rm.materialsUsed && rm.materialsUsed.length > 0" style="margin-left: 0.25rem;">
@@ -226,163 +245,12 @@
                     <span *ngIf="getProcessMaterials(process).length === 0">-</span>
                   </td>
                 </tr>
-                <tr *ngIf="(!getLatestRevision(customer)?.processName && !customer.processName) || (getLatestRevision(customer)?.processName?.length === 0 && customer.processName?.length === 0)">
-                  <td colspan="5" class="no-data">No process data available</td>
+                <tr *ngIf="(!getSelectedRevision(customer)?.processName && !customer.processName) || (getSelectedRevision(customer)?.processName?.length === 0 && customer.processName?.length === 0)">
+                  <td colspan="3" class="no-data">No process data available</td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-          <!-- Salary and Wages and Overheads Side by Side -->
-          <div class="side-by-side-sections">
-            <!-- Salary and Wages Table -->
-            <div class="details-section" *ngIf="getLatestRevision(customer)?.SalaryAndWages || customer.SalaryAndWages">
-              <h5 class="section-title">Salary and Wages</h5>
-              <table class="nested-table">
-                <thead>
-                  <tr>
-                    <th>Description</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Salary for Process</td>
-                    <td>{{ (getLatestRevision(customer)?.SalaryAndWages?.salaryforProcess || customer.SalaryAndWages?.salaryforProcess || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr>
-                    <td>Salary Excluding Core Making</td>
-                    <td>{{ (getLatestRevision(customer)?.SalaryAndWages?.salaryExcludingCoreMaking || customer.SalaryAndWages?.salaryExcludingCoreMaking || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr>
-                    <td>Salary for Core Production</td>
-                    <td>{{ (getLatestRevision(customer)?.SalaryAndWages?.salaryForCoreProduction || customer.SalaryAndWages?.salaryForCoreProduction || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.SalaryAndWages?.outSourcingCost || customer.SalaryAndWages?.outSourcingCost">
-                    <td>Outsourcing Cost</td>
-                    <td>{{ (getLatestRevision(customer)?.SalaryAndWages?.outSourcingCost || customer.SalaryAndWages?.outSourcingCost || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.SalaryAndWages?.splOutSourcingCost || customer.SalaryAndWages?.splOutSourcingCost">
-                    <td>Special Outsourcing Cost</td>
-                    <td>{{ (getLatestRevision(customer)?.SalaryAndWages?.splOutSourcingCost || customer.SalaryAndWages?.splOutSourcingCost || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Overheads Table -->
-            <div class="details-section" *ngIf="getLatestRevision(customer)?.OverHeads || customer.OverHeads">
-              <h5 class="section-title">Overheads</h5>
-              <table class="nested-table">
-                <thead>
-                  <tr>
-                    <th>Description</th>
-                    <th>Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="getLatestRevision(customer)?.OverHeads?.totalOverHeads || customer.OverHeads?.totalOverHeads">
-                    <td>Total Overheads</td>
-                    <td>{{ (getLatestRevision(customer)?.OverHeads?.totalOverHeads || customer.OverHeads?.totalOverHeads || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.OverHeads?.totalOverHeadsWithFinanceCost || customer.OverHeads?.totalOverHeadsWithFinanceCost">
-                    <td>Total Overheads with Finance Cost</td>
-                    <td>{{ (getLatestRevision(customer)?.OverHeads?.totalOverHeadsWithFinanceCost || customer.OverHeads?.totalOverHeadsWithFinanceCost || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.OverHeads?.repairAndMaintenance || customer.OverHeads?.repairAndMaintenance">
-                    <td>Repair and Maintenance</td>
-                    <td>{{ (getLatestRevision(customer)?.OverHeads?.repairAndMaintenance || customer.OverHeads?.repairAndMaintenance || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.OverHeads?.sellingDistributionAndMiscOverHeads || customer.OverHeads?.sellingDistributionAndMiscOverHeads">
-                    <td>Selling, Distribution & Misc Overheads</td>
-                    <td>{{ (getLatestRevision(customer)?.OverHeads?.sellingDistributionAndMiscOverHeads || customer.OverHeads?.sellingDistributionAndMiscOverHeads || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.OverHeads?.financeCost || customer.OverHeads?.financeCost">
-                    <td>Finance Cost</td>
-                    <td>{{ (getLatestRevision(customer)?.OverHeads?.financeCost || customer.OverHeads?.financeCost || 0) | number:'1.2-2' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Commercial Terms and Margin & Rejection Side by Side -->
-          <div class="side-by-side-sections">
-            <!-- Commercial Terms Table -->
-            <div class="details-section" *ngIf="getLatestRevision(customer)?.CommercialTerms || customer.CommercialTerms">
-              <h5 class="section-title">Commercial Terms</h5>
-              <table class="nested-table">
-                <thead>
-                  <tr>
-                    <th>Description</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="getLatestRevision(customer)?.CommercialTerms?.paymentCreditPeriod || customer.CommercialTerms?.paymentCreditPeriod">
-                    <td>Payment Credit Period (Days)</td>
-                    <td>{{ getLatestRevision(customer)?.CommercialTerms?.paymentCreditPeriod || customer.CommercialTerms?.paymentCreditPeriod || '-' }}</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.CommercialTerms?.bankInterest || customer.CommercialTerms?.bankInterest">
-                    <td>Bank Interest (%)</td>
-                    <td>{{ getLatestRevision(customer)?.CommercialTerms?.bankInterest || customer.CommercialTerms?.bankInterest || '-' }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- Margin and Rejection Table -->
-            <div class="details-section" *ngIf="getLatestRevision(customer)?.Margin || customer.Margin || getLatestRevision(customer)?.AnticipatedRejection || customer.AnticipatedRejection">
-              <h5 class="section-title">Margin & Rejection</h5>
-              <table class="nested-table">
-                <thead>
-                  <tr>
-                    <th>Description</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngIf="getLatestRevision(customer)?.Margin?.profit || customer.Margin?.profit">
-                    <td>Profit (%)</td>
-                    <td class="profit-value">{{ getLatestRevision(customer)?.Margin?.profit || customer.Margin?.profit || '-' }}%</td>
-                  </tr>
-                  <tr *ngIf="getLatestRevision(customer)?.AnticipatedRejection?.rejection || customer.AnticipatedRejection?.rejection">
-                    <td>Anticipated Rejection (%)</td>
-                    <td class="rejection-value">{{ getLatestRevision(customer)?.AnticipatedRejection?.rejection || customer.AnticipatedRejection?.rejection || '-' }}%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Power Cost Table -->
-          <div class="details-section" *ngIf="customer.powerCost">
-            <h5 class="section-title">Power Cost</h5>
-            <table class="nested-table">
-              <thead>
-                <tr>
-                  <th>Description</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngIf="customer.powerCost?.MeltAndOthersPower">
-                  <td>Melt and Others Power</td>
-                  <td>{{ customer.powerCost.MeltAndOthersPower | number:'1.2-2' }}</td>
-                </tr>
-                <tr *ngIf="customer.powerCost?.mouldPower">
-                  <td>Mould Power</td>
-                  <td>{{ customer.powerCost.mouldPower | number:'1.2-2' }}</td>
-                </tr>
-                <tr *ngIf="customer.powerCost?.corePower">
-                  <td>Core Power</td>
-                  <td>{{ customer.powerCost.corePower | number:'1.2-2' }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-         
         </div>
       </td>
     </tr>
