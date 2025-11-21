@@ -1,3 +1,27 @@
+/* Luxury Color Variables - Matching Application Theme */
+:host {
+  /* Primary Colors (Luxury + Trust) */
+  --imperial-green: #0B3B2E;
+  --deep-emerald: #0F5C48;
+  
+  /* Secondary Colors (Premium Feel) */
+  --metallic-gold: #D4AF37;
+  --royal-champagne-gold: #F1D28F;
+  
+  /* Background Colors (Clean + High-End) */
+  --off-white: #F8F7F2;
+  --soft-stone-grey: #E5E3DD;
+  --premium-charcoal: #1A1A1A;
+  
+  /* Text Colors */
+  --black-pearl: #101414;
+  --luxury-grey: #3C3F3E;
+  
+  /* Accent Colors */
+  --profit-green: #1AA274;
+  --alert-red: #A63A3A;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f6f9;
@@ -706,14 +730,14 @@ body {
     margin-top: 10px;
   }
 
-  /* Revision Selector Styles */
+  /* Revision Selector Styles - Green Theme */
   .revision-selector-container {
     margin: 20px 0;
     padding: 16px;
-    background-color: #f8f9fa;
+    background-color: var(--off-white);
     border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(229, 227, 221, 0.6);
+    box-shadow: 0 2px 8px rgba(11, 59, 46, 0.06);
   }
 
   .revision-selector-header {
@@ -726,7 +750,7 @@ body {
   .revision-label {
     font-weight: 600;
     font-size: 14px;
-    color: #333;
+    color: var(--imperial-green);
     min-width: 120px;
   }
 
@@ -743,24 +767,28 @@ body {
     padding: 8px 16px;
     transition: all 0.3s ease;
     border-radius: 4px;
+    font-weight: 500;
   }
 
   .revision-button.selected {
-    background-color: #3f51b5 !important;
-    color: white !important;
-    box-shadow: 0 2px 8px rgba(63, 81, 181, 0.4);
+    background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+    color: var(--off-white) !important;
+    box-shadow: 0 2px 8px rgba(11, 59, 46, 0.2);
+    border: 1px solid rgba(11, 59, 46, 0.3);
   }
 
   .revision-button:not(.selected) {
-    background-color: white;
-    color: #333;
-    border: 1px solid #ccc;
+    background-color: var(--off-white);
+    color: var(--imperial-green);
+    border: 1px solid rgba(229, 227, 221, 0.8);
   }
 
   .revision-button:not(.selected):hover {
-    background-color: #f0f0f0;
-    border-color: #3f51b5;
+    background-color: rgba(229, 227, 221, 0.4);
+    border-color: rgba(15, 92, 72, 0.5);
     transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(11, 59, 46, 0.1);
+    color: var(--deep-emerald);
   }
 
   .revision-date {

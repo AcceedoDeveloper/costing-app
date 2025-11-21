@@ -613,6 +613,21 @@ margin-right: 25px;
   color: rgba(15, 92, 72, 0.8);
 }
 
+/* Expand/Collapse button specific styling */
+::ng-deep .action-buttons-container button:first-child .mat-icon {
+  color: rgba(11, 59, 46, 0.7);
+  transition: all 0.3s ease;
+}
+
+::ng-deep .action-buttons-container button:first-child:hover .mat-icon {
+  color: rgba(15, 92, 72, 0.9);
+  transform: scale(1.1);
+}
+
+::ng-deep .action-buttons-container button:first-child:hover {
+  background: rgba(15, 92, 72, 0.1);
+}
+
 /* Delete button specific styling */
 ::ng-deep .action-buttons-container button:has(.mat-icon[svgIcon*="delete"]) .mat-icon,
 ::ng-deep .action-buttons-container button:last-child .mat-icon {
@@ -679,18 +694,31 @@ margin-right: 25px;
 }
 
 .nested-table thead {
-  background: linear-gradient(135deg, rgba(11, 59, 46, 0.75) 0%, rgba(15, 92, 72, 0.75) 100%);
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  position: relative;
+}
+
+.nested-table thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
 }
 
 .nested-table thead th {
   padding: 0.5rem 0.75rem;
   text-align: left;
-  color: black;
+  color: var(--off-white) !important;
   font-weight: 600;
   font-size: 0.7rem;
   letter-spacing: 0.15px;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1.5px solid rgba(212, 175, 55, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  background: transparent !important;
 }
 
 .nested-table tbody tr {
@@ -708,7 +736,7 @@ margin-right: 25px;
 
 .nested-table tbody td {
   padding: 0.625rem 0.75rem;
-  color: rgba(16, 20, 20, 0.85);
+  color: rgba(16, 20, 20, 0.85) !important;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -718,6 +746,167 @@ margin-right: 25px;
   color: rgba(60, 63, 62, 0.6);
   font-style: italic;
   padding: 1rem;
+}
+
+/* Details Header */
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2);
+}
+
+.details-title {
+  margin: 0;
+  color: var(--imperial-green);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.customer-info {
+  font-size: 0.875rem;
+  color: var(--luxury-grey);
+  font-weight: 500;
+  color: #101414 !important;
+}
+
+
+.section-title {
+  margin: 0 0 0.75rem 0;
+  color: var(--deep-emerald);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(15, 92, 72, 0.15);
+}
+
+/* Side by Side Sections Container */
+.side-by-side-sections {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.side-by-side-sections .details-section {
+  flex: 1;
+  min-width: 300px;
+  margin-bottom: 0;
+}
+
+/* Enhanced Nested Table Styling */
+.nested-table-container .nested-table {
+  margin-bottom: 0;
+}
+
+.nested-table-container .nested-table thead {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  position: relative;
+}
+
+.nested-table-container .nested-table thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+}
+
+.nested-table-container .nested-table thead th {
+  color: var(--off-white) !important;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1.5px solid rgba(212, 175, 55, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  background: transparent !important;
+}
+
+.nested-table-container .nested-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.nested-table-container .nested-table tbody tr:hover {
+  background: rgba(229, 227, 221, 0.4);
+}
+
+.nested-table-container .nested-table tbody tr:nth-child(even) {
+  background: rgba(248, 247, 242, 0.3);
+}
+
+.nested-table-container .nested-table tbody td {
+  padding: 0.625rem 0.75rem;
+  color: rgba(16, 20, 20, 0.85) !important;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.nested-table-container .nested-table tbody td:first-child {
+  color: var(--black-pearl) !important;
+  font-weight: 500;
+}
+
+.nested-table-container .nested-table tbody td:last-child {
+  text-align: right;
+  font-weight: 600;
+  color: var(--imperial-green) !important;
+}
+
+/* Ensure all nested table body cells have visible text */
+.nested-table-container .nested-table tbody tr td,
+.details-section .nested-table tbody tr td {
+  color: rgba(16, 20, 20, 0.9) !important;
+
+}
+
+/* Ensure all nested table headers have green background and white text */
+.details-section .nested-table thead,
+.details-section .nested-table thead th {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.9) 0%, rgba(15, 92, 72, 0.9) 100%) !important;
+  color: var(--off-white) !important;
+}
+
+.details-section .nested-table thead {
+  position: relative;
+}
+
+.details-section .nested-table thead::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+}
+
+.details-section .nested-table thead th {
+  border-bottom: 1.5px solid rgba(212, 175, 55, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Profit and Rejection Value Styling */
+.profit-value {
+  color: var(--profit-green) !important;
+  font-weight: 600 !important;
+}
+
+.rejection-value {
+  color: var(--alert-red) !important;
+  font-weight: 600 !important;
+}
+
+/* Revision Toggle Section */
+.revision-toggle-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid rgba(15, 92, 72, 0.2);
 }
 
 
@@ -743,6 +932,15 @@ margin-right: 25px;
   .data-table thead th,
   .data-table tbody td {
     padding: 0.75rem 0.625rem;
+  }
+
+  .side-by-side-sections {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .side-by-side-sections .details-section {
+    min-width: 100%;
   }
 }
 
