@@ -647,6 +647,71 @@ getProcessCount(customer: any): number {
   return 0;
 }
 
+// Get grade name from nested grade structure
+getGradeName(process: any): string {
+  // Check if grade is a simple string or object
+  if (typeof process?.grade === 'string') {
+    return process.grade;
+  }
+  if (process?.grade?.name) {
+    return process.grade.name;
+  }
+  
+  // Check nested array structure: grade[0][0].name or grade[0][0].gradeNo
+  if (process?.grade && Array.isArray(process.grade) && process.grade.length > 0) {
+    const firstGradeArray = process.grade[0];
+    if (Array.isArray(firstGradeArray) && firstGradeArray.length > 0) {
+      const gradeObj = firstGradeArray[0];
+      return gradeObj?.name || gradeObj?.gradeNo || '-';
+    }
+    // If it's not nested, check first element
+    if (firstGradeArray?.name || firstGradeArray?.gradeNo) {
+      return firstGradeArray.name || firstGradeArray.gradeNo;
+    }
+  }
+  
+  return '-';
+}
+
+// Get all raw materials from process (both process-level and grade-level)
+getProcessMaterials(process: any): any[] {
+  const materials: any[] = [];
+  
+  // First, check process-level rawMaterial
+  if (process?.rawMaterial && Array.isArray(process.rawMaterial) && process.rawMaterial.length > 0) {
+    materials.push(...process.rawMaterial);
+  }
+  
+  // Then, check grade-level rawMaterial from nested structure
+  if (process?.grade && Array.isArray(process.grade) && process.grade.length > 0) {
+    const firstGradeArray = process.grade[0];
+    if (Array.isArray(firstGradeArray) && firstGradeArray.length > 0) {
+      const gradeObj = firstGradeArray[0];
+      if (gradeObj?.rawMaterial && Array.isArray(gradeObj.rawMaterial) && gradeObj.rawMaterial.length > 0) {
+        // Add grade materials, avoiding duplicates
+        gradeObj.rawMaterial.forEach((rm: any) => {
+          // Check if this type already exists in materials
+          const existingIndex = materials.findIndex(m => m.type === rm.type);
+          if (existingIndex >= 0) {
+            // Merge materialsUsed if type exists
+            if (rm.materialsUsed && Array.isArray(rm.materialsUsed)) {
+              if (!materials[existingIndex].materialsUsed) {
+                materials[existingIndex].materialsUsed = [];
+              }
+              materials[existingIndex].materialsUsed.push(...rm.materialsUsed);
+            }
+          } else {
+            // Add new material type
+            materials.push(rm);
+          }
+        });
+      }
+    }
+  }
+  
+  return materials;
+}
+
 // Get status with default value "pending"
 getStatus(customer: any): string {
   // Check if Status is in the root level or in the latest revision
