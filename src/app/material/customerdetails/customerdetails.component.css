@@ -379,23 +379,7 @@ margin-right: 25px;
   transform: scale(0.95);
 }
 
-/* Table Container */
-.table-container {
-  background: var(--off-white);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(11, 59, 46, 0.06);
-  margin-top: 1.25rem;
-  border: 1px solid rgba(229, 227, 221, 0.5);
-  width: 100%;
-  max-width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  height: calc(100vh - 250px);
-  min-height: 590px;
-  padding-bottom: 56px;
-}
+
 
 .data-table {
   width: 100%;
@@ -712,84 +696,7 @@ margin-right: 25px;
   padding: 1rem;
 }
 
-/* Paginator */
-.custom-paginator {
-  background: rgba(229, 227, 221, 0.4);
-  border-top: 1px solid rgba(229, 227, 221, 0.5);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0.4rem 0.5rem;
-  min-height: 40px;
-  flex-shrink: 0;
-  width: 100%;
-  box-sizing: border-box;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-}
 
-::ng-deep .custom-paginator .mat-paginator-container {
-  justify-content: center;
-  min-height: 32px;
-  padding: 0;
-}
-
-::ng-deep .custom-paginator .mat-paginator-page-size-label,
-::ng-deep .custom-paginator .mat-paginator-range-label {
-  color: rgba(16, 20, 20, 0.8);
-  font-weight: 500;
-  font-size: 0.7rem;
-  margin: 0 0.25rem;
-}
-
-::ng-deep .custom-paginator .mat-paginator-navigation-previous,
-::ng-deep .custom-paginator .mat-paginator-navigation-next,
-::ng-deep .custom-paginator .mat-paginator-navigation-first,
-::ng-deep .custom-paginator .mat-paginator-navigation-last {
-  color: rgba(11, 59, 46, 0.7);
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-}
-
-::ng-deep .custom-paginator .mat-paginator-navigation-previous:hover,
-::ng-deep .custom-paginator .mat-paginator-navigation-next:hover,
-::ng-deep .custom-paginator .mat-paginator-navigation-first:hover,
-::ng-deep .custom-paginator .mat-paginator-navigation-last:hover {
-  background: transparent;
-  color: rgba(15, 92, 72, 0.8);
-}
-
-::ng-deep .custom-paginator .mat-paginator-navigation-previous:focus-visible,
-::ng-deep .custom-paginator .mat-paginator-navigation-next:focus-visible,
-::ng-deep .custom-paginator .mat-paginator-navigation-first:focus-visible,
-::ng-deep .custom-paginator .mat-paginator-navigation-last:focus-visible {
-  outline: 2px solid rgba(15, 92, 72, 0.8);
-  outline-offset: 2px;
-  background: rgba(15, 92, 72, 0.1);
-}
-
-::ng-deep .custom-paginator .mat-select-value {
-  color: rgba(16, 20, 20, 0.8);
-  font-weight: 500;
-  font-size: 0.7rem;
-}
-
-::ng-deep .custom-paginator .mat-select-arrow {
-  color: rgba(11, 59, 46, 0.7);
-}
-
-::ng-deep .custom-paginator .mat-paginator-page-size {
-  min-width: 60px;
-}
-
-::ng-deep .custom-paginator .mat-paginator-page-size-select {
-  width: 60px;
-  margin: 0 0.25rem;
-}
 
 /* Responsive Design */
 @media (max-width: 1024px) {
@@ -849,6 +756,26 @@ button, .filter-card, .combined-button, .native-input, .data-table tbody tr {
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Table Container Styling */
+.table-container {
+  background: var(--off-white);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(11, 59, 46, 0.06);
+  overflow: hidden;
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  transition: all 0.3s ease;
+  margin-top: 1.25rem;
+}
+
+.table-container:hover {
+  box-shadow: 0 4px 12px rgba(11, 59, 46, 0.1);
+}
+
+.table-container .data-table {
+  margin: 0;
+  border-radius: 0;
+}
+
 /* Scrollbar Styling */
 .table-container::-webkit-scrollbar {
   height: 8px;
@@ -866,6 +793,105 @@ button, .filter-card, .combined-button, .native-input, .data-table tbody tr {
 
 .table-container::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, rgba(15, 92, 72, 0.7) 0%, rgba(11, 59, 46, 0.7) 100%);
+}
+
+/* Custom Paginator Styling */
+::ng-deep .custom-paginator.mat-paginator {
+  background: var(--off-white);
+  border-top: 1px solid rgba(229, 227, 221, 0.6);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 -1px 4px rgba(11, 59, 46, 0.04);
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-container {
+  justify-content: flex-end;
+  padding: 0;
+  min-height: 40px;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-range-label,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-previous,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-next,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-first,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-last {
+  color: rgba(16, 20, 20, 0.85);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size-select {
+  margin: 0 0.375rem;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size-select .mat-form-field-wrapper {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size-select .mat-form-field-underline {
+  display: none;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size-select .mat-form-field-outline {
+  color: rgba(229, 227, 221, 0.8);
+  border-width: 1px;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size-select .mat-select-value {
+  color: rgba(16, 20, 20, 0.85);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-page-size-select .mat-select-arrow {
+  color: var(--luxury-grey);
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-previous,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-next,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-first,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-last {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  color: rgba(11, 59, 46, 0.7);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-previous .mat-icon,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-next .mat-icon,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-first .mat-icon,
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-last .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-previous:hover:not([disabled]),
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-next:hover:not([disabled]),
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-first:hover:not([disabled]),
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-last:hover:not([disabled]) {
+  background: rgba(15, 92, 72, 0.1);
+  color: var(--deep-emerald);
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-previous[disabled],
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-next[disabled],
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-first[disabled],
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-navigation-last[disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+::ng-deep .custom-paginator.mat-paginator .mat-paginator-range-label {
+  margin: 0 0.5rem;
+  color: rgba(16, 20, 20, 0.75);
+  font-weight: 500;
 }
 
 /* Status Field Styling */
