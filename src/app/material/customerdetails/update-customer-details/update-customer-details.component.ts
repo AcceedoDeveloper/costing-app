@@ -47,6 +47,9 @@ export class UpdateCustomerDetailsComponent implements OnInit {
   editMode: { [index: number]: boolean } = {};
   customerId: string | null = null;
   editId: string | null = null;
+  showAddProcessSelector: boolean = false;
+  selectedProcessToAdd: any = null;
+  currentStatus: string = 'pending'; // Store current status to preserve it on update
   quotationData: any;
   quotationCalc: any;
   today: Date = new Date();
@@ -230,6 +233,11 @@ this.thirdFormGroup = this.fb.group({
   selectedProcesses: this.fb.control([])
 });
 
+// Initialize selectedProcesses as empty array if not already set
+if (!this.selectedProcesses) {
+  this.selectedProcesses = [];
+}
+
 
 
 this.store.select(getCustomerWithId).subscribe((state) => {
@@ -355,7 +363,17 @@ this.secondFormGroup.valueChanges.subscribe(values => {
     });
     this.isApplyingRevision = false;
 
-    this.selectedProcesses = customer.processName || [];
+    // Initialize selectedProcesses (will be overridden by setRevisionData if revision exists)
+    if (!this.selectedProcesses || this.selectedProcesses.length === 0) {
+      this.selectedProcesses = this.cloneProcesses(customer.processName || []);
+    }
+    
+    // Store current Status to preserve it on update
+    this.currentStatus = customer.Status || 
+                        (customer.revision && Array.isArray(customer.revision) && customer.revision.length > 0 
+                          ? customer.revision[customer.revision.length - 1]?.Status 
+                          : null) ||
+                        'pending';
     
     // Store revision and customer ID from existing data if available
     this.setRevisionData(customer);
@@ -476,13 +494,13 @@ finalSubmit() {
   const first = this.firstFormGroup.value;
   const second = this.secondFormGroup.value;
   const cost = this.costForm.value;
-  const processList = this.selectedProcesses.length > 0 
-    ? this.selectedProcesses 
-    : (this.thirdFormGroup.value.selectedProcesses || []);
+  
+  // Get the full process data (with updated quantities/costs)
+  const fullProcessData = this.getFullUpdatedProcessData();
   const revisionValue = this.getCurrentRevisionNumber();
 
-  // Extract process names
-  const processName = processList.map((p: any) => p.processName || p.name);
+  // Extract process names from full process data
+  const processName = fullProcessData.map((p: any) => p.processName || p.name);
 
   // Build final JSON object
   const finalData = {
@@ -536,6 +554,7 @@ finalSubmit() {
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumables: cost.otherConsumables,
+    Status: this.currentStatus, // Preserve existing status
     revision: revisionValue  
   };
 
@@ -679,7 +698,7 @@ const revisionValue = this.getCurrentRevisionNumber();
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumableCost: cost.otherConsumables,
-    Status: 'Completed',
+    Status: this.currentStatus, // Preserve existing status
 
     powerCost: {
     MeltAndOthersPower: cost.power1,
@@ -749,27 +768,157 @@ submitForm() {
 
   logUpdatedData() {
     console.log('Updated Processes:', this.selectedProcesses);
+    this.hasUserEdits = true;
+  }
+
+  // Toggle add process selector
+  toggleAddProcessSelector(): void {
+    this.showAddProcessSelector = !this.showAddProcessSelector;
+    if (this.showAddProcessSelector) {
+      this.selectedProcessToAdd = null;
+    }
+  }
+
+  // Get available processes that can be added
+  getAvailableProcesses(): Process[] {
+    const currentProcessIds = (this.selectedProcesses || []).map((p: any) => p._id);
+    return this.processes.filter((p: Process) => !currentProcessIds.includes(p._id));
+  }
+
+  // Add the selected process
+  confirmAddProcess(): void {
+    if (!this.selectedProcessToAdd) {
+      this.tooster.warning('Please select a process to add', 'Warning');
+      return;
+    }
+
+    const processName = this.selectedProcessToAdd.processName;
+    const clonedProcess = this.cloneProcesses([this.selectedProcessToAdd])[0];
+    if (!this.selectedProcesses) {
+      this.selectedProcesses = [];
+    }
+    this.selectedProcesses.push(clonedProcess);
+    this.hasUserEdits = true;
+    this.showAddProcessSelector = false;
+    this.selectedProcessToAdd = null;
+    this.tooster.success(`Process "${processName}" added successfully`, 'Success');
+  }
+
+  // Cancel adding process
+  cancelAddProcess(): void {
+    this.showAddProcessSelector = false;
+    this.selectedProcessToAdd = null;
+  }
+
+  // Delete a process
+  deleteProcess(index: number): void {
+    const process = this.selectedProcesses[index];
+    const processName = process?.processName || process?.name || 'this process';
+    
+    if (confirm(`Are you sure you want to delete "${processName}"?`)) {
+      this.selectedProcesses.splice(index, 1);
+      // Close expanded row if it was the deleted one
+      if (this.expandedRowIndex === index) {
+        this.expandedRowIndex = null;
+      } else if (this.expandedRowIndex !== null && this.expandedRowIndex > index) {
+        // Adjust expanded index if a row before it was deleted
+        this.expandedRowIndex = this.expandedRowIndex - 1;
+      }
+      this.hasUserEdits = true;
+      this.tooster.success(`Process "${processName}" deleted successfully`, 'Success');
+    }
+  }
+
+  // Get grade name from process (handles different grade structures)
+  getProcessGradeName(process: any): string {
+    if (!process || !process.grade) {
+      return 'Material';
+    }
+
+    if (Array.isArray(process.grade) && process.grade.length > 0) {
+      const firstGrade = process.grade[0];
+      
+      if (Array.isArray(firstGrade) && firstGrade.length > 0) {
+        // Nested structure: grade[0] is an array
+        const gradeObj = firstGrade[0];
+        return gradeObj?.gradeNo || gradeObj?.name || 'Material';
+      } else if (firstGrade) {
+        // Direct structure: grade[0] is a grade object
+        return firstGrade.gradeNo || firstGrade.name || 'Material';
+      }
+    }
+    
+    return 'Material';
+  }
+
+  // Get raw materials from a process (handles both grade and direct rawMaterial)
+  getProcessRawMaterials(process: any): any[] {
+    const rawMaterials: any[] = [];
+    
+    // Check if process has grade structure
+    if (process.grade && Array.isArray(process.grade) && process.grade.length > 0) {
+      const firstGrade = process.grade[0];
+      
+      if (Array.isArray(firstGrade) && firstGrade.length > 0) {
+        // Nested structure: grade[0] is an array
+        const gradeObj = firstGrade[0];
+        if (gradeObj && gradeObj.rawMaterial && Array.isArray(gradeObj.rawMaterial)) {
+          return gradeObj.rawMaterial;
+        }
+      } else if (firstGrade && firstGrade.rawMaterial && Array.isArray(firstGrade.rawMaterial)) {
+        // Direct structure: grade[0] is a grade object
+        return firstGrade.rawMaterial;
+      }
+    } else if (process.rawMaterial && Array.isArray(process.rawMaterial)) {
+      // Direct rawMaterial on process
+      return process.rawMaterial;
+    }
+    
+    return rawMaterials;
   }
 
   calculateProcessTotalCost(process: any): number {
     let total = 0;
 
-    if (process.grade?.length > 0) {
-      for (let g of process.grade[0]) {
-        for (let rm of g.rawMaterial) {
-          for (let m of rm.materialsUsed) {
-            const qty = m.updatedQuantity || m.quantity;
-            const cost = m.updatedUnitCost || m.unitCost;
-            total += qty * cost;
+    if (process.grade && Array.isArray(process.grade) && process.grade.length > 0) {
+      const firstGrade = process.grade[0];
+      
+      // Check if firstGrade is an array (nested structure) or a direct object
+      if (Array.isArray(firstGrade)) {
+        // Nested structure: grade[0] is an array
+        for (let g of firstGrade) {
+          if (g && g.rawMaterial && Array.isArray(g.rawMaterial)) {
+            for (let rm of g.rawMaterial) {
+              if (rm && rm.materialsUsed && Array.isArray(rm.materialsUsed)) {
+                for (let m of rm.materialsUsed) {
+                  const qty = m.updatedQuantity || m.quantity || 0;
+                  const cost = m.updatedUnitCost || m.unitCost || 0;
+                  total += qty * cost;
+                }
+              }
+            }
+          }
+        }
+      } else if (firstGrade && firstGrade.rawMaterial && Array.isArray(firstGrade.rawMaterial)) {
+        // Direct structure: grade[0] is a grade object
+        for (let rm of firstGrade.rawMaterial) {
+          if (rm && rm.materialsUsed && Array.isArray(rm.materialsUsed)) {
+            for (let m of rm.materialsUsed) {
+              const qty = m.updatedQuantity || m.quantity || 0;
+              const cost = m.updatedUnitCost || m.unitCost || 0;
+              total += qty * cost;
+            }
           }
         }
       }
-    } else if (process.rawMaterial?.length > 0) {
+    } else if (process.rawMaterial && Array.isArray(process.rawMaterial) && process.rawMaterial.length > 0) {
       for (let rm of process.rawMaterial) {
-        for (let m of rm.materialsUsed) {
-          const qty = m.updatedQuantity || m.quantity;
-          const cost = m.updatedUnitCost || m.unitCost;
-          total += qty * cost;
+        if (rm && rm.materialsUsed && Array.isArray(rm.materialsUsed)) {
+          for (let m of rm.materialsUsed) {
+            const qty = m.updatedQuantity || m.quantity || 0;
+            const cost = m.updatedUnitCost || m.unitCost || 0;
+            total += qty * cost;
+          }
         }
       }
     }
@@ -779,27 +928,57 @@ submitForm() {
 
 
  getFullUpdatedProcessData(): any[] {
-  return this.selectedProcesses.map(process => {
+  // Use selectedProcesses if available, otherwise use storedRevisionData
+  const processesToUse = this.selectedProcesses && this.selectedProcesses.length > 0 
+    ? this.selectedProcesses 
+    : (this.storedRevisionData?.processName || []);
+  
+  return processesToUse.map(process => {
     const newProcess = { ...process };
 
-    if (newProcess.grade?.length > 0) {
-      newProcess.grade = newProcess.grade.map(inner =>
-        inner.map(g => ({
-          ...g,
-          rawMaterial: g.rawMaterial.map(rm => ({
-            type: rm.type,
-            materialsUsed: rm.materialsUsed.map(mat => ({
-              name: mat.name,
-              updateQuantity: mat.updatedQuantity ?? mat.quantity,
-              updateCost: mat.updatedUnitCost ?? mat.unitCost
-            }))
-          }))
-        }))
-      );
-    } else if (newProcess.rawMaterial?.length > 0) {
-      newProcess.rawMaterial = newProcess.rawMaterial.map(rm => ({
+    // Handle grade structure - can be nested array or simple array
+    if (newProcess.grade && Array.isArray(newProcess.grade) && newProcess.grade.length > 0) {
+      newProcess.grade = newProcess.grade.map((inner: any) => {
+        // Check if inner is an array (nested structure)
+        if (Array.isArray(inner)) {
+          return inner.map((g: any) => {
+            if (g && g.rawMaterial && Array.isArray(g.rawMaterial)) {
+              return {
+                ...g,
+                rawMaterial: g.rawMaterial.map((rm: any) => ({
+                  type: rm.type,
+                  materialsUsed: (rm.materialsUsed || []).map((mat: any) => ({
+                    name: mat.name,
+                    updateQuantity: mat.updatedQuantity ?? mat.quantity,
+                    updateCost: mat.updatedUnitCost ?? mat.unitCost
+                  }))
+                }))
+              };
+            }
+            return g;
+          });
+        } else {
+          // inner is a grade object directly
+          if (inner && inner.rawMaterial && Array.isArray(inner.rawMaterial)) {
+            return {
+              ...inner,
+              rawMaterial: inner.rawMaterial.map((rm: any) => ({
+                type: rm.type,
+                materialsUsed: (rm.materialsUsed || []).map((mat: any) => ({
+                  name: mat.name,
+                  updateQuantity: mat.updatedQuantity ?? mat.quantity,
+                  updateCost: mat.updatedUnitCost ?? mat.unitCost
+                }))
+              }))
+            };
+          }
+          return inner;
+        }
+      });
+    } else if (newProcess.rawMaterial && Array.isArray(newProcess.rawMaterial) && newProcess.rawMaterial.length > 0) {
+      newProcess.rawMaterial = newProcess.rawMaterial.map((rm: any) => ({
         type: rm.type,
-        materialsUsed: rm.materialsUsed.map(mat => ({
+        materialsUsed: (rm.materialsUsed || []).map((mat: any) => ({
           name: mat.name,
           updateQuantity: mat.updatedQuantity ?? mat.quantity,
           updateCost: mat.updatedUnitCost ?? mat.unitCost
@@ -960,7 +1139,7 @@ const revisionValue = this.getCurrentRevisionNumber();
     NozzleShotBlasting: cost.NozzleShotBlasting,
     highPressureCleaning: cost.highPressureCleaning,
     otherConsumableCost: cost.otherConsumables,
-    Status: 'Completed',
+    Status: this.currentStatus, // Preserve existing status
 
     powerCost: {
     MeltAndOthersPower: cost.power1,
@@ -1081,6 +1260,10 @@ private setRevisionData(customer: any): void {
   if (revisionArray && Array.isArray(revisionArray) && revisionArray.length > 0) {
     this.revisionCount = revisionArray.length;
     this.storedRevisionData = revisionArray[revisionArray.length - 1];
+    // Preserve Status from latest revision if available
+    if (this.storedRevisionData?.Status) {
+      this.currentStatus = this.storedRevisionData.Status;
+    }
     this.applyRevisionData(this.storedRevisionData);
   } else {
     this.revisionCount = Array.isArray(revisionArray) ? revisionArray.length : Number(revisionArray || 0);
@@ -1201,24 +1384,49 @@ private cloneProcesses(processes: any[]): any[] {
   return (processes || []).map((p) => {
     const process = { ...p };
 
-    if (process.grade?.length > 0) {
-      process.grade = process.grade.map((inner: any[]) =>
-        inner.map((g: any) => ({
-          ...g,
-          rawMaterial: g.rawMaterial.map((rm: any) => ({
-            ...rm,
-            materialsUsed: rm.materialsUsed.map((m: any) => ({
-              ...m,
-              updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
-              updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
-            })),
-          })),
-        }))
-      );
-    } else if (process.rawMaterial?.length > 0) {
+    // Handle grade structure - can be nested array or simple array
+    if (process.grade && Array.isArray(process.grade) && process.grade.length > 0) {
+      process.grade = process.grade.map((inner: any) => {
+        // Check if inner is an array (nested structure)
+        if (Array.isArray(inner)) {
+          return inner.map((g: any) => {
+            if (g && g.rawMaterial && Array.isArray(g.rawMaterial)) {
+              return {
+                ...g,
+                rawMaterial: g.rawMaterial.map((rm: any) => ({
+                  ...rm,
+                  materialsUsed: (rm.materialsUsed || []).map((m: any) => ({
+                    ...m,
+                    updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
+                    updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
+                  })),
+                })),
+              };
+            }
+            return g;
+          });
+        } else {
+          // inner is a grade object directly
+          if (inner && inner.rawMaterial && Array.isArray(inner.rawMaterial)) {
+            return {
+              ...inner,
+              rawMaterial: inner.rawMaterial.map((rm: any) => ({
+                ...rm,
+                materialsUsed: (rm.materialsUsed || []).map((m: any) => ({
+                  ...m,
+                  updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
+                  updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,
+                })),
+              })),
+            };
+          }
+          return inner;
+        }
+      });
+    } else if (process.rawMaterial && Array.isArray(process.rawMaterial) && process.rawMaterial.length > 0) {
       process.rawMaterial = process.rawMaterial.map((rm: any) => ({
         ...rm,
-        materialsUsed: rm.materialsUsed.map((m: any) => ({
+        materialsUsed: (rm.materialsUsed || []).map((m: any) => ({
           ...m,
           updatedQuantity: m.updatedQuantity ?? m.quantity ?? 0,
           updatedUnitCost: m.updatedUnitCost ?? m.unitCost ?? 0,

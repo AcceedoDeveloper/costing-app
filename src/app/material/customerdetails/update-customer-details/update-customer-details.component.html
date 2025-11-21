@@ -219,7 +219,37 @@
   <form [formGroup]="forthFormGroup">
     <ng-template matStepLabel>Review Cost</ng-template>
 
-    
+    <!-- Add Process Section -->
+    <div style="margin-bottom: 1rem;">
+      <div *ngIf="!showAddProcessSelector" style="display: flex; justify-content: flex-end;">
+        <button mat-raised-button color="primary" (click)="toggleAddProcessSelector()" style="margin-bottom: 10px;">
+          <mat-icon>add</mat-icon>
+          Add Process
+        </button>
+      </div>
+      
+      <!-- Process Selector -->
+      <div *ngIf="showAddProcessSelector" style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4 style="margin: 0 0 1rem 0; color: #333;">Select Process to Add</h4>
+        <div *ngIf="getAvailableProcesses().length === 0" style="color: #f44336; margin-bottom: 1rem;">
+          No additional processes available to add. All processes are already included.
+        </div>
+        <mat-form-field *ngIf="getAvailableProcesses().length > 0" appearance="outline" style="width: 100%;">
+          <mat-label>Available Processes</mat-label>
+          <mat-select [(ngModel)]="selectedProcessToAdd" [ngModelOptions]="{ standalone: true }">
+            <mat-option *ngFor="let process of getAvailableProcesses()" [value]="process">
+              {{ process.processName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 0.5rem;">
+          <button mat-button (click)="cancelAddProcess()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="confirmAddProcess()" [disabled]="!selectedProcessToAdd || getAvailableProcesses().length === 0">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
 
 <div class="table-container">
   <table>
@@ -232,18 +262,28 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let process of (storedRevisionData?.processName || selectedProcesses); let i = index">
+      <tr *ngIf="selectedProcesses.length === 0">
+        <td colspan="4" style="text-align: center; padding: 2rem; color: #666;">
+          No processes added. Click "Add Process" to add processes.
+        </td>
+      </tr>
+      <ng-container *ngFor="let process of selectedProcesses; let i = index">
         <!-- Main Row -->
         <tr>
           <td>{{ process.processName || process.name || '-' }}</td>
-          <td>{{ process.grade?.length > 0 ? process.grade[0][0]?.gradeNo : 'Material' }}</td>
+          <td>{{ getProcessGradeName(process) }}</td>
           <td>
             ₹ {{ calculateProcessTotalCost(process) | number: '1.2-2' }}
           </td>
           <td>
-            <button (click)="toggleRow(i)">
-              {{ expandedRowIndex === i ? 'Hide' : 'Show' }}
-            </button>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button mat-icon-button color="primary" (click)="toggleRow(i)" matTooltip="{{ expandedRowIndex === i ? 'Hide Details' : 'Show Details' }}">
+                <mat-icon>{{ expandedRowIndex === i ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteProcess(i)" matTooltip="Delete Process">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </td>
         </tr>
 
@@ -262,10 +302,10 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- Grade-based Materials -->
-                <ng-container *ngIf="process.grade?.length > 0">
-                  <ng-container *ngFor="let rm of process.grade[0][0]?.rawMaterial">
-                    <ng-container *ngFor="let mat of rm.materialsUsed">
+                <!-- All Materials (handles both grade-based and direct rawMaterial) -->
+                <ng-container *ngIf="getProcessRawMaterials(process).length > 0">
+                  <ng-container *ngFor="let rm of getProcessRawMaterials(process)">
+                    <ng-container *ngFor="let mat of (rm.materialsUsed || [])">
                       <tr>
                         <td>{{ mat.name }}</td>
                         <td>{{ mat.quantity }}</td>
@@ -288,8 +328,8 @@
                         </td>
                         <td>
                           ₹ {{
-                            (mat.updatedQuantity || mat.quantity) *
-                            (mat.updatedUnitCost || mat.unitCost)
+                            (mat.updatedQuantity || mat.quantity || 0) *
+                            (mat.updatedUnitCost || mat.unitCost || 0)
                               | number: '1.2-2'
                           }}
                         </td>
@@ -297,42 +337,11 @@
                     </ng-container>
                   </ng-container>
                 </ng-container>
-
-                <!-- Raw Material Only -->
-                <ng-container *ngIf="!process.grade?.length">
-                  <ng-container *ngFor="let rm of process.rawMaterial">
-                    <ng-container *ngFor="let mat of rm.materialsUsed">
-                      <tr>
-                        <td>{{ mat.name }}</td>
-                        <td>{{ mat.quantity }}</td>
-                        <td>
-                          <input
-                            type="number"
-                            [(ngModel)]="mat.updatedQuantity"
-                            (change)="logUpdatedData()"
-                            [ngModelOptions]="{ standalone: true }"
-                          />
-                        </td>
-                        <td>{{ mat.unitCost }}</td>
-                        <td>
-                          <input
-                            type="number"
-                            [(ngModel)]="mat.updatedUnitCost"
-                            (change)="logUpdatedData()"
-                            [ngModelOptions]="{ standalone: true }"
-                          />
-                        </td>
-                        <td>
-                          ₹ {{
-                            (mat.updatedQuantity || mat.quantity) *
-                            (mat.updatedUnitCost || mat.unitCost)
-                              | number: '1.2-2'
-                          }}
-                        </td>
-                      </tr>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
+                <tr *ngIf="getProcessRawMaterials(process).length === 0">
+                  <td colspan="6" style="text-align: center; padding: 1rem; color: #666;">
+                    No materials found for this process.
+                  </td>
+                </tr>
               </tbody>
             </table>
           </td>
