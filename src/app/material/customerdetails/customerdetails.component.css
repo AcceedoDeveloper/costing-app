@@ -301,6 +301,65 @@
   opacity: 0.7;
 }
 
+/* View Toggle Wrapper */
+.view-toggle-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.view-toggle-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--off-white);
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(11, 59, 46, 0.04);
+}
+
+.view-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.view-toggle-label:hover {
+  background: rgba(15, 92, 72, 0.05);
+}
+
+.view-radio {
+  cursor: pointer;
+  accent-color: var(--imperial-green);
+  width: 16px;
+  height: 16px;
+}
+
+.view-toggle-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(16, 20, 20, 0.85);
+  transition: color 0.2s ease;
+}
+
+.view-toggle-label:hover .view-toggle-text {
+  color: rgba(11, 59, 46, 0.9);
+}
+
+.view-radio:checked + .view-toggle-text {
+  color: var(--imperial-green);
+  font-weight: 600;
+}
+
 /* Add Button Wrapper */
 .add-button-wrapper {
   display: flex;
@@ -673,7 +732,6 @@ margin-right: 25px;
 }
 
 .nested-table-cell {
-  padding: 1rem !important;
   background: rgba(229, 227, 221, 0.3);
   border-top: 1px solid rgba(15, 92, 72, 0.15);
   color: black;
@@ -711,7 +769,7 @@ margin-right: 25px;
 .nested-table thead th {
   padding: 0.5rem 0.75rem;
   text-align: left;
-  color: var(--off-white) !important;
+  color: black !important;
   font-weight: 600;
   font-size: 0.7rem;
   letter-spacing: 0.15px;
@@ -999,7 +1057,7 @@ margin-right: 25px;
 }
 
 .nested-table-container .nested-table thead th {
-  color: var(--off-white) !important;
+  color: black;
   font-weight: 600;
   font-size: 0.75rem;
   padding: 0.625rem 0.75rem;
@@ -1486,5 +1544,217 @@ button, .filter-card, .combined-button, .native-input, .data-table tbody tr {
 
 .status-field[data-status="rejected"] ::ng-deep .mat-select-value-text {
   color: var(--alert-red);
+}
+
+/* Customer View Table Styling */
+.customer-view-table {
+  width: 100%;
+}
+
+.customer-row {
+  background: var(--off-white);
+  border-bottom: 2px solid rgba(15, 92, 72, 0.15);
+}
+
+.customer-row:hover {
+  background: rgba(248, 247, 242, 0.8);
+  border-left: 3px solid rgba(15, 92, 72, 0.4);
+}
+
+/* Customer expand button inside part-count-badge */
+.part-count-badge .customer-expand-btn {
+  margin: 0;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.part-count-badge .customer-expand-btn .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  color: rgba(11, 59, 46, 0.8);
+}
+
+.part-count-badge .customer-expand-btn:hover .mat-icon {
+  color: rgba(15, 92, 72, 0.9);
+}
+
+.expanded-customer-row {
+  background: rgba(248, 247, 242, 0.5) !important;
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2) !important;
+}
+
+.expanded-customer-row:hover {
+  background: rgba(248, 247, 242, 0.7) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+}
+
+.part-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.1) 0%, rgba(15, 92, 72, 0.1) 100%);
+  color: var(--imperial-green);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid rgba(15, 92, 72, 0.2);
+}
+
+.parts-table {
+  margin-top: 0.5rem;
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Parts table column widths for even spacing */
+.parts-table thead th:nth-child(1),
+.parts-table tbody td:nth-child(1) {
+  width: 12%;
+}
+
+.parts-table thead th:nth-child(2),
+.parts-table tbody td:nth-child(2) {
+  width: 10%;
+}
+
+.parts-table thead th:nth-child(3),
+.parts-table tbody td:nth-child(3) {
+  width: 10%;
+}
+
+.parts-table thead th:nth-child(4),
+.parts-table tbody td:nth-child(4) {
+  width: 10%;
+}
+
+.parts-table thead th:nth-child(5),
+.parts-table tbody td:nth-child(5) {
+  width: 12%;
+}
+
+.parts-table thead th:nth-child(6),
+.parts-table tbody td:nth-child(6) {
+  width: 15%;
+  padding: 0.55rem 0.75rem !important;
+}
+
+.parts-table thead th:nth-child(7),
+.parts-table tbody td:nth-child(7) {
+  width: 15%;
+  padding: 0.55rem 0.75rem !important;
+}
+
+.parts-table thead th:nth-child(8),
+.parts-table tbody td:nth-child(8) {
+  width: 16%;
+  padding: 0.55rem 0.75rem !important;
+}
+
+.part-row {
+  background: rgba(248, 247, 242, 0.3);
+  border-bottom: 1px solid rgba(229, 227, 221, 0.4);
+}
+
+.part-row:hover {
+  background: rgba(248, 247, 242, 0.6);
+  border-left: 2px solid rgba(15, 92, 72, 0.3);
+}
+
+.expanded-part-row {
+  background: rgba(229, 227, 221, 0.2) !important;
+  border-bottom: 1px solid rgba(15, 92, 72, 0.15) !important;
+}
+
+.expanded-part-row:hover {
+  background: rgba(229, 227, 221, 0.3) !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border-left: none !important;
+}
+
+/* PartName Group Container Styling */
+.partname-group-container {
+  margin-bottom: 1rem;
+  border: 1px solid rgba(229, 227, 221, 0.6);
+  border-radius: 8px;
+  background: var(--off-white);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(11, 59, 46, 0.04);
+}
+
+.partname-group-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.08) 0%, rgba(15, 92, 72, 0.08) 100%);
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  justify-content: space-between;
+  height: 50px;
+  padding: 5px 10px;
+
+}
+
+.partname-group-header:hover {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.12) 0%, rgba(15, 92, 72, 0.12) 100%);
+  border-left: 3px solid rgba(15, 92, 72, 0.4);
+}
+
+.partname-group-header button {
+  flex-shrink: 0;
+}
+
+.partname-group-content {
+  padding: 0.5rem;
+  background: rgba(248, 247, 242, 0.3);
+}
+
+/* PartName Group Row Styling (legacy - keeping for compatibility) */
+.partname-group-row {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.08) 0%, rgba(15, 92, 72, 0.08) 100%);
+  border-bottom: 2px solid rgba(15, 92, 72, 0.2);
+  border-top: 1px solid rgba(15, 92, 72, 0.15);
+}
+
+.partname-group-row:hover {
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.12) 0%, rgba(15, 92, 72, 0.12) 100%);
+  border-left: 3px solid rgba(15, 92, 72, 0.4);
+}
+
+.partname-group-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, rgba(11, 59, 46, 0.15) 0%, rgba(15, 92, 72, 0.15) 100%);
+  color: var(--imperial-green);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid rgba(15, 92, 72, 0.3);
+  margin-right: 0.75rem;
+}
+
+.partname-count-badge {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(241, 210, 143, 0.2) 100%);
+  color: rgba(11, 59, 46, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  height: 35px;
+
 }
 

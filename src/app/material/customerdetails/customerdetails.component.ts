@@ -67,6 +67,20 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
   // Selected revisions for comparison (multiple checkboxes)
   selectedRevisionsForComparison: { [customerId: string]: number[] } = {}; // Array of selected revision indices
 
+  // View toggle: 'parts' for current table, 'customers' for customer view
+  viewMode: 'parts' | 'customers' = 'parts';
+
+  // Customer view: expanded customers, partName groups, and parts
+  expandedCustomers: Set<string> = new Set<string>();
+  expandedPartNameGroups: Set<string> = new Set<string>(); // Key: customerName_partName
+  expandedParts: Set<string> = new Set<string>();
+
+  // Grouped customer data
+  groupedCustomerData: { [customerName: string]: CustomerdetailsIn[] } = {};
+  
+  // Grouped partName data within customers
+  groupedPartNameData: { [customerName: string]: { [partName: string]: CustomerdetailsIn[] } } = {};
+
   constructor(
     private store: Store<{ materials: MaterialState }>, 
     private dialog : MatDialog,
@@ -159,6 +173,7 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
         this.totalRecords = response.total || this.customerDetails.length;
         this.loading = false;
         console.log('Customer Details:', this.customerDetails);
+        this.groupCustomerData();
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -916,43 +931,190 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
 }
 
 // Handle status change
-onStatusChange(customerId: string, newStatus: string): void {
-  const customer = this.customerDetails.find(c => c._id === customerId);
-  
-  if (!customer) {
-    this.tooster.error('Customer not found', 'Error');
-    return;
+  onStatusChange(customerId: string, newStatus: string): void {
+    const customer = this.customerDetails.find(c => c._id === customerId);
+    
+    if (!customer) {
+      this.tooster.error('Customer not found', 'Error');
+      return;
+    }
+
+    // Build the complete customer data object in the expected format
+    const updateData = this.buildCustomerUpdateData(customer, newStatus);
+    
+    console.log('Updating customer with data:', updateData);
+
+    const sub = this.reportsService.updateStatus(customerId, updateData).subscribe({
+      next: (response) => {
+        // Update the local customer data
+        if (customer) {
+          customer.Status = newStatus;
+          // Also update in revision if it exists
+          const latestRevision = this.getLatestRevision(customer);
+          if (latestRevision) {
+            latestRevision.Status = newStatus;
+          }
+        }
+        this.tooster.success('Status updated successfully!', 'Success');
+        this.groupCustomerData(); // Regroup after status update
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error updating status:', error);
+        console.error('Error details:', error.error);
+        this.tooster.error('Failed to update status', 'Error');
+        // Revert the change in UI by triggering change detection
+        this.cdr.detectChanges();
+      }
+    });
+
+    this.subscription.add(sub);
   }
 
-  // Build the complete customer data object in the expected format
-  const updateData = this.buildCustomerUpdateData(customer, newStatus);
-  
-  console.log('Updating customer with data:', updateData);
-
-  const sub = this.reportsService.updateStatus(customerId, updateData).subscribe({
-    next: (response) => {
-      // Update the local customer data
-      if (customer) {
-        customer.Status = newStatus;
-        // Also update in revision if it exists
-        const latestRevision = this.getLatestRevision(customer);
-        if (latestRevision) {
-          latestRevision.Status = newStatus;
-        }
+  // Group customer data by customer name and partName
+  groupCustomerData(): void {
+    this.groupedCustomerData = {};
+    this.groupedPartNameData = {};
+    
+    this.customerDetails.forEach(customer => {
+      const customerName = customer.CustomerName?.name || 'Unknown';
+      const partName = customer.partName || 'Unknown Part';
+      
+      // Group by customer
+      if (!this.groupedCustomerData[customerName]) {
+        this.groupedCustomerData[customerName] = [];
       }
-      this.tooster.success('Status updated successfully!', 'Success');
-      this.cdr.detectChanges();
-    },
-    error: (error) => {
-      console.error('Error updating status:', error);
-      console.error('Error details:', error.error);
-      this.tooster.error('Failed to update status', 'Error');
-      // Revert the change in UI by triggering change detection
-      this.cdr.detectChanges();
-    }
-  });
+      this.groupedCustomerData[customerName].push(customer);
+      
+      // Group by partName within customer
+      if (!this.groupedPartNameData[customerName]) {
+        this.groupedPartNameData[customerName] = {};
+      }
+      if (!this.groupedPartNameData[customerName][partName]) {
+        this.groupedPartNameData[customerName][partName] = [];
+      }
+      this.groupedPartNameData[customerName][partName].push(customer);
+    });
+  }
 
-  this.subscription.add(sub);
-}
+  // Get list of customer names
+  getCustomerNames(): string[] {
+    return Object.keys(this.groupedCustomerData).sort();
+  }
+
+  // Get parts for a customer
+  getCustomerParts(customerName: string): CustomerdetailsIn[] {
+    return this.groupedCustomerData[customerName] || [];
+  }
+
+  // Get part count for a customer
+  getPartCount(customerName: string): number {
+    return this.getCustomerParts(customerName).length;
+  }
+
+  // Get partName groups for a customer
+  getPartNameGroups(customerName: string): string[] {
+    if (!this.groupedPartNameData[customerName]) {
+      return [];
+    }
+    return Object.keys(this.groupedPartNameData[customerName]).sort();
+  }
+
+  // Get parts for a specific partName within a customer
+  getPartsByPartName(customerName: string, partName: string): CustomerdetailsIn[] {
+    if (!this.groupedPartNameData[customerName] || !this.groupedPartNameData[customerName][partName]) {
+      return [];
+    }
+    return this.groupedPartNameData[customerName][partName];
+  }
+
+  // Get part count for a partName group
+  getPartNameGroupCount(customerName: string, partName: string): number {
+    return this.getPartsByPartName(customerName, partName).length;
+  }
+
+  // Check if partName group should be expandable (has more than 1 part)
+  isPartNameGroupExpandable(customerName: string, partName: string): boolean {
+    return this.getPartNameGroupCount(customerName, partName) > 1;
+  }
+
+  // Get unique key for partName group
+  getPartNameGroupKey(customerName: string, partName: string): string {
+    return `${customerName}_${partName}`;
+  }
+
+  // Toggle partName group expansion
+  togglePartNameGroup(customerName: string, partName: string): void {
+    const key = this.getPartNameGroupKey(customerName, partName);
+    if (this.expandedPartNameGroups.has(key)) {
+      this.expandedPartNameGroups.delete(key);
+      // Also collapse all parts in this group
+      const parts = this.getPartsByPartName(customerName, partName);
+      parts.forEach(part => {
+        this.expandedParts.delete(this.getPartKey(part));
+      });
+    } else {
+      this.expandedPartNameGroups.add(key);
+    }
+  }
+
+  // Check if partName group is expanded
+  isPartNameGroupExpanded(customerName: string, partName: string): boolean {
+    return this.expandedPartNameGroups.has(this.getPartNameGroupKey(customerName, partName));
+  }
+
+  // Get unique part identifier (drawingNo + partName)
+  getPartKey(part: CustomerdetailsIn): string {
+    return `${part.drawingNo || ''}_${part.partName || ''}_${part._id}`;
+  }
+
+  // Toggle customer expansion
+  toggleCustomer(customerName: string): void {
+    if (this.expandedCustomers.has(customerName)) {
+      this.expandedCustomers.delete(customerName);
+      // Also collapse all partName groups and parts for this customer
+      const partNameGroups = this.getPartNameGroups(customerName);
+      partNameGroups.forEach(partName => {
+        this.expandedPartNameGroups.delete(this.getPartNameGroupKey(customerName, partName));
+        const parts = this.getPartsByPartName(customerName, partName);
+        parts.forEach(part => {
+          this.expandedParts.delete(this.getPartKey(part));
+        });
+      });
+    } else {
+      this.expandedCustomers.add(customerName);
+      // Optionally auto-expand all partName groups when customer is expanded
+      // Uncomment the following lines if you want partName groups to auto-expand
+      // const partNameGroups = this.getPartNameGroups(customerName);
+      // partNameGroups.forEach(partName => {
+      //   this.expandedPartNameGroups.add(this.getPartNameGroupKey(customerName, partName));
+      // });
+    }
+  }
+
+  // Check if customer is expanded
+  isCustomerExpanded(customerName: string): boolean {
+    return this.expandedCustomers.has(customerName);
+  }
+
+  // Toggle part expansion
+  togglePart(part: CustomerdetailsIn): void {
+    const partKey = this.getPartKey(part);
+    if (this.expandedParts.has(partKey)) {
+      this.expandedParts.delete(partKey);
+    } else {
+      this.expandedParts.add(partKey);
+    }
+  }
+
+  // Check if part is expanded
+  isPartExpanded(part: CustomerdetailsIn): boolean {
+    return this.expandedParts.has(this.getPartKey(part));
+  }
+
+  // Switch view mode
+  switchViewMode(mode: 'parts' | 'customers'): void {
+    this.viewMode = mode;
+  }
 
 }

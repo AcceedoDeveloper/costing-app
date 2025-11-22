@@ -176,23 +176,31 @@
 
       </div>
 
-      <!-- Add Quotation Button -->
-
+      <!-- View Toggle and Add Button -->
+      <div class="view-toggle-wrapper">
+        <div class="view-toggle-container">
+          <label class="view-toggle-label">
+            <input type="radio" name="viewMode" [value]="'parts'" [(ngModel)]="viewMode" (change)="switchViewMode('parts')" class="view-radio">
+            <span class="view-toggle-text">Parts View</span>
+          </label>
+          <label class="view-toggle-label">
+            <input type="radio" name="viewMode" [value]="'customers'" [(ngModel)]="viewMode" (change)="switchViewMode('customers')" class="view-radio">
+            <span class="view-toggle-text">Customer View</span>
+          </label>
+        </div>
       <div class="add-button-wrapper">
-
        <button mat-raised-button color="primary" class="add-but" (click)="addCustomerDetails()">
-
          <mat-icon>add</mat-icon>
-
        </button>
-
+        </div>
      </div>
 
      </div>
 
     <div class="table-container">
 
-      <table class="data-table">
+      <!-- Parts View (Current Table) -->
+      <table class="data-table" *ngIf="viewMode === 'parts'">
 
     <thead>
 
@@ -523,24 +531,273 @@
 
       </table>
 
-      <!-- Paginator -->
+      <!-- Paginator for Parts View -->
 
       <mat-paginator 
-
+        *ngIf="viewMode === 'parts'"
         [length]="totalRecords"
-
         [pageSize]="pageSize"
-
         [pageIndex]="pageIndex"
-
         [pageSizeOptions]="pageSizeOptions"
-
         [showFirstLastButtons]="true"
-
         (page)="onPageChange($event)"
-
         class="custom-paginator">
+      </mat-paginator>
 
+      <!-- Customer View (New Table) -->
+      <table class="data-table customer-view-table" *ngIf="viewMode === 'customers'">
+        <thead>
+          <tr>
+            <th>Customer Name</th>
+            <th style="text-align: right;">Total Parts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let customerName of getCustomerNames()">
+            <!-- Customer Row -->
+            <tr class="customer-row" (click)="toggleCustomer(customerName)" >
+              <td style="font-weight: 600; color: rgba(11, 59, 46, 0.8);">{{ customerName }}</td>
+              <td style="text-align: right; position: relative;">
+                <span class="part-count-badge">
+                  {{ getPartCount(customerName) }} Part{{ getPartCount(customerName) !== 1 ? 's' : '' }}
+                  <button mat-icon-button (click)="toggleCustomer(customerName)" title="Expand/Collapse" class="customer-expand-btn">
+                    <mat-icon>{{ isCustomerExpanded(customerName) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  </button>
+                </span>
+              </td>
+            </tr>
+            
+            <!-- Expanded Customer: Show Parts -->
+            <tr *ngIf="isCustomerExpanded(customerName)" class="expanded-customer-row">
+              <td colspan="2" class="nested-table-cell">
+                <div class="nested-table-container">
+                  <div class="details-header">
+                    <h4 class="details-title">Parts for {{ customerName }}</h4>
+                  </div>
+                  
+                  <ng-container *ngFor="let partName of getPartNameGroups(customerName)">
+                    <!-- PartName Group Container -->
+                    <div class="partname-group-container">
+                      <!-- PartName Group Header Row -->
+                      <div class="partname-group-header" (click)="togglePartNameGroup(customerName, partName)">
+                       
+                        <span class="partname-group-badge">{{ partName }}</span>
+                        <span class="partname-count-badge">{{ getPartNameGroupCount(customerName, partName) }} Part{{ getPartNameGroupCount(customerName, partName) !== 1 ? 's' : '' }}
+                          <button mat-icon-button title="Expand/Collapse Part Name Group">
+                            <mat-icon>{{ isPartNameGroupExpanded(customerName, partName) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                          </button>
+                        </span>
+                      </div>
+                      
+                      <!-- Expanded PartName Group: Show table with parts -->
+                      <div *ngIf="isPartNameGroupExpanded(customerName, partName)" class="partname-group-content">
+                        <table class="nested-table parts-table">
+                          <thead>
+                            <tr>
+                              <th style="width: 12%;">Drawing No</th>
+                              <th style="width: 10%;">No of Process</th>
+                              <th style="width: 10%;">Revision Count</th>
+                              <th style="width: 10%;">Overall Cost</th>
+                              <th style="width: 12%;">Download</th>
+                              <th style="width: 15%;">Action</th>
+                              <th style="width: 15%;">Updated At</th>
+                              <th style="width: 16%;">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <ng-container *ngFor="let part of getPartsByPartName(customerName, partName)">
+                              <!-- Part Row -->
+                              <tr class="part-row">
+                                <td>{{ part.drawingNo || '-' }}</td>
+                                <td>{{ getProcessCount(part) }} Process</td>
+                                <td>
+                                  <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <span>{{ getAllRevisions(part).length }}</span>
+                                    <button 
+                                      *ngIf="getAllRevisions(part).length > 1"
+                                      mat-icon-button 
+                                      color="accent" 
+                                      (click)="compareRevisions(part)"
+                                      style="width: 32px; height: 32px; line-height: 32px;"
+                                      matTooltip="Compare Revisions">
+                                      <mat-icon style="font-size: 18px; height: 18px; width: 18px; line-height: 18px;">compare_arrows</mat-icon>
+                                    </button>
+                                  </div>
+                                </td>
+                                <td>{{ (part.OverallTotalCost || getRevisionTotalCost(getLatestRevision(part))) | number:'1.2-2' }}</td>
+                                <td class="download-cell">
+                                  <div class="combined-button">
+                                    <div class="view-section" (click)="viewQuotation(part)">
+                                      <span>View</span>
+                                    </div>
+                                    <div class="download-section" (click)="downloadQuotation(part)">
+                                      <span>Download</span>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td class="action-cell">
+                                  <div class="action-buttons-container">
+                                    <button mat-icon-button (click)="togglePart(part)" title="Expand/Collapse Details" *ngIf="getAllRevisions(part).length > 0">
+                                      <mat-icon>{{ isPartExpanded(part) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="edit(part._id)" title="Edit">
+                                      <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="delete(part._id)" title="Delete">
+                                      <mat-icon>delete</mat-icon>
+                                    </button>
+                                  </div>
+                                </td>
+                                <td>
+                                  {{ part.updatedAt ? (part.updatedAt | date:'mediumDate') : (part.createdAt ? (part.createdAt | date:'mediumDate') : '-') }}
+                                </td>
+                                <td>
+                                  <mat-form-field appearance="outline" class="status-field">
+                                    <mat-select 
+                                      [value]="getStatus(part)" 
+                                      (selectionChange)="onStatusChange(part._id, $event.value)">
+                                      <mat-option value="pending">Pending</mat-option>
+                                      <mat-option value="e-mail sent">E-mail Sent</mat-option>
+                                      <mat-option value="approved">Approved</mat-option>
+                                      <mat-option value="rejected">Rejected</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </td>
+                              </tr>
+                              
+                              <!-- Expanded Part: Show Revision Details -->
+                              <tr *ngIf="isPartExpanded(part) && getAllRevisions(part).length > 0" class="expanded-part-row">
+                                <td colspan="10" class="nested-table-cell">
+                                  <div class="nested-table-container">
+                                    <div class="details-header">
+                                      <h4 class="details-title">Revision Details for {{ part.partName }}</h4>
+                                      <div class="revision-selector">
+                                        <div *ngIf="getAllRevisions(part).length > 0" class="revision-checkboxes-container">
+                                          <div class="revision-checkboxes-wrapper">
+                                            <div class="revision-checkboxes">
+                                              <label *ngFor="let revision of getAllRevisions(part); let i = index" class="revision-checkbox-label">
+                                                <input 
+                                                  type="checkbox" 
+                                                  [checked]="isRevisionSelectedForComparison(part._id, i)"
+                                                  (change)="toggleRevisionForComparison(part._id, i)"
+                                                  class="revision-checkbox">
+                                                <span class="revision-checkbox-text">
+                                                  Rev {{ i + 1 }}
+                                                  <span *ngIf="revision.createdAt" class="revision-date-small">
+                                                    ({{ revision.createdAt | date:'shortDate' }})
+                                                  </span>
+                                                </span>
+                                              </label>
+                                            </div>
+                                          </div>
+                                          <button 
+                                            mat-raised-button 
+                                            color="primary"
+                                            [disabled]="getSelectedRevisionsCount(part._id) < 2"
+                                            (click)="openCompareWithSelectedRevisions(part)"
+                                            class="compare-revisions-btn"
+                                            [class.disabled]="getSelectedRevisionsCount(part._id) < 2">
+                                            <mat-icon>compare_arrows</mat-icon>
+                                            Compare Revisions ({{ getSelectedRevisionsCount(part._id) }})
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="details-section">
+                                      <table class="nested-table">
+                                        <thead>
+                                          <tr>
+                                            <th>Revision</th>
+                                            <th>Total Process Cost</th>
+                                            <th>Subtotal Metal</th>
+                                            <th>Sub Total Labour</th>
+                                            <th>Sub Total Power</th>
+                                            <th>Process Name</th>
+                                            <th>Inputs</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <ng-container *ngIf="getAllRevisions(part).length > 0">
+                                            <tr *ngFor="let revision of getAllRevisions(part); let i = index">
+                                              <td>
+                                                <div class="revision-number-badge">Rev {{ i + 1 }}</div>
+                                                <div *ngIf="revision.createdAt" class="revision-date-text">
+                                                  {{ revision.createdAt | date:'shortDate' }}
+                                                </div>
+                                              </td>
+                                              <td>
+                                                {{ (revision.totalProcessCost || 0) | number:'1.2-2' }}
+                                              </td>
+                                              <td>
+                                                {{ getSubtotalMetal(part) | number:'1.2-2' }}
+                                              </td>
+                                              <td>
+                                                {{ getSubtotalLabour(part) | number:'1.2-2' }}
+                                              </td>
+                                              <td>
+                                                {{ getSubtotalPower(part) | number:'1.2-2' }}
+                                              </td>
+                                              <td>
+                                                <div class="process-names-list" *ngIf="revision.processName && revision.processName.length > 0">
+                                                  <div *ngFor="let process of revision.processName; let last = last" class="process-name-item">
+                                                    {{ process.name || process.processName || '-' }}
+                                                    <span *ngIf="!last">, </span>
+                                                  </div>
+                                                </div>
+                                                <div *ngIf="!revision.processName || revision.processName.length === 0" class="no-process">
+                                                  -
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <div class="inputs-container">
+                                                  <div class="input-badge casting" *ngIf="revision.castingInputs || part.castingInputs">
+                                                    <mat-icon class="input-icon">settings</mat-icon>
+                                                    <span>Casting</span>
+                                                  </div>
+                                                  <div class="input-badge moulding" *ngIf="revision.mouldingInputs || part.mouldingInputs">
+                                                    <mat-icon class="input-icon">build</mat-icon>
+                                                    <span>Moulding</span>
+                                                  </div>
+                                                  <div class="input-badge core" *ngIf="revision.coreInputs || part.coreInputs">
+                                                    <mat-icon class="input-icon">category</mat-icon>
+                                                    <span>Core</span>
+                                                  </div>
+                                                  <div *ngIf="!revision.castingInputs && !part.castingInputs && !revision.mouldingInputs && !part.mouldingInputs && !revision.coreInputs && !part.coreInputs" class="no-inputs">
+                                                    -
+                                                  </div>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </ng-container>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            </ng-container>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <!-- Paginator for Customer View -->
+      <mat-paginator 
+        *ngIf="viewMode === 'customers'"
+        [length]="totalRecords"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)"
+        class="custom-paginator">
       </mat-paginator>
 
     </div>
