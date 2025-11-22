@@ -2,30 +2,31 @@
   View Quotation
 </h5>
 
-<!-- Revision Selector -->
-<div class="revision-selector-container" *ngIf="allRevisions.length > 0">
-  <div class="revision-selector-header">
-    <span class="revision-label">Select Revision:</span>
-    <div class="revision-buttons">
-      <button 
-        *ngFor="let revision of allRevisions; let i = index"
-        mat-raised-button
-        [class.selected]="selectedRevisionIndex === i"
-        [color]="selectedRevisionIndex === i ? 'primary' : 'basic'"
-        (click)="onRevisionSelect(i)"
-        class="revision-button">
-        Revision {{ i + 1 }}
-        <span class="revision-date" *ngIf="revision.createdAt">
-          ({{ revision.createdAt | date:'shortDate' }})
-        </span>
-      </button>
-    </div>
-  </div>
-</div>
-
 <mat-horizontal-stepper [linear]="false" #stepper>
     <mat-step>
-        <ng-template matStepLabel>View Quote</ng-template>
+        <!-- Revision Selector -->
+        <div class="revision-selector-container" *ngIf="allRevisions.length > 0">
+          <div class="revision-selector-header">
+            <span class="revision-label">Select Revision:</span>
+            <div class="revision-checkboxes">
+              <label 
+                *ngFor="let revision of allRevisions; let i = index"
+                class="revision-checkbox-label">
+                <input 
+                  type="checkbox" 
+                  [checked]="selectedRevisionIndex === i"
+                  (change)="onRevisionSelect(i)"
+                  class="revision-checkbox">
+                <span class="revision-checkbox-text">
+                  Revision {{ i + 1 }}
+                  <span class="revision-date" *ngIf="revision.createdAt">
+                    ({{ revision.createdAt | date:'shortDate' }})
+                  </span>
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
          <table  *ngIf="quotationData" >
             <tr class="header-row">
                 <td colspan="3">INDO SHELL CAST PRIVATE LIMITED

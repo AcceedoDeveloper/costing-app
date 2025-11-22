@@ -18,19 +18,23 @@
   <!-- Revision Selection -->
   <div class="revision-selection">
     <h5>Select Revisions to Compare</h5>
-    <div class="revision-buttons">
-      <button 
+    <div class="revision-checkboxes">
+      <label 
         *ngFor="let revision of allRevisions; let i = index"
-        mat-raised-button
-        [class.selected]="isRevisionSelected(i)"
-        [color]="isRevisionSelected(i) ? 'primary' : 'basic'"
-        (click)="toggleRevisionSelection(i)"
-        class="revision-select-btn">
-        Revision {{ i + 1 }}
-        <span *ngIf="revision.createdAt" class="revision-date">
-          ({{ revision.createdAt | date:'shortDate' }})
+        class="revision-checkbox-label"
+        [class.selected]="isRevisionSelected(i)">
+        <input 
+          type="checkbox" 
+          [checked]="isRevisionSelected(i)"
+          (change)="toggleRevisionSelection(i)"
+          class="revision-checkbox">
+        <span class="revision-checkbox-text">
+          Revision {{ i + 1 }}
+          <span *ngIf="revision.createdAt" class="revision-date">
+            ({{ revision.createdAt | date:'shortDate' }})
+          </span>
         </span>
-      </button>
+      </label>
     </div>
     <p *ngIf="selectedRevisions.length === 0" class="warning-text">
       Please select at least one revision to compare
@@ -65,12 +69,15 @@
                     class="data-col">
                   <div class="value-cell" *ngIf="i < getProcesses(comp.revision).length">
                     <div class="cost-value">₹ {{ (getProcesses(comp.revision)[i]?.processCost || 0) | number:'1.2-2' }}</div>
-                    <div class="material-info" *ngIf="getProcessMaterials(getProcesses(comp.revision)[i]).length > 0">
-                      <div *ngFor="let rm of getProcessMaterials(getProcesses(comp.revision)[i])" class="material-item">
-                        <strong>{{ rm.type }}:</strong>
-                        <span *ngFor="let mat of (rm.materialsUsed || []); let last = last">
-                          {{ mat.name }}<span *ngIf="mat.quantity"> ({{ mat.quantity }})</span><span *ngIf="!last">, </span>
-                        </span>
+                    <div class="material-list" *ngIf="getProcessMaterials(getProcesses(comp.revision)[i]).length > 0">
+                      <div *ngFor="let rm of getProcessMaterials(getProcesses(comp.revision)[i])" class="material-group">
+                        <div class="material-type">{{ rm.type }}</div>
+                        <ul class="material-items">
+                          <li *ngFor="let mat of (rm.materialsUsed || [])" class="material-item">
+                            <span class="material-name">{{ mat.name }}</span>
+                            <span class="material-quantity" *ngIf="mat.quantity">({{ mat.quantity }})</span>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
