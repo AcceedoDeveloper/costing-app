@@ -31,10 +31,11 @@ import { ChartsModule } from 'ng2-charts';
 import { ToastrModule } from 'ngx-toastr';
 import { ReportQuotationDialogComponent } from './report/report-quotation-dialog/report-quotation-dialog.component';
 import { AutoFontSizeDirective } from './dash/auto-font-size.directive';
+import { UserManagementUpdateComponent } from './user-management-update/user-management-update.component';
 
 @NgModule({
   declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent, DifferenceGraphDialogComponent,
-     ReportDetailsDialogComponent, ReportQuotationDialogComponent, AutoFontSizeDirective],
+     ReportDetailsDialogComponent, ReportQuotationDialogComponent, AutoFontSizeDirective, UserManagementUpdateComponent],
   imports: [
     MatIconModule,
     MaterialModule,
