@@ -37,7 +37,7 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
   searchFilterOptions: string[] = [];
 
   // Date Filter properties
-  dateFilterType: string = 'date'; // 'none', 'date', 'week', 'month', 'year'
+  dateFilterType: string = 'month'; // 'none', 'date', 'week', 'month', 'year'
   
   // Native HTML input filters
   filters: any = {
@@ -54,6 +54,9 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
   pageSizeOptions: number[] = [10, 25, 50, 100];
   totalRecords: number = 0;
   paginatedCustomers: CustomerdetailsIn[] = [];
+  hasNextPage: boolean = false;
+  hasPreviousPage: boolean = false;
+  totalPages: number = 0;
 
   // Expanded rows tracking
   expandedRows: Set<string> = new Set<string>();
@@ -168,11 +171,32 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
     }
 
     const sub = this.reportsService.getCustomerDetails(params).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.customerDetails = response.data || [];
-        this.totalRecords = response.total || this.customerDetails.length;
+        // Use pagination object from API response
+        if (response.pagination) {
+          this.totalRecords = response.pagination.totalRecords || 0;
+          this.hasNextPage = response.pagination.hasNextPage || false;
+          this.hasPreviousPage = response.pagination.hasPreviousPage || false;
+          this.totalPages = response.pagination.totalPages || 0;
+          this.currentPage = response.pagination.currentPage || 1;
+          this.pageIndex = (response.pagination.currentPage || 1) - 1; // Convert to 0-based index
+        } else {
+          // Fallback if pagination object is not present
+          this.totalRecords = response.total || response.count || this.customerDetails.length;
+          this.hasNextPage = false;
+          this.hasPreviousPage = false;
+          this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }
         this.loading = false;
         console.log('Customer Details:', this.customerDetails);
+        console.log('Pagination:', {
+          totalRecords: this.totalRecords,
+          hasNextPage: this.hasNextPage,
+          hasPreviousPage: this.hasPreviousPage,
+          totalPages: this.totalPages,
+          currentPage: this.currentPage
+        });
         this.groupCustomerData();
         this.cdr.detectChanges();
       },
@@ -791,15 +815,24 @@ getProcessMaterials(process: any): any[] {
 
 // Get status with default value "pending"
 getStatus(customer: any): string {
+  let status: string = 'pending';
+  
   // Check if Status is in the root level or in the latest revision
   if (customer?.Status) {
-    return customer.Status;
+    status = customer.Status;
+  } else {
+    const latestRevision = this.getLatestRevision(customer);
+    if (latestRevision?.Status) {
+      status = latestRevision.Status;
+    }
   }
-  const latestRevision = this.getLatestRevision(customer);
-  if (latestRevision?.Status) {
-    return latestRevision.Status;
+  
+  // Map "Completed" from server to "approved" for UI display
+  if (status === 'Completed' || status === 'completed') {
+    return 'approved';
   }
-  return 'pending';
+  
+  return status;
 }
 
 // Get selected revision for a customer (or latest if none selected)
@@ -939,20 +972,23 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
       return;
     }
 
+    // Map "approved" from UI to "Completed" for server
+    const serverStatus = newStatus === 'approved' ? 'Completed' : newStatus;
+
     // Build the complete customer data object in the expected format
-    const updateData = this.buildCustomerUpdateData(customer, newStatus);
+    const updateData = this.buildCustomerUpdateData(customer, serverStatus);
     
     console.log('Updating customer with data:', updateData);
 
     const sub = this.reportsService.updateStatus(customerId, updateData).subscribe({
       next: (response) => {
-        // Update the local customer data
+        // Update the local customer data with server status (Completed)
         if (customer) {
-          customer.Status = newStatus;
+          customer.Status = serverStatus;
           // Also update in revision if it exists
           const latestRevision = this.getLatestRevision(customer);
           if (latestRevision) {
-            latestRevision.Status = newStatus;
+            latestRevision.Status = serverStatus;
           }
         }
         this.tooster.success('Status updated successfully!', 'Success');

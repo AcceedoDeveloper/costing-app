@@ -47,6 +47,10 @@ export class ReportComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   pageLimit: number = 10;
   totalRecords: number = 0;
+  hasNextPage: boolean = false;
+  hasPreviousPage: boolean = false;
+  totalPages: number = 0;
+  pageIndex: number = 0;
 
   // View mode
   viewMode: 'grid' | 'table' = 'grid';
@@ -105,11 +109,32 @@ export class ReportComponent implements OnInit, OnDestroy {
     };
 
     const sub = this.reportsService.getCustomerDetails(params).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.customerDetails = response.data || [];
-        this.totalRecords = response.total || this.customerDetails.length;
+        // Use pagination object from API response
+        if (response.pagination) {
+          this.totalRecords = response.pagination.totalRecords || 0;
+          this.hasNextPage = response.pagination.hasNextPage || false;
+          this.hasPreviousPage = response.pagination.hasPreviousPage || false;
+          this.totalPages = response.pagination.totalPages || 0;
+          this.currentPage = response.pagination.currentPage || 1;
+          this.pageIndex = (response.pagination.currentPage || 1) - 1; // Convert to 0-based index
+        } else {
+          // Fallback if pagination object is not present
+          this.totalRecords = response.total || response.count || this.customerDetails.length;
+          this.hasNextPage = false;
+          this.hasPreviousPage = false;
+          this.totalPages = Math.ceil(this.totalRecords / this.pageLimit);
+        }
         this.calculateStatistics();
         this.loading = false;
+        console.log('Pagination:', {
+          totalRecords: this.totalRecords,
+          hasNextPage: this.hasNextPage,
+          hasPreviousPage: this.hasPreviousPage,
+          totalPages: this.totalPages,
+          currentPage: this.currentPage
+        });
       },
       error: (error) => {
         console.error('Error loading customer details:', error);
@@ -632,6 +657,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   applyFilter(): void {
     this.currentPage = 1;
+    this.pageIndex = 0;
     this.loadCustomerDetails();
   }
 
@@ -646,6 +672,7 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.selectedStatus = 'all';
     this.selectedStatFilter = '';
     this.currentPage = 1;
+    this.pageIndex = 0;
     this.loadCustomerDetails();
   }
 
@@ -659,7 +686,8 @@ export class ReportComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: PageEvent): void {
-    this.currentPage = event.pageIndex + 1; // MatPaginator uses 0-based index
+    this.pageIndex = event.pageIndex;
+    this.currentPage = event.pageIndex + 1; // API uses 1-based page numbers
     this.pageLimit = event.pageSize;
     this.loadCustomerDetails();
   }
