@@ -11,12 +11,14 @@ export class CompareRevisionsComponent implements OnInit {
   allRevisions: any[] = [];
   selectedRevisions: number[] = []; // Array of revision indices to compare
   comparisonData: any[] = []; // Processed data for comparison
+  uniqueProcesses: any[] = []; // Cached unique processes
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<CompareRevisionsComponent>
   ) {
     if (data) {
+      console.log("data", data);
       this.customer = data.customer || data;
       this.initializeRevisions();
     }
@@ -72,6 +74,8 @@ export class CompareRevisionsComponent implements OnInit {
       revision: this.allRevisions[idx],
       revisionNumber: idx + 1
     }));
+    // Update cached unique processes
+    this.uniqueProcesses = this.getAllUniqueProcesses();
   }
 
   // Compare two values and return if they're different
@@ -112,6 +116,60 @@ export class CompareRevisionsComponent implements OnInit {
       return revision.processName;
     }
     return [];
+  }
+
+  // Get all unique processes across all selected revisions
+  getAllUniqueProcesses(): any[] {
+    const processMap = new Map<string, any>();
+
+    // Collect all processes from all selected revisions
+    this.comparisonData.forEach(comp => {
+      const processes = this.getProcesses(comp.revision);
+      processes.forEach((process: any, index: number) => {
+        const processName = process?.name || process?.processName || `Process ${index + 1}`;
+        if (!processMap.has(processName)) {
+          processMap.set(processName, process);
+        }
+      });
+    });
+
+    return Array.from(processMap.values());
+  }
+
+  // Get process display name
+  getProcessDisplayName(process: any, index: number): string {
+    return process?.name || process?.processName || `Process ${index + 1}`;
+  }
+
+  // Get process cost helper method
+  getProcessCost(revision: any, process: any, index: number): number {
+    const processName = this.getProcessDisplayName(process, index);
+    const foundProcess = this.getProcessByName(revision, processName);
+    return foundProcess?.processCost || 0;
+  }
+
+  // Get process from revision by name
+  getProcessByName(revision: any, processName: string): any {
+    if (!processName) return null;
+    const processes = this.getProcesses(revision);
+    return processes.find((p: any) => {
+      const pName = p?.name || p?.processName;
+      return pName === processName;
+    }) || null;
+  }
+
+  // Get process by index from a specific revision
+  getProcessByIndex(revision: any, index: number): any {
+    const processes = this.getProcesses(revision);
+    return processes[index] || null;
+  }
+
+  // Find process index by name in a revision
+  findProcessIndex(revision: any, processName: string): number {
+    const processes = this.getProcesses(revision);
+    return processes.findIndex((p: any) => 
+      (p.name || p.processName) === processName
+    );
   }
 
   // Get process materials

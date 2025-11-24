@@ -58,19 +58,19 @@
             </tr>
           </thead>
           <tbody>
-            <ng-container *ngIf="comparisonData.length > 0 && getProcesses(comparisonData[0].revision).length > 0">
-              <tr *ngFor="let process of getProcesses(comparisonData[0].revision); let i = index">
-                <td class="label-col">{{ process.name || process.processName || '-' }}</td>
+            <ng-container *ngIf="comparisonData.length > 0 && uniqueProcesses && uniqueProcesses.length > 0">
+              <tr *ngFor="let process of uniqueProcesses; let i = index">
+                <td class="label-col">{{ getProcessDisplayName(process, i) }}</td>
                 <td *ngFor="let comp of comparisonData" 
-                    [class.different]="comparisonData.length > 1 && i < getProcesses(comp.revision).length && areDifferent(
-                      getProcesses(comparisonData[0].revision)[i]?.processCost || 0,
-                      getProcesses(comp.revision)[i]?.processCost || 0
+                    [class.different]="comparisonData.length > 1 && areDifferent(
+                      getProcessCost(comparisonData[0].revision, process, i),
+                      getProcessCost(comp.revision, process, i)
                     )"
                     class="data-col">
-                  <div class="value-cell" *ngIf="i < getProcesses(comp.revision).length">
-                    <div class="cost-value">₹ {{ (getProcesses(comp.revision)[i]?.processCost || 0) | number:'1.2-2' }}</div>
-                    <div class="material-list" *ngIf="getProcessMaterials(getProcesses(comp.revision)[i]).length > 0">
-                      <div *ngFor="let rm of getProcessMaterials(getProcesses(comp.revision)[i])" class="material-group">
+                  <div class="value-cell" *ngIf="getProcessByName(comp.revision, getProcessDisplayName(process, i)) as revProcess">
+                    <div class="cost-value">₹ {{ (revProcess?.processCost || 0) | number:'1.2-2' }}</div>
+                    <div class="material-list" *ngIf="getProcessMaterials(revProcess).length > 0">
+                      <div *ngFor="let rm of getProcessMaterials(revProcess)" class="material-group">
                         <div class="material-type">{{ rm.type }}</div>
                         <ul class="material-items">
                           <li *ngFor="let mat of (rm.materialsUsed || [])" class="material-item">
@@ -81,13 +81,13 @@
                       </div>
                     </div>
                   </div>
-                  <div *ngIf="i >= getProcesses(comp.revision).length" class="value-cell">
+                  <div *ngIf="!getProcessByName(comp.revision, getProcessDisplayName(process, i))" class="value-cell">
                     <span style="color: #999; font-style: italic;">N/A</span>
                   </div>
                 </td>
               </tr>
             </ng-container>
-            <tr *ngIf="comparisonData.length === 0 || getProcesses(comparisonData[0].revision).length === 0">
+            <tr *ngIf="comparisonData.length === 0 || uniqueProcesses.length === 0">
               <td [attr.colspan]="comparisonData.length + 1" class="no-data">No process data available</td>
             </tr>
           </tbody>
@@ -260,6 +260,243 @@
                   [class.different]="isValueDifferent(comp.revision?.AnticipatedRejection?.rejection, 'AnticipatedRejection.rejection')"
                   class="data-col">
                 {{ comp.revision?.AnticipatedRejection?.rejection || '-' }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Additional Costs Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0]?.revision?.UltraSonicWashing || comparisonData[0]?.revision?.specialProcess || comparisonData[0]?.revision?.otherConsumables">
+      <h5 class="section-title">Additional Costs</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0]?.revision?.UltraSonicWashing?.heatTreatment !== undefined">
+              <td class="label-col">Heat Treatment</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.UltraSonicWashing?.heatTreatment, 'UltraSonicWashing.heatTreatment')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.UltraSonicWashing?.heatTreatment || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.UltraSonicWashing?.postProcess !== undefined">
+              <td class="label-col">Cutting / Grinding</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.UltraSonicWashing?.postProcess, 'UltraSonicWashing.postProcess')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.UltraSonicWashing?.postProcess || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.UltraSonicWashing?.packingAndTransport !== undefined">
+              <td class="label-col">Packing & Transport</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.UltraSonicWashing?.packingAndTransport, 'UltraSonicWashing.packingAndTransport')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.UltraSonicWashing?.packingAndTransport || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.UltraSonicWashing?.NozzleShotBlasting !== undefined">
+              <td class="label-col">Nozzle Shot Blasting</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.UltraSonicWashing?.NozzleShotBlasting, 'UltraSonicWashing.NozzleShotBlasting')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.UltraSonicWashing?.NozzleShotBlasting || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.specialProcess?.highPressureCleaning !== undefined">
+              <td class="label-col">High Pressure Cleaning</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.specialProcess?.highPressureCleaning, 'specialProcess.highPressureCleaning')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.specialProcess?.highPressureCleaning || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.otherConsumables?.otherConsumableCost !== undefined">
+              <td class="label-col">Other Consumables Cost</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.otherConsumables?.otherConsumableCost, 'otherConsumables.otherConsumableCost')"
+                  class="data-col">
+                ₹ {{ (comp.revision?.otherConsumables?.otherConsumableCost || 0) | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PowerCost Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0].revision?.powerCost">
+      <h5 class="section-title">PowerCost</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0].revision?.powerCost?.MeltAndOthersPower !== undefined">
+              <td class="label-col">MeltAndOthersPower</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.powerCost?.MeltAndOthersPower, 'powerCost.MeltAndOthersPower')"
+                  class="data-col">
+                {{ comp.revision?.powerCost?.MeltAndOthersPower || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.powerCost?.mouldPower !== undefined">
+              <td class="label-col">mouldPower</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.powerCost?.mouldPower, 'powerCost.mouldPower')"
+                  class="data-col">
+                {{ comp.revision?.powerCost?.mouldPower || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0].revision?.powerCost?.corePower !== undefined">
+              <td class="label-col">corePower</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.powerCost?.corePower, 'powerCost.corePower')"
+                  class="data-col">
+                {{ comp.revision?.powerCost?.corePower || 0 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Casting Inputs Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0]?.revision?.castingInputs">
+      <h5 class="section-title">Casting Inputs</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0]?.revision?.castingInputs?.CastingWeight !== undefined">
+              <td class="label-col">Casting Weight</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.castingInputs?.CastingWeight, 'castingInputs.CastingWeight')"
+                  class="data-col">
+                {{ comp.revision?.castingInputs?.CastingWeight || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.castingInputs?.Cavities !== undefined">
+              <td class="label-col">Cavities</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.castingInputs?.Cavities, 'castingInputs.Cavities')"
+                  class="data-col">
+                {{ comp.revision?.castingInputs?.Cavities || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.castingInputs?.PouringWeight !== undefined">
+              <td class="label-col">Pouring Weight</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.castingInputs?.PouringWeight, 'castingInputs.PouringWeight')"
+                  class="data-col">
+                {{ comp.revision?.castingInputs?.PouringWeight || 0 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Moulding Inputs Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0]?.revision?.mouldingInputs">
+      <h5 class="section-title">Moulding Inputs</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0]?.revision?.mouldingInputs?.MouldingWeight !== undefined">
+              <td class="label-col">Moulding Weight</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.mouldingInputs?.MouldingWeight, 'mouldingInputs.MouldingWeight')"
+                  class="data-col">
+                {{ comp.revision?.mouldingInputs?.MouldingWeight || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.mouldingInputs?.BakeMoulding !== undefined">
+              <td class="label-col">Bake Moulding</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.mouldingInputs?.BakeMoulding, 'mouldingInputs.BakeMoulding')"
+                  class="data-col">
+                {{ comp.revision?.mouldingInputs?.BakeMoulding || 0 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Core Inputs Comparison -->
+    <div class="comparison-section" *ngIf="comparisonData[0]?.revision?.coreInputs">
+      <h5 class="section-title">Core Inputs</h5>
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th class="label-col">Description</th>
+              <th *ngFor="let comp of comparisonData" class="data-col">Rev {{ comp.revisionNumber }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="comparisonData[0]?.revision?.coreInputs?.CoreWeight !== undefined">
+              <td class="label-col">Core Weight</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.coreInputs?.CoreWeight, 'coreInputs.CoreWeight')"
+                  class="data-col">
+                {{ comp.revision?.coreInputs?.CoreWeight || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.coreInputs?.CoresPerMould !== undefined">
+              <td class="label-col">Cores Per Mould</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.coreInputs?.CoresPerMould, 'coreInputs.CoresPerMould')"
+                  class="data-col">
+                {{ comp.revision?.coreInputs?.CoresPerMould || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.coreInputs?.CoreCavities !== undefined">
+              <td class="label-col">Core Cavities</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.coreInputs?.CoreCavities, 'coreInputs.CoreCavities')"
+                  class="data-col">
+                {{ comp.revision?.coreInputs?.CoreCavities || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.coreInputs?.ShootingPerShift !== undefined">
+              <td class="label-col">Shooting Per Shift</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.coreInputs?.ShootingPerShift, 'coreInputs.ShootingPerShift')"
+                  class="data-col">
+                {{ comp.revision?.coreInputs?.ShootingPerShift || 0 }}
+              </td>
+            </tr>
+            <tr *ngIf="comparisonData[0]?.revision?.coreInputs?.CoreSand !== undefined">
+              <td class="label-col">Core Sand</td>
+              <td *ngFor="let comp of comparisonData" 
+                  [class.different]="isValueDifferent(comp.revision?.coreInputs?.CoreSand, 'coreInputs.CoreSand')"
+                  class="data-col">
+                {{ comp.revision?.coreInputs?.CoreSand || 0 }}
               </td>
             </tr>
           </tbody>
