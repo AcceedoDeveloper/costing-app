@@ -30,6 +30,107 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
   filteredCustomersList: CustomerdetailsIn[] = [];
   private subscription: Subscription = new Subscription();
   loading: boolean = false;
+  selectedCustomer: string | null = null;
+  selectedParts: any[] = [];
+  pdfgenarate: boolean = false;
+  showPdfPopup: boolean = false;   // popup open/close
+  attention: string = '';
+regards: string = '';
+predetails: boolean = false;
+
+
+tableUserInputs: any[] = [];     // store user-entered data
+
+materialComposition = {
+  C: '',
+  Si: '',
+  Mn: '',
+  Ni: '',
+  Cr: '',
+  Mo: ''
+};
+
+
+termsAndConditions: string[] = [
+  "Ingate and Parting Line Projections: Maximum allowable projection is 1.00 mm.",
+  "Raw Casting Models: 2D and 3D models are required during the development stage.",
+  "Casting Soundness: Soundness level shall be Level III (maximum) as per ASTM E446.",
+  "Unspecified Tolerances: Raw casting tolerances will conform to ISO 8062 CT8 grade.",
+  "Drawing Given Tolerance Dia 1060mm -0.20 & -0.40 is not feasible. Required ±0.40mm.",
+  "Component teeth tolerance ±0.20mm is not feasible. Required ±0.50mm.",
+  "Machining Stock: Minimum machining allowance of 2.00 mm per side is recommended."
+];
+
+
+commercialTerms: any[] = [
+  {
+    heading: "Pricing",
+    points: [
+      "The price of component will vary if there is any change in the following factors.",
+      "Component weight",
+      "Raw material price",
+      "Modification in payment terms"
+    ]
+  },
+  {
+    heading: "Raw Material Price Terms",
+    points: [
+      "We accept 3% fluctuation in RM Prices.",
+      "Any variation beyond this threshold will be passed on to the customer every quarter."
+    ]
+  },
+  {
+    heading: "Casting Weight Consideration",
+    points: [
+      "ISC will determine the as-cast weight using customer-provided 3D models.",
+      "Machining stock will be decided by ISC."
+    ]
+  },
+  {
+    heading: "Pricing & Taxes",
+    points: [
+      "The quoted rates are basic and exclude statutory taxes.",
+      "HSN 732599 (Casting) 18% GST",
+      "HSN 84803000 (Tools) 18% GST",
+      "Tax changes will be passed to customer"
+    ]
+  },
+  {
+    heading: "Incoterms",
+    points: [ "The quoted rates are based on EX WORKS." ]
+  },
+  {
+    heading: "Payment Terms",
+    points: [
+      "For Casting: Payment due within 75 days",
+      "50% tool cost payable with Tooling PO",
+      "Remaining 50% payable on PPAP or 120 days"
+    ]
+  },
+  {
+    heading: "Volume Consideration",
+    points: ["The quoted rates are based on the MOQ."]
+  },
+  {
+    heading: "Packaging",
+    points: ["The quoted rates based on Sea Worthy Packaging."]
+  },
+  {
+    heading: "Lead Time",
+    points: [
+      "Raw Casting Sample: 12 weeks from receipt of PO & advance."
+    ]
+  },
+  {
+    heading: "Validation",
+    points: [
+      "Rates valid for 30 days from date of offer."
+    ]
+  }
+];
+
+
+
 
   // Search Filter properties
   searchFilterType: string = 'none'; // 'none', 'customerName', 'drawingNo', 'partNo'
@@ -1152,5 +1253,97 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
   switchViewMode(mode: 'parts' | 'customers'): void {
     this.viewMode = mode;
   }
+
+  onPartSelect(customerName: string, part: any, event: any) {
+  // Set selected customer on first click
+  if (!this.selectedCustomer) {
+    this.selectedCustomer = customerName;
+  }
+
+  // If checkbox checked
+  if (event.target.checked) {
+    this.selectedParts.push(part);
+  } else {
+    this.selectedParts = this.selectedParts.filter(p => p._id !== part._id);
+
+    // If no parts selected → unlock all customers
+    if (this.selectedParts.length === 0) {
+      this.selectedCustomer = null;
+    }
+  }
+
+    this.pdfgenarate = this.selectedParts.length > 0;
+
+  console.log("Selected Customer:", this.selectedCustomer);
+  console.log("Selected Parts:", this.selectedParts);
+}
+
+openPdfPopup() {
+  // Convert selectedParts → table rows
+  this.tableUserInputs = this.selectedParts.map((p, index) => ({
+    sno: index + 1,
+    drawingNo: p.drawingNo || '-',
+    partName: p.partName || '-',
+    castingMaterial: '',
+    castingWeight: '',
+    annualVolume: '',
+    partPrice: '',
+    patternCost: '',
+    moq: ''
+  }));
+
+  this.showPdfPopup = true;
+}
+
+
+
+addPoint(termIndex: number) {
+  this.commercialTerms[termIndex].points.push("");
+}
+
+deletePoint(termIndex: number, pointIndex: number) {
+  this.commercialTerms[termIndex].points.splice(pointIndex, 1);
+}
+
+addCommercialTerm() {
+  this.commercialTerms.push({
+    heading: '',
+    points: ['']
+  });
+}
+
+deleteTerm(index: number) {
+  this.commercialTerms.splice(index, 1);
+}
+
+addTerm() {
+  this.termsAndConditions.push('');
+}
+
+removeTerm(index: number) {
+  this.termsAndConditions.splice(index, 1);
+}
+
+logTable() {
+  console.log("Selected Parts Table:", this.tableUserInputs);
+  console.log("Material Composition:", this.materialComposition);
+  console.log("Attention:", this.attention);
+  console.log("Regards:", this.regards);
+  console.log("General Terms:", this.termsAndConditions); 
+  console.log("Commercial Terms:", this.commercialTerms);
+  this.pdfgenarate = false;
+}
+
+trackByIndex(index: number, item: any) {
+  return index;
+}
+
+
+
+
+cosepopup(){
+  this.showPdfPopup = false;
+}
+
 
 }

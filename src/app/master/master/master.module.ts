@@ -28,14 +28,18 @@ import { AddcustomerComponent } from './customer/addcustomer/addcustomer.compone
 import { OverHeadsComponent } from './over-heads/over-heads.component';
 import { AddOverheadsComponent } from './over-heads/add-overheads/add-overheads.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core'
+import { MatNativeDateModule } from '@angular/material/core';
+import { PdfmakerComponent } from './pdfmaker/pdfmaker.component';
+import { PdfViewComponent } from './pdf-view/pdf-view.component'
 
 
 @NgModule({
   declarations: [MasterComponent, AdduserComponent, RoleComponent, 
     CustomerComponent, DepertmentComponent, AddcustomerComponent,
      OverHeadsComponent,
-     AddOverheadsComponent,   ],
+     AddOverheadsComponent,
+     PdfmakerComponent,
+     PdfViewComponent,   ],
   imports: [
     MatSelectModule,
     MatDatepickerModule,

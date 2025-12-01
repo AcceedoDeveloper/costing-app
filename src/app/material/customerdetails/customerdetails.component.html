@@ -1,6 +1,4 @@
-
-
-  <!-- Main Content Area -->
+<!-- Main Content Area -->
 
   <div class="main-content">
 
@@ -573,6 +571,11 @@
                 <div class="nested-table-container">
                   <div class="details-header">
                     <h4 class="details-title">Parts for {{ customerName }}</h4>
+                    <button *ngIf="pdfgenarate" class="pdf-btn" (click)="openPdfPopup()" >
+  <mat-icon>picture_as_pdf</mat-icon>
+  Generate PDF
+</button>
+
                   </div>
                   
                   <ng-container *ngFor="let partName of getPartNameGroups(customerName)">
@@ -608,7 +611,11 @@
                             <ng-container *ngFor="let part of getPartsByPartName(customerName, partName)">
                               <!-- Part Row -->
                               <tr class="part-row">
-                                <td>{{ part.drawingNo || '-' }}</td>
+                                <td> <input 
+      type="checkbox"
+      [disabled]="selectedCustomer && selectedCustomer !== customerName"
+      (change)="onPartSelect(customerName, part, $event)"
+    />{{ part.drawingNo || '-' }}</td>
                                 <td>{{ getProcessCount(part) }} Process</td>
                                 <td>
                                   <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -803,3 +810,176 @@
     </div>
 
   </div>
+
+
+
+
+
+
+  <div class="popup-overlay" *ngIf="showPdfPopup">
+  <div class="popup-container">
+
+    <h2 class="popup-title">PDF Preview Details</h2>
+
+ 
+
+
+    <table class="popup-table">
+      <thead>
+        <tr>
+          <th>SNO</th>
+          <th>Drawing Number</th>
+          <th>Part Name</th>
+          <th>Casting Material</th>
+          <th>Casting Weight (Kg)</th>
+          <th>Annual Volume</th>
+          <th>Part Price (INR)</th>
+          <th>Pattern Cost</th>
+          <th>MOQ</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of tableUserInputs; let i = index">
+
+          <td>{{ row.sno }}</td>
+
+          <td>{{ row.drawingNo }}</td>
+
+          <td>{{ row.partName }}</td>
+
+          <!-- User Input Fields -->
+          <td><input [(ngModel)]="row.castingMaterial" class="input-cell"></td>
+          <td><input [(ngModel)]="row.castingWeight" class="input-cell"></td>
+          <td><input [(ngModel)]="row.annualVolume" class="input-cell"></td>
+          <td><input [(ngModel)]="row.partPrice" class="input-cell"></td>
+          <td><input [(ngModel)]="row.patternCost" class="input-cell"></td>
+          <td><input [(ngModel)]="row.moq" class="input-cell"></td>
+
+        </tr>
+      </tbody>
+    </table>
+
+
+   <table class="popup-table">
+  <thead>
+    <tr>
+      <th colspan="6" class="material-type-header">ET</th>
+    </tr>
+    <tr>
+      <th>C</th>
+      <th>Si</th>
+      <th>Mn</th>
+      <th>Ni</th>
+      <th>Cr</th>
+      <th>Mo</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td><input [(ngModel)]="materialComposition.C" class="input-cell"></td>
+      <td><input [(ngModel)]="materialComposition.Si" class="input-cell"></td>
+      <td><input [(ngModel)]="materialComposition.Mn" class="input-cell"></td>
+      <td><input [(ngModel)]="materialComposition.Ni" class="input-cell"></td>
+      <td><input [(ngModel)]="materialComposition.Cr" class="input-cell"></td>
+      <td><input [(ngModel)]="materialComposition.Mo" class="input-cell"></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div class="terms-container">
+  <h3>Terms & Conditions</h3>
+
+  <div *ngFor="let term of termsAndConditions; let i = index; trackBy: trackByIndex" class="term-row">
+    <textarea [(ngModel)]="termsAndConditions[i]" class="term-input"></textarea>
+
+    <button mat-icon-button color="warn" (click)="removeTerm(i)">
+  <mat-icon>delete</mat-icon>
+</button>
+
+  </div>
+
+  <button class="add-btn" (click)="addTerm()">+ Add New Line</button>
+</div>
+
+
+<div class="commercial-container">
+
+  <h3>Commercial Terms & Conditions</h3>
+
+  <div *ngFor="let term of commercialTerms; let tIndex = index" class="commercial-block">
+
+    <!-- Heading -->
+    <input 
+      [(ngModel)]="term.heading" 
+      class="heading-input" 
+      placeholder="Enter heading"
+    />
+
+    <!-- Points -->
+   <div *ngFor="let point of term.points; let pIndex = index; trackBy: trackByIndex"
+       class="point-row">
+
+    <textarea [(ngModel)]="term.points[pIndex]" class="point-input"></textarea>
+
+    <button mat-icon-button (click)="deletePoint(tIndex, pIndex)">
+      <mat-icon>delete</mat-icon>
+    </button>
+
+  </div>
+
+    <!-- Add point button -->
+    <button class="add-btn" (click)="addPoint(tIndex)">+ Add Point</button>
+
+    <!-- Delete entire term -->
+<button class="remove-term-btn" (click)="deleteTerm(tIndex)">
+  Remove Section
+</button>
+
+  </div>
+
+  <!-- Add new Commercial Term Section -->
+  <button class="add-btn" (click)="addCommercialTerm()">+ Add New Commercial Section</button>
+
+</div>
+
+
+
+
+
+    <div class="popup-actions">
+      <button class="popup-btn close" (click)="cosepopup()">Close</button>
+
+      <button class="popup-btn save"  (click)="logTable()">
+        Console Log Table
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+<div  class="popup-overlay" *ngIf="predetails"  >
+  <div class="popup-container">
+
+   <div class="extra-inputs">
+  <label>
+    Attention:
+    <input [(ngModel)]="attention" class="input-cell" placeholder="Enter attention">
+  </label>
+
+  <label>
+    Regards:
+    <input [(ngModel)]="regards" class="input-cell" placeholder="Enter regards">
+  </label>
+</div>
+  </div>
+
+</div>

@@ -1,0 +1,588 @@
+/* Document-style layout matching the image exactly */
+.document-wrapper {
+    background: #f5f5f5;
+    min-height: calc(100vh - 80px);
+    font-family: 'Arial', 'Helvetica', sans-serif;
+  }
+  
+  .document-page {
+    width: 100%;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: white;
+    padding: 40px 50px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  /* Company Header Image */
+  .company-header {
+    width: 100%;
+    margin-bottom: 15px;
+    margin-left: -50px;
+    margin-right: -50px;
+    margin-top: -40px;
+    padding: 0;
+  }
+  
+  .header-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+  
+  /* Quote Reference Section */
+  .quote-reference-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 25px;
+    text-align: right;
+  }
+  
+  .quote-ref-item {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    margin-bottom: 3px;
+  }
+  
+  .quote-label {
+    font-weight: normal;
+    margin-right: 5px;
+  }
+  
+  .quote-value {
+    font-weight: normal;
+  }
+  
+  /* Header Section */
+  .document-header {
+    margin-bottom: 30px;
+  }
+  
+  .attention-line {
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .attention-label {
+    font-weight: normal;
+    color: #000;
+  }
+  
+  .attention-value {
+    margin-left: 5px;
+    color: #000;
+    font-weight: normal;
+    display: inline-block;
+  }
+  
+  .greeting {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #000;
+    line-height: 1.6;
+  }
+  
+  .intro-paragraph {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    text-align: justify;
+    margin-bottom: 25px;
+  }
+  
+  /* Main Quote Table */
+  .quote-table-section {
+    margin-bottom: 30px;
+  }
+  
+  .table-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #000;
+    letter-spacing: 0.5px;
+  }
+  
+  .main-quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    font-size: 12px;
+    margin-bottom: 20px;
+    table-layout: fixed;
+  }
+  
+  .main-quote-table thead {
+    background-color: #fff;
+  }
+  
+  .main-quote-table thead th {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+    color: #000;
+    vertical-align: middle;
+    word-wrap: break-word;
+    line-height: 1.3;
+    background-color: #fff;
+  }
+  
+  .table-main-title {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+    background-color: #fff;
+  }
+  
+  .main-quote-table tbody td {
+    border: 1px solid #000;
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 11px;
+    color: #000;
+    vertical-align: middle;
+    word-wrap: break-word;
+    line-height: 1.4;
+    background-color: #fff;
+  }
+  
+  .main-quote-table tbody tr:nth-child(7n+1) {
+    background-color: #fff;
+  }
+  
+  .sno-cell {
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+  }
+  
+  .drawing-number-cell {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+  }
+  
+  .data-cell {
+    text-align: center;
+    word-break: break-word;
+    white-space: pre-line;
+    vertical-align: middle;
+    background-color: #fff;
+  }
+  
+  .multi-line-text {
+    white-space: pre-line;
+    line-height: 1.5;
+    text-align: center;
+  }
+  
+  .part-name-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 6px;
+  }
+  
+  .part-name-cell .multi-line-text {
+    line-height: 1.6;
+  }
+  
+  .material-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 6px;
+  }
+  
+  .material-cell .multi-line-text {
+    line-height: 1.6;
+  }
+  
+  /* Chemical Composition Section */
+  .composition-section {
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+  
+  .composition-intro {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #000;
+    line-height: 1.6;
+  }
+  
+  .composition-table-wrapper {
+    display: block;
+  }
+  
+  .composition-table {
+    border-collapse: collapse;
+    border: 1px solid #000;
+    font-size: 12px;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .composition-table thead {
+    background-color: #fff;
+  }
+  
+  .material-type-header {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: #000;
+    background-color: #fff;
+  }
+  
+  .composition-table thead th {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+    color: #000;
+    background-color: #fff;
+    width: 16.66%;
+  }
+  
+  .composition-table tbody td {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 11px;
+    color: #000;
+    word-wrap: break-word;
+    background-color: #fff;
+    vertical-align: middle;
+  }
+  
+  .composition-table tbody tr {
+    background-color: #fff;
+  }
+  
+  /* General Considerations Section */
+  .considerations-section {
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+  
+  .considerations-list {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+  }
+  
+  .considerations-list li {
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  
+  .considerations-list li strong {
+    font-weight: bold;
+  }
+  
+  .sub-point {
+    margin-top: 5px;
+    margin-left: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  /* Commercial Terms Section */
+  .commercial-terms-section {
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .commercial-terms-top-list {
+    margin: 0 0 15px 0;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    list-style-type: disc;
+  }
+  
+  .commercial-terms-top-list li {
+    margin-bottom: 8px;
+    text-align: justify;
+  }
+  
+  .commercial-terms-list {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+  }
+  
+  .commercial-terms-list li {
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  
+  .term-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #000;
+  }
+  
+  .term-description {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #000;
+  }
+  
+  .commercial-terms-list li strong {
+    font-weight: bold;
+  }
+  
+  .square-list {
+    list-style-type: square;
+    padding-left: 30px;
+    margin: 0 0 8px 0;
+  }
+  
+  .square-list li {
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  
+  .factors-list {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding-left: 25px;
+    list-style-type: disc;
+  }
+  
+  .factors-list li {
+    margin-bottom: 5px;
+    line-height: 1.6;
+  }
+  
+  .hsn-codes-list {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 25px;
+    list-style-type: disc;
+  }
+  
+  .hsn-codes-list li {
+    margin-bottom: 3px;
+    line-height: 1.6;
+  }
+  
+  .tooling-payment-list {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 25px;
+    list-style-type: disc;
+  }
+  
+  .tooling-payment-list li {
+    margin-bottom: 5px;
+    line-height: 1.6;
+  }
+  
+  /* Concluding Paragraph */
+  .concluding-paragraph {
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .concluding-paragraph p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    text-align: justify;
+    margin: 0;
+  }
+  
+  /* Signature Block */
+  .signature-block {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .signature-line {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .signature-name {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+    font-weight: normal;
+  }
+  
+  .signature-title {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+    font-weight: normal;
+  }
+  
+  .signature-department {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+    font-weight: normal;
+  }
+  
+  .signature-department-full {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+  
+  
+  /* Print Styles */
+  @media print {
+    .document-wrapper {
+      background: white;
+      padding: 0;
+    }
+  
+    .document-page {
+      box-shadow: none;
+      margin: 0;
+      padding: 20mm 25mm;
+      max-width: 100%;
+    }
+  
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .document-page {
+      padding: 30px 40px;
+    }
+  
+    .main-quote-table {
+      font-size: 10px;
+    }
+  
+    .main-quote-table thead th,
+    .main-quote-table tbody td {
+      padding: 6px 4px;
+      font-size: 10px;
+    }
+  
+    .composition-table {
+      font-size: 10px;
+    }
+  
+    .composition-table thead th,
+    .composition-table tbody td {
+      padding: 8px 6px;
+      font-size: 10px;
+    }
+  }
+  
+  @media (max-width: 968px) {
+    .main-quote-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    .main-quote-table thead,
+    .main-quote-table tbody,
+    .main-quote-table tr,
+    .main-quote-table td,
+    .main-quote-table th {
+      display: block;
+    }
+  
+    .main-quote-table thead {
+      display: none;
+    }
+  
+    .main-quote-table tr {
+      border: 1px solid #000;
+      margin-bottom: 10px;
+      display: block;
+    }
+  
+    .main-quote-table td {
+      border: none;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+      padding-left: 35%;
+      text-align: left;
+    }
+  
+    .main-quote-table td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 8px;
+      width: 30%;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .document-wrapper {
+      padding: 10px;
+    }
+  
+    .document-page {
+      padding: 20px;
+    }
+  
+    .main-quote-table {
+      font-size: 9px;
+    }
+  
+    .composition-table-wrapper {
+      display: block;
+    }
+  
+    .action-controls {
+      flex-direction: column;
+    }
+  
+    .control-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  /* Ensure proper text rendering */
+  .document-page * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  

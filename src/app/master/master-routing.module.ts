@@ -5,6 +5,7 @@ import { RoleComponent} from './master/role/role.component';
 import { CustomerComponent} from './master/customer/customer.component';
 import { DepertmentComponent } from './master/depertment/depertment.component';
 import { OverHeadsComponent} from './master/over-heads/over-heads.component';
+import { PdfmakerComponent } from './master/pdfmaker/pdfmaker.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'over-heads',
     component: OverHeadsComponent
+  },
+  {
+    path: 'pdfmaker',
+    component: PdfmakerComponent
   },
 
 

@@ -1,0 +1,326 @@
+<div class="document-wrapper">
+  <div class="document-page">
+    <!-- Company Header Image -->
+    <div class="company-header">
+      <img src="assets/pdfheaderimage.png" alt="Indo Shell Cast Private Limited" class="header-image">
+    </div>
+
+    <!-- Quote Reference Section -->
+    <div class="quote-reference-section">
+      <div class="quote-ref-item">
+        <span class="quote-label">Quote Ref Number:</span>
+        <span class="quote-value">{{ quoteData.quoteRefNumber }}</span> &nbsp;&nbsp;
+        <span class="quote-label">Date:</span>
+        <span class="quote-value">{{ quoteData.quoteDate }}</span>
+      </div>
+      <div class="quote-ref-item">
+        <span class="quote-label">Customer:</span>
+        <span class="quote-value">{{ quoteData.customer }}</span>
+      </div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="document-header">
+      <div class="attention-line">
+        <span class="attention-label">Attention:</span>
+        <span class="attention-value">{{ quoteData.attention }}</span>
+      </div>
+      <div class="greeting">Dear Sir,</div>
+      <div class="intro-paragraph">
+        We appreciate you for considering us for the new business opportunity. Following a thorough feasibility study of your drawings, we are pleased to provide the quote below, which we trust aligns with your business requirements.
+      </div>
+    </div>
+
+    <!-- Main Quote Table -->
+    <div class="quote-table-section">
+      <table class="main-quote-table">
+        <thead>
+          <tr>
+            <th colspan="9" class="table-main-title">
+              ISC – SHELL MOULDING/ STEEL CASTING – QUOTE
+            </th>
+          </tr>
+          <tr>
+            <th>SNO</th>
+            <th>Drawing Number</th>
+            <th>Part Name</th>
+            <th>Casting Material</th>
+            <th>Casting Weight in Kgs</th>
+            <th>Annual Volume</th>
+            <th>Part Price in INR</th>
+            <th class="pattern-cost-header">
+              <div class="pattern-cost-title">Pattern Cost</div>
+              <div class="pattern-cost-line"></div>
+              <div class="pattern-cost-subtitle">(INR)</div>
+            </th>
+            <th>MOQ in Nos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let part of quoteData.parts; let i = index">
+            <!-- First row with all data spanning multiple rows -->
+            <tr>
+              <td [attr.rowspan]="getRowSpan(i)" class="sno-cell">
+                {{ i + 1 }}
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="drawing-number-cell">
+                {{ part.drawingNumber }}
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="part-name-cell">
+                <div class="multi-line-text">{{ formatPartName(part.partName) }}</div>
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="material-cell">
+                <div class="multi-line-text">{{ formatCastingMaterial(part.castingMaterial) }}</div>
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
+                {{ part.castingWeight }}
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
+                {{ part.annualVolume || '-' }}
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
+                {{ part.partPrice }}
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
+                {{ part.patternCost }}
+              </td>
+              <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
+                {{ part.moq }}
+              </td>
+            </tr>
+            <!-- Additional empty rows for spacing (no cells needed as all columns have rowspan) -->
+            <tr *ngFor="let row of getEmptyRows(i)"></tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Chemical Composition Section -->
+    <div class="composition-section">
+      <div class="composition-intro">We consider the following Raw Material Chemical Composition</div>
+      <div class="composition-table-wrapper">
+        <table class="composition-table">
+          <thead>
+            <tr>
+              <th colspan="6" class="material-type-header">ET</th>
+            </tr>
+            <tr>
+              <th>C</th>
+              <th>Si</th>
+              <th>Mn</th>
+              <th>Ni</th>
+              <th>Cr</th>
+              <th>Mo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="data-cell">{{ quoteData.composition.c }}</td>
+              <td class="data-cell">{{ quoteData.composition.si }}</td>
+              <td class="data-cell">{{ quoteData.composition.mn }}</td>
+              <td class="data-cell">{{ quoteData.composition.ni }}</td>
+              <td class="data-cell">{{ quoteData.composition.cr }}</td>
+              <td class="data-cell">{{ quoteData.composition.mo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="contact-and-certification-section">
+      <!-- Contact Information -->
+    <div class="contact-info">
+      <div class="contact-text">
+        Address: {{ quoteData.address }}, Ph: <span class="contact-link">{{ quoteData.phone }}</span>,<br>
+        <span class="contact-link">{{ quoteData.website }}</span>
+      </div>
+    </div>
+
+    <!-- Certification Logos -->
+    <div class="certification-logos">
+      <img src="assets/pdffooter.png" alt="Certification Logos" class="certification-image">
+    </div>
+
+    </div>
+
+    <!-- General Considerations Section -->
+    <div class="considerations-section">
+      <h3 class="section-title">General Considerations for Casting Development:</h3>
+      <ol class="considerations-list">
+        <li>
+          <strong>Ingate and Parting Line Projections:</strong> Maximum allowable projection is 1.00 mm.
+        </li>
+        <li>
+          <strong>Raw Casting Models:</strong> 2D and 3D models are required during the development stage.
+        </li>
+        <li>
+          <strong>Casting Soundness:</strong> Soundness level shall be Level III (maximum) as per ASTM E446.
+        </li>
+        <li>
+          <strong>Unspecified Tolerances:</strong> Raw casting tolerances will conform to ISO 8062 CT8 grade.
+        </li>
+        <li>
+          <strong>Drawing Given Tolerance Dia 1060mm -0.20 & -0.40 it is not feasible to do. We need ±0.40m to proceed.</strong>
+          <div ><strong>In the view of component teeth tolerance given ±0.20mm is not feasible. We need ±0.50mm to proceed.</strong></div>
+        </li>
+        <li>
+          <strong>Machining Stock Recommendation:</strong> A minimum machining allowance of 2.00 mm per side is recommended. Lower allowances may increase the risk of surface defects.
+        </li>
+      </ol>
+    </div>
+
+    <!-- Commercial Terms Section -->
+    <div class="commercial-terms-section">
+      <h3 class="section-title">Commercial Terms & conditions</h3>
+   
+      <ol class="commercial-terms-list">
+        <li>
+          <div class="term-title">Pricing:</div>
+          <p class="term-description">
+            The price of component will vary if there is any change in the following factors.
+          </p>
+          <ul class="square-list">
+            <li>Component weight</li>
+            <li>Raw material price</li>
+            <li>Modification in payment terms</li>
+          </ul>
+        </li>
+        <li>
+          <div class="term-title">Raw Material Price Terms:</div>
+          <p class="term-description">
+            We accept <strong>3% fluctuation</strong> in RM Prices.
+          </p>
+          <div class="contact-and-certification-section">
+            <!-- Contact Information -->
+          <div class="contact-info">
+            <div class="contact-text">
+              Address: {{ quoteData.address }}, Ph: <span class="contact-link">{{ quoteData.phone }}</span>,<br>
+              <span class="contact-link">{{ quoteData.website }}</span>
+            </div>
+          </div>
+      
+          <!-- Certification Logos -->
+          <div class="certification-logos">
+            <img src="assets/pdffooter.png" alt="Certification Logos" class="certification-image">
+          </div>
+      
+          </div>
+          <ul class="square-list">
+            <li>Any variation beyond this threshold will be passed on the customer every quarter.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Casting Weight Consideration:</strong>
+          <ul class="factors-list">
+            <li>ISC will determine the <strong>as-cast weight</strong> using customer-provided 3D models and our advanced 3D software.</li>
+            <li>The required machining stock to meet the final <strong>machining drawing specifications</strong> will be decided by Isc.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Pricing & Taxes</strong>
+          <ul class="factors-list">
+            <li>The quoted rates are basic and exclude applicable statutory taxes which will become by the customer.</li>
+            <li>
+              <strong>HSN Codes as GST:</strong>
+              <ul class="hsn-codes-list">
+                <li>Parts (Casting): HSN Code 732599- Current GST 18%</li>
+                <li>Tools (Moulds & Dies) HSN Code 84803000 - Current GST 18%</li>
+                Any changes in tax rates during the supply period will be <strong>Passed on to the customer.</strong>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Incoterms:</strong>
+          <ul class="factors-list">
+            <li>The quoted rates are based on <strong>EX WORKS.</strong></li>
+          </ul>
+        </li>
+        <li>
+          <strong>Payment Terms:</strong>
+          <ul class="factors-list">
+            <li>For Casting: Payment due within 75 days from the invoice date (as ISC is an MSME Supplier)</li>
+            <li>
+              For Tooling:
+              <div class="contact-and-certification-section">
+                <!-- Contact Information -->
+              <div class="contact-info">
+                <div class="contact-text">
+                  Address: {{ quoteData.address }}, Ph: <span class="contact-link">{{ quoteData.phone }}</span>,<br>
+                  <span class="contact-link">{{ quoteData.website }}</span>
+                </div>
+              </div>
+          
+              <!-- Certification Logos -->
+              <div class="certification-logos">
+                <img src="assets/pdffooter.png" alt="Certification Logos" class="certification-image">
+              </div>
+          
+              </div>
+              <ul class="tooling-payment-list">
+                <li>50% of the quoted tool cost is payable along with Tooling PO, against our proforma invoice.</li>
+                <li>The remaining 50% is payable on <strong>PPAP approval or 120 days</strong> from the date of receipt of the Tooling Purchase Order & Tooling Advance.</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>Volume Consideration:</strong>
+          <ul class="factors-list">
+            <li>The quoted rates are based on the <strong>MOQ</strong>.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Packaging:</strong>
+          <ul class="factors-list">
+            <li>The quoted rates based on <strong>Sea Worthy Packaging</strong>.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Lead Time:</strong>
+          <ul class="factors-list">
+            <li><strong>Raw Casting Sample Submission:</strong> <strong>12 weeks</strong> from the date of receipt of the <strong>Tooling Purchase Order & Tooling Advance</strong>.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Validation of Quotation:</strong>
+          <ul class="factors-list">
+            <li>The quoted rates are valid for <strong>30 days</strong> from the date of this offer.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Concluding Paragraph -->
+    <div class="concluding-paragraph">
+      <p>We hope that our rates are quite competitive and expect your valuable order to do our best with pleasure.</p>
+    </div>
+
+    <!-- Signature Block -->
+    <div class="signature-block">
+      <div class="signature-line">Thanks & Regards</div>
+      <div class="signature-name">M. Karthik</div>
+      <div class="signature-title">Manager</div>
+      <div class="signature-department">Marketing & Costing</div>
+      <div class="signature-department-full">Manager - Marketing & Costing</div>
+    </div>
+
+
+    <div class="contact-and-certification-section">
+      <!-- Contact Information -->
+    <div class="contact-info">
+      <div class="contact-text">
+        Address: {{ quoteData.address }}, Ph: <span class="contact-link">{{ quoteData.phone }}</span>,<br>
+        <span class="contact-link">{{ quoteData.website }}</span>
+      </div>
+    </div>
+
+    <!-- Certification Logos -->
+    <div class="certification-logos">
+      <img src="assets/pdffooter.png" alt="Certification Logos" class="certification-image">
+    </div>
+
+    </div>
+    
+  </div>
+</div>
