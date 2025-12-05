@@ -25,6 +25,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DifferenceGraphDialogComponent } from './dash/difference-graph-dialog.component';
 import { ReportDetailsDialogComponent } from './report/report-details-dialog/report-details-dialog.component';
 import { ChartsModule } from 'ng2-charts';
@@ -32,10 +33,12 @@ import { ToastrModule } from 'ngx-toastr';
 import { ReportQuotationDialogComponent } from './report/report-quotation-dialog/report-quotation-dialog.component';
 import { AutoFontSizeDirective } from './dash/auto-font-size.directive';
 import { UserManagementUpdateComponent } from './user-management-update/user-management-update.component';
+import { CreateVersionDialogComponent } from './user-management-update/create-version-dialog/create-version-dialog.component';
+import { EditVersionDialogComponent } from './user-management-update/edit-version-dialog/edit-version-dialog.component';
 
 @NgModule({
   declarations: [DashboardComponent, ReportComponent, DashComponent, CompanyComponent, DifferenceGraphDialogComponent,
-     ReportDetailsDialogComponent, ReportQuotationDialogComponent, AutoFontSizeDirective, UserManagementUpdateComponent],
+     ReportDetailsDialogComponent, ReportQuotationDialogComponent, AutoFontSizeDirective, UserManagementUpdateComponent, CreateVersionDialogComponent, EditVersionDialogComponent],
   imports: [
     MatIconModule,
     MaterialModule,
@@ -58,6 +61,7 @@ import { UserManagementUpdateComponent } from './user-management-update/user-man
     MatButtonModule,
     MatDialogModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
     ToastrModule
   ]
 })

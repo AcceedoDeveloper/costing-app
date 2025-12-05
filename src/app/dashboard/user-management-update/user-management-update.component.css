@@ -128,11 +128,32 @@
   color: #0f172a;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .versions-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   padding-right: 8px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 20px;
+}
+
+.loading-container p {
+  color: #64748b;
+  font-size: 16px;
+  margin: 0;
 }
 
 .versions-scroll::-webkit-scrollbar {
@@ -171,6 +192,12 @@
   margin: 0;
   font-size: 22px;
   color: #111827;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .status-chip {
@@ -315,10 +342,12 @@
 }
 
 .lightbox-content img {
-  max-width: 80vw;
-  max-height: 70vh;
+  width: 800px;
+  height: 600px;
   border-radius: 12px;
   object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }
 
 .lightbox-content p {
@@ -331,6 +360,19 @@
   position: absolute;
   top: 8px;
   right: 8px;
+  color: #f44336 !important;
+}
+
+.close-btn mat-icon {
+  color: #f44336 !important;
+}
+
+.close-btn:hover {
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.close-btn:hover mat-icon {
+  color: #d32f2f !important;
 }
 
 @media (max-width: 1024px) {
@@ -363,6 +405,12 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .lightbox-content img {
+    width: 90vw;
+    height: auto;
+    max-height: 70vh;
   }
 }
 

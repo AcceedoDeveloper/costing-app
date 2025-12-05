@@ -1,0 +1,67 @@
+<div class="edit-version-dialog">
+  <h2 mat-dialog-title>Edit Version</h2>
+  
+  <mat-dialog-content>
+    <form [formGroup]="editForm" class="version-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Heading</mat-label>
+        <input matInput formControlName="heading" placeholder="e.g., Dashboard">
+      </mat-form-field>
+
+      <div class="file-upload-section">
+        <label class="file-upload-label">Old Images</label>
+        <div class="file-input-wrapper">
+          <input
+            type="file"
+            #oldImagesInput
+            (change)="onFileSelected($event, 'oldImages')"
+            accept="image/*"
+            style="display: none;"
+            id="oldImages">
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="oldImagesInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            Choose File
+          </button>
+          <span class="file-name">{{ getFileName('oldImages') }}</span>
+        </div>
+      </div>
+
+      <div class="file-upload-section">
+        <label class="file-upload-label">New Images</label>
+        <div class="file-input-wrapper">
+          <input
+            type="file"
+            #newImagesInput
+            (change)="onFileSelected($event, 'newImages')"
+            accept="image/*"
+            style="display: none;"
+            id="newImages">
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="newImagesInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            Choose File
+          </button>
+          <span class="file-name">{{ getFileName('newImages') }}</span>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!hasChanges() || isSubmitting">
+      <span *ngIf="!isSubmitting">Update</span>
+      <span *ngIf="isSubmitting">Updating...</span>
+    </button>
+  </mat-dialog-actions>
+</div>
+
