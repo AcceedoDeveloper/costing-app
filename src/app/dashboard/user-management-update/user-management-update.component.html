@@ -33,14 +33,24 @@
       <div>
         <h1>Older vs New User Version</h1>
       </div>
-      <button mat-raised-button color="primary">
-        <mat-icon>settings</mat-icon>
-        Configure
-      </button>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="openCreateVersionDialog()">
+          <mat-icon>add</mat-icon>
+          Create
+        </button>
+        <button mat-raised-button color="primary">
+          <mat-icon>settings</mat-icon>
+          Configure
+        </button>
+      </div>
     </header>
 
     <div class="versions-scroll">
-      <div class="versions-grid">
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading versions...</p>
+      </div>
+      <div class="versions-grid" *ngIf="!isLoading">
         <article
           class="version-card"
           *ngFor="let comparison of versionComparisons"
@@ -49,7 +59,22 @@
             <div>
               <h3>{{ comparison.title }}</h3>
             </div>
-          
+            <div class="card-actions">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="openEditVersionDialog(comparison)"
+                matTooltip="Edit version">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteVersion(comparison)"
+                matTooltip="Delete version">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
       
 

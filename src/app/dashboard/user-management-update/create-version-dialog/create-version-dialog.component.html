@@ -1,0 +1,76 @@
+<div class="create-version-dialog">
+  <h2 mat-dialog-title>Create New Version</h2>
+  
+  <mat-dialog-content>
+    <form [formGroup]="versionForm" class="version-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Heading</mat-label>
+        <input matInput formControlName="heading" placeholder="e.g., Dashboard" required>
+        <mat-error *ngIf="versionForm.get('heading')?.hasError('required')">
+          Heading is required
+        </mat-error>
+      </mat-form-field>
+
+      <div class="file-upload-section">
+        <label class="file-upload-label">Old Images</label>
+        <div class="file-input-wrapper">
+          <input
+            type="file"
+            #oldImagesInput
+            (change)="onFileSelected($event, 'oldImages')"
+            accept="image/*"
+            style="display: none;"
+            id="oldImages">
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="oldImagesInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            Choose File
+          </button>
+          <span class="file-name">{{ getFileName('oldImages') }}</span>
+        </div>
+        <mat-error *ngIf="versionForm.get('oldImages')?.hasError('required') && versionForm.get('oldImages')?.touched">
+          Old image is required
+        </mat-error>
+      </div>
+
+      <div class="file-upload-section">
+        <label class="file-upload-label">New Images</label>
+        <div class="file-input-wrapper">
+          <input
+            type="file"
+            #newImagesInput
+            (change)="onFileSelected($event, 'newImages')"
+            accept="image/*"
+            style="display: none;"
+            id="newImages">
+          <button
+            type="button"
+            mat-stroked-button
+            (click)="newImagesInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            Choose File
+          </button>
+          <span class="file-name">{{ getFileName('newImages') }}</span>
+        </div>
+        <mat-error *ngIf="versionForm.get('newImages')?.hasError('required') && versionForm.get('newImages')?.touched">
+          New image is required
+        </mat-error>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!versionForm.valid || isSubmitting">
+      <span *ngIf="!isSubmitting">Create</span>
+      <span *ngIf="isSubmitting">Creating...</span>
+    </button>
+  </mat-dialog-actions>
+</div>
+

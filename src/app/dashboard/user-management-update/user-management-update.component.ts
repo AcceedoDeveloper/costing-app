@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateVersionDialogComponent } from './create-version-dialog/create-version-dialog.component';
+import { EditVersionDialogComponent } from './edit-version-dialog/edit-version-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { VersionService } from '../../services/version.service';
+import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment';
 
 type VersionNote = string;
 
@@ -25,7 +32,21 @@ interface VersionComparison {
   templateUrl: './user-management-update.component.html',
   styleUrls: ['./user-management-update.component.css']
 })
-export class UserManagementUpdateComponent {
+export class UserManagementUpdateComponent implements OnInit {
+  isLoading = false;
+  versionComparisons: VersionComparison[] = [];
+  versionDataMap: Map<string, any> = new Map(); // Store raw backend data for editing
+
+  constructor(
+    private dialog: MatDialog,
+    private versionService: VersionService,
+    private toastr: ToastrService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadVersions();
+  }
+
   quickLinks = [
     { label: 'Dashboard', anchor: 'dashboard-overview' },
     { label: 'Customer', anchor: 'customer-flow' },
@@ -47,7 +68,8 @@ export class UserManagementUpdateComponent {
     summary: 'Consolidated release that aligns the new UI with the latest access policies and SOC2 compliance updates.'
   };
 
-  versionComparisons: VersionComparison[] = [
+  // Default/mock data - will be used as fallback if API fails or returns no data
+  defaultVersionComparisons: VersionComparison[] = [
     {
       id: 'dashboard-overview',
       title: 'Dashboard',
@@ -368,8 +390,51 @@ export class UserManagementUpdateComponent {
 
   lightboxImage: { url: string; title: string } | null = null;
 
+  getImageUrl(imagePath: string): string {
+    if (!imagePath || imagePath.trim() === '') {
+      return '';
+    }
+    
+    // If already a full URL (http:// or https://), return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    
+    // If it starts with /uploads/version, it's already the correct path
+    if (imagePath.startsWith('/uploads/version')) {
+      return `${environment.apiUrl}${imagePath}`;
+    }
+    
+    // If it starts with uploads/version (without leading /)
+    if (imagePath.startsWith('uploads/version')) {
+      return `${environment.apiUrl}/${imagePath}`;
+    }
+    
+    // If it starts with /uploads, it's a relative path from backend root
+    if (imagePath.startsWith('/uploads')) {
+      return `${environment.apiUrl}${imagePath}`;
+    }
+    
+    // If it starts with uploads (without /), add the slash
+    if (imagePath.startsWith('uploads')) {
+      return `${environment.apiUrl}/${imagePath}`;
+    }
+    
+    // If it's just a filename or relative path, construct the full URL
+    // Backend saves to public/uploads/version, so the URL should be /uploads/version/filename
+    const cleanPath = imagePath.replace(/^\/+/, ''); // Remove leading slashes
+    const imageUrl = `${environment.apiUrl}/uploads/version/${cleanPath}`;
+    console.log('🖼️ Constructed image URL:', { 
+      original: imagePath, 
+      constructed: imageUrl,
+      apiUrl: environment.apiUrl
+    });
+    return imageUrl;
+  }
+
   getBackgroundImage(url: string): string {
-    return url ? `url('${url}')` : 'none';
+    const imageUrl = this.getImageUrl(url);
+    return imageUrl ? `url('${imageUrl}')` : 'none';
   }
 
   scrollTo(anchor: string): void {
@@ -398,6 +463,204 @@ export class UserManagementUpdateComponent {
 
   closeLightbox(): void {
     this.lightboxImage = null;
+  }
+
+  loadVersions(): void {
+    this.isLoading = true;
+    this.versionService.getVersions().subscribe({
+      next: (response) => {
+        console.log('✅ Versions loaded:', response);
+        
+        // Handle different response formats
+        const versions = Array.isArray(response) ? response : (response.data || response.versions || []);
+        
+        if (versions.length > 0) {
+          // Clear previous data map
+          this.versionDataMap.clear();
+          
+          // Map backend response to VersionComparison interface
+          this.versionComparisons = versions.map((version: any, index: number) => {
+            // Store raw version data for editing
+            const versionId = version.id || version._id?.$oid || version._id || `version-${index}`;
+            this.versionDataMap.set(versionId, version);
+            return this.mapToVersionComparison(version, index);
+          });
+        } else {
+          // If no versions from API, use default data
+          this.versionComparisons = this.defaultVersionComparisons;
+        }
+        
+        this.isLoading = false;
+        this.updateQuickLinks();
+      },
+      error: (error) => {
+        console.error('❌ Error loading versions:', error);
+        this.toastr.error('Failed to load versions. Using default data.', 'Warning');
+        // Fallback to default data on error
+        this.versionComparisons = this.defaultVersionComparisons;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  mapToVersionComparison(version: any, index: number): VersionComparison {
+    // Map backend data to VersionComparison interface
+    // Backend structure: { heading: "Dashboard", images: [{ oldImage: "9.PNG", newImage: "Capture.PNG" }] }
+    
+    // Get image paths from the images array
+    let oldImagePath = '';
+    let newImagePath = '';
+    
+    if (version.images && Array.isArray(version.images) && version.images.length > 0) {
+      // Get the first image object from the array
+      const firstImage = version.images[0];
+      oldImagePath = firstImage.oldImage || firstImage.oldImages || '';
+      newImagePath = firstImage.newImage || firstImage.newImages || '';
+    }
+    
+    // Fallback to direct properties if images array doesn't exist
+    if (!oldImagePath) {
+      oldImagePath = version.oldImages || version.oldImage || version.old?.image || '';
+    }
+    if (!newImagePath) {
+      newImagePath = version.newImages || version.newImage || version.new?.image || '';
+    }
+    
+    console.log('📋 Mapping version:', {
+      heading: version.heading,
+      oldImagePath,
+      newImagePath,
+      imagesArray: version.images,
+      fullVersion: version
+    });
+    
+    // Extract ID - handle MongoDB ObjectId format
+    let versionId = version.id || version._id?.$oid || version._id || `version-${index}`;
+    if (typeof versionId !== 'string') {
+      versionId = String(versionId);
+    }
+    
+    return {
+      id: versionId,
+      title: version.heading || version.title || 'Untitled',
+      description: version.description || '',
+      owner: version.owner || 'Unknown',
+      lastUpdated: version.lastUpdated || version.updatedAt?.$date || version.updatedAt || new Date().toISOString(),
+      tags: version.tags || [version.heading || ''],
+      status: (version.status || 'Draft') as 'In Review' | 'Ready' | 'Draft',
+      old: {
+        caption: version.oldCaption || version.old?.caption || '',
+        image: this.getImageUrl(oldImagePath),
+        notes: version.oldNotes || version.old?.notes || []
+      },
+      newer: {
+        caption: version.newCaption || version.new?.caption || '',
+        image: this.getImageUrl(newImagePath),
+        notes: version.newNotes || version.new?.notes || [],
+        highlights: version.highlights || version.new?.highlights || []
+      }
+    };
+  }
+
+  updateQuickLinks(): void {
+    // Update quick links based on loaded versions
+    if (this.versionComparisons.length > 0) {
+      this.quickLinks = this.versionComparisons.map((version, index) => ({
+        label: version.title,
+        anchor: version.id
+      }));
+    }
+  }
+
+  openCreateVersionDialog(): void {
+    const dialogRef = this.dialog.open(CreateVersionDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Refresh the version list after creating a new version
+        this.loadVersions();
+        this.toastr.success('Version list refreshed');
+      }
+    });
+  }
+
+  openEditVersionDialog(comparison: VersionComparison): void {
+    const rawVersionData = this.versionDataMap.get(comparison.id);
+    
+    // Extract original image filenames from raw data
+    let oldImageFilename = '';
+    let newImageFilename = '';
+    
+    if (rawVersionData?.images && Array.isArray(rawVersionData.images) && rawVersionData.images.length > 0) {
+      const firstImage = rawVersionData.images[0];
+      oldImageFilename = firstImage.oldImage || firstImage.oldImages || '';
+      newImageFilename = firstImage.newImage || firstImage.newImages || '';
+    }
+    
+    // Extract ID - handle MongoDB ObjectId format
+    let versionId = rawVersionData?.id || rawVersionData?._id?.$oid || rawVersionData?._id || comparison.id;
+    if (typeof versionId !== 'string') {
+      versionId = String(versionId);
+    }
+    
+    const dialogRef = this.dialog.open(EditVersionDialogComponent, {
+      width: '600px',
+      disableClose: true,
+      autoFocus: false,
+      data: {
+        versionId: versionId,
+        heading: comparison.title,
+        oldImage: oldImageFilename,
+        newImage: newImageFilename
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Refresh the version list after updating
+        this.loadVersions();
+      }
+    });
+  }
+
+  deleteVersion(comparison: VersionComparison): void {
+    const rawVersionData = this.versionDataMap.get(comparison.id);
+    
+    // Extract ID - handle MongoDB ObjectId format
+    let versionId = rawVersionData?.id || rawVersionData?._id?.$oid || rawVersionData?._id || comparison.id;
+    if (typeof versionId !== 'string') {
+      versionId = String(versionId);
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      disableClose: true,
+      data: {
+        title: 'Delete Confirmation',
+        message: `Are you sure you want to delete "${comparison.title}"? This action cannot be undone.`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.versionService.deleteVersion(versionId).subscribe({
+          next: (response) => {
+            console.log('✅ Version deleted successfully:', response);
+            this.toastr.success('Version deleted successfully');
+            // Refresh the version list after deletion
+            this.loadVersions();
+          },
+          error: (error) => {
+            console.error('❌ Error deleting version:', error);
+            this.toastr.error('Failed to delete version');
+          }
+        });
+      }
+    });
   }
 }
 
