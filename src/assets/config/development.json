@@ -162,8 +162,36 @@
 {
   "name":"getCostContribution",
   "url":"getCostContribution"
-}
+},
 
+{
+  "name":"getQuoteTemplate",
+  "url":"getQuoteTemplate"
+},
+{
+  "name":"updateQuoteTemplate",
+  "url":"updateQuoteTemplate"
+},
+{
+  "name":"createQuotation",
+  "url":"createQuotation"
+},
+{
+  "name":"updateQuotation",
+  "url":"updateQuotation"
+},
+{
+  "name":"getQuotations",
+  "url":"getQuotations"
+},
+{
+  "name":"deleteQuotation",
+  "url":"deleteQuotation"
+},
+{
+  "name":"getQuotationByCustomerAndId",
+  "url":"getQuotationByCustomerAndId"
+}
 
 
 

@@ -36,6 +36,7 @@ import { CustomerdetailsComponent } from './customerdetails/customerdetails.comp
 import { ProcessComponent } from './process/process.component';
 import { AddprocessComponent } from './process/addprocess/addprocess.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GradeModule } from '../grade/grade.module';
 import { MeterialtypeModule} from '../modules/materialinput/meterialinput.module';
 import { MasterModule } from '../master/master/master.module';
@@ -51,16 +52,19 @@ import { UpdateCustomerDetailsComponent } from './customerdetails/update-custome
 import { SalaryWagesHistoryComponent } from './salary-wages-history/salary-wages-history.component';
 import { ViewQuotationComponent } from './customerdetails/view-quotation/view-quotation.component';
 import { CompareRevisionsComponent } from './customerdetails/compare-revisions/compare-revisions.component';
+import { FinalQuotationComponent } from './customerdetails/final-quotation/final-quotation.component';
+import { QuotationEditDirective } from './customerdetails/final-quotation/quotation-edit.directive';
 
 @NgModule({
   declarations: [MaterialComponent, AddMaterialComponent, 
     SupplierComponent, AddSupplierComponent, CustomerdetailsComponent, 
     ProcessComponent, AddprocessComponent, MaterialtypeComponent, 
     ProcesseditComponent, AddcustomerdetailsComponent, 
-    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent, SalaryWagesHistoryComponent, ViewQuotationComponent, CompareRevisionsComponent],
+    UpdateaddcustomerdDetailsComponent, ProcessPowerComponent, SalaryWagesComponent, AddSalaryWagesComponent, UpdateCustomerDetailsComponent, SalaryWagesHistoryComponent, ViewQuotationComponent, CompareRevisionsComponent, FinalQuotationComponent, QuotationEditDirective],
   imports: [
     MatAutocompleteModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
      MatStepperModule ,
     GradeModule,
     MeterialtypeModule,

@@ -305,6 +305,26 @@
   font-weight: bold;
 }
 
+.consideration-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.gc-title {
+  display: inline-block;
+  font-weight:400;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gc-description {
+  display: inline-block;
+  flex: 1;
+}
+
 .sub-point {
   margin-top: 5px;
   margin-left: 20px;
@@ -554,6 +574,42 @@
   }
 }
 
+/* Contact and Certification Section */
+.contact-and-certification-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding-top: 10px;
+ 
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.contact-text {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #000;
+}
+
+.contact-link {
+  color: #000;
+}
+
+.certification-logos {
+  flex-shrink: 0;
+  margin-left: 20px;
+}
+
+.certification-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .document-wrapper {
     padding: 10px;
@@ -579,10 +635,161 @@
     width: 100%;
     justify-content: center;
   }
+
+  /* Certification image responsive */
+  .contact-and-certification-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .certification-logos {
+    margin-left: 0;
+    margin-top: 15px;
+    width: 100%;
+  }
+
+  .certification-image {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .certification-image {
+    max-width: 250px;
+  }
+
+  .contact-text {
+    font-size: 11px;
+  }
 }
 
 /* Ensure proper text rendering */
 .document-page * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+
+.commercial-terms-list {
+  padding-left: 22px;
+  margin: 20px 0;
+  line-height: 1.6;
+  font-size: 12.5px;
+  counter-reset: term-counter;
+}
+
+.main-term {
+  margin: 16px 0;
+  list-style: none;
+  position: relative;
+  padding-left: 5px;
+}
+
+.main-term::before {
+  counter-increment: term-counter;
+  content: counter(term-counter) ".";
+  font-weight: bold;
+  position: absolute;
+  left: -22px;
+}
+
+.main-term > strong {
+  font-size: 13px;
+  color: #000;
+}
+
+.sub-items {
+  margin: 10px 0 0 20px;
+  padding-left: 0;
+}
+
+.sub-item {
+  margin: 7px 0;
+  line-height: 1.5;
+  position: relative;
+}
+
+.sub-item::before {
+  content: "•";
+  color: #000;
+  font-weight: bold;
+  position: absolute;
+  left: -18px;
+}
+
+.contact-and-certification-section{
+  color:#797777
+}
+
+.text-line {
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 6px;
+  margin-top: 4px;
+  line-height: 1.6;
+  font-size: 12.5px;
+  margin-left: 20px;
+}
+
+.text-line:not(:empty)::before {
+  content: "•";
+  color: #000;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.text-line:empty::before {
+  content: "Click or press Add to type here...";
+  color: #aaa;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.bullet-block {
+  margin: 10px 0;
+}
+
+.bullet-list {
+  list-style-type: square;
+  padding-left: 25px;
+  margin: 8px 0;
+  line-height: 1.6;
+  font-size: 12.5px;
+}
+
+.bullet-item {
+  margin-bottom: 6px;
+  margin-top: 4px;
+  line-height: 1.6;
+}
+
+.bullet-item:empty::before {
+  content: "Click or press Add to type here...";
+  color: #aaa;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.text-line[contenteditable="true"],
+.bullet-item[contenteditable="true"] {
+  background: #fff !important;
+  outline: 2px solid #3498db;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+}
+
+/* Make editable elements visually distinct */
+[appPdfEdit]:not([contenteditable="true"]) {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+[appPdfEdit]:not([contenteditable="true"]):hover {
+  background-color: #f8f9fa !important;
+}
+
+[appPdfEdit][contenteditable="true"] {
+  cursor: text;
 }

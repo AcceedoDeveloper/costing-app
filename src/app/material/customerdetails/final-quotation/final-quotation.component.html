@@ -1,0 +1,455 @@
+
+<div *ngIf="downloadingPDF" class="loading-spinner">
+    <div class="lds-roller">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div>Loading Data</div>
+  </div>
+<div class="final-quotation-popup">
+
+<mat-icon (click)="closePopup()">close</mat-icon>
+    
+    <div class="document-wrapper">
+        <div class="document-page">
+          <!-- Company Header Image -->
+          <div class="company-header">
+            <img src="assets/pdfheaderimage.png" alt="Indo Shell Cast Private Limited" class="header-image">
+          </div>
+    
+          <!-- Quote Reference Section -->
+          <div class="quote-reference-section">
+            <div class="quote-ref-item">
+              <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData?.header.quoteRefNumber.label || '')"></span>
+              <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData?.header.quoteRefNumber.value || '-')">
+              </span>
+              &nbsp;&nbsp;
+              <span class="quote-label">Date:</span>
+              <span class="quote-value">{{ today }}/D</span>
+            </div>
+    
+            <div class="quote-ref-item">
+              <span class="quote-label">{{ quoteData?.header.customer.label }} -</span>
+              <span class="quote-value">
+                {{ quoteData?.header.customer.value || '-' }}
+              </span>
+            </div>
+          </div>
+    
+          <!-- Header Section -->
+          <div class="document-header">
+            <div class="attention-line">
+              <span class="attention-label" [innerHTML]="boldBeforeColon(quoteData?.header.attention.label || '')"></span>
+              <span class="attention-value" [innerHTML]="boldBeforeColon(quoteData?.header.attention.value || '-')">
+              </span>
+            </div>
+    
+            <div class="greeting" [innerHTML]="boldBeforeColon(quoteData?.salutation || '')">
+            </div>
+    
+            <div class="intro-paragraph" [innerHTML]="boldBeforeColon(quoteData?.introduction || '')">
+            </div>
+          </div>
+    
+      <!-- Main Quote Table - NOW FULLY EDITABLE -->
+      <div class="quote-table-section">
+        <table class="main-quote-table">
+          <thead>
+            <tr>
+              <th colspan="9" class="table-main-title"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  propertyPath="quoteTable.title"
+                  [innerHTML]="boldBeforeColon(quoteData?.quoteTable.title || 'ISC - SHELL MOULDING/ STEEL CASTING - QUOTE')">
+              </th>
+            </tr>
+            <tr>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].sno.label' : 'quoteTable.columns.sno'">
+                {{ getColumnHeader('sno') || 'S.No' }}
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].drawingNumber.label' : 'quoteTable.columns.drawingNumber'">
+                {{ getColumnHeader('drawingNumber') || 'Drawing No' }}
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].partName.label' : 'quoteTable.columns.partName'">
+                {{ getColumnHeader('partName') || 'Part Name' }}
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].castingMaterial.label' : 'quoteTable.columns.castingMaterial'">
+                {{ getColumnHeader('castingMaterial') || 'Casting Material' }}
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].castingWeightInKgs.label' : 'quoteTable.columns.castingWeightInKgs'">
+                {{ getColumnHeader('castingWeightInKgs') || 'Casting Weight (kg)' }}
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].annualVolume.label' : 'quoteTable.columns.annualVolume'">
+                {{ getColumnHeader('annualVolume') || 'Annual Volume' }}
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].partPriceInINR.label' : 'quoteTable.columns.partPriceInINR'">
+                {{ getColumnHeader('partPriceInINR') || 'Part Price (INR)' }}
+              </th>
+              <th class="pattern-cost-header"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].patternCostINR.label' : 'quoteTable.columns.patternCostINR'">
+                <div class="pattern-cost-title">{{ getColumnHeader('patternCostINR') || 'Pattern Cost (INR)' }}</div>
+                <div class="pattern-cost-line"></div>
+                <!-- <div class="pattern-cost-subtitle">(INR)</div> -->
+              </th>
+              <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" [propertyPath]="isColumnsArray() ? 'quoteTable.columns[0].moqInNos.label' : 'quoteTable.columns.moqInNos'">
+                {{ getColumnHeader('moqInNos') || 'MOQ (Nos)' }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="getTableRows().length > 0; else emptyTable">
+              <ng-container *ngFor="let row of getTableRows(); let i = index">
+                <tr>
+                  <!-- S.No - Not editable, from selected parts -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="sno-cell">
+                    {{ getSnoValue(row, i) }}
+                  </td>
+    
+                  <!-- Drawing Number - Not editable, from selected parts -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="drawing-number-cell">
+                    {{ getDrawingNumberValue(row, i) }}
+                  </td>
+    
+                  <!-- Part Name - Not editable, from selected parts -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="part-name-cell">
+                    <div class="multi-line-text">{{ formatPartName(getPartNameValue(row, i)) || '-' }}</div>
+                  </td>
+    
+                  <!-- Casting Material -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="material-cell"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[' + i + '].castingMaterial.value' : 'quoteTable.parts[' + i + '].castingMaterial'">
+                    <div class="multi-line-text">{{ formatCastingMaterial(getEditableValue(row, i, 'castingMaterial', 'castingMaterial')) || '-' }}</div>
+                  </td>
+    
+                  <!-- Casting Weight -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[' + i + '].castingWeightInKgs.value' : 'quoteTable.parts[' + i + '].castingWeight'">
+                    {{ getEditableValue(row, i, 'castingWeightInKgs', 'castingWeight') }}
+                  </td>
+    
+                  <!-- Annual Volume -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[' + i + '].annualVolume.value' : 'quoteTable.parts[' + i + '].annualVolume'">
+                    {{ getEditableValue(row, i, 'annualVolume', 'annualVolume') }}
+                  </td>
+    
+                  <!-- Part Price -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[' + i + '].partPriceInINR.value' : 'quoteTable.parts[' + i + '].partPrice'">
+                    {{ getEditableValue(row, i, 'partPriceInINR', 'partPrice') }}
+                  </td>
+    
+                  <!-- Pattern Cost -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[' + i + '].patternCostINR.value' : 'quoteTable.parts[' + i + '].patternCost'">
+                    {{ getEditableValue(row, i, 'patternCostINR', 'patternCost') }}
+                  </td>
+    
+                  <!-- MOQ -->
+                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell"
+                  appQuotationEdit
+                  [quoteData]="quoteData"
+                  [quotationData]="quotationData"
+                  [propertyPath]="isColumnsArray() ? 'quoteTable.columns[' + i + '].moqInNos.value' : 'quoteTable.parts[' + i + '].moq'">
+                    {{ getEditableValue(row, i, 'moqInNos', 'moq') }}
+                  </td>
+                </tr>
+                <!-- Empty rows for spacing if needed -->
+                <tr *ngFor="let emptyRow of getEmptyRows(i)"></tr>
+              </ng-container>
+            </ng-container>
+    
+            <!-- Empty state -->
+            <ng-template #emptyTable>
+              <tr>
+                <td class="sno-cell">1</td>
+                <td class="drawing-number-cell">-</td>
+                <td class="part-name-cell"><div class="multi-line-text">-</div></td>
+                <td class="material-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="quoteTable.parts[0].castingMaterial"><div class="multi-line-text">-</div></td>
+                <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="quoteTable.parts[0].castingWeight">-</td>
+                <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="quoteTable.parts[0].annualVolume">-</td>
+                <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="quoteTable.parts[0].partPrice">-</td>
+                <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="quoteTable.parts[0].patternCost">-</td>
+                <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="quoteTable.parts[0].moq">-</td>
+              </tr>
+            </ng-template>
+          </tbody>
+        </table>
+      </div>
+    
+          
+      <!-- Chemical Composition Section – NOW FULLY EDITABLE -->
+      <div class="composition-section" (pdf-edit-action)="onPdfEditAction($event)">
+        <!-- Section Title -->
+        <div class="composition-intro"
+            appQuotationEdit
+            [quoteData]="quoteData"
+            [quotationData]="quotationData"
+            propertyPath="rawMaterialComposition.title">
+          {{ quoteData?.rawMaterialComposition.title || 'Chemical Composition' }}
+        </div>
+    
+        <!-- Loop through each material (e.g. GS 20 Mn5, CA6NM, etc.) -->
+        <ng-container *ngFor="let material of quoteData?.rawMaterialComposition.materials; let matIndex = index">
+          <div class="composition-table-wrapper" style="margin-top: 20px; page-break-inside: avoid;">
+    
+            <table class="composition-table">
+              <thead>
+                <!-- Material Name Header (e.g. "GS 20 Mn5") -->
+                <tr>
+                  <th [attr.colspan]="material.elements.length"
+                      class="material-type-header"
+                      appQuotationEdit
+                      [quoteData]="quoteData"
+                      [quotationData]="quotationData"
+                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].materialName'">
+                    {{ material.materialName || 'Material Name' }}
+                  </th>
+                </tr>
+    
+                <!-- Element Names Row (C, Mn, P, S, etc.) -->
+                <tr>
+                  <th *ngFor="let el of material.elements; let elIndex = index"
+                      appQuotationEdit
+                      [quoteData]="quoteData"
+                      [quotationData]="quotationData"
+                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].element'">
+                    {{ el.element || '-' }}
+                  </th>
+                </tr>
+              </thead>
+    
+              <tbody>
+                <!-- Range Values Row -->
+                <tr>
+                  <td class="data-cell"
+                      *ngFor="let el of material.elements; let elIndex = index"
+                      appQuotationEdit
+                      [quoteData]="quoteData"
+                      [quotationData]="quotationData"
+                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].range'">
+                    {{ el.range || '-' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+    
+        <!-- Optional: Show empty table if no materials -->
+        <ng-container *ngIf="!quoteData?.rawMaterialComposition.materials || quoteData.rawMaterialComposition.materials.length === 0">
+          <div class="composition-table-wrapper" style="margin-top: 20px;">
+            <table class="composition-table">
+              <thead>
+                <tr>
+                  <th colspan="8" class="material-type-header"
+                      appQuotationEdit
+                      [quoteData]="quoteData"
+                      [quotationData]="quotationData"
+                      propertyPath="rawMaterialComposition.materials[0].materialName">
+                    Material Grade
+                  </th>
+                </tr>
+                <tr>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[0].element">C</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[1].element">Mn</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[2].element">P</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[3].element">S</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[4].element">Si</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[5].element">Cr</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[6].element">Ni</th>
+                  <th appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[7].element">Mo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[0].range">-</td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[1].range"> - </td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[2].range">-</td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[3].range">-</td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[4].range">-</td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[5].range">-</td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[6].range">-</td>
+                  <td class="data-cell" appQuotationEdit [quoteData]="quoteData" [quotationData]="quotationData" propertyPath="rawMaterialComposition.materials[0].elements[7].range">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </div>
+    
+    
+    
+    
+
+    <!-- GENERAL CONSIDERATIONS -->
+    <div class="considerations-section" *ngIf="!loading && quoteData" (pdf-edit-action)="onPdfEditAction($event)">
+    
+    <!-- MAIN TITLE → Only Add new point -->
+    <h3 class="section-title main-title" [innerHTML]="quoteData?.generalConsiderations?.title?.trim() ? boldBeforeColon(quoteData.generalConsiderations.title) : '<em style=&quot;color:#999;&quot;>General Considerations</em>'">
+    </h3>
+    
+    <ol class="considerations-list">
+      <ng-container *ngFor="let item of (quoteData?.generalConsiderations?.items || []); let i = index">
+        <li class="consideration-item">
+    
+          <!-- Checkbox -->
+          <input 
+            type="checkbox" 
+            [checked]="item?.isActive === true"
+            (change)="toggleGeneralConsiderationItem(i, $event)"
+            class="gc-checkbox"
+            title="Include/Exclude this item">
+    
+          <!-- TITLE LINE -->
+          <div class="gc-title" [innerHTML]="item?.title?.trim() ? boldBeforeColon(item.title + ':') : '<em style=&quot;color:#aaa;&quot;>Click to add title...</em>:'">
+          </div>
+    
+          <!-- DESCRIPTION LINE -->
+          <div class="gc-description" [innerHTML]="item?.description ? boldBeforeColon(item.description) : '<em style=&quot;color:#aaa;&quot;>Click to add description...</em>'">
+          </div>
+    
+        </li>
+      </ng-container>
+    </ol>
+    
+    </div>
+    
+    
+    <!-- COMMERCIAL TERMS & CONDITIONS -->
+    <div class="commercial-terms-section" *ngIf="!loading && quoteData" (pdf-edit-action)="onPdfEditAction($event)">
+    
+    <!-- MAIN TITLE → Add New Section -->
+    <!-- MAIN TITLE → Add New Section -->
+    <h3 class="section-title main-title" [innerHTML]="getMainTitleDisplay()">
+    </h3>
+    
+    <ol class="commercial-terms-list">
+      <ng-container *ngFor="let section of (quoteData?.commercialTermsAndConditions?.sections || []); let secIdx = index">
+        <li class="main-term">
+    
+          <!-- SECTION TITLE → Add point + Delete section -->
+    <!-- SECTION TITLE → Add point + Delete section -->
+    <div class="section-header">
+      <!-- Checkbox for section -->
+      <input 
+        type="checkbox" 
+        [checked]="section?.isActive === true"
+        (change)="toggleCommercialSection(secIdx, $event)"
+        class="section-checkbox"
+        title="Include/Exclude this section">
+      <div class="editable-title" [innerHTML]="getSectionTitleDisplay(section)">
+      </div>
+    </div>
+          <div class="section-items">
+            <ng-container *ngFor="let item of (section?.items || []); let itemIdx = index">
+    
+              <!-- Normal text line -->
+     <!-- Normal text line -->
+    <div *ngIf="item?.text !== undefined && (!item?.bulletPoints || item.bulletPoints.length === 0)"
+    class="text-line"
+    [innerHTML]="item?.text ? boldBeforeColon(item.text) : '<em style=&quot;color:#aaa;&quot;>Click or press Add to type here...</em>'">
+    </div>
+    
+              <!-- Subheading (e.g. "HSN Codes as GST:") -->
+              <div *ngIf="item?.subheading"
+                   class="subheading"
+                   [innerHTML]="boldBeforeColon(item.subheading)">
+              </div>
+    
+              <!-- BULLET POINTS BLOCK -->
+              <div *ngIf="item?.bulletPoints?.length" class="bullet-block">
+                <ul class="bullet-list">
+                  <li *ngFor="let bullet of item.bulletPoints; let bIdx = index"
+                  class="bullet-item"
+                  [innerHTML]="bullet ? boldBeforeColon(bullet) : '<em style=&quot;color:#aaa;&quot;>New bullet point...</em>'">
+              </li>
+                </ul>
+              </div>
+    
+            </ng-container>
+    
+          </div>
+        </li>
+      </ng-container>
+    </ol>
+    
+    
+    </div>
+    
+      
+          <!-- Closing Statement -->
+          <div class="concluding-paragraph">
+            <p [innerHTML]="boldBeforeColon(quoteData?.closingStatement || '')">
+            </p>
+          </div>
+    
+          <!-- Signature -->
+          <div class="signature-block">
+            <div class="signature-line" [innerHTML]="boldBeforeColon(quoteData?.signature.thanks || '')">
+            </div>
+            <div class="signature-name" [innerHTML]="boldBeforeColon(quoteData?.signature.name || '')">
+            </div>
+            <div class="signature-title" [innerHTML]="boldBeforeColon(quoteData?.signature.designation || '')">
+            </div>
+            <div class="signature-department" [innerHTML]="boldBeforeColon(quoteData?.signature.department || '')">
+            </div>
+     
+          </div>
+    
+          <!-- Contact Footer -->
+          <div class="contact-and-certification-section">
+            <div class="contact-info">
+              <div class="contact-text">
+                <span class="contact-link">
+                    Address: {{ quoteData?.contactInfo.address.value }},
+          
+                </span>
+            
+                <span class="contact-link">
+                  {{ quoteData?.contactInfo.phone.value || '-' }}
+                </span>,<br>
+                <span class="contact-link">
+                  {{ quoteData?.contactInfo.website.value || '-' }}
+                </span>
+              </div>
+            </div>
+            <div class="certification-logos">
+              <img src="assets/pdffooter.png" alt="Certifications" class="certification-image">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="download-pdf-btn" (click)="downloadPDF()" [disabled]="downloadingPDF">
+     
+        <mat-icon *ngIf="!downloadingPDF">picture_as_pdf</mat-icon>
+        <span>{{ downloadingPDF ? 'Generating PDF...' : 'View PDF' }}</span>
+      </button>
+
+</div>

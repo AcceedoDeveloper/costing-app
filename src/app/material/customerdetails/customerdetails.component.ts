@@ -17,6 +17,13 @@ import { ViewQuotationComponent } from './view-quotation/view-quotation.componen
 import { CompareRevisionsComponent } from './compare-revisions/compare-revisions.component';
 import { PageEvent } from '@angular/material/paginator';
 import { ReportsService } from '../../services/reports.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../models/users.model';
+import { Quote } from '../../models/Quote.model';
+import { FinalQuotationComponent } from './final-quotation/final-quotation.component';
+import { Quotation } from '../../models/Quotation.model';
+import { Pdfmaker } from '../../master/master/pdfmaker/pdfmaker.model';
+
 
 @Component({
   selector: 'app-customerdetails',
@@ -38,96 +45,23 @@ export class CustomerdetailsComponent implements OnInit, OnDestroy {
 regards: string = '';
 predetails: boolean = false;
 
+//get user data 
+showFinalQuotationPopup: boolean = false;
+users:User[]=[];
+selectedUser: string = '';
+Pdfgeneratepopup=false;
+Quotationdata:Quote[]=[];
+attentionquote:string='';
+customerquote:string='';
+quotationExists: boolean = false; // Track if quotation already exists
+
 
 tableUserInputs: any[] = [];     // store user-entered data
-
-materialComposition = {
-  C: '',
-  Si: '',
-  Mn: '',
-  Ni: '',
-  Cr: '',
-  Mo: ''
-};
+materialComposition: any = { C: '', Si: '', Mn: '', Ni: '', Cr: '', Mo: '' };
 
 
-termsAndConditions: string[] = [
-  "Ingate and Parting Line Projections: Maximum allowable projection is 1.00 mm.",
-  "Raw Casting Models: 2D and 3D models are required during the development stage.",
-  "Casting Soundness: Soundness level shall be Level III (maximum) as per ASTM E446.",
-  "Unspecified Tolerances: Raw casting tolerances will conform to ISO 8062 CT8 grade.",
-  "Drawing Given Tolerance Dia 1060mm -0.20 & -0.40 is not feasible. Required ±0.40mm.",
-  "Component teeth tolerance ±0.20mm is not feasible. Required ±0.50mm.",
-  "Machining Stock: Minimum machining allowance of 2.00 mm per side is recommended."
-];
 
 
-commercialTerms: any[] = [
-  {
-    heading: "Pricing",
-    points: [
-      "The price of component will vary if there is any change in the following factors.",
-      "Component weight",
-      "Raw material price",
-      "Modification in payment terms"
-    ]
-  },
-  {
-    heading: "Raw Material Price Terms",
-    points: [
-      "We accept 3% fluctuation in RM Prices.",
-      "Any variation beyond this threshold will be passed on to the customer every quarter."
-    ]
-  },
-  {
-    heading: "Casting Weight Consideration",
-    points: [
-      "ISC will determine the as-cast weight using customer-provided 3D models.",
-      "Machining stock will be decided by ISC."
-    ]
-  },
-  {
-    heading: "Pricing & Taxes",
-    points: [
-      "The quoted rates are basic and exclude statutory taxes.",
-      "HSN 732599 (Casting) 18% GST",
-      "HSN 84803000 (Tools) 18% GST",
-      "Tax changes will be passed to customer"
-    ]
-  },
-  {
-    heading: "Incoterms",
-    points: [ "The quoted rates are based on EX WORKS." ]
-  },
-  {
-    heading: "Payment Terms",
-    points: [
-      "For Casting: Payment due within 75 days",
-      "50% tool cost payable with Tooling PO",
-      "Remaining 50% payable on PPAP or 120 days"
-    ]
-  },
-  {
-    heading: "Volume Consideration",
-    points: ["The quoted rates are based on the MOQ."]
-  },
-  {
-    heading: "Packaging",
-    points: ["The quoted rates based on Sea Worthy Packaging."]
-  },
-  {
-    heading: "Lead Time",
-    points: [
-      "Raw Casting Sample: 12 weeks from receipt of PO & advance."
-    ]
-  },
-  {
-    heading: "Validation",
-    points: [
-      "Rates valid for 30 days from date of offer."
-    ]
-  }
-];
 
 
 
@@ -191,13 +125,20 @@ commercialTerms: any[] = [
     private power: PowerService,
     private tooster: ToastrService,
     private cdr: ChangeDetectorRef,
-    private reportsService: ReportsService
+    private reportsService: ReportsService,
+    private userservice:UserService,
   ) {}
 
   ngOnInit(): void {
     // Initialize filters with current date values
     this.initializeDateFilters();
     this.loadCustomerDetails();
+    this.userservice.getUsers().subscribe((users:User[])=>
+    {
+        this.users=users;
+    })
+
+
   }
 
   // Initialize date filters with current date
@@ -290,14 +231,6 @@ commercialTerms: any[] = [
           this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         }
         this.loading = false;
-        console.log('Customer Details:', this.customerDetails);
-        console.log('Pagination:', {
-          totalRecords: this.totalRecords,
-          hasNextPage: this.hasNextPage,
-          hasPreviousPage: this.hasPreviousPage,
-          totalPages: this.totalPages,
-          currentPage: this.currentPage
-        });
         this.groupCustomerData();
         this.cdr.detectChanges();
       },
@@ -336,7 +269,6 @@ getFirstProcessCost(customer: any): number {
 
 
 delete(id: string) {
-  console.log('ID', id);
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
     width: '300px',
     data: {
@@ -386,10 +318,6 @@ edit(id: string) {
     dialogRef.afterClosed().subscribe(() => {
       this.loadCustomerDetails();
     });
-    
-    console.log('Editing Customer:', customer);
-  } else {
-    console.warn('Customer not found for editing:', id);
   }
 }
 
@@ -1078,8 +1006,6 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
 
     // Build the complete customer data object in the expected format
     const updateData = this.buildCustomerUpdateData(customer, serverStatus);
-    
-    console.log('Updating customer with data:', updateData);
 
     const sub = this.reportsService.updateStatus(customerId, updateData).subscribe({
       next: (response) => {
@@ -1208,6 +1134,7 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
   // Toggle customer expansion
   toggleCustomer(customerName: string): void {
     if (this.expandedCustomers.has(customerName)) {
+      // If already expanded, collapse it
       this.expandedCustomers.delete(customerName);
       // Also collapse all partName groups and parts for this customer
       const partNameGroups = this.getPartNameGroups(customerName);
@@ -1219,6 +1146,31 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
         });
       });
     } else {
+      // If not expanded, collapse all other customers first (only one customer expanded at a time)
+      const allCustomers = Array.from(this.expandedCustomers);
+      allCustomers.forEach(customer => {
+        // Collapse all partName groups and parts for the previously expanded customer
+        const partNameGroups = this.getPartNameGroups(customer);
+        partNameGroups.forEach(partName => {
+          this.expandedPartNameGroups.delete(this.getPartNameGroupKey(customer, partName));
+          const parts = this.getPartsByPartName(customer, partName);
+          parts.forEach(part => {
+            this.expandedParts.delete(this.getPartKey(part));
+          });
+        });
+      });
+      // Clear all expanded customers
+      this.expandedCustomers.clear();
+      
+      // If selected parts belong to a different customer, clear selections
+      if (this.selectedCustomer && this.selectedCustomer !== customerName) {
+        this.selectedParts = [];
+        this.selectedCustomer = null;
+        this.quotationExists = false;
+        this.pdfgenarate = false;
+      }
+      
+      // Now expand the selected customer
       this.expandedCustomers.add(customerName);
       // Optionally auto-expand all partName groups when customer is expanded
       // Uncomment the following lines if you want partName groups to auto-expand
@@ -1254,28 +1206,75 @@ buildCustomerUpdateData(customer: any, newStatus: string): any {
     this.viewMode = mode;
   }
 
-  onPartSelect(customerName: string, part: any, event: any) {
-  // Set selected customer on first click
-  if (!this.selectedCustomer) {
-    this.selectedCustomer = customerName;
+  // Helper method to check if a part is selected
+  isPartSelected(part: any): boolean {
+    if (!part || this.selectedParts.length === 0) return false;
+    const partId = String(part.ID || part._id);
+    return this.selectedParts.some(p => String(p.ID || p._id) === partId);
   }
 
-  // If checkbox checked
-  if (event.target.checked) {
-    this.selectedParts.push(part);
-  } else {
-    this.selectedParts = this.selectedParts.filter(p => p._id !== part._id);
+  onPartSelect(customerName: string, part: any, event: any) {
+    // Set selected customer on first click
+    if (!this.selectedCustomer) {
+      this.selectedCustomer = customerName;
+    }
 
-    // If no parts selected → unlock all customers
-    if (this.selectedParts.length === 0) {
-      this.selectedCustomer = null;
+    // If checkbox checked
+    if (event.target.checked) {
+      this.selectedParts.push(part);
+      this.customerquote = this.selectedCustomer || '-';
+    } else {
+      this.selectedParts = this.selectedParts.filter(p => (p.ID || p._id) !== (part.ID || part._id));
+
+      // If no parts selected → unlock all customers and close popup
+      if (this.selectedParts.length === 0) {
+        this.selectedCustomer = null;
+        this.Pdfgeneratepopup = false;
+        this.quotationExists = false;
+      }
+    }
+
+    this.pdfgenarate = this.selectedParts.length > 0;
+    this.customerquote = this.selectedCustomer || '-';
+    // Refresh quotation existence flag whenever selection changes
+    const partIds = this.selectedParts
+      .map(p => String(p.ID || p._id))
+      .filter(id => id && id !== '0');
+
+    if (this.selectedCustomer && partIds.length > 0) {
+      this.checkQuotationExists(this.selectedCustomer, partIds);
+    } else {
+      this.quotationExists = false;
     }
   }
 
-    this.pdfgenarate = this.selectedParts.length > 0;
+private checkQuotationExists(customerName: string, partIds: string[]): void {
+  if (!customerName || partIds.length === 0) {
+    this.quotationExists = false;
+    return;
+  }
 
-  console.log("Selected Customer:", this.selectedCustomer);
-  console.log("Selected Parts:", this.selectedParts);
+  this.reportsService.getQuotationByCustomerAndId(customerName, partIds).subscribe({
+    next: (quotations: Quotation[]) => {
+      if (quotations && quotations.length > 0) {
+        this.quotationExists = true;
+        this.Pdfgeneratepopup = false; // Don't auto-open popup
+      } else {
+        // Quotation doesn't exist - show button (popup only opens from button click)
+        this.quotationExists = false;
+        this.Pdfgeneratepopup = false; // Don't auto-open popup
+      }
+    },
+    error: (err) => {
+      // On error (404 or other), assume quotation doesn't exist
+      if (err.status === 404 || err.status === 0) {
+      } else {
+        console.error('Error checking quotation:', err);
+      }
+      this.quotationExists = false;
+      this.Pdfgeneratepopup = false; // Don't auto-open popup
+    }
+  });
 }
 
 openPdfPopup() {
@@ -1297,42 +1296,7 @@ openPdfPopup() {
 
 
 
-addPoint(termIndex: number) {
-  this.commercialTerms[termIndex].points.push("");
-}
 
-deletePoint(termIndex: number, pointIndex: number) {
-  this.commercialTerms[termIndex].points.splice(pointIndex, 1);
-}
-
-addCommercialTerm() {
-  this.commercialTerms.push({
-    heading: '',
-    points: ['']
-  });
-}
-
-deleteTerm(index: number) {
-  this.commercialTerms.splice(index, 1);
-}
-
-addTerm() {
-  this.termsAndConditions.push('');
-}
-
-removeTerm(index: number) {
-  this.termsAndConditions.splice(index, 1);
-}
-
-logTable() {
-  console.log("Selected Parts Table:", this.tableUserInputs);
-  console.log("Material Composition:", this.materialComposition);
-  console.log("Attention:", this.attention);
-  console.log("Regards:", this.regards);
-  console.log("General Terms:", this.termsAndConditions); 
-  console.log("Commercial Terms:", this.commercialTerms);
-  this.pdfgenarate = false;
-}
 
 trackByIndex(index: number, item: any) {
   return index;
@@ -1346,4 +1310,389 @@ cosepopup(){
 }
 
 
+cosequotepopup()
+{
+  this.Pdfgeneratepopup=false;
+}
+
+openCreateQuotationPopup() {
+  // Always open the create quotation popup when button is clicked
+  this.Pdfgeneratepopup = true;
+  // Set customer quote if not already set
+  if (!this.customerquote && this.selectedCustomer) {
+    this.customerquote = this.selectedCustomer;
+  }
+}
+
+generateQuote() {
+  // Validation
+  if (!this.selectedCustomer || this.selectedParts.length === 0) {
+    this.tooster.error('Please select customer and parts');
+    return;
+  }
+
+  if (!this.attentionquote || !this.attentionquote.trim()) {
+    this.tooster.error('Please enter attention');
+    return;
+  }
+
+  if (!this.selectedUser) {
+    this.tooster.error('Please select a user');
+    return;
+  }
+
+  this.loading = true;
+
+  // Get part IDs and customer name for checking existing quotation
+  const partIds = this.selectedParts.map(part => String(part.ID || part._id)).filter(id => id && id !== '0');
+  const customerName = this.customerquote;
+
+  // Step 1: Check if quotation exists for this customer and parts, then delete if exists
+  this.reportsService.getQuotationByCustomerAndId(customerName, partIds).subscribe({
+    next: (existingQuotations: Quotation[]) => {
+      console.log(`[QUOTATION CHECK] Customer: "${customerName}", Part IDs: [${partIds.join(', ')}], Found: ${existingQuotations?.length || 0}`);
+      
+      if (existingQuotations && existingQuotations.length > 0) {
+        this.processQuotationMatch(existingQuotations, customerName, partIds);
+      } else {
+        // No quotations found - create new one
+        console.log(`[QUOTATION CREATE] No quotations found. Creating new for "${customerName}"`);
+        this.createNewQuotation(partIds, customerName);
+      }
+    },
+    error: (checkErr) => {
+      // If check fails (404), create new quotation (no fallback to avoid wrong matches)
+      if (checkErr.status === 404 || checkErr.status === 0) {
+        console.log(`[QUOTATION CREATE] No existing quotation found (404). Creating new for "${customerName}"`);
+      } else {
+        console.error('[QUOTATION CREATE] Error checking quotation:', checkErr);
+      }
+      this.createNewQuotation(partIds, customerName);
+    }
+  });
+}
+
+private processQuotationMatch(existingQuotations: Quotation[], customerName: string, partIds: string[]): void {
+  // Find quotation that matches BOTH customer name AND part IDs exactly
+  console.log(`[QUOTATION CHECK] Checking ${existingQuotations.length} quotation(s) for exact match - Customer: "${customerName}", Part IDs: [${partIds.join(', ')}]`);
+  
+  const matchingQuotation = existingQuotations.find(quote => {
+    const quoteCustomerName = quote.header?.customer?.value || '';
+    const quotePartIds = quote.ID || [];
+    
+    // Normalize customer names for comparison (trim and case-insensitive)
+    const customerMatch = quoteCustomerName.trim().toLowerCase() === customerName.trim().toLowerCase();
+    
+    // Normalize and sort part IDs for comparison (handle order differences)
+    const normalizedQuoteIds = quotePartIds.map(id => String(id).trim()).sort();
+    const normalizedPartIds = partIds.map(id => String(id).trim()).sort();
+    
+    // Check if part IDs match exactly (same length and same values)
+    const partIdsMatch = normalizedQuoteIds.length === normalizedPartIds.length && 
+      normalizedQuoteIds.every((id, index) => id === normalizedPartIds[index]);
+    
+    // Log comparison details
+    if (!customerMatch || !partIdsMatch) {
+      console.log(`[QUOTATION CHECK] No match - Quote Customer: "${quoteCustomerName}" vs New: "${customerName}" (${customerMatch ? '✓' : '✗'}), Quote IDs: [${quotePartIds.join(', ')}] vs New: [${partIds.join(', ')}] (${partIdsMatch ? '✓' : '✗'})`);
+    }
+    
+    return customerMatch && partIdsMatch;
+  });
+  
+  if (matchingQuotation) {
+    const quotationId = (matchingQuotation as any)._id || (matchingQuotation as any).id;
+    const oldCustomerName = matchingQuotation.header?.customer?.value || 'Unknown';
+    
+    if (quotationId) {
+      console.log(`[QUOTATION REPLACE] Replacing ID: ${quotationId} for "${oldCustomerName}" → "${customerName}"`);
+      
+      // Delete existing quotation
+      this.reportsService.deleteQuotation(quotationId).subscribe({
+        next: () => {
+          console.log(`[QUOTATION REPLACE] Deleted successfully. Creating new for "${customerName}"`);
+          this.createNewQuotation(partIds, customerName);
+        },
+        error: (deleteErr) => {
+          console.error('[QUOTATION REPLACE] Delete error:', deleteErr);
+          this.createNewQuotation(partIds, customerName);
+        }
+      });
+    } else {
+      console.log(`[QUOTATION CREATE] No valid ID. Creating new for "${customerName}"`);
+      this.createNewQuotation(partIds, customerName);
+    }
+  } else {
+    console.log(`[QUOTATION CREATE] No exact match. Creating new for "${customerName}"`);
+    this.createNewQuotation(partIds, customerName);
+  }
+}
+
+private createNewQuotation(partIds: string[], customerName: string): void {
+  // Step 1: Get quote template from /getQuoteTemplate
+  this.reportsService.getQuoteTemplate().subscribe({
+    next: (template: Pdfmaker) => {
+      // Step 2: Transform template data to Quotation format
+      const user = this.users.find(u => (u.id || u._id) === this.selectedUser);
+      const currentDate = new Date().toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }).replace(/\//g, '.');
+
+      // Transform Pdfmaker to Quotation
+      const quotation: Quotation = {
+        // Add ID array from selected parts
+        ID: partIds,
+        
+        // Transform header with attention and customer
+        header: {
+          quoteRefNumber: template.header.quoteRefNumber,
+          date: {
+            label: template.header.date.label,
+            value: currentDate
+          },
+          customer: {
+            label: template.header.customer.label,
+            value: this.customerquote,
+          },
+          attention: {
+            label: template.header.attention.label,
+            value: this.attentionquote.trim()
+          }
+        },
+        
+        // Copy as-is
+        salutation: template.salutation,
+        introduction: template.introduction,
+        closingStatement: template.closingStatement,
+        contactInfo: template.contactInfo,
+        
+        // Transform quoteTable - add parts from selected parts
+        quoteTable: {
+          title: template.quoteTable.title,
+          columns: (() => {
+            // Get column headers from template (support both old and new structure)
+            const templateColumns = template.quoteTable.columns as any || {};
+            
+            // Helper function to extract label from template (supports both old string format and new LabelValue format)
+            const getLabel = (key: string, defaultLabel: string): string => {
+              if (Array.isArray(templateColumns) && templateColumns.length > 0) {
+                // New structure: array with LabelValue format
+                const firstRow = templateColumns[0];
+                if (firstRow[key] && typeof firstRow[key] === 'object' && 'label' in firstRow[key]) {
+                  return firstRow[key].label || defaultLabel;
+                }
+              } else if (templateColumns[key]) {
+                // Old structure: direct string value
+                if (typeof templateColumns[key] === 'string') {
+                  return templateColumns[key];
+                } else if (typeof templateColumns[key] === 'object' && 'label' in templateColumns[key]) {
+                  return templateColumns[key].label || defaultLabel;
+                }
+              }
+              return defaultLabel;
+            };
+
+            // Create array structure with LabelValue format for each selected part
+            return this.selectedParts.map((part, index) => ({
+              sno: { 
+                label: getLabel('sno', 'S.No'), 
+                value: String(index + 1) 
+              },
+              drawingNumber: { 
+                label: getLabel('drawingNumber', 'Drawing No'), 
+                value: part.drawingNo || '-' 
+              },
+              partName: { 
+                label: getLabel('partName', 'Part Name'), 
+                value: part.partName || '-' 
+              },
+              castingMaterial: { 
+                label: getLabel('castingMaterial', 'Casting Material'), 
+                value: '' 
+              },
+              castingWeightInKgs: { 
+                label: getLabel('castingWeightInKgs', 'Casting Weight (kg)'), 
+                value: '' 
+              },
+              annualVolume: { 
+                label: getLabel('annualVolume', 'Annual Volume'), 
+                value: '' 
+              },
+              partPriceInINR: { 
+                label: getLabel('partPriceInINR', 'Part Price (INR)'), 
+                value: '' 
+              },
+              patternCostINR: { 
+                label: getLabel('patternCostINR', 'Pattern Cost (INR)'), 
+                value: '' 
+              },
+              moqInNos: { 
+                label: getLabel('moqInNos', 'MOQ (Nos)'), 
+                value: '' 
+              }
+            }));
+          })(),
+          parts: this.selectedParts.map((part, index) => ({
+            castingMaterial: '',
+            castingWeight: '',
+            annualVolume: '',
+            partPrice: '',
+            patternCost: '',
+            moq: ''
+          }))
+        },
+        
+       
+        rawMaterialComposition: template.rawMaterialComposition,
+        
+        
+        generalConsiderations: {
+          title: template.generalConsiderations.title,
+          items: template.generalConsiderations.items.map(item => ({
+            title: item.title,
+            description: typeof item.description === 'string' 
+              ? [item.description] 
+              : (Array.isArray(item.description) ? item.description : []),
+            isActive: true
+          }))
+        },
+        
+       
+        commercialTermsAndConditions: {
+          title: template.commercialTermsAndConditions.title,
+          sections: template.commercialTermsAndConditions.sections.map(section => ({
+            sectionTitle: section.sectionTitle,
+            items: section.items.map(item => ({
+              text: item.text,
+              subheading: item.subheading,
+              bulletPoints: item.bulletPoints || []
+            })),
+            isActive: true
+          }))
+        },
+        
+      
+        signature: {
+          thanks: template.signature.thanks,
+          name: user?.UserName || user?.userName || template.signature.name,
+          designation: user?.department || template.signature.designation,
+          department: template.signature.department
+        }
+      };
+
+      // Step 3: Send to /createQuotation
+      // Deep-clone to ensure we never reuse object references between creates
+      const quotationPayload: Quotation = JSON.parse(JSON.stringify(quotation));
+      this.reportsService.createQuotation(quotationPayload).subscribe({
+        next: (createdQuotation: Quotation) => {
+          console.log(`[QUOTATION CREATE] New quotation created successfully for customer "${customerName}"`);
+          this.tooster.success('Quotation created successfully');
+          
+          // Update quotationExists flag so buttons update immediately
+          this.quotationExists = true;
+          
+          this.Pdfgeneratepopup = false;
+          this.loading = false;
+
+          // Prepare table user inputs for dialog
+          this.tableUserInputs = this.selectedParts.map((part, index) => ({
+            sno: index + 1,
+            drawingNo: part.drawingNo || '-',
+            partName: part.partName || '-',
+            castingMaterial: '',
+            castingWeight: '',
+            annualVolume: '',
+            partPrice: '',
+            patternCost: '',
+            moq: ''
+          }));
+
+          // Open final quotation dialog
+          this.dialog.open(FinalQuotationComponent, {
+            width: '95%',
+            maxWidth: '1400px',
+            height: '90vh',
+            data: { 
+              tableUserInputs: this.tableUserInputs,
+              materialComposition: this.materialComposition,
+              // Pass a cloned copy so later edits in the dialog cannot
+              // mutate the object we keep in component state
+              quotation: JSON.parse(JSON.stringify(createdQuotation))
+            },
+            autoFocus: false,
+            disableClose: false,
+            panelClass: 'final-quotation-dialog'
+          });
+        },
+        error: (err) => {
+          console.error('[QUOTATION CREATE] Error creating quotation:', err);
+          this.tooster.error('Failed to create quotation. Please try again.');
+          this.loading = false;
+        }
+      });
+    },
+    error: (err) => {
+      console.error('[QUOTATION CREATE] Error loading quote template:', err);
+      this.tooster.error('Failed to load quote template. Please try again.');
+      this.loading = false;
+    }
+  });
+}
+
+openFinalQuotationPopup() {
+  // Only check if quotation exists and open PDF directly if found
+  // Popup is already shown when checkbox is checked
+  if (this.selectedParts.length > 0 && this.selectedCustomer) {
+    // Extract IDs from selected parts (use ID field, not _id)
+    const partIds = this.selectedParts.map(part => String(part.ID || part._id)).filter(id => id && id !== '0');
+    const customerName = this.selectedCustomer;
+
+    // Prepare table user inputs
+    this.tableUserInputs = this.selectedParts.map((part, index) => ({
+      sno: index + 1,
+      drawingNo: part.drawingNo || '-',
+      partName: part.partName || '-',
+      castingMaterial: '',
+      castingWeight: '',
+      annualVolume: '',
+      partPrice: '',
+      patternCost: '',
+      moq: ''
+    }));
+
+    // Check if quotation exists (handle 404 gracefully)
+    this.reportsService.getQuotationByCustomerAndId(customerName, partIds).subscribe({
+      next: (quotations: Quotation[]) => {
+        if (quotations && quotations.length > 0) {
+          // Quotation exists - close popup and open PDF directly
+          this.Pdfgeneratepopup = false;
+          this.dialog.open(FinalQuotationComponent, {
+            width: '95%',
+            maxWidth: '1400px',
+            height: '90vh',
+            data: { 
+              tableUserInputs: this.tableUserInputs,
+              materialComposition: this.materialComposition,
+              quotation: quotations[0], // Pass the existing quotation
+              customerName: customerName,
+              partIds: partIds
+            },
+            autoFocus: false,
+            disableClose: false,
+            panelClass: 'final-quotation-dialog'
+          });
+        }
+        
+      },
+      error: (err) => {
+        if (err.status === 404 || err.status === 0) {
+          // Quotation not found - expected case
+        } else {
+          console.error('Error checking quotation:', err);
+        }
+      }
+    });
+  }
+}
 }

@@ -5,6 +5,12 @@
     
 
 
+ 
+
+      
+    
+
+
 
   
 
@@ -571,10 +577,24 @@
                 <div class="nested-table-container">
                   <div class="details-header">
                     <h4 class="details-title">Parts for {{ customerName }}</h4>
-                    <button *ngIf="pdfgenarate" class="pdf-btn" (click)="openPdfPopup()" >
-  <mat-icon>picture_as_pdf</mat-icon>
-  Generate PDF
-</button>
+                    
+                    <div *ngIf="selectedParts.length > 0">
+                     <button 
+                       *ngIf="!quotationExists"
+                       class="pdf-btn" 
+                       (click)="openCreateQuotationPopup()">
+                       <mat-icon>add</mat-icon>
+                       Create Quotation
+                     </button>
+                     
+                     <button 
+                       *ngIf="quotationExists"
+                       class="pdf-btn" 
+                       (click)="openFinalQuotationPopup()">
+                       <mat-icon>picture_as_pdf</mat-icon>
+                       Previous Quotation
+                     </button>
+                    </div>
 
                   </div>
                   
@@ -611,11 +631,14 @@
                             <ng-container *ngFor="let part of getPartsByPartName(customerName, partName)">
                               <!-- Part Row -->
                               <tr class="part-row">
-                                <td> <input 
-      type="checkbox"
-      [disabled]="selectedCustomer && selectedCustomer !== customerName"
-      (change)="onPartSelect(customerName, part, $event)"
-    />{{ part.drawingNo || '-' }}</td>
+                                <td> 
+                                  <input 
+                                    type="checkbox"
+                                    [checked]="isPartSelected(part)"
+                                    (change)="onPartSelect(customerName, part, $event)"
+                                  />
+                                  {{ part.drawingNo || '-' }}
+                                </td>
                                 <td>{{ getProcessCount(part) }} Process</td>
                                 <td>
                                   <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -966,20 +989,56 @@
 
 
 
-<div  class="popup-overlay" *ngIf="predetails"  >
-  <div class="popup-container">
 
-   <div class="extra-inputs">
-  <label>
-    Attention:
-    <input [(ngModel)]="attention" class="input-cell" placeholder="Enter attention">
-  </label>
 
-  <label>
-    Regards:
-    <input [(ngModel)]="regards" class="input-cell" placeholder="Enter regards">
-  </label>
-</div>
+
+<div class="popup-layer" *ngIf="Pdfgeneratepopup">
+  <div class="popup-content-quote">
+    
+    <div class="quotepopup-content">
+
+      <h5 class="popup-title">Create New Quotation</h5>
+      <div class="popup-Attention">
+    
+        <label >Attention:</label>
+    
+       <input type="text" [(ngModel)]="attentionquote">
+         
+    
+       
+    
+    
+      </div>
+  
+      <div class="popup-Attention">
+        <label >User:</label>
+        <select [(ngModel)]="selectedUser" class="user-select">
+          <option value="">-- Select User --</option>
+          <option *ngFor="let user of users" [value]="user.id || user._id">
+            {{user.userName || user.UserName}} - {{user.UserCode || user.userCode || 'N/A'}}
+          </option>
+        </select>
+      </div>
+      <div class="customer-data">
+    
+        <label >Customer Details:</label>
+  
+        <h5>{{customerquote}}</h5>
+  
+  
+  
+      </div>
+
+    </div>
+
+
+
+    <div class="quotepopup-action">
+      <button class="popup-btn close" (click)="cosequotepopup()">Close</button>
+      <button class="popup-btn save" (click)="generateQuote()">create  Quote</button>
+
+    </div>
+
   </div>
 
 </div>

@@ -13,7 +13,7 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'pdf-view',
+    path: 'generatepdf',
     component: PdfViewComponent
   },
   {

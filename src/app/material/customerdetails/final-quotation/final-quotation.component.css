@@ -1,0 +1,955 @@
+/* Document-style layout matching the image exactly */
+.document-wrapper {
+    background: #f5f5f5;
+    padding: 20px;
+    min-height: calc(100vh - 80px);
+    font-family: 'Arial', 'Helvetica', sans-serif;
+  }
+  
+  .document-page {
+    width: 100%;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: white;
+    padding: 40px 50px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  /* Company Header Image */
+  .company-header {
+    width: 100%;
+    margin-bottom: 15px;
+    margin-left: -50px;
+    margin-right: -50px;
+    margin-top: -40px;
+    padding: 0;
+  }
+  
+  .header-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+  
+  /* Quote Reference Section */
+  .quote-reference-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 25px;
+    text-align: right;
+  }
+  
+  .quote-ref-item {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    margin-bottom: 3px;
+  }
+  
+  .quote-label {
+    font-weight: normal;
+    margin-right: 5px;
+  }
+  
+  .quote-value {
+    font-weight: normal;
+  }
+  
+  /* Header Section */
+  .document-header {
+    margin-bottom: 30px;
+  }
+  
+  .attention-line {
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .attention-label {
+    font-weight: normal;
+    color: #000;
+  }
+  
+  .attention-value {
+    margin-left: 5px;
+    color: #000;
+    font-weight: normal;
+    display: inline-block;
+  }
+  
+  .greeting {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #000;
+    line-height: 1.6;
+  }
+  
+  .intro-paragraph {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    text-align: justify;
+    margin-bottom: 25px;
+  }
+  
+  /* Main Quote Table */
+  .quote-table-section {
+    margin-bottom: 30px;
+  }
+  
+  .table-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #000;
+    letter-spacing: 0.5px;
+  }
+  
+  .main-quote-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #000;
+    font-size: 12px;
+    margin-bottom: 20px;
+    table-layout: fixed;
+  }
+  
+  .main-quote-table thead {
+    background-color: #fff;
+  }
+  
+  .main-quote-table thead th {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+    color: #000;
+    vertical-align: middle;
+    word-wrap: break-word;
+    line-height: 1.3;
+    background-color: #fff;
+  }
+  
+  .table-main-title {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #000;
+    background-color: #fff;
+  }
+  
+  .main-quote-table tbody td {
+    border: 1px solid #000;
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 11px;
+    color: #000;
+    vertical-align: middle;
+    word-wrap: break-word;
+    line-height: 1.4;
+    background-color: #fff;
+  }
+  
+  .main-quote-table tbody tr:nth-child(7n+1) {
+    background-color: #fff;
+  }
+  
+  .sno-cell {
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+  }
+  
+  .drawing-number-cell {
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+  }
+  
+  .data-cell {
+    text-align: center;
+    word-break: break-word;
+    white-space: pre-line;
+    vertical-align: middle;
+    background-color: #fff;
+  }
+  
+  .multi-line-text {
+    white-space: pre-line;
+    line-height: 1.5;
+    text-align: center;
+  }
+  
+  .part-name-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 6px;
+  }
+  
+  .part-name-cell .multi-line-text {
+    line-height: 1.6;
+  }
+  
+  .material-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 6px;
+  }
+  
+  .material-cell .multi-line-text {
+    line-height: 1.6;
+  }
+  
+  /* Chemical Composition Section */
+  .composition-section {
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+  
+  .composition-intro {
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #000;
+    line-height: 1.6;
+  }
+  
+  .composition-table-wrapper {
+    display: block;
+  }
+  
+  .composition-table {
+    border-collapse: collapse;
+    border: 1px solid #000;
+    font-size: 12px;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .composition-table thead {
+    background-color: #fff;
+  }
+  
+  .material-type-header {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    color: #000;
+    background-color: #fff;
+  }
+  
+  .composition-table thead th {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 11px;
+    color: #000;
+    background-color: #fff;
+    width: 16.66%;
+  }
+  
+  .composition-table tbody td {
+    border: 1px solid #000;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 11px;
+    color: #000;
+    word-wrap: break-word;
+    background-color: #fff;
+    vertical-align: middle;
+  }
+  
+  .composition-table tbody tr {
+    background-color: #fff;
+  }
+  
+  /* General Considerations Section */
+  .considerations-section {
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+  
+  .considerations-list {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+  }
+  
+  .considerations-list li {
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  
+  .considerations-list li strong {
+    font-weight: bold;
+  }
+  
+.consideration-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.gc-checkbox {
+  margin-right: 8px;
+  margin-top: 4px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.gc-title {
+  display: inline-block;
+  font-weight:400;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gc-description {
+  display: inline-block;
+  flex: 1;
+}
+  
+  .sub-point {
+    margin-top: 5px;
+    margin-left: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  /* Commercial Terms Section */
+  .commercial-terms-section {
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .commercial-terms-top-list {
+    margin: 0 0 15px 0;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    list-style-type: disc;
+  }
+  
+  .commercial-terms-top-list li {
+    margin-bottom: 8px;
+    text-align: justify;
+  }
+  
+  .commercial-terms-list {
+    margin: 0;
+    padding-left: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+  }
+  
+  .commercial-terms-list li {
+    margin-bottom: 12px;
+    text-align: justify;
+  }
+  
+  .term-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #000;
+  }
+  
+  .term-description {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #000;
+  }
+  
+  .commercial-terms-list li strong {
+    font-weight: bold;
+  }
+  
+  .square-list {
+    list-style-type: square;
+    padding-left: 30px;
+    margin: 0 0 8px 0;
+  }
+  
+  .square-list li {
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  
+  .factors-list {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding-left: 25px;
+    list-style-type: disc;
+  }
+  
+  .factors-list li {
+    margin-bottom: 5px;
+    line-height: 1.6;
+  }
+  
+  .hsn-codes-list {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 25px;
+    list-style-type: disc;
+  }
+  
+  .hsn-codes-list li {
+    margin-bottom: 3px;
+    line-height: 1.6;
+  }
+  
+  .tooling-payment-list {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 25px;
+    list-style-type: disc;
+  }
+  
+  .tooling-payment-list li {
+    margin-bottom: 5px;
+    line-height: 1.6;
+  }
+  
+  /* Concluding Paragraph */
+  .concluding-paragraph {
+    margin-top: 30px;
+    margin-bottom: 25px;
+  }
+  
+  .concluding-paragraph p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #000;
+    text-align: justify;
+    margin: 0;
+  }
+  
+  /* Signature Block */
+  .signature-block {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .signature-line {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  .signature-name {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+    font-weight: normal;
+  }
+  
+  .signature-title {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+    font-weight: normal;
+  }
+  
+  .signature-department {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+    font-weight: normal;
+  }
+  
+  .signature-department-full {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+  
+  
+  /* Print Styles */
+  @media print {
+    .document-wrapper {
+      background: white;
+      padding: 0;
+    }
+  
+    .document-page {
+      box-shadow: none;
+      margin: 0;
+      padding: 20mm 25mm;
+      max-width: 100%;
+    }
+  
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .document-page {
+      padding: 30px 40px;
+    }
+  
+    .main-quote-table {
+      font-size: 10px;
+    }
+  
+    .main-quote-table thead th,
+    .main-quote-table tbody td {
+      padding: 6px 4px;
+      font-size: 10px;
+    }
+  
+    .composition-table {
+      font-size: 10px;
+    }
+  
+    .composition-table thead th,
+    .composition-table tbody td {
+      padding: 8px 6px;
+      font-size: 10px;
+    }
+  }
+  
+  @media (max-width: 968px) {
+    .main-quote-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    .main-quote-table thead,
+    .main-quote-table tbody,
+    .main-quote-table tr,
+    .main-quote-table td,
+    .main-quote-table th {
+      display: block;
+    }
+  
+    .main-quote-table thead {
+      display: none;
+    }
+  
+    .main-quote-table tr {
+      border: 1px solid #000;
+      margin-bottom: 10px;
+      display: block;
+    }
+  
+    .main-quote-table td {
+      border: none;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+      padding-left: 35%;
+      text-align: left;
+    }
+  
+    .main-quote-table td:before {
+      content: attr(data-label);
+      position: absolute;
+      left: 8px;
+      width: 30%;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+  
+  /* Contact and Certification Section */
+  .contact-and-certification-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 10px;
+    padding-top: 10px;
+   
+  }
+  
+  .contact-info {
+    flex: 1;
+  }
+  
+  .contact-text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: #000;
+  }
+  
+  .contact-link {
+    color: #000;
+  }
+  
+  .certification-logos {
+    flex-shrink: 0;
+    margin-left: 20px;
+  }
+  
+  .certification-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    .document-wrapper {
+      padding: 10px;
+    }
+  
+    .document-page {
+      padding: 20px;
+    }
+  
+    .main-quote-table {
+      font-size: 9px;
+    }
+  
+    .composition-table-wrapper {
+      display: block;
+    }
+  
+    .action-controls {
+      flex-direction: column;
+    }
+  
+    .control-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  
+    /* Certification image responsive */
+    .contact-and-certification-section {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .certification-logos {
+      margin-left: 0;
+      margin-top: 15px;
+      width: 100%;
+    }
+  
+    .certification-image {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .certification-image {
+      max-width: 250px;
+    }
+  
+    .contact-text {
+      font-size: 11px;
+    }
+  }
+  
+  /* Ensure proper text rendering */
+  .document-page * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  
+  .commercial-terms-list {
+    padding-left: 22px;
+    margin: 20px 0;
+    line-height: 1.6;
+    font-size: 12.5px;
+    counter-reset: term-counter;
+  }
+  
+  .main-term {
+    margin: 16px 0;
+    list-style: none;
+    position: relative;
+    padding-left: 5px;
+  }
+  
+  .main-term::before {
+    counter-increment: term-counter;
+    content: counter(term-counter) ".";
+    font-weight: bold;
+    position: absolute;
+    left: -22px;
+  }
+  
+  .main-term > strong {
+    font-size: 13px;
+    color: #000;
+  }
+  
+  .section-header {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .section-checkbox {
+    margin-right: 4px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+  
+  .sub-items {
+    margin: 10px 0 0 20px;
+    padding-left: 0;
+  }
+  
+  .sub-item {
+    margin: 7px 0;
+    line-height: 1.5;
+    position: relative;
+  }
+  
+  .sub-item::before {
+    content: "•";
+    color: #000;
+    font-weight: bold;
+    position: absolute;
+    left: -18px;
+  }
+  
+  .contact-and-certification-section{
+    color:#797777
+  }
+  
+.text-line {
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 6px;
+  margin-top: 4px;
+  line-height: 1.6;
+  font-size: 12.5px;
+  margin-left: 20px;
+}
+  
+  .text-line:not(:empty)::before {
+    content: "•";
+    color: #000;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  
+  .text-line:empty::before {
+    content: "Click or press Add to type here...";
+    color: #aaa;
+    font-style: italic;
+    pointer-events: none;
+  }
+  
+  .bullet-block {
+    margin: 10px 0;
+  }
+  
+  .bullet-list {
+    list-style-type: square;
+    padding-left: 25px;
+    margin: 8px 0;
+    line-height: 1.6;
+    font-size: 12.5px;
+  }
+  
+  .bullet-item {
+    margin-bottom: 6px;
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+  
+  .bullet-item:empty::before {
+    content: "Click or press Add to type here...";
+    color: #aaa;
+    font-style: italic;
+    pointer-events: none;
+  }
+  
+  .text-line[contenteditable="true"],
+  .bullet-item[contenteditable="true"] {
+    background: #fff !important;
+    outline: 2px solid #3498db;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
+  }
+
+/* Download PDF Button */
+.download-pdf-btn {
+  padding: 12px 24px;
+  background: #1b5e20; /* dark green */
+  color: white;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  margin-top: 20px;
+}
+
+.download-pdf-btn:hover:not(:disabled) {
+  background: #2e7d32; /* lighter green */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+}
+
+.download-pdf-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.download-pdf-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #1b5e20;
+}
+
+.download-pdf-btn mat-icon {
+  font-size: 20px;
+}
+
+.download-pdf-btn mat-spinner {
+  margin-right: 8px;
+}
+
+
+.lds-roller {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-roller div {
+    animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    transform-origin: 40px 40px;
+  }
+  .lds-roller div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #000;
+    margin: -4px 0 0 -4px;
+  }
+  .lds-roller div:nth-child(1) {
+    animation-delay: -0.036s;
+  }
+  .lds-roller div:nth-child(1):after {
+    top: 63px;
+    left: 63px;
+  }
+  .lds-roller div:nth-child(2) {
+    animation-delay: -0.072s;
+  }
+  .lds-roller div:nth-child(2):after {
+    top: 68px;
+    left: 56px;
+  }
+  .lds-roller div:nth-child(3) {
+    animation-delay: -0.108s;
+  }
+  .lds-roller div:nth-child(3):after {
+    top: 71px;
+    left: 48px;
+  }
+  .lds-roller div:nth-child(4) {
+    animation-delay: -0.144s;
+  }
+  .lds-roller div:nth-child(4):after {
+    top: 72px;
+    left: 40px;
+  }
+  .lds-roller div:nth-child(5) {
+    animation-delay: -0.18s;
+  }
+  .lds-roller div:nth-child(5):after {
+    top: 71px;
+    left: 32px;
+  }
+  .lds-roller div:nth-child(6) {
+    animation-delay: -0.216s;
+  }
+  .lds-roller div:nth-child(6):after {
+    top: 68px;
+    left: 24px;
+  }
+  .lds-roller div:nth-child(7) {
+    animation-delay: -0.252s;
+  }
+  .lds-roller div:nth-child(7):after {
+    top: 63px;
+    left: 17px;
+  }
+  .lds-roller div:nth-child(8) {
+    animation-delay: -0.288s;
+  }
+  .lds-roller div:nth-child(8):after {
+    top: 56px;
+    left: 12px;
+  }
+  @keyframes lds-roller {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .loading-spinner {
+    position: fixed;
+    width: 20vw;
+    left: 40vw;
+    top: 30%;
+    z-index: 99;
+    background-color: #fff;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #aaa;
+  }
+  
+  .backdrop {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 98;
+  }
+  

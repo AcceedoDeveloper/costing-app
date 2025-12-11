@@ -30,7 +30,8 @@ import { AddOverheadsComponent } from './over-heads/add-overheads/add-overheads.
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PdfmakerComponent } from './pdfmaker/pdfmaker.component';
-import { PdfViewComponent } from './pdf-view/pdf-view.component'
+import { PdfViewComponent } from './pdf-view/pdf-view.component';
+import { PdfEditDirective } from './pdfmaker/pdf-edit.directive';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { PdfViewComponent } from './pdf-view/pdf-view.component'
      OverHeadsComponent,
      AddOverheadsComponent,
      PdfmakerComponent,
-     PdfViewComponent,   ],
+     PdfViewComponent,
+     PdfEditDirective,   ],
   imports: [
     MatSelectModule,
     MatDatepickerModule,
