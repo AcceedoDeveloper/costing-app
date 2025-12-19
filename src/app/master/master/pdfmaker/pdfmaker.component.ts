@@ -1,7 +1,9 @@
 // src/app/master/master/pdfmaker/pdfmaker.component.ts
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ReportsService } from '../../../services/reports.service';
 import { Pdfmaker } from './pdfmaker.model';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-pdfmaker',
@@ -17,7 +19,8 @@ export class PdfmakerComponent implements OnInit {
 
   constructor(
     private reportservice: ReportsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -151,10 +154,10 @@ export class PdfmakerComponent implements OnInit {
       const materialMatch = path.match(/materials\[(\d+)\]\.materialName/);
       if (materialMatch && type === 'delete') {
         const matIdx = +materialMatch[1];
-        if (confirm('Delete this material and all its elements?')) {
+        this.openDeleteDialog('Delete this material and all its elements?', () => {
           this.quoteData!.rawMaterialComposition.materials.splice(matIdx, 1);
           this.triggerAutoSave();
-        }
+        });
         return;
       }
 
@@ -185,10 +188,10 @@ export class PdfmakerComponent implements OnInit {
         const matIdx = +elementMatch[1];
         const elIdx = +elementMatch[2];
         const material = this.quoteData!.rawMaterialComposition.materials[matIdx];
-        if (confirm('Delete this element column?')) {
+        this.openDeleteDialog('Delete this element column?', () => {
           material.elements.splice(elIdx, 1);
           this.triggerAutoSave();
-        }
+        });
         return;
       }
     }
@@ -232,9 +235,11 @@ export class PdfmakerComponent implements OnInit {
   
       if (type === 'delete' && path.includes('items[')) {
         const match = path.match(/items\[(\d+)\]/);
-        if (match && confirm('Delete this consideration point?')) {
-          this.quoteData!.generalConsiderations.items.splice(+match[1], 1);
-          this.triggerAutoSave();
+        if (match) {
+          this.openDeleteDialog('Delete this consideration point?', () => {
+            this.quoteData!.generalConsiderations.items.splice(+match[1], 1);
+            this.triggerAutoSave();
+          });
         }
         return; // ← STOP HERE
       }
@@ -275,10 +280,10 @@ export class PdfmakerComponent implements OnInit {
   
       // Delete entire section
       if (path.includes('.sectionTitle') && type === 'delete') {
-        if (confirm('Delete entire section?')) {
+        this.openDeleteDialog('Delete entire section?', () => {
           this.quoteData!.commercialTermsAndConditions.sections.splice(secIdx, 1);
           this.triggerAutoSave();
-        }
+        });
         return;
       }
   
@@ -293,11 +298,13 @@ export class PdfmakerComponent implements OnInit {
         if (!item.bulletPoints) item.bulletPoints = [];
   
         if (type === 'delete') {
-          if (confirm('Delete this bullet?')) {
-            item.bulletPoints.splice(bulletIdx, 1);
-            if (item.bulletPoints.length === 0) delete item.bulletPoints;
+          this.openDeleteDialog('Delete this bullet?', () => {
+            if (item.bulletPoints) {
+              item.bulletPoints.splice(bulletIdx, 1);
+              if (item.bulletPoints.length === 0) delete item.bulletPoints;
+            }
             this.triggerAutoSave();
-          }
+          });
         } else if (type === 'add') {
           item.bulletPoints.splice(bulletIdx + 1, 0, '');
           this.triggerAutoSave();
@@ -312,10 +319,10 @@ export class PdfmakerComponent implements OnInit {
         const itemIdx = +itemMatch[1];
   
         if (type === 'delete') {
-          if (confirm('Delete this line?')) {
+          this.openDeleteDialog('Delete this line?', () => {
             section.items.splice(itemIdx, 1);
             this.triggerAutoSave();
-          }
+          });
         } else if (type === 'add') {
           const newItem = { text: '', bulletPoints: [], subheading: '' };
           section.items.splice(itemIdx + 1, 0, newItem);
@@ -476,5 +483,23 @@ export class PdfmakerComponent implements OnInit {
         }
       });
     }
+  }
+
+  /* ---------------------- DELETE CONFIRMATION DIALOG ---------------------- */
+  private openDeleteDialog(message: string, onConfirm: () => void): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      disableClose: true,
+      data: {
+        title: 'Delete Confirmation',
+        message: message
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        onConfirm();
+      }
+    });
   }
 }
