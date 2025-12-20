@@ -1,4 +1,5 @@
 
+
 <div *ngIf="downloadingPDF" class="loading-spinner">
     <div class="lds-roller">
       <div></div>
@@ -210,8 +211,8 @@
             appQuotationEdit
             [quoteData]="quoteData"
             [quotationData]="quotationData"
-            propertyPath="rawMaterialComposition.title">
-          {{ quoteData?.rawMaterialComposition.title || 'Chemical Composition' }}
+            propertyPath="rawMaterialComposition.title"
+            [innerHTML]="quoteData?.rawMaterialComposition?.title ? boldBeforeColon(quoteData.rawMaterialComposition.title) : 'Chemical Composition'">
         </div>
     
         <!-- Loop through each material (e.g. GS 20 Mn5, CA6NM, etc.) -->
@@ -227,8 +228,8 @@
                       appQuotationEdit
                       [quoteData]="quoteData"
                       [quotationData]="quotationData"
-                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].materialName'">
-                    {{ material.materialName || 'Material Name' }}
+                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].materialName'"
+                      [innerHTML]="material.materialName ? boldBeforeColon(material.materialName) : 'Material Name'">
                   </th>
                 </tr>
     
@@ -238,8 +239,8 @@
                       appQuotationEdit
                       [quoteData]="quoteData"
                       [quotationData]="quotationData"
-                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].element'">
-                    {{ el.element || '-' }}
+                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].element'"
+                      [innerHTML]="el.element ? boldBeforeColon(el.element) : '-'">
                   </th>
                 </tr>
               </thead>
@@ -252,8 +253,8 @@
                       appQuotationEdit
                       [quoteData]="quoteData"
                       [quotationData]="quotationData"
-                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].range'">
-                    {{ el.range || '-' }}
+                      [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].range'"
+                      [innerHTML]="el.range ? boldBeforeColon(el.range) : '-'">
                   </td>
                 </tr>
               </tbody>

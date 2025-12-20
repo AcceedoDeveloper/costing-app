@@ -337,7 +337,7 @@ export class PdfViewComponent implements OnInit, AfterViewInit {
       return div.innerHTML;
     };
     let escaped = escapeHtml(text);
-    let processed = escaped.replace(/\$([^$]+?)\$/g, '<strong>$1</strong>');
+    let processed = escaped.replace(/\$+([^$]+?)\$+/g, '<strong>$1</strong>');
     if (!processed.includes('<strong>')) {
       processed = processed.replace(/^([^:]+):/g, '<strong>$1:</strong>');
     }

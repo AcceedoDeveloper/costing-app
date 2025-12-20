@@ -1,3 +1,5 @@
+
+
     <div class="document-wrapper">
       <div class="document-page">
         <!-- Company Header Image -->
@@ -237,8 +239,8 @@
                 <th *ngFor="let el of material.elements; let elIndex = index"
                     appPdfEdit
                     [quoteData]="quoteData"
-                    [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].element'">
-                  {{ el.element || '-' }}
+                    [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].element'"
+                    [innerHTML]="el.element ? boldBeforeColon(el.element) : '-'">
                 </th>
               </tr>
             </thead>
@@ -250,8 +252,8 @@
                     *ngFor="let el of material.elements; let elIndex = index"
                     appPdfEdit
                     [quoteData]="quoteData"
-                    [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].range'">
-                  {{ el.range || '-' }}
+                    [propertyPath]="'rawMaterialComposition.materials[' + matIndex + '].elements[' + elIndex + '].range'"
+                    [innerHTML]="el.range ? boldBeforeColon(el.range) : '-'">
                 </td>
               </tr>
             </tbody>

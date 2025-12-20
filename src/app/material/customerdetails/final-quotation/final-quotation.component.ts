@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit, ChangeDetectorRef, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -605,7 +607,8 @@ export class FinalQuotationComponent implements OnInit {
     };
 
     let escaped = escapeHtml(text);
-    let processed = escaped.replace(/\$([^$]+?)\$/g, '<strong>$1</strong>');
+    // Support one-or-more $ markers (e.g. $text$, $$text$$, $$$text$$$)
+    let processed = escaped.replace(/\$+([^$]+?)\$+/g, '<strong>$1</strong>');
 
     if (!processed.includes('<strong>')) {
       processed = processed.replace(/^([^:]+):/g, '<strong>$1:</strong>');

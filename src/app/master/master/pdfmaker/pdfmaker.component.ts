@@ -1,3 +1,4 @@
+
 // src/app/master/master/pdfmaker/pdfmaker.component.ts
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -75,7 +76,8 @@ export class PdfmakerComponent implements OnInit {
     };
 
     let escaped = escapeHtml(text);
-    let processed = escaped.replace(/\$([^$]+?)\$/g, '<strong>$1</strong>');
+    // Support multiple $ markers (e.g. $$text$$ or $$$text$$$)
+    let processed = escaped.replace(/\$+([^$]+?)\$+/g, '<strong>$1</strong>');
 
     if (!processed.includes('<strong>')) {
       processed = processed.replace(/^([^:]+):/g, '<strong>$1:</strong>');

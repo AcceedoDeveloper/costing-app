@@ -1,5 +1,3 @@
-// src/app/material/customerdetails/final-quotation/quotation-edit.directive.ts
-
 import { Directive, ElementRef, Input, HostListener, Renderer2 } from '@angular/core';
 import { Pdfmaker } from '../../../master/master/pdfmaker/pdfmaker.model';
 import { Quotation } from '../../../models/Quotation.model';
@@ -68,10 +66,11 @@ export class QuotationEditDirective {
     }
     // 3. RAW MATERIAL COMPOSITION
     else if (lowerPath.includes('rawmaterialcomposition')) {
-      if (lowerPath === 'rawmaterialcomposition.title') {
-        actionButtons = 'add';        // Main title → only Add (to add new material)
+      // Hide Add/Delete for the main composition title and for per-material names
+      if (lowerPath === 'rawmaterialcomposition.title' || lowerPath.endsWith('.materialname')) {
+        actionButtons = undefined;   // No Add/Delete
       } else {
-        actionButtons = 'both';       // Material names, elements, ranges → Add + Delete
+        actionButtons = 'both';       // Material elements and ranges → Add + Delete
       }
     }
     // 4. Everything else (header, table, etc.) → no buttons
@@ -187,6 +186,18 @@ export class QuotationEditDirective {
   private showToolbar(actionButtons?: 'add' | 'delete' | 'both') {
     if (this.toolbarEl) this.hideToolbar();
 
+    // Determine whether formatting or action buttons should be shown for this element.
+    const lowerProp = (this.propertyPath || '').trim().toLowerCase();
+    const classList = this.el?.nativeElement?.classList;
+    const isCompClass = !!(classList && (classList.contains('composition-intro') || classList.contains('material-type-header')));
+    const disableFormatting = isCompClass || lowerProp.includes('rawmaterialcomposition') || lowerProp.includes('quotetable');
+
+    const willShowFormatting = !disableFormatting;
+    const willShowActionButtons = !!actionButtons;
+
+    // If nothing to show, don't render the toolbar at all (prevents empty background box)
+    if (!willShowFormatting && !willShowActionButtons) return;
+
     const rect = this.el.nativeElement.getBoundingClientRect();
     const toolbar = this.renderer.createElement('div');
     this.renderer.addClass(toolbar, 'pdf-edit-toolbar');
@@ -212,19 +223,21 @@ export class QuotationEditDirective {
       this.isToolbarClick = true;
     });
 
-    // Bold Button
-    const boldBtn = this.createToolButton('Bold', '#f39c12', () => {
-      this.wrapSelectionWithDollar();
-      setTimeout(() => this.el.nativeElement.blur(), 50);
-    });
-    this.renderer.appendChild(toolbar, boldBtn);
+    // Bold Button (skip when formatting is disabled)
+    if (willShowFormatting) {
+      const boldBtn = this.createToolButton('Bold', '#f39c12', () => {
+        this.wrapSelectionWithDollar();
+        setTimeout(() => this.el.nativeElement.blur(), 50);
+      });
+      this.renderer.appendChild(toolbar, boldBtn);
 
-    // Unbold Button
-    const unboldBtn = this.createToolButton('Unbold', '#95a5a6', () => {
-      this.removeDollarMarkers();
-      setTimeout(() => this.el.nativeElement.blur(), 50);
-    });
-    this.renderer.appendChild(toolbar, unboldBtn);
+      // Unbold Button
+      const unboldBtn = this.createToolButton('Unbold', '#95a5a6', () => {
+        this.removeDollarMarkers();
+        setTimeout(() => this.el.nativeElement.blur(), 50);
+      });
+      this.renderer.appendChild(toolbar, unboldBtn);
+    }
 
     // Add / Delete Buttons
     if (actionButtons) {
@@ -332,7 +345,8 @@ export class QuotationEditDirective {
     if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
-    return div.innerHTML.replace(/\$([^$]+?)\$/g, '<strong>$1</strong>');
+    // Support one-or-more $ markers (e.g. $text$, $$text$$, $$$text$$$)
+    return div.innerHTML.replace(/\$+([^$]+?)\$+/g, '<strong>$1</strong>');
   }
 
   private convertHtmlToDollar(html: string): string {
@@ -474,4 +488,3 @@ export class QuotationEditDirective {
     };
   }
 }
-

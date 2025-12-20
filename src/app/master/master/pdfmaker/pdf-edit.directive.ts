@@ -1,3 +1,4 @@
+
 import { Directive, Input, ElementRef, HostListener, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { Pdfmaker } from './pdfmaker.model';
 import { ReportsService } from '../../../services/reports.service';
@@ -177,10 +178,11 @@ export class PdfEditDirective implements OnInit, OnDestroy {
     }
     // 3. RAW MATERIAL COMPOSITION
     else if (lowerPath.includes('rawmaterialcomposition')) {
-      if (lowerPath === 'rawmaterialcomposition.title') {
-        actionButtons = 'add';        // Main title → only Add (new material)
+      // Hide Add/Delete for main composition title and for each material's title (materialName)
+      if (lowerPath === 'rawmaterialcomposition.title' || lowerPath.includes('.materialname')) {
+        actionButtons = undefined;    // No Add/Delete buttons
       } else {
-        actionButtons = 'both';       // Material names, elements, ranges → Add + Delete
+        actionButtons = 'both';       // Material elements, ranges → Add + Delete
       }
     }
     // 4. Everything else (header, table, etc.) → no Add/Delete buttons
@@ -495,7 +497,8 @@ export class PdfEditDirective implements OnInit, OnDestroy {
     if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
-    return div.innerHTML.replace(/\$([^$]+?)\$/g, '<strong>$1</strong>');
+    // Support one-or-more $ markers (e.g. $text$, $$text$$, $$$text$$$)
+    return div.innerHTML.replace(/\$+([^$]+?)\$+/g, '<strong>$1</strong>');
   }
 
   private convertHtmlToDollar(html: string): string {
@@ -542,14 +545,32 @@ export class PdfEditDirective implements OnInit, OnDestroy {
 
     let container: Node | null = range.commonAncestorContainer;
     if (container.nodeType === Node.TEXT_NODE) container = container.parentNode;
-
+    // First try to unwrap the nearest ancestor <strong> or <b>
     const strong = (container as HTMLElement)?.closest?.('strong, b');
-    if (strong?.parentNode) {
+    if (strong && strong.parentNode) {
       while (strong.firstChild) {
         strong.parentNode.insertBefore(strong.firstChild, strong);
       }
       strong.parentNode.removeChild(strong);
       strong.parentNode.normalize();
+    } else {
+      // Fallback: find any <strong> or <b> within this element that intersects the selection
+      const root = this.el.nativeElement as HTMLElement;
+      const candidates = root.querySelectorAll('strong, b');
+      candidates.forEach((s) => {
+        try {
+          if ((range as Range).intersectsNode(s)) {
+            const sEl = s as HTMLElement;
+            while (sEl.firstChild) {
+              sEl.parentNode!.insertBefore(sEl.firstChild, sEl);
+            }
+            sEl.parentNode!.removeChild(sEl);
+          }
+        } catch (e) {
+          // ignore any errors from intersectsNode in older browsers
+        }
+      });
+      root.normalize();
     }
     window.getSelection()?.removeAllRanges();
     this.savedRange = null;
