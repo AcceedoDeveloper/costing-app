@@ -222,7 +222,14 @@ export class PdfEditDirective implements OnInit, OnDestroy {
       next: (saved: Pdfmaker) => {
         // Update quoteData with saved data
         Object.assign(this.quoteData!, saved);
-        console.log('[PdfEdit] Saved successfully');
+        console.log('[PdfEdit] Saved successfully', saved);
+        // Helpful debug: log types of general considerations descriptions after save
+        try {
+          const items = saved.generalConsiderations?.items || [];
+          console.log('[PdfEdit] After save - generalConsiderations.items types:', items.map((it: any, idx: number) => ({ idx, type: typeof it.description, value: it.description })));
+        } catch (e) {
+          console.warn('[PdfEdit] Could not log saved items details', e);
+        }
       },
       error: (err) => {
         console.error('[PdfEdit] Save failed:', err);

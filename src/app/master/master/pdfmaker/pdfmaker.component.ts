@@ -100,7 +100,14 @@ export class PdfmakerComponent implements OnInit {
   private triggerAutoSave() {
     if (!this.quoteData) return;
 
-  
+    // Log current generalConsiderations items for debugging (types/values)
+    try {
+      const items = this.quoteData.generalConsiderations?.items || [];
+      console.log('🟡 [PDF] Auto-save initiated. generalConsiderations items:', items.map((it: any, i: number) => ({ i, title: it.title, descriptionType: typeof it.description, descriptionValue: it.description })));
+    } catch (e) {
+      console.warn('🟡 [PDF] Auto-save: could not stringify items', e);
+    }
+
     setTimeout(() => {
       this.reportservice.updateQuoteTemplate(this.quoteData!).subscribe({
         next: () => console.log('Auto-saved'),
@@ -216,6 +223,8 @@ export class PdfmakerComponent implements OnInit {
           this.quoteData!.generalConsiderations.items.push(newItem);
         }
   
+        console.log('🟢 [PDF] Adding new General Consideration item at index', this.quoteData!.generalConsiderations.items.length);
+        console.log('🟢 [PDF] New item:', JSON.stringify(newItem));
         this.triggerAutoSave();
   
         // Auto-focus the new title
@@ -387,6 +396,28 @@ export class PdfmakerComponent implements OnInit {
       return this.boldBeforeColon(title + ':');
     }
     return '<em style="color:#aaa; font-style:italic;">Click to add section title...</em>:';
+  }
+  
+  /**
+   * Returns the HTML string to render inside description field.
+   * Handles string or array types for backwards compatibility.
+   */
+  getDescriptionDisplay(item: any): string {
+    const desc = item && item.description;
+    let text = '';
+
+    if (typeof desc === 'string') {
+      text = desc.trim();
+    } else if (Array.isArray(desc)) {
+      // Join array elements with a single space (common case: saved as array of lines)
+      text = desc.join(' ').trim();
+    }
+
+    if (text) {
+      return this.boldBeforeColon(text);
+    }
+
+    return '<em style="color:#aaa;font-style:italic;">Click to add description...</em>';
   }
   getMainTitleDisplay(): string {
     const title = this.quoteData?.commercialTermsAndConditions?.title?.trim();

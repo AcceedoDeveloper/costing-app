@@ -328,12 +328,12 @@
         </div>
 
         <!-- DESCRIPTION LINE -->
-        <div class="gc-description"
+           <div class="gc-description"
              appPdfEdit
              [quoteData]="quoteData"
              [propertyPath]="'generalConsiderations.items[' + i + '].description'"
-             [innerHTML]="item.description ? boldBeforeColon(item.description) : '<em style=&quot;color:#aaa;&quot;>Click to add description...</em>'">
-        </div>
+             [innerHTML]="getDescriptionDisplay(item)">
+           </div>
 
       </li>
     </ng-container>
