@@ -191,7 +191,14 @@
 {
   "name":"getQuotationByCustomerAndId",
   "url":"getQuotationByCustomerAndId"
-}
+},
+{"name":"getVersions","url":"getVersions"},
+{"name":"createVersions","url":"createVersions"},
+{"name":"updateVersions","url":"updateVersions"},
+{"name":"updateVersions/objects","url":"updateVersions/objects"},
+{"name":"deleteVersions","url":"deleteVersions"},
+{"name":"deleteVersions/objects","url":"deleteVersions/objects"}
+
 
 
 
