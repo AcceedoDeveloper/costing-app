@@ -53,7 +53,7 @@ export class ReportComponent implements OnInit, OnDestroy {
   pageIndex: number = 0;
 
   // View mode
-  viewMode: 'grid' | 'table' = 'grid';
+  viewMode: 'grid' | 'table' = 'table';
 
   constructor(
     private reportsService: ReportsService,

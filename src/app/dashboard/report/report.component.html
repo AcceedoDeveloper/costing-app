@@ -116,9 +116,9 @@
         <mat-icon class="date-icon">calendar_today</mat-icon>
         <select class="date-type-select" [(ngModel)]="dateFilterType" (ngModelChange)="onDateFilterTypeChange()">
           <option value="custom">Custom Range</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="year">This Year</option>
+          <option value="week"> Week</option>
+          <option value="month"> Month</option>
+          <option value="year"> Year</option>
         </select>
       </div>
       <div class="date-range-inputs" *ngIf="dateFilterType === 'custom'">

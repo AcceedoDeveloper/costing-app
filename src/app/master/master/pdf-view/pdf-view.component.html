@@ -1,4 +1,6 @@
-<!-- Loading State -->
+
+
+  <!-- Loading State -->
 <div *ngIf="loading" class="loading-container" style="display: flex; justify-content: center; align-items: center; min-height: 400px;">
   <div style="text-align: center;">
     <p>Loading quotation data...</p>
@@ -14,106 +16,96 @@
 
 <!-- Document Content -->
 <div class="document-wrapper" *ngIf="!loading && !error && quoteData">
-    <div class="document-page" #documentPage>
+  <!-- Use table layout for reliable repeating footer in print -->
+  <table class="print-table">
+    <tbody>
+      <tr>
+        <td class="print-body">
+          <div class="document-page">
+            <div class="page-content">
+              <!-- Company Header Image -->
+              <div class="company-header">
+                <img src="assets/pdfheaderimage.png" alt="Indo Shell Cast Private Limited" class="header-image">
+              </div>
 
-      <div class="page-content">
-      <!-- Company Header Image -->
-      <div class="company-header">
-        <img src="assets/pdfheaderimage.png" alt="Indo Shell Cast Private Limited" class="header-image">
-      </div>
-  
-      <!-- Quote Reference Section -->
-      <div class="quote-reference-section">
-        <div class="quote-ref-item">
-          <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData.header.quoteRefNumber.label || '')"></span>
-          <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData.header.quoteRefNumber.value || '-')"></span> &nbsp;&nbsp;
-          <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData.header.date.label || 'Date:')"></span>
-          <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData.header.date.value || '-')"></span>
-        </div>
-        <div class="quote-ref-item">
-          <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData.header.customer.label || '')"></span>
-          <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData.header.customer.value || '-')"></span>
-        </div>
-      </div>
-  
-      <!-- Header Section -->
-      <div class="document-header">
-        <div class="attention-line">
-          <span class="attention-label" [innerHTML]="boldBeforeColon(quoteData.header.attention.label || '')"></span>
-          <span class="attention-value" [innerHTML]="boldBeforeColon(quoteData.header.attention.value || '-')"></span>
-        </div>
-        <div class="greeting" [innerHTML]="boldBeforeColon(quoteData.salutation || 'Dear Sir,')"></div>
-        <div class="intro-paragraph" [innerHTML]="boldBeforeColon(quoteData.introduction || '')"></div>
-      </div>
-  
-      <!-- Main Quote Table -->
-      <div class="quote-table-section">
-        <table class="main-quote-table">
-          <thead>
-            <tr>
-              <th colspan="9" class="table-main-title"
-                  [innerHTML]="boldBeforeColon(quoteData.quoteTable.title || 'ISC – SHELL MOULDING/ STEEL CASTING – QUOTE')">
-              </th>
-            </tr>
-            <tr>
-              <th>{{ getColumnHeader('sno') }}</th>
-              <th>{{ getColumnHeader('drawingNumber') }}</th>
-              <th>{{ getColumnHeader('partName') }}</th>
-              <th>{{ getColumnHeader('castingMaterial') }}</th>
-              <th>{{ getColumnHeader('castingWeightInKgs') }}</th>
-              <th>{{ getColumnHeader('annualVolume') }}</th>
-              <th>{{ getColumnHeader('partPriceInINR') }}</th>
-              <th class="pattern-cost-header">
-                <div class="pattern-cost-title">{{ getColumnHeader('patternCostINR') }}</div>
-                <div class="pattern-cost-line"></div>
-              </th>
-              <th>{{ getColumnHeader('moqInNos') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngIf="getTableRows().length > 0">
-              <ng-container *ngFor="let row of getTableRows(); let i = index">
-                <!-- First row with all data spanning multiple rows -->
-                <tr>
-                  <td [attr.rowspan]="getRowSpan(i)" class="sno-cell">
-                    {{ getSno(i) }}
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="drawing-number-cell">
-                    {{ getDrawingNumber(i) }}
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="part-name-cell">
-                    <div class="multi-line-text">{{ formatPartName(getPartName(i)) || '-' }}</div>
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="material-cell">
-                    <div class="multi-line-text">{{ formatCastingMaterial(isColumnsArray() ? getRowValue(row, 'castingMaterial') : (row.castingMaterial || '-')) || '-' }}</div>
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
-                    {{ isColumnsArray() ? getRowValue(row, 'castingWeightInKgs') : (row.castingWeight || '-') }}
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
-                    {{ isColumnsArray() ? getRowValue(row, 'annualVolume') : (row.annualVolume || '-') }}
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
-                    {{ isColumnsArray() ? getRowValue(row, 'partPriceInINR') : (row.partPrice || '-') }}
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
-                    {{ isColumnsArray() ? getRowValue(row, 'patternCostINR') : (row.patternCost || '-') }}
-                  </td>
-                  <td [attr.rowspan]="getRowSpan(i)" class="data-cell">
-                    {{ isColumnsArray() ? getRowValue(row, 'moqInNos') : (row.moq || '-') }}
-                  </td>
-                </tr>
-                <!-- Additional empty rows for spacing -->
-                <tr *ngFor="let emptyRow of getEmptyRows(i)"></tr>
-              </ng-container>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
-  
-      <!-- Chemical Composition Section -->
-      <!-- Chemical Composition Section – NOW FULLY EDITABLE -->
-      <div class="composition-section">
+              <!-- Quote Reference Section -->
+              <div class="quote-reference-section">
+                <div class="quote-ref-item">
+                  <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData.header.quoteRefNumber.label || '')"></span>
+                  <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData.header.quoteRefNumber.value || '-')"></span> &nbsp;&nbsp;
+                  <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData.header.date.label || 'Date:')"></span>
+                  <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData.header.date.value || '-')"></span>
+                </div>
+                <div class="quote-ref-item">
+                  <span class="quote-label" [innerHTML]="boldBeforeColon(quoteData.header.customer.label || '')"></span>
+                  <span class="quote-value" [innerHTML]="boldBeforeColon(quoteData.header.customer.value || '-')"></span>
+                </div>
+              </div>
+
+              <!-- Header Section -->
+              <div class="document-header">
+                <div class="attention-line">
+                  <span class="attention-label" [innerHTML]="boldBeforeColon(quoteData.header.attention.label || '')"></span>
+                  <span class="attention-value" [innerHTML]="boldBeforeColon(quoteData.header.attention.value || '-')"></span>
+                </div>
+                <div class="greeting" [innerHTML]="boldBeforeColon(quoteData.salutation || 'Dear Sir,')"></div>
+                <div class="intro-paragraph" [innerHTML]="boldBeforeColon(quoteData.introduction || '')"></div>
+              </div>
+
+              <!-- Main Quote Table -->
+              <div class="quote-table-section">
+                <table class="main-quote-table">
+                  <thead>
+                    <tr>
+                      <th colspan="9" class="table-main-title"
+                          [innerHTML]="boldBeforeColon(quoteData.quoteTable.title || 'ISC – SHELL MOULDING/ STEEL CASTING – QUOTE')">
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>{{ getColumnHeader('sno') }}</th>
+                      <th>{{ getColumnHeader('drawingNumber') }}</th>
+                      <th>{{ getColumnHeader('partName') }}</th>
+                      <th>{{ getColumnHeader('castingMaterial') }}</th>
+                      <th>{{ getColumnHeader('castingWeightInKgs') }}</th>
+                      <th>{{ getColumnHeader('annualVolume') }}</th>
+                      <th>{{ getColumnHeader('partPriceInINR') }}</th>
+                      <th class="pattern-cost-header">
+                        <div class="pattern-cost-title">{{ getColumnHeader('patternCostINR') }}</div>
+                        <div class="pattern-cost-line"></div>
+                      </th>
+                      <th>{{ getColumnHeader('moqInNos') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Your existing table rows -->
+                    <ng-container *ngIf="getTableRows().length > 0">
+                      <ng-container *ngFor="let row of getTableRows(); let i = index">
+                        <tr>
+                          <td [attr.rowspan]="getRowSpan(i)" class="sno-cell">{{ getSno(i) }}</td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="drawing-number-cell">{{ getDrawingNumber(i) }}</td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="part-name-cell">
+                            <div class="multi-line-text">{{ formatPartName(getPartName(i)) || '-' }}</div>
+                          </td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="material-cell">
+                            <div class="multi-line-text">{{ formatCastingMaterial(isColumnsArray() ? getRowValue(row, 'castingMaterial') : (row.castingMaterial || '-')) || '-' }}</div>
+                          </td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="data-cell">{{ isColumnsArray() ? getRowValue(row, 'castingWeightInKgs') : (row.castingWeight || '-') }}</td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="data-cell">{{ isColumnsArray() ? getRowValue(row, 'annualVolume') : (row.annualVolume || '-') }}</td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="data-cell">{{ isColumnsArray() ? getRowValue(row, 'partPriceInINR') : (row.partPrice || '-') }}</td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="data-cell">{{ isColumnsArray() ? getRowValue(row, 'patternCostINR') : (row.patternCost || '-') }}</td>
+                          <td [attr.rowspan]="getRowSpan(i)" class="data-cell">{{ isColumnsArray() ? getRowValue(row, 'moqInNos') : (row.moq || '-') }}</td>
+                        </tr>
+                        <tr *ngFor="let emptyRow of getEmptyRows(i)"></tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- All other sections (composition, considerations, commercial terms, signature) -->
+              <!-- Keep exactly as you have them -->
+              <!-- ... (your existing sections) ... -->
+                    <div class="composition-section">
         <!-- Section Title -->
         <div class="composition-intro"
             appQuotationEdit
@@ -267,41 +259,43 @@
       <div class="concluding-paragraph">
         <p [innerHTML]="boldBeforeColon(quoteData.closingStatement || '')"></p>
       </div>
-  
-      <!-- Signature Block -->
-      <div class="signature-block">
-        <div class="signature-line" [innerHTML]="boldBeforeColon(quoteData.signature.thanks || '')"></div>
-        <div class="signature-name" [innerHTML]="boldBeforeColon(quoteData.signature.name || '')"></div>
-        <div class="signature-title" [innerHTML]="boldBeforeColon(quoteData.signature.designation || '')"></div>
-        <div class="signature-department" [innerHTML]="boldBeforeColon(quoteData.signature.department || '')"></div>
-        
-      </div>
-      <!-- ====== FOOTER IN DOCUMENT FLOW (for screen view & editing) ====== -->
-      <div class="contact-footer-inflow">
-        <div class="contact-and-certification-section">
-          <div class="contact-info">
-            <div class="contact-text">
-              <span class="contact-link">
-                Address: {{ quoteData.contactInfo.address.value || '-' }},-,<br>
-              </span>
-              <span class="contact-link">
-                {{ quoteData.contactInfo.website.value || '-' }}
-              </span>
+
+              <!-- Signature Block -->
+              <div class="signature-block">
+                <div class="signature-line" [innerHTML]="boldBeforeColon(quoteData.signature.thanks || '')"></div>
+                <div class="signature-name" [innerHTML]="boldBeforeColon(quoteData.signature.name || '')"></div>
+                <div class="signature-title" [innerHTML]="boldBeforeColon(quoteData.signature.designation || '')"></div>
+                <div class="signature-department" [innerHTML]="boldBeforeColon(quoteData.signature.department || '')"></div>
+              </div>
             </div>
           </div>
-          <div class="certification-logos">
-            <img src="assets/pdffooter.png" alt="Certification Logos" class="certification-image">
+        </td>
+      </tr>
+    </tbody>
+
+    <!-- Repeating Footer -->
+    <tfoot>
+      <tr>
+        <td class="print-footer">
+          <div class="contact-footer-fixed">
+            <div class="contact-and-certification-section">
+              <div class="contact-info">
+                <div class="contact-text">
+                  <span class="contact-link">
+                    Address: {{ quoteData.contactInfo.address.value || '-' }},-,<br>
+                  </span>
+                  <span class="contact-link">
+                    {{ quoteData.contactInfo.website.value || '-' }}
+                  </span>
+                </div>
+              </div>
+              <div class="certification-logos">
+                <img src="assets/pdffooter.png" alt="Certification Logos" class="certification-image" id="certification-logo">
+              </div>
+            </div>
           </div>
-        </div>
-      </div> <!-- FOOTER IN DOCUMENT FLOW -->
-
-    </div> <!-- PAGE CONTENT -->
-
-
-      
-    </div> <!-- document-page -->
-    
-  
-  </div> <!-- document-wrapper -->
-
-
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

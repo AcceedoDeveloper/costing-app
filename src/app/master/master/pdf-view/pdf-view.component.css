@@ -11,7 +11,7 @@
   min-height: 297mm;
   margin: 0 auto;
   background: white;
-  padding: 40px 50px;
+  padding: 40px 50px 150px 50px; /* Increased bottom padding to prevent overlay */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
 }
@@ -419,7 +419,7 @@ flex: 1;
   margin-top: 5px;
   margin-bottom: 5px;
   padding-left: 25px;
-  list-style-type: disc;
+  list-style: italic;
 }
 
 .hsn-codes-list li {
@@ -954,3 +954,180 @@ margin-right: 8px;
 }
 
 
+/* Fixed footer that appears on every printed/screen page */
+.contact-footer-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 10px 50px;
+
+  font-size: 12px;
+  color: #797777;
+  z-index: 100;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.contact-and-certification-section {
+  display: flex;
+ 
+  max-width: 100%;
+  gap: 20px;
+}
+
+.contact-info {
+  flex: 1;
+  text-align: left;
+}
+
+.contact-text {
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-link {
+  color: #797777;
+  display: inline;
+}
+
+.certification-logos {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.certification-image {
+  max-height: 30px;
+  width: auto;
+}
+
+/* Prevent content overlay - add more bottom space */
+.document-page {
+  padding-bottom: 150px !important; /* Increased from 100px to avoid overlap */
+}
+
+/* Print Styles - Footer on every page */
+@page {
+  size: A4 landscape;
+  margin: 10mm 12mm 30mm 12mm; /* Increased bottom margin for footer space */
+}
+
+
+
+/* Responsive Design for Footer */
+@media (max-width: 768px) {
+  .contact-footer-fixed {
+    padding: 8px 30px;
+    font-size: 11px;
+  }
+
+  .contact-and-certification-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .certification-logos {
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .certification-image {
+    max-height: 25px;
+  }
+
+  .document-page {
+    padding-bottom: 120px !important;
+  }
+}
+
+
+
+
+/* Table layout for print */
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.print-body {
+  vertical-align: top;
+    min-height: 297mm;        /* FULL A4 height */
+  display: flex;
+  flex-direction: column;
+}
+.page-content-wrapper {
+  flex: 1 0 auto;
+}
+
+.print-footer {
+  height: 70px; /* Adjust based on your footer height */
+  background: white;
+}
+
+/* Screen view - hide repeating footer */
+@media screen {
+  .print-footer {
+    display: none;
+  }
+}
+
+/* Print view - repeating footer */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 10mm 12mm 45mm 12mm; /* Bottom margin for footer */
+  }
+
+
+
+
+
+  /* Ensure footer repeats on every page */
+  .print-table tfoot {
+    display: table-footer-group;
+  }
+
+  .contact-footer-fixed {
+    position: static !important;
+    width: 100%;
+
+  
+    padding: 8px 12mm 4px 12mm;
+    font-size: 12px;
+    color: #797777;
+    background: white;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center !important;
+    
+
+  }
+
+.certification-image {
+  max-height: 50px;
+ 
+}
+#certification-logo{
+  min-width: 70vw !important;
+}
+
+
+  /* Hide any fixed footer conflicts */
+  .contact-footer-fixed:not(.print-footer *) {
+    display: none !important;
+  }
+
+
+
+  /* .section-title {
+    page-break-after: avoid;
+  } */
+}
