@@ -4,6 +4,8 @@
   "backupUrl": "http://20.84.65.155:9011/",
   "urls": [
 
+    {"name" : "baseUrl", "url":""},
+
      { "name": "login", "url": "login" },
 
     { "name": "role", "url": "getRole" },
@@ -197,9 +199,8 @@
 {"name":"updateVersions","url":"updateVersions"},
 {"name":"updateVersions/objects","url":"updateVersions/objects"},
 {"name":"deleteVersions","url":"deleteVersions"},
-{"name":"deleteVersions/objects","url":"deleteVersions/objects"}
-
-
+{"name":"deleteVersions/objects","url":"deleteVersions/objects"},
+{"name":"printQuotation","url":"printQuotation"}
 
 
 
