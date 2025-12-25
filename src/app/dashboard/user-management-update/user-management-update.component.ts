@@ -126,7 +126,7 @@ scrollTo(anchor: string): void {
 
   openCreateVersionDialog(): void {
     const dialogRef = this.dialog.open(CreateVersionDialogComponent, {
-      width: '600px',
+      width: '700px',
       maxHeight: '90vh',
       disableClose: true
     });
@@ -138,7 +138,7 @@ scrollTo(anchor: string): void {
 
   openEditVersionDialog(version: Version): void {
     const dialogRef = this.dialog.open(EditVersionDialogComponent, {
-      width: '600px',
+      width: '700px',
       maxHeight: '90vh',
       disableClose: true,
       data: { version }

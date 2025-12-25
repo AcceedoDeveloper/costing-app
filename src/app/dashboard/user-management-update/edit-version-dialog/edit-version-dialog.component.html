@@ -44,6 +44,9 @@
   </mat-error>
 </mat-form-field>
 
+<div class="existing-image-upload-section">
+
+
           <!-- Existing Image Preview (if not new) -->
           <div *ngIf="!section.get('isNew')?.value" class="existing-image-preview">
             <label>Current Image</label>
@@ -86,7 +89,7 @@
     <img [src]="previewUrls[i]" alt="Selected image preview" class="preview-thumbnail" />
   </div> -->
 </div>
-
+</div>
         </div>
       </div>
 
