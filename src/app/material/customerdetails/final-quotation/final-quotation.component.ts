@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ReportsService } from '../../../services/reports.service';
 import { Pdfmaker } from '../../../master/master/pdfmaker/pdfmaker.model';
 import { Quotation } from '../../../models/Quotation.model';
+import { ConfigService } from 'src/app/shared/components/config.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class FinalQuotationComponent implements OnInit {
     private reportservice: ReportsService,
     private cdr: ChangeDetectorRef,
     private toastr: ToastrService,
+    private config: ConfigService,
     public dialogRef: MatDialogRef<FinalQuotationComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
@@ -1054,7 +1056,7 @@ export class FinalQuotationComponent implements OnInit {
             console.log('PDF generation response:', response);
             
             if (response.status === 'success' && response.fileName) {
-              const pdfUrl = `http://localhost:3007/get-report/${encodeURIComponent(response.fileName)}`;
+              const pdfUrl = `${this.config.getCostingUrl('baseUrl')}get-report/${encodeURIComponent(response.fileName)}`;
               window.open(pdfUrl, '_blank');
               
               this.downloadingPDF = false;

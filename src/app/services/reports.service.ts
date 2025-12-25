@@ -165,7 +165,7 @@ deleteQuotation(id: string): Observable<any> {
       .set('id', idParam);
 
     // Since getCostingUrl adds the url from config, we'll construct it manually
-    const baseUrl = 'http://localhost:3007/printQuotation';
+    const baseUrl = `${this.config.getCostingUrl('baseUrl')}printQuotation`;
     console.log('Printing quotation:', { customerName, ids, idParam, baseUrl });
     
     return this.http.get<{ status: string; message: string; fileName: string }>(baseUrl, { params });

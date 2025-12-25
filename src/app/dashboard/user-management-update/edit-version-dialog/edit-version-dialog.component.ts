@@ -234,7 +234,7 @@ export class EditVersionDialogComponent implements OnInit, OnDestroy {
       const base = url.replace(/getVersions\/?$/, '');
       return base.replace(/\/$/, '');
     } catch (e) {
-      return 'http://localhost:3007';
+      return '';
     }
   }
 
