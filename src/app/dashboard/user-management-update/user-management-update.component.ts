@@ -110,10 +110,11 @@ scrollTo(anchor: string): void {
     if (!filename) return '';
     if (/^https?:\/\//.test(filename)) return filename;
 
-    const apiUrl = this.config.getCostingUrl('getVersions');
-    const urlObj = new URL(apiUrl);
-    const baseUrl = `${urlObj.protocol}//${urlObj.host}`;
-    return `${baseUrl}/uploads/version/${filename}`;
+    const apiUrl = this.config.getCostingUrl('baseUrl');
+    console.log('stand api', apiUrl);
+    // const baseUrl = apiUrl;
+    console.log('Constructed base URL for image:', `${apiUrl}uploads/version/${filename}`);
+    return `${apiUrl}uploads/version/${filename}`;
   }
 
   openLightbox(url: string, title?: string): void {
