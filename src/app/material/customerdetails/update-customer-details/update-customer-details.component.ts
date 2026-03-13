@@ -746,6 +746,9 @@ this.dhashboardServices.getQuoteData(first.customerName, first.drawing, first.pa
     }
   );
 
+
+  
+
 if (this.pendingRevisionIncrement) {
   this.revisionCount = revisionValue;
   this.storedRevision = revisionValue;
@@ -754,6 +757,135 @@ if (this.pendingRevisionIncrement) {
 }
 }
 
+
+viewQutation() : void {
+   const first = this.firstFormGroup.value;
+  const second = this.secondFormGroup.value;
+  const cost = this.costForm.value;
+  this.isSaved = true;
+
+  const fullProcessData = this.getFullUpdatedProcessData();
+const revisionValue = this.getCurrentRevisionNumber();
+
+  const finalData = {
+    CustomerName: first.customerName,
+    drawingNo: first.drawing,
+    partName: first.partNo,
+    processName: fullProcessData,
+
+    castingInputs: first.CastingInput || false,
+    ...(first.CastingInput && {
+      CastingWeight: second.CastingWeight,
+      Cavities: second.Cavities,
+      PouringWeight: second.PouringWeight
+    }),
+
+    mouldingInputs: first.MouldingInput || false,
+    ...(first.MouldingInput && {
+      MouldingWeight: second.MouldingWeight,
+      BakeMoulding: second.BakeMoulding
+    }),
+
+    coreInputs: first.CoreInput || false,
+    ...(first.CoreInput && {
+      CoreWeight: second.CoreWeight,
+      CoresPerMould: second.CoresPerMould,
+      CoreCavities: second.CoreCavities,
+      ShootingPerShift: second.ShootingPerShift,
+      CoreSand: second.CoreSand
+    }),
+
+    // Cost
+    salaryforProcess: cost.salaryforProcess,
+    salaryExcludingCoreMaking: cost.salaryExcludingCoreMaking,
+    salaryForCoreProduction: cost.salaryForCoreProduction,
+    outSourcingCost: cost.outSourcingCost,
+    splOutSourcingCost: cost.splOutSourcingCost,
+
+    repairAndMaintenance: cost.repairAndMaintenance,
+    sellingDistributionAndMiscOverHeads: cost.sellingDistributionAndMiscOverHeads,
+    financeCost: cost.financeCost,
+
+    paymentCreditPeriod: cost.paymentCreditPeriod,
+    bankInterest: cost.bankInterest,
+
+    profit: cost.profit,
+    rejection: cost.rejection,
+
+    heatTreatment: cost.heatTreatment,
+    postProcess: cost.postProcess,
+    packingAndTransport: cost.packingAndTransport,
+    NozzleShotBlasting: cost.NozzleShotBlasting,
+    highPressureCleaning: cost.highPressureCleaning,
+    otherConsumableCost: cost.otherConsumables,
+    Status: this.currentStatus, // Preserve existing status
+
+    powerCost: {
+    MeltAndOthersPower: cost.power1,
+    mouldPower: cost.power2,
+    corePower: cost.power3
+},
+revision: revisionValue
+
+  };
+
+  console.log(' Final Full JSON Format:', finalData);
+    this.store.dispatch(updateCustomerDetails({ id: this.editId!, customer: finalData }));
+    
+    this.actions$
+.pipe(
+  ofType(updateCustomerDetailsSuccess),
+  take(1)
+)
+.subscribe((action: any) => {
+
+  console.log('action:', action);
+
+  if (action && action.customer) {
+
+    const revision = action.customer.updatedCustomer?.revision || revisionValue;
+    const customerId = action.customer.updatedCustomer?.ID || null;
+
+    this.storedRevision = revision;
+    this.storedCustomerId = customerId;
+
+    console.log('✅ Customer updated. Revision:', revision, 'Customer ID:', customerId);
+
+    // ✅ CALL API HERE AFTER ID IS AVAILABLE
+    this.dhashboardServices
+      .getQuoteData(
+        first.customerName,
+        first.drawing,
+        first.partNo,
+        customerId,
+        revisionValue
+      )
+      .subscribe(
+        response => {
+          console.log('Calculation ', response);
+
+          this.quotationData = response;
+          this.quotationCalc = response.calculations?.[0] || {};
+        },
+        error => {
+          console.error('API Error:', error);
+        }
+      );
+  }
+});
+
+
+
+
+  
+
+if (this.pendingRevisionIncrement) {
+  this.revisionCount = revisionValue;
+  this.storedRevision = revisionValue;
+  this.pendingRevisionIncrement = false;
+  this.hasUserEdits = false;
+}
+}
 
 
 submitForm() {
