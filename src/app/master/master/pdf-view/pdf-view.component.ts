@@ -31,86 +31,65 @@ export class PdfViewComponent implements OnInit, AfterViewInit {
     private reportsService: ReportsService
   ) { }
 
-  ngOnInit(): void {
-    // Get route parameters (customerName and IDs)
-    this.route.queryParams.subscribe(params => {
-      const customerName = params['customerName'];
-      const idsParam = params['id']; // IDs joined with % separator
-      
-      if (!customerName) {
-        this.error = 'Customer name is required';
-        this.loading = false;
-        return;
-      }
+ ngOnInit(): void {
+  this.route.queryParams.subscribe(params => {
+    const customerName = params['customerName'];
+    const idsParam = params['id'];
 
-      // Parse IDs from the parameter (split by %)
-      const ids = idsParam ? idsParam.split('%').filter(id => id && id.trim() !== '') : [];
-      
-      // First, fetch the selected parts data to get drawingNo and partName
-      this.reportsService.getCustomerDetails({
-        customerName: customerName
-      }).subscribe({
-        next: (response) => {
-          // Filter parts by IDs to get the selected parts data
-          const allParts = response.data || [];
-          this.selectedPartsData = allParts.filter((part: any) => {
+    if (!customerName) {
+      this.error = 'Customer name is required';
+      this.loading = false;
+      return;
+    }
+
+    const ids = idsParam
+      ? idsParam.split('%').filter((id: string) => id && id.trim() !== '')
+      : [];
+
+    // Load quotation first
+    this.reportsService.getQuotationByCustomerAndId(customerName, ids).subscribe({
+      next: (quotations: Quotation[]) => {
+        if (quotations && quotations.length > 0) {
+          this.quoteData = this.convertQuotationToPdfmaker(quotations[0]);
+          this.loading = false;
+          setTimeout(() => this.calculateTotalPages(), 100);
+        } else {
+          this.error = 'No quotation found for the specified customer and parts';
+          this.loading = false;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching quotation:', err);
+        this.error = 'Failed to load quotation data. Please try again.';
+        this.loading = false;
+      }
+    });
+
+    // Load part details separately, but don't break page if it fails
+    this.reportsService.getCustomerDetails({ customerName }).subscribe({
+      next: (response) => {
+        const allParts = response?.data || [];
+        this.selectedPartsData = allParts
+          .filter((part: any) => {
             const partId = String(part.ID || part._id || '');
             return ids.includes(partId);
-          }).map((part: any, index: number) => ({
+          })
+          .map((part: any, index: number) => ({
             sno: index + 1,
             drawingNo: part.drawingNo || '-',
             partName: part.partName || '-',
             ID: part.ID || part._id
           }));
-          
-          console.log('✅ Selected parts data loaded:', this.selectedPartsData);
-          
-          // Now fetch quotation data
-          this.reportsService.getQuotationByCustomerAndId(customerName, ids).subscribe({
-            next: (quotations: Quotation[]) => {
-              if (quotations && quotations.length > 0) {
-                // Use the first quotation if multiple are returned
-                this.quoteData = this.convertQuotationToPdfmaker(quotations[0]);
-                this.loading = false;
-                // Calculate pages after data is loaded
-                setTimeout(() => this.calculateTotalPages(), 100);
-              } else {
-                this.error = 'No quotation found for the specified customer and parts';
-                this.loading = false;
-              }
-            },
-            error: (err) => {
-              console.error('Error fetching quotation:', err);
-              this.error = 'Failed to load quotation data. Please try again.';
-              this.loading = false;
-            }
-          });
-        },
-        error: (err) => {
-          console.error('Error fetching customer details:', err);
-          // Still try to load quotation even if parts fetch fails
-          this.reportsService.getQuotationByCustomerAndId(customerName, ids).subscribe({
-            next: (quotations: Quotation[]) => {
-              if (quotations && quotations.length > 0) {
-                this.quoteData = this.convertQuotationToPdfmaker(quotations[0]);
-                this.loading = false;
-                // Calculate pages after data is loaded
-                setTimeout(() => this.calculateTotalPages(), 100);
-              } else {
-                this.error = 'No quotation found for the specified customer and parts';
-                this.loading = false;
-              }
-            },
-            error: (err) => {
-              console.error('Error fetching quotation:', err);
-              this.error = 'Failed to load quotation data. Please try again.';
-              this.loading = false;
-            }
-          });
-        }
-      });
+
+        console.log('✅ Selected parts data loaded:', this.selectedPartsData);
+      },
+      error: (err) => {
+        console.warn('Customer details failed, continuing without parts data:', err);
+        this.selectedPartsData = [];
+      }
     });
-  }
+  });
+}
 
   ngAfterViewInit(): void {
     // Calculate pages after view is initialized

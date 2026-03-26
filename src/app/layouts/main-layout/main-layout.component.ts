@@ -42,6 +42,7 @@ export class MainLayoutComponent implements AfterViewInit {
   }
  
  ngOnInit(): void {
+  
     this.store.select(selectAuthState).subscribe((authState) => {
       if (authState.user) {
         this.username = authState.user.userName || 'unknown';
@@ -53,7 +54,10 @@ export class MainLayoutComponent implements AfterViewInit {
         }
         console.log('User:', this.username, 'Role:', this.role);
       }
+      
+      
     });
+    
   }
 
 

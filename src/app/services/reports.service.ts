@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { ConfigService } from '../shared/components/config.service';
 import { CustomerdetailsIn } from '../models/Customer-details.model';
 import { Pdfmaker } from '../master/master/pdfmaker/pdfmaker.model';
@@ -70,6 +70,17 @@ export class ReportsService {
           return { data: response, total: response.length };
         }
         return response as { data: CustomerdetailsIn[]; total?: number; page?: number; limit?: number };
+      }),
+
+      // ✅ FIX ADDED HERE (NO OTHER CHANGES)
+      catchError((err) => {
+        console.warn('⚠️ Customer details API failed:', err);
+
+        // Return empty data instead of throwing error
+        return of({
+          data: [],
+          total: 0
+        });
       })
     );
   }
@@ -82,52 +93,49 @@ export class ReportsService {
   }
 
 
-getQuoteTemplate() {
-  const baseUrl = this.config.getCostingUrl('getQuoteTemplate');
-  console.log("Fetching quote template from:", baseUrl);
-  return this.http.get<Pdfmaker>(baseUrl);
-}
+  getQuoteTemplate() {
+    const baseUrl = this.config.getCostingUrl('getQuoteTemplate');
+    console.log("Fetching quote template from:", baseUrl);
+    return this.http.get<Pdfmaker>(baseUrl);
+  }
 
 
 
-updateQuoteTemplate(data: Pdfmaker): Observable<Pdfmaker> {
-  // Deep-clone to strip any Angular metadata / prototypes before sending
-  const payload = JSON.parse(JSON.stringify(data));
-  console.log('updateQuoteTemplate payload:', payload);
+  updateQuoteTemplate(data: Pdfmaker): Observable<Pdfmaker> {
+    const payload = JSON.parse(JSON.stringify(data));
+    console.log('updateQuoteTemplate payload:', payload);
 
-  const baseUrl = this.config.getCostingUrl('updateQuoteTemplate');
-  return this.http.put<Pdfmaker>(baseUrl, payload);
-}
-
+    const baseUrl = this.config.getCostingUrl('updateQuoteTemplate');
+    return this.http.put<Pdfmaker>(baseUrl, payload);
+  }
 
 
-createQuotation(data: Quotation): Observable<Quotation> {
-  // Deep-clone to strip any Angular metadata / prototypes before sending
-  const payload = JSON.parse(JSON.stringify(data));
-  console.log('createQuotation payload:', payload);
-  const baseUrl = this.config.getCostingUrl('createQuotation');
-  return this.http.post<Quotation>(baseUrl, payload);
-}
 
-updateQuotation(id: string, data: Quotation): Observable<Quotation> {
-  // Deep-clone to strip any Angular metadata / prototypes before sending
-  const payload = JSON.parse(JSON.stringify(data));
-  console.log('updateQuotation payload:', payload);
-  const baseUrl = this.config.getCostingUrl('updateQuotation');
-  return this.http.put<Quotation>(`${baseUrl}/${id}`, payload);
-}
+  createQuotation(data: Quotation): Observable<Quotation> {
+    const payload = JSON.parse(JSON.stringify(data));
+    console.log('createQuotation payload:', payload);
+    const baseUrl = this.config.getCostingUrl('createQuotation');
+    return this.http.post<Quotation>(baseUrl, payload);
+  }
 
-getQuotations(): Observable<Quotation[]> {
-  const baseUrl = this.config.getCostingUrl('getQuotations');
-  console.log('Fetching quotations from:', baseUrl);
-  return this.http.get<Quotation[]>(baseUrl);
-}
+  updateQuotation(id: string, data: Quotation): Observable<Quotation> {
+    const payload = JSON.parse(JSON.stringify(data));
+    console.log('updateQuotation payload:', payload);
+    const baseUrl = this.config.getCostingUrl('updateQuotation');
+    return this.http.put<Quotation>(`${baseUrl}/${id}`, payload);
+  }
 
-deleteQuotation(id: string): Observable<any> {
-  const baseUrl = this.config.getCostingUrl('deleteQuotation');
-  console.log('Deleting quotation:', id);
-  return this.http.delete(`${baseUrl}/${id}`);
-}
+  getQuotations(): Observable<Quotation[]> {
+    const baseUrl = this.config.getCostingUrl('getQuotations');
+    console.log('Fetching quotations from:', baseUrl);
+    return this.http.get<Quotation[]>(baseUrl);
+  }
+
+  deleteQuotation(id: string): Observable<any> {
+    const baseUrl = this.config.getCostingUrl('deleteQuotation');
+    console.log('Deleting quotation:', id);
+    return this.http.delete(`${baseUrl}/${id}`);
+  }
 
   getQuotationByCustomerAndId(customerName: string, ids: string[]): Observable<Quotation[]> {
     const baseUrl = this.config.getCostingUrl('getQuotationByCustomerAndId');
@@ -139,7 +147,6 @@ deleteQuotation(id: string): Observable<any> {
       });
     }
     
-    // Join IDs with % separator as requested
     const idParam = ids.join('%');
     const params = new HttpParams()
       .set('customerName', customerName)
@@ -158,13 +165,11 @@ deleteQuotation(id: string): Observable<any> {
   }
 
   printQuotation(customerName: string, ids: string[]): Observable<{ status: string; message: string; fileName: string }> {
-    // Join IDs with % separator
     const idParam = ids.join('%');
     const params = new HttpParams()
       .set('customerName', customerName)
       .set('id', idParam);
 
-    // Since getCostingUrl adds the url from config, we'll construct it manually
     const baseUrl = `${this.config.getCostingUrl('baseUrl')}printQuotation`;
     console.log('Printing quotation:', { customerName, ids, idParam, baseUrl });
     

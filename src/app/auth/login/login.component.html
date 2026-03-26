@@ -1,102 +1,75 @@
-<!-- <div class="row">
-  <div class="col-md-6 offset-md-3">
-    
+<div class="login-page">
+  <div class="login-wrapper">
+    <div class="login-card">
 
-    <h3>Login</h3>
-    <hr />
-    <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-      <div class="mb-3">
-        <label>Email</label>
-        <input type="text" class="form-control" formControlName="email" />
-        <div
-          *ngIf="
-            loginForm.get('email').touched && !loginForm.get('email').valid
-          "
-        >
-          <div *ngIf="loginForm.get('email').errors.required">
-            Email is required
+      <!-- Left Side Form -->
+      <div class="login-form-section">
+        <div class="form-inner">
+          <div class="header-text">
+            <h2>LOGIN</h2>
+            <p>Please enter your credentials to continue</p>
           </div>
-          <div *ngIf="loginForm.get('email').errors.email">Invalid Email</div>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+
+            <!-- Username -->
+            <div class="form-group custom-group">
+              <label for="username">Username</label>
+              <input
+                id="username"
+                type="text"
+                class="form-control custom-input"
+                placeholder="Enter your username"
+                formControlName="username"
+              />
+            </div>
+
+            <!-- Password -->
+            <div class="form-group custom-group">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                class="form-control custom-input"
+                placeholder="Enter your password"
+                formControlName="password"
+              />
+            </div>
+
+            <!-- Display error message -->
+            <div *ngIf="errorMessage" class="mb-3 text-danger">
+              {{ errorMessage }}
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+              <button
+                type="submit"
+                class="sign-btn"
+                [disabled]="!loginForm.valid || isLoading"
+              >
+                <span
+                  *ngIf="isLoading"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                {{ isLoading ? 'Logging in...' : 'Sign In' }}
+              </button>
+            </div>
+
+          </form>
         </div>
       </div>
-      <div class="mb-3">
-        <label>Password</label>
-        <input
-          type="password"
-          class="form-control"
-          formControlName="password"
+
+      <!-- Right Side Image -->
+      <div class="login-image-section">
+        <img
+          src="assets/login-img.png"
+          alt="Cost Management Illustration"
         />
-        <div
-          *ngIf="
-            loginForm.get('password').touched &&
-            !loginForm.get('password').valid
-          "
-        >
-          <div>Password is required</div>
-        </div>
       </div>
 
-      <div class="mb-3">
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="!loginForm.valid"
-        >
-          Login
-        </button>
-      </div>
-    </form>
-  </div>
-</div> -->
-
-
-<!----------------------- Main Container -------------------------->
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <!----------------------- Login Container -------------------------->
-  <div class="row border rounded-5 p-3 bg-white shadow box-area">
-    <!--------------------------- Left Box ----------------------------->
-    <div class="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box">
-      <div class="featured-image mb-3">
-        <img src="" class="img-fluid" style="width: 250px;">
-      </div>
-      <!-- <small class="text-white text-wrap text-center" style="width: 17rem;font-family: 'Courier New', Courier, monospace; color: #000;">Costing Management helps industries track customer needs, project costs, and materials for better future planning.</small> -->
-    </div> 
-    <!-------------------- Right Box ---------------------------->
-    <div class="col-md-6 right-box">
-      <div class="row align-items-center">
-        <div class="header-text mb-4">
-          <mat-icon>lock</mat-icon>
-          <h2>Login</h2>
-        </div>
-        <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-        <!-- Username Field -->
-        <div class="form-group mb-3">
-            <input type="text" class="form-control form-control-lg bg-light fs-6" placeholder="User Name" formControlName="username">
-            
-        </div>
-
-        <!-- Password Field -->
-        <div class="form-group mb-3">
-              <input type="password" class="form-control form-control-lg bg-light fs-6" placeholder="Password" formControlName="password">
-              
-        </div>
-
-          <div class="input-group mb-5 d-flex justify-content-between">
-            
-          </div>
-          <!-- Display error message -->
-          <div *ngIf="errorMessage" class="alert alert-danger mb-3">
-            {{ errorMessage }}
-          </div>
-          <!-- Login button with loading state -->
-          <div class="input-group mb-3">
-            <button class="btn btn-lg btn-primary w-100 fs-6" [disabled]="!loginForm.valid || isLoading">
-              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-              {{ isLoading ? 'Logging in...' : 'Login' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div> 
+    </div>
   </div>
 </div>

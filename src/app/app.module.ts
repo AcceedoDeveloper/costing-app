@@ -76,6 +76,7 @@ export function initializeApp(configService: ConfigService) {
     MatIconModule,
     MatMenuModule,
     MatBadgeModule,
+     MatIconModule,
     MatSidenavModule,
     MatListModule,
     BrowserModule,

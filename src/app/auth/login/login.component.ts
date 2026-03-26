@@ -16,9 +16,9 @@ import { getLoading } from '../../store/Shared/shared.selector';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   errorMessage: string | null = null;
-  isLoading: boolean = false; // Explicitly declare and initializ
+  isLoading: boolean = false;
   private authSubscription: Subscription;
   private errorSubscription: Subscription;
   private loadingSubscription: Subscription;
@@ -46,25 +46,28 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     this.errorSubscription = this.store.select(getErrorMessage).subscribe((error) => {
-      console.log('Component received error:', error); 
-      this.errorMessage = error ? this.authService.getErrorMessage(error) : null;
+      console.log('Component received error:', error);
+      this.errorMessage = error ? 'Username or Password is incorrect' : null;
     });
 
     this.loadingSubscription = this.store.select(getLoading).subscribe((loading) => {
       console.log('Loading state:', loading);
       this.isLoading = loading;
     });
-    
   }
 
   onLoginSubmit() {
     if (this.loginForm.invalid) {
       return;
     }
+
     this.errorMessage = null;
+
     const username = this.loginForm.value.username;
     const password = this.loginForm.value.password;
+
     console.log('Login form submitted:', this.loginForm.value);
+
     this.store.dispatch(setLoadingSpinner({ status: true }));
     this.store.dispatch(loginStart({ username, password }));
   }
@@ -75,6 +78,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     if (this.errorSubscription) {
       this.errorSubscription.unsubscribe();
+    }
+    if (this.loadingSubscription) {
+      this.loadingSubscription.unsubscribe();
     }
   }
 }
